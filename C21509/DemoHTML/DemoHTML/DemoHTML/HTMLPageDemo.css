@@ -1,17 +1,25 @@
 
 
  .flex-container {
-        display: flex;
-        flex-direction: row;
-        margin: 50px;
-        padding: 100px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 50px;
+    row-gap: 5px;
+    column-gap: 1px;
+    align-items: center;
  }
 
-.product{
-   width= 100;
-    
+ .search-container {
+   text-align: right; 
+   margin-right: 20px; 
 }
 
-.img {
-    width = 100;
+.product{
+   width: 20%;
+
+}
+
+img {
+   width : 100%;
 }
