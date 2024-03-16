@@ -69,7 +69,7 @@ button{
 
 	width: 100%;
 	height: 75px;
-	background: orange;
+	background: #8a9597;
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: space-between;
@@ -169,4 +169,15 @@ button{
 	background: orange;
 	color: white;
 	cursor: pointer;
+}
+
+/* Footer */
+footer{
+	margin-top: 25px;
+	background: #8a9597;
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	color: white;
+	align-items: center;
 }
