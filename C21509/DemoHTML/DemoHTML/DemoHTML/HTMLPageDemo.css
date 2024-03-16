@@ -1,0 +1,17 @@
+
+
+ .flex-container {
+        display: flex;
+        flex-direction: row;
+        margin: 50px;
+        padding: 100px;
+ }
+
+.product{
+   width= 100;
+    
+}
+
+.img {
+    width = 100;
+}
