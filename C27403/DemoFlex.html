@@ -9,72 +9,117 @@
     .page {
         display: grid;
         height: 200px;
-        margin:auto;
+        margin:0 auto;
         grid-template-columns: 200px;
         grid-template-columns: repeat(4, 1fr);
     }
     .post {
         container-type: inline-size;
         container-name: sidebar;
-        border: 1px ridge black;
+        /*border: 1px ridge black;*/
         margin: 1rem;
         align-items: center;
         justify-content: center;
+        background-color: white;
+    }
+    .grid-container {
+        display: inline-flex;
+        grid-template-rows: 200px;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0;
+        padding: 0; 
+
+    }
+    .cuad {
+        display: grid;
+        height: 200px;
+        margin:0 auto;
+        grid-template-columns: 200px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .button {
+        background-color: #ff9900;
+        border: none;
+        color: white;
+        padding: 15px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        border-radius: 5px;
+        }
+    .button1 {
+        box-shadow: 0 8px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+    input[type=text], select {
+        width: 100%;
+        padding: 15px 230px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;;
     }
     
-    .button {
-        margin:5rem;
-        width: 40px;
-        height: 36px;
-        border: 1px solid #00B4CC;
-        background: #00B4CC;
-        text-align: center;
-        color: #fff;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-        font-size: 20px;
-    }
 
 
 </style>
-<body>
-    <div class="search">
-        <input type="text">
-        <button type="submit">
-        </button>
+<body style="background-image: url(https://m.media-amazon.com/images/I/61QXfRUN69L._SX3000_.jpg);">
+    <div class="grid-container">
+        <div><input type="text" placeholder="Search Amazon""></div>
+        <div><button class="button button1">🔍</button>
+        </div>
     </div>
+</div>
     <div class="page">
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">Top Deal</h2>
+            <div style="text-align: center;"><img src="https://m.media-amazon.com/images/I/41n5es7IdHL._AC_SY230_.jpg" alt="centered image" width="280" style="align-self: center; margin: 0 auto;" ></div>
+            <h3 style="background-color: rgb(87, 1, 1); color: white; text-align: center;">Up to 41% off</h3><h3 style="color:rgb(87, 1, 1);">&ensp;Limited time deal</h3>
+            <p>&ensp;Premium Bath & Laundry Essentials from Lane Linen</p>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Free delivery on your &ensp;first order</h2>
+            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" width="280"></div>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Deals in PCs</h2>
+            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg" width="280"></div>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif" >&ensp;Home décor under $50</h2>
+            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v6._SY304_CB573698005_.jpg" width="280"></div>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Refresh your space</h2>
+            <div class="cuad"> 
+                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_LP-HP_B08MYX5Q2W_01.23._SY116_CB619238939_.jpg" width="140">
+                    <p style="text-align: left;">&ensp;Dining</p>    
+                </div>
+                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_home_B08RCCP3HV_01.23._SY116_CB619238939_.jpg" width="140">
+                    <p style="text-align: left;"> &ensp;Home</p>    
+                </div>
+                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_kitchen_B0126LMDFK_01.23._SY116_CB619238939_.jpg" width="140">
+                    <p style="text-align: left;"> &ensp;Kitchen</p>    
+                </div>
+                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_health-beauty_B07662GN57_01.23._SY116_CB619238939_.jpg" width="140">
+                    <p style="text-align: left;"> &ensp;Healthy and Beauty</p>    
+                </div>
+            </div>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Fill your Easter basket with joy</h2>
+            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/Easter/Fuji_Easter_Dash_card_1x_EN._SY304_CB581341381_.jpg" width="280"></div>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Amazon Gadget Store</h2>
+            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" width="300"></div>
         </div>
         <div class="post">
-            <h1>Prueba</h1>
-            <div><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" alt=""></div>
+            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Toys under $25</h2>
+            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v3._SY304_CB573698005_.jpg" width="280"></div>
         </div>
     </div>
 
