@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
     <title></title>
@@ -8,11 +9,11 @@
 <style>
     .page {
         display: grid;
-        height: 200px;
-        margin:0 auto;
-        grid-template-columns: 200px;
+        margin: 0 auto;
+        grid-template-columns: 100px;
         grid-template-columns: repeat(4, 1fr);
     }
+
     .post {
         container-type: inline-size;
         container-name: sidebar;
@@ -22,21 +23,22 @@
         justify-content: center;
         background-color: white;
     }
+
     .grid-container {
         display: inline-flex;
-        grid-template-rows: 200px;
-        grid-template-columns: repeat(2, 1fr);
-        margin: 0;
-        padding: 0; 
-
+        grid-template-rows: 150px;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 0;
+        margin: 1rem;
     }
+
     .cuad {
         display: grid;
-        height: 200px;
-        margin:0 auto;
+        margin: 0 auto;
         grid-template-columns: 200px;
         grid-template-columns: repeat(2, 1fr);
     }
+
     .button {
         background-color: #ff9900;
         border: none;
@@ -47,81 +49,117 @@
         display: inline-block;
         font-size: 15px;
         cursor: pointer;
-        -webkit-transition-duration: 0.4s; /* Safari */
+        -webkit-transition-duration: 0.4s;
+        /* Safari */
         transition-duration: 0.4s;
         border-radius: 5px;
-        }
-    .button1 {
-        box-shadow: 0 8px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-        }
+    }
 
-    input[type=text], select {
+    .button1 {
+        box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    input[type=text],
+    select {
         width: 100%;
         padding: 15px 230px;
         display: inline-block;
         border: 1px solid #ccc;
-        box-sizing: border-box;;
+        box-sizing: border-box;
+        ;
     }
-    
 
-
+    footer {
+        background-color: rgb(151, 151, 151);
+    }
 </style>
-<body style="background-image: url(https://m.media-amazon.com/images/I/61QXfRUN69L._SX3000_.jpg);">
-    <div class="grid-container">
-        <div><input type="text" placeholder="Search Amazon""></div>
-        <div><button class="button button1">🔍</button>
+
+<body style="background-color:blanchedalmond">
+    <header style="background-color: rgb(134, 133, 133);">
+        <div class="grid-container">
+            <div><img src="https://freelogopng.com/images/all_img/1688364164amazon-logo-transparent.png" style="height: 30px; margin: 0.6rem;"></div>
+            <div><input type="text" placeholder="Search Amazon"></div>
+            <div><button class=" button button1">🔍</button></div>
+            <button><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" style="height: 1cm; text-align: right;"></button>
         </div>
-    </div>
-</div>
-    <div class="page">
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">Top Deal</h2>
-            <div style="text-align: center;"><img src="https://m.media-amazon.com/images/I/41n5es7IdHL._AC_SY230_.jpg" alt="centered image" width="280" style="align-self: center; margin: 0 auto;" ></div>
-            <h3 style="background-color: rgb(87, 1, 1); color: white; text-align: center;">Up to 41% off</h3><h3 style="color:rgb(87, 1, 1);">&ensp;Limited time deal</h3>
-            <p>&ensp;Premium Bath & Laundry Essentials from Lane Linen</p>
-        </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Free delivery on your &ensp;first order</h2>
-            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" width="280"></div>
-        </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Deals in PCs</h2>
-            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg" width="280"></div>
-        </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif" >&ensp;Home décor under $50</h2>
-            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v6._SY304_CB573698005_.jpg" width="280"></div>
-        </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Refresh your space</h2>
-            <div class="cuad"> 
-                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_LP-HP_B08MYX5Q2W_01.23._SY116_CB619238939_.jpg" width="140">
-                    <p style="text-align: left;">&ensp;Dining</p>    
-                </div>
-                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_home_B08RCCP3HV_01.23._SY116_CB619238939_.jpg" width="140">
-                    <p style="text-align: left;"> &ensp;Home</p>    
-                </div>
-                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_kitchen_B0126LMDFK_01.23._SY116_CB619238939_.jpg" width="140">
-                    <p style="text-align: left;"> &ensp;Kitchen</p>    
-                </div>
-                <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_health-beauty_B07662GN57_01.23._SY116_CB619238939_.jpg" width="140">
-                    <p style="text-align: left;"> &ensp;Healthy and Beauty</p>    
+    </header>
+    <br>
+    
+        <div class="page">
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">Top Deal</h3>
+                <div style="text-align: center;"><img
+                        src="https://m.media-amazon.com/images/I/41n5es7IdHL._AC_SY230_.jpg" alt="centered image"
+                        width="280" style="align-self: center; margin: 0 auto;"></div>
+                <h3 style="background-color: rgb(87, 1, 1); color: white; text-align: center;">Up to 41% off</h3>
+                <h3 style="color:rgb(212, 207, 207);">&ensp;Limited time deal</h3>
+                <p>&ensp;Premium Bath & Laundry Essentials from Lane Linen</p>
+            </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Free delivery on your &ensp;first order</h3>
+                <div style="text-align: center;"><img
+                        src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg"
+                        width="280"></div>
+            </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Deals in PCs</h3>
+                <div style="text-align: center;"><img
+                        src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg"
+                        width="280"></div>
+            </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Home décor under $50</h3>
+                <div style="text-align: center;"><img
+                        src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v6._SY304_CB573698005_.jpg"
+                        width="280"></div>
+            </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Refresh your space</h3>
+                <div class="cuad">
+                    <div style="text-align: center;"><img
+                            src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_LP-HP_B08MYX5Q2W_01.23._SY116_CB619238939_.jpg"
+                            width="140">
+                        <p style="text-align: left;">&ensp;Dining</p>
+                    </div>
+                    <div style="text-align: center;"><img
+                            src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_home_B08RCCP3HV_01.23._SY116_CB619238939_.jpg"
+                            width="140">
+                        <p style="text-align: left;"> &ensp;Home</p>
+                    </div>
+                    <div style="text-align: center;"><img
+                            src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_kitchen_B0126LMDFK_01.23._SY116_CB619238939_.jpg"
+                            width="140">
+                        <p style="text-align: left;"> &ensp;Kitchen</p>
+                    </div>
+                    <div style="text-align: center;"><img
+                            src="https://images-na.ssl-images-amazon.com/images/G/01/launchpad/2023/Gateway/January/DesktopQuadCat_186x116_health-beauty_B07662GN57_01.23._SY116_CB619238939_.jpg"
+                            width="140">
+                        <p style="text-align: left;"> &ensp;Healthy and Beauty</p>
+                    </div>
                 </div>
             </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Fill your Easter basket with joy</h3>
+                <div style="text-align: center;"><img
+                        src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/Easter/Fuji_Easter_Dash_card_1x_EN._SY304_CB581341381_.jpg"
+                        width="280"></div>
+            </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Amazon Gadget Store</h3>
+                <div style="text-align: center;"><img
+                        src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg"
+                        width="280"></div>
+            </div>
+            <div class="post">
+                <h3 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Toys under $25</h3>
+                <div style="text-align: center;"><img
+                        src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v3._SY304_CB573698005_.jpg"
+                        width="280"></div>
+            </div>
         </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Fill your Easter basket with joy</h2>
-            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/Easter/Fuji_Easter_Dash_card_1x_EN._SY304_CB581341381_.jpg" width="280"></div>
-        </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Amazon Gadget Store</h2>
-            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2024/FDFO/Fuji_FDFO_Dash_card_1X_zhTW._SY304_CB585530037_.jpg" width="300"></div>
-        </div>
-        <div class="post">
-            <h2 style="font-family: 'Trebuchet MS', sans-serif">&ensp;Toys under $25</h2>
-            <div style="text-align: center;"><img src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v3._SY304_CB573698005_.jpg" width="280"></div>
-        </div>
-    </div>
-
+        <footer style="background-color: rgb(48, 47, 47); height: 60px;">
+            <h3 style="text-align: center; color: white;"><br>amazon.com</h3>
+        </footer>
 </body>
+
 </html>
