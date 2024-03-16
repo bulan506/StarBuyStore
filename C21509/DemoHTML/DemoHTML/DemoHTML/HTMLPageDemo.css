@@ -1,18 +1,22 @@
-
+.header-container {
+   background-color: orange; 
+   padding: 20px; 
+   width: 100%;
+}
 
  .flex-container {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     margin: 50px;
-    row-gap: 5px;
-    column-gap: 1px;
+    row-gap: 10px;
+    column-gap: 10px;
     align-items: center;
  }
 
  .search-container {
    text-align: right; 
-   margin-right: 20px; 
+   margin-right: 60px; 
 }
 
 .product{
