@@ -82,3 +82,13 @@ ul {
   .top {
     background-color: lightblue;
   }
+
+  .header {
+    background-color: lightgray;
+    height: 30px;
+  }
+
+  .footer {
+    background-color: darkgray;
+    height: 30px;
+  }
