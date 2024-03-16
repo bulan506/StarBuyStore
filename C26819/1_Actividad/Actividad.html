@@ -30,6 +30,7 @@
 			.search-bar {
 				margin-bottom: 20px;
 				text-align: center;
+				padding-top: 2%; /*--es interesante*/
 			}
 
 			.search-input {
@@ -45,20 +46,36 @@
 				border: none;
 				cursor: pointer;
 			}
+
+			footer{
+				margin-top: 25px;
+				background-color: #8a9597;
+				width: 100%;
+				height: 100px;
+			}
+
+			header{
+				margin-top: 25px;
+				background-color: #C0c0c0;
+				width: 100%;
+				height: 100px;
+			}
+
 			
 		</style>
 
 	</head>
 	<body>
 
-		<div class="search-bar">
-        
-			<input type="text" class="search-input" placeholder="Search...">
+		<header>
+			<div class="search-bar">
+			
+				<input type="text" class="search-input" placeholder="Search...">
+						
+				<button class="search-button">Search</button>
 					
-			<button class="search-button">Search</button>
-				
-		</div>
-
+			</div>
+		</header>
 		<h1>Productos</h1>
 
 		<div class="grid-container">
@@ -124,6 +141,8 @@
 			</div> 
 		</div>
 	
+		<footer> </footer>
+
 	</body>
 </html>
 
