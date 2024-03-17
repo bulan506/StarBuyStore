@@ -68,12 +68,13 @@ button{
 .main_banner{
 
 	width: 100%;
-	height: 75px;
-	background: orange;
-	display: flex;
+	height: auto;
+	background: #8a9597;
+	padding: 1.4rem;
+	/* display: flex;
 	flex-flow: row nowrap;
 	justify-content: space-between;
-	align-items: center;
+	align-items: center; */
 }
 
 /* Div con el buscador */
@@ -103,7 +104,7 @@ button{
 /* Div con el carrito */
 .cart_container{
 	width: 50%;
-	height: 25px;	
+	height: 25px;		
 }
 
 
@@ -128,24 +129,29 @@ button{
 .div_gallery{
 	margin-top: 50px;
 	width: 100%;
-	display: flex;
+	/* display: flex;
 	flex-wrap: wrap;
 	row-gap: 20px;
 	column-gap: 20px;
-	justify-content: center;
+	justify-content: center; */
 }
 
-.product{
-	width: 25%;
+.product{	
 	height: auto;
 	padding: 0 1.5rem;
-	display: flex;
-	flex-flow: column nowrap;
+	/* display: flex;
+	flex-flow: column nowrap; */
 }
 
 .product *{
 	margin: 10px 0;
 }
+
+
+
+
+
+
 
 /* Contenedor de la imagen del producto */
 .product div{
@@ -169,4 +175,24 @@ button{
 	background: orange;
 	color: white;
 	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+/* Footer */
+footer{
+	margin-top: 25px;
+	background: #8a9597;
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	color: white;
+	align-items: center;
 }
