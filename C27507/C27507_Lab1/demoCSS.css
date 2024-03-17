@@ -179,9 +179,79 @@ button{
 
 
 
+/* Carrusel */
+
+.container_carousel{
+	width: 100%;
+	height: 500px;
+	background: white;
+}
+
+#carouselExampleCaptions{
+	width: 100%;
+	height: 100%;
+	position: relative;	
+}
+
+#carouselExampleCaptions .carousel-inner,.carousel-item,img{
+	width: 100%;
+	height: 100%;	
+}
+
+#carouselExampleCaptions img{	
+	object-fit: contain;
+}
 
 
+	/* Cambiar el color forzosamente */
+	#carouselExampleCaptions p,span,h5{	
+		color:orange;
+		font-weight: bolder;
+	}
 
+	#carouselExampleCaptions h5{	
+		color:orange;
+	}
+
+	.carousel-control-prev span{
+		color: orange;
+	}
+
+.title_section_carousel{
+	margin: 100px 0 25px;
+	color: orange;
+}
+
+
+	/* agregar manta a las imagenes del slider */
+	.carousel-item{
+		position: relative;	
+	}
+
+	.cover_img{
+		width: 100%;
+		height: 100%;	
+		position: absolute;	
+		background-color: rgba(0, 0, 0, 0.2);
+		top: 0;
+		left: 0;	
+		pointer-events: none;
+	}
+
+	/* agregar manta a los botones inferiores y los textos */
+
+	.carousel-caption{
+		position: relative;
+	}
+	.cover_info{
+		width: 100%;
+		height: 100%;	
+		position: absolute;	
+		background-color: rgba(0, 0, 0, 0.2);
+		top: 0;
+		left: 0;	
+		pointer-events: none;
+	}
 
 
 
