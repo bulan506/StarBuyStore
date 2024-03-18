@@ -13,6 +13,8 @@ En primer lugar tenemos __El movimiento #MeToo__, según la definición de la p�
 ## Efecto Pence  
 Por otra parte, en la página del periódico ELPAIS, Romero Rubén (2018) describe el efecto Pence como “los hombres que tenían miedo a las mujeres”. Señalando así una dinámica social donde algunos hombres experimentan temor o ansiedad al interactuar con mujeres, especialmente en contextos laborales o sociales donde se sienten en riesgo de ser acusados injustamente de conducta inapropiada o de acoso sexual. Esta percepción, según el autor, puede generar barreras en la interacción y limitar la participación equitativa de hombres y mujeres en diversos ámbitos de la vida.
 
+El nombre del "efecto Pence" proviene del apellido del exvicepresidente de los Estados Unidos, Mike Pence. Este término se popularizó debido a la actitud pública de Pence hacia las interacciones con mujeres, donde se le atribuyó la práctica de evitar situaciones que pudieran generar especulaciones o acusaciones de conducta inapropiada. Este comportamiento incluye evitar cenar a solas con mujeres que no sean su esposa y evitar eventos sociales donde el alcohol esté presente si su esposa no está presente. Aunque Pence no acuñó este término él mismo, su postura ha sido citada como ejemplo del fenómeno social que lleva su nombre.
+
 ![EfectoPence](https://integralatampost.s3.amazonaws.com/uploads/article/picture/13177/20181225__De-qu%C3%A9-se-trata-el-efecto-Pence.jpg)
 
 
