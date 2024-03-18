@@ -27,6 +27,16 @@
 
 ><a href="https://latinamericanpost.com/es/americas-es/de-que-se-trata-el-efecto-pence/">Para leer más sobre el efecto Pence y su origen: 🧑‍💼</a>
 
+#<h3>Opinión:</h3>
+***
+<p>Es desafortunado cómo la falta de información, burlas, actitudes machistas, desconcientización social y la desinformación misma ocasionada por medios amarillistas; ocasionan que movimientos sociales y otras luchas similares pierdan apoyo y visibilización; apoyo necesario debido a que al ser víctimas de personajes con mucho poder, estos pueden manipular todo a su antojo para salir impunes.
+
+Muchos ejemplos de este efecto Pence pueden observarse en redes sociales, donde publicaciones relacionadas a movimientos sociales feministas están repletas de comentarios y reacciones negativas y despectivas hacia su causa.
+
+Todo esto conlleva a un ciclo sin terminar de violencia y acoso hacia las mujeres e incluso hombres. Imaginemos... si a una mujer le es difícil denunciar y hacerse visible ante la sociedad para demandar a un victimario, es aún más difícil para los hombres que sufran casos similares, los cuales por lo general son objetivos de burlas y mofas.
+
+Por eso, todo movimiento social que apoye el bienestar tanto mental, físico y social merece todo el apoyo que sea posible, porque al final de cuentas, como sociedad estamos prácticamente relacionados.</p>
+
 #<h3>Referencias bibliográficas</h3>
 ***
 
