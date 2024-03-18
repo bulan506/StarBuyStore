@@ -1,41 +1,122 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" href="HTMLPageDemo.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
-
-
 
 <body>
 
-  <header class="header-container">
-    <div class="search-container">
-      <input type="search" placeholder="Buscar" value=""> <img src="img/Lupa.png" style="width: 20px;">
-      <img src="img/carrito.png" style="width: 20px;">
+  <header class="header-container row">
+    <div class="search-container col-sm-4">
+      <input type="search" placeholder="Buscar" value=""> 
+      <img src="img/Lupa.png" style="width: 20px;" class="col-sm-4">
+      <img src="img/carrito.png" style="width: 20px;" class="col-sm-4">
     </div>
   </header>
 
-    <div class="flex-container">
+    <div class="container row">
        
-        <div class="product"> 
+        <div class="product col-sm-4"> 
           <img src="img/Iphone.jpg" />
+          <p>Iphone</p>
+          <button class="button">Comprar</button>
         </div>
     
-        <div class="product">
+        <div class="product col-sm-4">
           <img src="img/audifonos.jpg" />
+          <p>Audifonos</p>
+          <button class="button">Comprar</button>
         </div>
     
-        <div class="product"> 
+        <div class="product col-sm-4"> 
           <img src="img/mouse.jpg" />
+          <p>Mouse</p>
+          <button class="button">Comprar</button>
         </div>
     
-        <div class="product">
+        <div class="product col-sm-4">
           <img src="img/Pantalla.jpg" />
+          <p>Pantalla</p>
+          <button class="button">Comprar</button>
+        </div>
+
+        <div class="product col-sm-4"> 
+          <img src="img/Headphone.jpg" />
+          <p>Headphone</p>
+          <button class="button">Comprar</button>
+        </div>
+    
+        <div class="product col-sm-4">
+          <img src="img/teclado.jpg" />
+          <p>Teclado</p>
+          <button class="button">Comprar</button>
+        </div>
+    
+        <div class="product col-sm-4"> 
+          <img src="img/Cable.jpg" />
+          <p>Cable USB</p>
+          <button class="button">Comprar</button>
+        </div>
+    
+        <div class="product col-sm-4">
+          <img src="img/Chromecast.jpg" />
+          <p>Chromecast</p>
+          <button class="button">Comprar</button>
         </div>
     </div>
-    
+
+    <div class="bodyTxt">
+      Productos que te pueden interesar
+    </div>
+
+    <div class="slide col-sm-12">
+      <div class="slide-inner">
+          <input class="slide-open" type="radio" id="slide-1" 
+                name="slide" aria-hidden="true" hidden="" checked="checked">
+          <div class="slide-item">
+              <img src="img/mouse.jpg">
+              <label class="slide-text col-sm-6">Mouse</label>
+          </div>
+          <input class="slide-open" type="radio" id="slide-2" 
+                name="slide" aria-hidden="true" hidden="">
+          <div class="slide-item">
+              <img src="img/Iphone.jpg">
+              <label class="slide-text col-sm-6">Iphone</label>
+          </div>
+          <input class="slide-open" type="radio" id="slide-3" 
+                name="slide" aria-hidden="true" hidden="">
+          <div class="slide-item">
+              <img src="img/Headphone.jpg">
+              <label class="slide-text col-sm-6">Headphone</label>
+          </div>
+          <label for="slide-3" class="slide-control prev control-1">‹</label>
+          <label for="slide-2" class="slide-control next control-1">›</label>
+          <label for="slide-1" class="slide-control prev control-2">‹</label>
+          <label for="slide-3" class="slide-control next control-2">›</label>
+          <label for="slide-2" class="slide-control prev control-3">‹</label>
+          <label for="slide-1" class="slide-control next control-3">›</label>
+          <ol class="slide-indicador">
+              <li>
+                  <label for="slide-1" class="slide-circulo">•</label>
+              </li>
+              <li>
+                  <label for="slide-2" class="slide-circulo">•</label>
+              </li>
+              <li>
+                  <label for="slide-3" class="slide-circulo">•</label>
+              </li>
+          </ol>
+      </div>
+  </div>
+
+    <footer class="footer-container">
+      <p>Derechos reservados, 2024</p>
+    </footer>
 </body>
+
 </html>
