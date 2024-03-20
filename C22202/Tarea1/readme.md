@@ -3,10 +3,10 @@
 ## Lista de Contenidos
 
 - [Movimiento #MeToo](#movimiento-metoo)
-    - [¿Qué es?](#¿qué-es)
-    - [¿Cómo surgió?](#¿cómo-surgió)
+    - [¿Qué es?](#qué-es)
+    - [¿Cómo surgió?](#cómo-surgió)
 - [Efecto Pence](#efecto-pence)
-    - [¿Qué es?](#c2bfquc3a9-es-1)
+    - [¿Qué es?](#qué-es-1)
 - [Opinion personal](#opinion-personal)
 - [Referencias Bibliográficas](#referencias-bibliográficas)
 
