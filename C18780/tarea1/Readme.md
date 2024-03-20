@@ -14,7 +14,7 @@ Por otro lado, se puede inferir que no es posible lograr que toda una sociedad a
 
 Por último, para las mujeres famosas que participan en este movimiento, tiene visibilidad publica, acceso a los medios de comunicación, capital social y económico y sobre todo la admiración de la comunidad, por lo tanto, casi cualquier historia que cuenten en público, va a tener una reacción por parte de miles de persona que van a exigir una rendición de cuentas, cosa de la cual la mayoría de mujeres en el mundo carecen, por lo cual se le tendrá que dar definitivamente otro enfoque al movimiento para poder crear un cambio cultural radical.
 
-![#METOO](https://s.rfi.fr/media/display/7b235ada-0ed2-11ea-91d1-005056a9aa4d/w:980/p:16x9/metoo-moving-forward-vs3.jpg)
+<img src="https://s.rfi.fr/media/display/7b235ada-0ed2-11ea-91d1-005056a9aa4d/w:980/p:16x9/metoo-moving-forward-vs3.jpg" alt="#METOO" width="300" height="200">
 
 ## El _efecto Pence_ : Los hombres (poderosos) que evitan a las mujeres
 Se entiende que el _efecto Pence_, son comportamientos evitativos que tienen los hombres con poder con su entorno, para no tener ningún tipo de mal entendido o acusación por parte de las mujeres.
