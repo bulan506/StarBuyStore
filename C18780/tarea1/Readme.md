@@ -25,7 +25,7 @@ Por un lado, es cierto que las mujeres por muchos años han sido victimas justam
 
 En conclusión, este tipo de temas siempre van a ser muy controversiales porque no se pueden explicar de forma generalizada. Cada historia es diferente, si bien es entendible evitar los problemas, llegar al extremo de excluir del trabajo a muchas personas por un posible que dirán, es una actitud muy curiosa de alguien presuntamente inocente y profesional.
 
-![#METOO](https://phantom-elmundo.unidadeditorial.es/6118f600810c3733b4822d96a50c9f80/resize/828/f/webp/assets/multimedia/imagenes/2019/05/13/15577363475231.jpg)
+<img src="https://phantom-elmundo.unidadeditorial.es/6118f600810c3733b4822d96a50c9f80/resize/828/f/webp/assets/multimedia/imagenes/2019/05/13/15577363475231.jpg" alt="Efecto Pense" width="300" height="200">
 
 ## Bibliografía
 - Ceballos, N. (2019, January 16). El efecto Pence: Los hombres (poderosos) que evitan a las mujeres. [_GQ España_](https://www.revistagq.com/noticias/politica/articulos/efecto-pence-hombres-poderosos-evitan-mujeres/32690).
