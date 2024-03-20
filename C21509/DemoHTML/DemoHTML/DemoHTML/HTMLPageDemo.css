@@ -1,18 +1,26 @@
 .header-container {
    background-color: #9b9b9b  ; 
+   background-color: #9b9b9b  ; 
    padding: 20px; 
    width: 100%;
 }
 
  .container {
+ .container {
     width: 100%;
+   /* display: flex;*/
+    /*flex-wrap: wrap;*/
    /* display: flex;*/
     /*flex-wrap: wrap;*/
     margin: 50px;
     /*row-gap: 50px;
+    /*row-gap: 50px;
     column-gap: 10px;
     align-items: center;
     */
+
+    /* Lo comentado era lo qe pertenecia a flex*/
+    
 
     /* Lo comentado era lo qe pertenecia a flex*/
  }
@@ -27,7 +35,17 @@
    text-align: center;
    border: 1px solid black;
 }
+   width: 100%;
+   text-align: center;
+   border: 1px solid black;
+}
 
+.product img{
+   width: 100%;
+   text-align: center;
+   height: 200px;
+   object-fit: contain; /*Para que el objeto se adapte al contenedor y no se deforme tanto*/
+}
 .product img{
    width: 100%;
    text-align: center;
