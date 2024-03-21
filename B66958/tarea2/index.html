@@ -11,6 +11,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Agregar Babel para compilar JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 </head>
 <header>
   <div class="header">
@@ -80,148 +84,244 @@
       </div>
     </div>
   </nav>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
-      </div>
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
-      </div>
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
-      </div>
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
-      </div>
-    </div>
-    <div class="row">
-      <h1>Productos más comprados</h1>
-    </div>
-    <div class="row">
-      <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
-            aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg" width="100%">
-            <div class="container">
-              <div class="carousel-caption">
-                <h1>Producto 1</h1>
-                <p class="opacity-75">Precio: $75</p>
-                <p class="opacity-75">Descripción: Mouse</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Comprar</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img
-              src="https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$"
-              width="100%">
-            <div class="container">
-              <div class="carousel-caption">
-                <h1>Producto 2</h1>
-                <p class="opacity-75">Precio: $700</p>
-                <p class="opacity-75">Descripción: Monitor</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Comprar</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img
-              src="https://media.steelseriescdn.com/blog/posts/how-to-choose-your-mousepad/38569118cb1443abb9b88cf9b3f10da0.jpg"
-              width="100%">
-            </svg>
-            <div class="container">
-              <div class="carousel-caption">
-                <h1>Producto 3</h1>
-                <p class="opacity-75">Precio: $30</p>
-                <p class="opacity-75">Descripción: Mousepad</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Comprar</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
+    <div class="container">
+
+      <div id="root"> </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
       </div>
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
+      <div class="row">
+        <h1>Productos más comprados</h1>
       </div>
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
+      <div class="row">
+        <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+              aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg" width="100%">
+              <div class="container">
+                <div class="carousel-caption">
+                  <h1>Producto 1</h1>
+                  <p class="opacity-75">Precio: $75</p>
+                  <p class="opacity-75">Descripción: Mouse</p>
+                  <p><a class="btn btn-lg btn-primary" href="#">Comprar</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img
+                src="https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$"
+                width="100%">
+              <div class="container">
+                <div class="carousel-caption">
+                  <h1>Producto 2</h1>
+                  <p class="opacity-75">Precio: $700</p>
+                  <p class="opacity-75">Descripción: Monitor</p>
+                  <p><a class="btn btn-lg btn-primary" href="#">Comprar</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img
+                src="https://media.steelseriescdn.com/blog/posts/how-to-choose-your-mousepad/38569118cb1443abb9b88cf9b3f10da0.jpg"
+                width="100%">
+              </svg>
+              <div class="container">
+                <div class="carousel-caption">
+                  <h1>Producto 3</h1>
+                  <p class="opacity-75">Precio: $30</p>
+                  <p class="opacity-75">Descripción: Mousepad</p>
+                  <p><a class="btn btn-lg btn-primary" href="#">Comprar</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
       </div>
-      <div class="col-md-3">
-        <h1>Producto</h1>
-        <p>Precio: $200</p>
-        <p>Descripción: un producto</p>
-        <img
-          src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
-          width="230" height="110">
-        <button>Comprar</button>
+  
+      <div class="row">
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
+        <div class="col-md-3">
+          <h1>Producto</h1>
+          <p>Precio: $200</p>
+          <p>Descripción: un producto</p>
+          <img
+            src="https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png"
+            width="230" height="110">
+          <button>Comprar</button>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
+    </div>
 </body>
+<script type="text/babel">
+  const products = [
+    { id: 1, name: 'Producto 1', description: 'Un producto', imageUrl: 'https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg', price: 75.0 },
+    { id: 2, name: 'Producto 2', description: 'Un producto', imageUrl: 'https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$', price: 700.0 },
+    { id: 3, name: 'Producto 3', description: 'Un producto', imageUrl: 'https://media.steelseriescdn.com/blog/posts/how-to-choose-your-mousepad/38569118cb1443abb9b88cf9b3f10da0.jpg', price: 30.0 },
+    { id: 4, name: 'Producto 4', description: 'Un producto', imageUrl: 'https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png', price: 30.0 },
+    { id: 5, name: 'Producto 5', description: 'Un producto', imageUrl: 'https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg', price: 75.0 },
+    { id: 6, name: 'Producto 6', description: 'Un producto', imageUrl: 'https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$', price: 700.0 },
+    { id: 7, name: 'Producto 7', description: 'Un producto', imageUrl: 'https://media.steelseriescdn.com/blog/posts/how-to-choose-your-mousepad/38569118cb1443abb9b88cf9b3f10da0.jpg', price: 30.0 },
+    { id: 8, name: 'Producto 8', description: 'Un producto', imageUrl: 'https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png', price: 30.0 },
+    { id: 9, name: 'Producto 9', description: 'Un producto', imageUrl: 'https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg', price: 75.0 },
+    { id: 10, name: 'Producto 10', description: 'Un producto', imageUrl: 'https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$', price: 700.0 },
+    { id: 11, name: 'Producto 11', description: 'Un producto', imageUrl: 'https://media.steelseriescdn.com/blog/posts/how-to-choose-your-mousepad/38569118cb1443abb9b88cf9b3f10da0.jpg', price: 30.0 },
+    { id: 12, name: 'Producto 12', description: 'Un producto', imageUrl: 'https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png', price: 30.0 },
+  ];
+
+  const Product = ({ product }) => {
+    const { name, description, imageUrl, price } = product;
+    return (
+      <div className="col-md-3">
+        <h1>{product.name}</h1>
+        <p>Precio: ${product.price}</p>
+        <p>Descripción: {product.description}</p>
+        <img
+          src={product.imageUrl}
+          width="230" height="110" />
+        <button>Comprar</button>
+      </div>
+    );
+  };
+
+  const MyRow = () => {
+    return (
+      <div className="row">
+        {products.map(product => <Product key={product.id} product={product}/>)}
+        </div>
+    );
+  };
+
+  const CarouselItem = ({ active }) => {
+    return <div className={active ? "carousel-item active" : "carousel-item" }>
+              <img src={product.imageUrl} width="100%"/>
+              <div className="container">
+                <div className="carousel-caption">
+                  <h1>{product.name}</h1>
+                  <p className="opacity-75">Precio: ${product.price}</p>
+                  <p className="opacity-75">Descripción: {product.description}</p>
+                  <p><a className="btn btn-lg btn-primary" href="#">Comprar</a></p>
+                </div>
+              </div>
+            </div>
+  }
+
+  const Carousel = () => {
+    return (
+      <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
+          <div className="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" className="active" aria-current="true"
+              aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+
+          <div className="carousel-inner">
+            <CarouselItem/>
+            </div>
+
+            <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
+          </button>
+          </div>
+    );
+  }
+
+  const App = () => {
+    return (
+      <div>
+        <h1>Lista de productos</h1>
+        {/*<MyRow></MyRow>*/}
+        <Carousel/>
+        </div>
+    );
+  };
+
+  ReactDOM.render(<App/>, document.getElementById('root'));
+
+</script>
 <footer>
   <div class="footer">
 
