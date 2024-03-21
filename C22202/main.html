@@ -81,47 +81,105 @@
 		<script type="text/babel">
 			const carrouselItems = [
 				{
-					id: 1,
-					imgSrc: Producto1.jpeg
+					id: 0,
+					imgSrc: "Producto1.jpeg"
 				},
 				{
-					id: 2,
+					id: 1,
 					imgSrc: "https://cdn.mos.cms.futurecdn.net/vhvu7HGyknSTnuQWhjxarS-650-80.png.webp"
 				},
 				{
-					id: 3,
+					id: 2,
 					imgSrc: "https://i.blogs.es/ed843e/superpc-ap/1366_2000.jpeg"
+				},
+				{
+					id: 4,
+					imgSrc: "https://cdn.mos.cms.futurecdn.net/vhvu7HGyknSTnuQWhjxarS-650-80.png.webp"
 				}
 			];
 
-			const carrousel = ({ carrouselItem }) => {
+			const FstItem = ({ carrouselItem }) => {
+				const { id, imgSrc } = carrouselItem;
+
+				return (
+					<div className="carousel-item active">
+						<img className="d-block w-100" src={carrouselItem.imgSrc} width="100%" />
+					</div>
+
+				)
+			};
+
+			const ScdItem = ({ carrouselItem }) => {
 				const { id, imgSrc } = carrouselItem;
 
 				return (
 					<div className="carousel-item">
-						<img className="d-block w-100"
-							src={carrouselItem.imgSrc} width="100%" />
+						<img className="d-block w-100" src={carrouselItem.imgSrc} width="100%" />
 					</div>
 				)
 			};
 
-			const carrouselApp = () => {
+			const Carrousel = ({ carrouselItem }) => {
+				const { id, imgSrc } = carrouselItem;
+
+				let content;
+
+				if (carrouselItem.id === 0) {
+					content = <FstItem carrouselItem={carrouselItem} />
+				} else {
+					content = <ScdItem carrouselItem={carrouselItem} />
+				}
+
 				return (
-					<div>
-						<h1>Lista de productos</h1>
-						<div className="row">
-							{products.map(product =>
-								<Product key={product.id} product={product} />
+					content
+				)
+			};
+
+			const Indicators = ({ carrouselItem }) => {
+				const { id, imgSrc } = carrouselItem;
+
+				let content;
+
+				if (carrouselItem.id === 0) {
+					content = <li data-target="#carrouselReact" data-slide-to={carrouselItem.id} className="active"></li>
+				} else {
+					content = <li data-target="#carrouselReact" data-slide-to={carrouselItem.id}></li>
+				}
+
+				return (
+					content
+				)
+			};
+
+			const CarrouselApp = () => {
+				return (
+					<div id="carrouselReact" className="carousel slide mb-6" data-ride="carousel">
+						<ol className="carousel-indicators">
+							{carrouselItems.map(carrouselItem =>
+								<Indicators key={carrouselItem.id} carrouselItem={carrouselItem} />
+							)}
+						</ol>
+						<div className="carousel-inner">
+							{carrouselItems.map(carrouselItem =>
+								<Carrousel key={carrouselItem.id} carrouselItem={carrouselItem} />
 							)}
 						</div>
+						<a className="carousel-control-prev" href="#carrouselReact" role="button" data-slide="prev">
+							<span className="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span className="sr-only">Previous</span>
+						</a>
+						<a className="carousel-control-next" href="#carrouselReact" role="button" data-slide="next">
+							<span className="carousel-control-next-icon" aria-hidden="true"></span>
+							<span className="sr-only">Next</span>
+						</a>
 					</div>
 				);
 			};
 
-			ReactDOM.render(<carrouselApp />, document.getElementById('carrousel'))
+			ReactDOM.render(<CarrouselApp />, document.getElementById('carrousel'))
 		</script>
 
-
+		<h1>Carrousel Viejo</h1>
 		<div id="carouselExampleIndicators" class="carousel slide mb-6" data-ride="carousel">
 			<ol class="carousel-indicators">
 				<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -251,8 +309,9 @@
 
 		</script>
 
-		<div id="root"></div>
+		<h1>Carrousel con react</h1>
 		<div id="carrousel"></div>
+		<div id="root"></div>
 
 	</div>
 	<footer>
