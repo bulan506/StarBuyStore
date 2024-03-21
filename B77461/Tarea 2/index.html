@@ -54,11 +54,11 @@
   <h1></h1>
   <h1></h1>
 
-
   <div class="container">
     <div class="row">
       <h1>Los más Populares</h1>
     </div>
+
   <div class="containerC">
     <div class="row">
       <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
@@ -136,8 +136,16 @@
       { id: 5, name: "Producto 5", price: 15, description: "Descripción del producto 5", image: "img/amazonProducto.jpg" },
       { id: 6, name: "Producto 6", price: 15, description: "Descripción del producto 6", image: "img/amazonProducto.jpg" },
       { id: 7, name: "Producto 7", price: 15, description: "Descripción del producto 7", image: "img/amazonProducto.jpg" },
-      { id: 8, name: "Producto 8", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" }
+      { id: 8, name: "Producto 8", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
+      { id: 9, name: "Producto 9", price: 55, description: "Headsets", image: "img/Producto1.jpg", active:true },
+      { id: 10, name: "Producto 10", price: 2000, description: "Laptop", image: "img/Producto2.jpg", active:true },
+      { id: 11, name: "Producto 11", price: 80, description: "Teclado", image: "img/Producto3.jpg", active:true }
     ];
+
+    // Lista de Productos para el Carrusel
+  const carouselProducts = [
+    
+  ];
   
     //Componente Producto
     const Product = ({ product }) => {
@@ -155,10 +163,12 @@
       );
     }
 
+
    
 // Componente principal
 const App = () => {
   return (
+    
     <div className="row" style={{ backgroundColor: 'white', alignItems: 'center', height: 'auto', padding: 'auto', width: '100%' }}>
       <h1></h1>
       <h1></h1>
@@ -167,9 +177,10 @@ const App = () => {
         <Product key={product.id} product={product} />
       ))}
     </div>
+
+    
   );
 }
-
 
   ReactDOM.render(<App/>, document.getElementById('root'));
   </script>
