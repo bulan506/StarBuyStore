@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="products.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!--React-->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Agregar Babel para compilar JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 </head>
 
 <body>
@@ -117,239 +131,11 @@
 
         <!-- Grid container productos-->
         <div class="container-fluid bg-trasparent my-4 p-3" style="position: relative;">
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">ASUS</span>
-                                <span class="float-end price-hp">₡ 489,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Modelo: ASUS TUF GAMING F15</p>
-                                    <p>Pantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz</p>
-                                    <p>Procesador: Intel Core i5 12500H</p>
-                                    <p>Memoria: 8 GB DDR4 3200</p>
-                                    <p>Gráficos: NVIDIA GeForce RTX 3050 4 GB</p>
-                                    <p>SSD: 512 GB M.2 NVME</p>
-                                    <p>Conectividad: WIFI 6 _ Bluetooth 5.1</p>
-                                    <p>Sistema Operativo: Windows 11</p>
-                                    <p>Thunderbolt 4</p>
-                                    <p>Audio: Dolby Atmos</p>
-                                    <p>Teclado: Iluminado RGB</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/34549-thickbox_default/lenovo-loq-15ir8-i5-12450h-8-gb-ssd-rtx-3050-6-gb-144-hz-storm-grey.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">LENOVO</span>
-                                <span class="float-end price-hp">₡ 465,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Modelo: LENOVO LOQ 15IR8</p>
-                                    <p>Pantalla: 15.6 pulgadas _ 1920 x 1080 resolución - 144 Hz IPS</p>
-                                    <p>Procesador: Intel Core i5 12450H</p>
-                                    <p>Memoria: 8 GB DDR5</p>
-                                    <p>Graficos: NVIDIA GeForce RTX 3050 6 GB</p>
-                                    <p>Disco SSD: 512 GB M.2 NVME PCIe 4.0</p>
-                                    <p>Sistema Operativo: Windows 11</p>
-                                    <p>Conectividad: Wi-Fi + Bluetooth</p>
-                                    <p>Teclado: retroiluminado blanco</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/30589-large_default/gigabyte-aorus-17x-axf-i9-13900hx-rtx-4080.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">GIGABYTE</span>
-                                <span class="float-end price-hp">₡ 1,899,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Modelo: GIGABYTE AORUS 17X AXF</p>
-                                    <p>Pantalla: 17.3 pulgadas _ 2560 x 1440 resolución - 240Hz</p>
-                                    <p>Procesador: Intel Core i9 13900HX</p>
-                                    <p>Memoria: 16 GB DDR5 4800</p>
-                                    <p>Graficos: NVIDIA GeForce RTX 4080 12 GB</p>
-                                    <p>Disco SSD: 1 TB M.2 NVME PCIe 4.0</p>
-                                    <p>Sistema Operativo: Windows 11</p>
-                                    <p>Conectividad: Wi-Fi 6E + Bluetooth 5.2</p>
-                                    <p>Teclado Iluminado RGB</p>
-                                    <p>Audio DTS:X® Ultra</p>
-                                    <p>100% sRGB, TÜV Rheinland-certified</p>
-                                    <p>HDMI 2.1</p>
-                                    <p>Thunderbolt 4</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/34559-large_default/msi-geforce-rtx-3050-ventus-2x-6-gb-oc.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">MSI</span>
-                                <span class="float-end price-hp">₡ 115,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Fabricante: MSI</p>
-                                    <p>GPU: NVIDIA GeForce RTX 3050</p>
-                                    <p>Memoria: 6 GB GDDR6</p>
-                                    <p>Boost Clock: 1492 MHz</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">ASUS</span>
-                                <span class="float-end price-hp">₡ 489,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Modelo: ASUS TUF GAMING F15</p>
-                                    <p>Pantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz</p>
-                                    <p>Procesador: Intel Core i5 12500H</p>
-                                    <p>Memoria: 8 GB DDR4 3200</p>
-                                    <p>Gráficos: NVIDIA GeForce RTX 3050 4 GB</p>
-                                    <p>SSD: 512 GB M.2 NVME</p>
-                                    <p>Conectividad: WIFI 6 _ Bluetooth 5.1</p>
-                                    <p>Sistema Operativo: Windows 11</p>
-                                    <p>Thunderbolt 4</p>
-                                    <p>Audio: Dolby Atmos</p>
-                                    <p>Teclado: Iluminado RGB</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/34549-thickbox_default/lenovo-loq-15ir8-i5-12450h-8-gb-ssd-rtx-3050-6-gb-144-hz-storm-grey.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">LENOVO</span>
-                                <span class="float-end price-hp">₡ 465,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Modelo: LENOVO LOQ 15IR8</p>
-                                    <p>Pantalla: 15.6 pulgadas _ 1920 x 1080 resolución - 144 Hz IPS</p>
-                                    <p>Procesador: Intel Core i5 12450H</p>
-                                    <p>Memoria: 8 GB DDR5</p>
-                                    <p>Graficos: NVIDIA GeForce RTX 3050 6 GB</p>
-                                    <p>Disco SSD: 512 GB M.2 NVME PCIe 4.0</p>
-                                    <p>Sistema Operativo: Windows 11</p>
-                                    <p>Conectividad: Wi-Fi + Bluetooth</p>
-                                    <p>Teclado: retroiluminado blanco</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/30589-large_default/gigabyte-aorus-17x-axf-i9-13900hx-rtx-4080.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">GIGABYTE</span>
-                                <span class="float-end price-hp">₡ 1,899,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Modelo: GIGABYTE AORUS 17X AXF</p>
-                                    <p>Pantalla: 17.3 pulgadas _ 2560 x 1440 resolución - 240Hz</p>
-                                    <p>Procesador: Intel Core i9 13900HX</p>
-                                    <p>Memoria: 16 GB DDR5 4800</p>
-                                    <p>Graficos: NVIDIA GeForce RTX 4080 12 GB</p>
-                                    <p>Disco SSD: 1 TB M.2 NVME PCIe 4.0</p>
-                                    <p>Sistema Operativo: Windows 11</p>
-                                    <p>Conectividad: Wi-Fi 6E + Bluetooth 5.2</p>
-                                    <p>Teclado Iluminado RGB</p>
-                                    <p>Audio DTS:X® Ultra</p>
-                                    <p>100% sRGB, TÜV Rheinland-certified</p>
-                                    <p>HDMI 2.1</p>
-                                    <p>Thunderbolt 4</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img src="https://extremetechcr.com/tienda/34559-large_default/msi-geforce-rtx-3050-ventus-2x-6-gb-oc.jpg"
-                            class="card-img-top" alt="laptop-notebook-png">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <span class="float-start badge rounded-pill bg-primary">MSI</span>
-                                <span class="float-end price-hp">₡ 115,000</span>
-                            </div>
-                            <div class="specifications">
-                                <div class="specifications-content">
-                                    <p>Fabricante: MSI</p>
-                                    <p>GPU: NVIDIA GeForce RTX 3050</p>
-                                    <p>Memoria: 6 GB GDDR6</p>
-                                    <p>Boost Clock: 1492 MHz</p>
-                                </div>
-                            </div>
-                            <div class="text-center my-4">
-                                <a href="#" class="btn btn-warning">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="root"></div>
         </div>
 
     </header>
+
     <footer class="bg-body-tertiary text-center">
         <!-- Grid container -->
         <div class="container p-4 pb-0">
@@ -425,14 +211,208 @@
         </div>
         <!-- Copyright -->
     </footer>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 </body>
+
+<script type="text/babel">
+    const carousels = [
+        {
+            id: 1,
+            imageUrl: "https://images.acer.com/is/image/acer/swift-go-14-Intel-main-banner_sfg14-73:Primary-Hero-L"
+        },
+        {
+            id: 2,
+            imageUrl: "https://images.samsung.com/is/image/samsung/assets/latin/The-Freestyle-2nd-Gen-SUGA-desktopBanner.jpg?imwidth=76"
+        }
+    ]
+
+    const products = [
+        {
+            id: 1,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 2,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 3,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 4,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 5,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 6,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 7,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 8,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 9,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 10,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 11,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 12,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+        {
+            id: 13,
+            name: "ASUS",
+            description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
+            imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+            price: 489000
+        },
+    ];
+
+    //Componente react
+    const Carousel = ({ carousel }) => {
+        const { imageUrl } = carousel;
+        return (
+            <div className="container-products">
+                <div id="carouselExampleIndicators" className="carousel slide carousel-fade" data-bs-ride="carousel"
+                    data-interval="5000" data-pause="hover">
+
+                    <div className="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            className="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+                            aria-label="Slide 4"></button>
+                    </div>
+
+                    <div className="carousel-inner">
+                        {carousel.id == 1 ? (
+                            <div className="carousel-item active">
+                                <img src={carousel.imageUrl}
+                                    className="d-block w-100" alt="" />
+                            </div>
+                        ) : (
+                            <div className="carousel-item">
+                                <img src={carousel.imageUrl}
+                                    className="d-block w-100" alt="" />
+                            </div>
+                        )}
+                    </div>
+
+                    <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span className="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
+    const Product = ({ product }) => {
+        const { name, description, imageUrl, price } = product;
+        return (
+            <div className="col-sm-3">
+                <div className="card">
+                    <img src={product.imageUrl}
+                        className="card-img-top" alt={product.name} />
+                    <div className="card-body">
+                        <div className="mb-3">
+                            <span className="float-start badge rounded-pill bg-primary">{product.name}</span>
+                            <span className="float-end price-hp">CRC {product.price}</span>
+                        </div>
+                        <div className="specifications">
+                            <div className="specifications-content">
+                                <p>{product.description}</p>
+                            </div>
+                        </div>
+                        <div className="text-center my-4">
+                            <a href="#" className="btn btn-warning">Buy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    //Componente principal
+    const ProductsRow = () => {
+        return (
+            <div className="row">
+                {products.map(product =>
+                    //<Product key={product.id} product={product} />
+                    <Carousel key={Carousel.id} carousel={carousel} />
+                )}
+            </div>
+        );
+    };
+
+    //Componente principal
+    const App = () => {
+        return (
+            <ProductsRow />
+        );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
 
 </html>
