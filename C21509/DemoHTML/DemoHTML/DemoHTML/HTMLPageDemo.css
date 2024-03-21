@@ -6,7 +6,6 @@
 }
 
  .container {
- .container {
     width: 100%;
    /* display: flex;*/
     /*flex-wrap: wrap;*/
@@ -23,7 +22,7 @@
     
 
     /* Lo comentado era lo qe pertenecia a flex*/
- }
+   }
 
  .search-container {
    text-align: right; 
@@ -35,17 +34,7 @@
    text-align: center;
    border: 1px solid black;
 }
-   width: 100%;
-   text-align: center;
-   border: 1px solid black;
-}
 
-.product img{
-   width: 100%;
-   text-align: center;
-   height: 200px;
-   object-fit: contain; /*Para que el objeto se adapte al contenedor y no se deforme tanto*/
-}
 .product img{
    width: 100%;
    text-align: center;

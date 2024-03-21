@@ -7,17 +7,113 @@
     <link rel="stylesheet" href="HTMLPageDemo.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Agregar Babel para compilar JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 </head>
 
 <body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const products= [
 
-  <header class="header-container row">
-    <div class="search-container col-sm-4">
-      <input type="search" placeholder="Buscar" value=""> 
-      <img src="img/Lupa.png" style="width: 20px;" class="col-sm-4">
-      <img src="img/carrito.png" style="width: 20px;" class="col-sm-4">
+    {
+        id: 1,
+        name: "Iphone",
+        imageURL: "img/Iphone.jpg",
+        price: 200
+      },
+      
+      {
+        id: 2,
+        name: "Audifono",
+        imageURL: "img/audifonos.jpg",
+        price: 100
+      },
+
+     {
+        id: 3,
+        name: "Mouse",
+        imageURL: "img/mouse.jpg",
+        price: 35
+      },
+      
+      {
+        id: 4,
+        name: "Pantalla",
+        imageURL: "img/Pantalla.jpg",
+        price: 68
+
+      },
+      
+      {
+        id: 5,
+        name: "Headphone",
+        imageURL: "img/Headphone.jpg",
+        price: 35
+
+      },
+
+      {
+        id: 6,
+        name: "Teclado",
+        imageURL: "img/teclado.jpg",
+        price: 95
+
+      },
+      
+      {
+        id: 7,
+        name: "Cable USB",
+        imageURL: "img/Cable.jpg",
+        price: 10
+      },
+      
+      {
+        id: 8,
+        name:"Chromecast",
+        imageURL:"img/Chromecast.jpg",
+        price:150
+      },
+
+      {
+        id: 9
+      }
+
+    ];
+
+    const Product = ({ product }) => {
+      const{name, imageURL, price}= product;
+      return(
+        <div class="products col-sm-6">
+          <div class="product col-sm-6"><img src={imageURL} /> </div>
+          <p class="col-sm-6">{name}</p>
+          <p class="col-sm-6">Precio: ${price}</p>
+          <button class="button">Comprar</button> 
+        </div>
+      );
+    };
+
+    //Componente principal
+    const App= () => {
+      return(
+        <div>
+          <h1>Lista de Productos</h1>
+          <div className='row' style={{display: 'flex', flexWrap: 'wrap' }}>
+            {products.map(product =>  
+              <Product key={product.id} product={product}/>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+
+  </script>   
+
   <header class="header-container row">
     <div class="search-container col-sm-4">
       <input type="search" placeholder="Buscar" value=""> 
@@ -27,9 +123,7 @@
   </header>
 
     <div class="container row">
-    <div class="container row">
        
-        <div class="product col-sm-4"> 
         <div class="product col-sm-4"> 
           <img src="img/Iphone.jpg" />
           <p>Iphone</p>
@@ -37,24 +131,17 @@
         </div>
     
         <div class="product col-sm-4">
-        <div class="product col-sm-4">
           <img src="img/audifonos.jpg" />
-          <p>Audifonos</p>
-          <button class="button">Comprar</button>
           <p>Audifonos</p>
           <button class="button">Comprar</button>
         </div>
     
-        <div class="product col-sm-4"> 
         <div class="product col-sm-4"> 
           <img src="img/mouse.jpg" />
           <p>Mouse</p>
           <button class="button">Comprar</button>
-          <p>Mouse</p>
-          <button class="button">Comprar</button>
         </div>
     
-        <div class="product col-sm-4">
         <div class="product col-sm-4">
           <img src="img/Pantalla.jpg" />
           <p>Pantalla</p>
