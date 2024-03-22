@@ -54,78 +54,7 @@
   <h1></h1>
   <h1></h1>
 
-  <div class="container">
-    <div class="row">
-      <h1>Los más Populares</h1>
-    </div>
-
-  <div class="containerC">
-    <div class="row">
-      <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
-            aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="img/Producto1.jpg" width="100%">
-            <div class="container">
-              <div class="carousel-caption">
-                <h1>Producto 1</h1>
-                <p class="opacity-75">Precio: $55</p>
-                <p class="opacity-75">Descripción: Headsets</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Ver</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img
-              src="img/Producto2.jpg"
-              width="100%">
-            <div class="container">
-              <div class="carousel-caption">
-                <h1>Producto 2</h1>
-                <p class="opacity-75">Precio: $2000</p>
-                <p class="opacity-75">Descripción: Laptop</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Ver</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img
-              src="img/Producto3.jpg"
-              width="100%">
-            </svg>
-            <div class="container">
-              <div class="carousel-caption">
-                <h1>Producto 3</h1>
-                <p class="opacity-75">Precio: $80</p>
-                <p class="opacity-75">Descripción: Teclado</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Ver</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-    </div>
-    <h1></h1>
-      <h1></h1>
-      <h1></h1>
-      <h1></h1>
-  </div>
-
-
-  <div id="root"> </div>
+  <div id="root"></div>
   <script type="text/babel">
     // Lista de Productos
     const products = [
@@ -137,52 +66,87 @@
       { id: 6, name: "Producto 6", price: 15, description: "Descripción del producto 6", image: "img/amazonProducto.jpg" },
       { id: 7, name: "Producto 7", price: 15, description: "Descripción del producto 7", image: "img/amazonProducto.jpg" },
       { id: 8, name: "Producto 8", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
-      { id: 9, name: "Producto 9", price: 55, description: "Headsets", image: "img/Producto1.jpg", active:true },
-      { id: 10, name: "Producto 10", price: 2000, description: "Laptop", image: "img/Producto2.jpg", active:true },
-      { id: 11, name: "Producto 11", price: 80, description: "Teclado", image: "img/Producto3.jpg", active:true }
+      { id: 9, name: "Producto 9", price: 55, description: "Headsets", image: "img/Producto1.jpg" },
+      { id: 10, name: "Producto 10", price: 2000, description: "Laptop", image: "img/Producto2.jpg" },
+      { id: 11, name: "Producto 11", price: 80, description: "Teclado", image: "img/Producto3.jpg" }
     ];
 
-    // Lista de Productos para el Carrusel
-  const carouselProducts = [
-    
-  ];
-  
     //Componente Producto
     const Product = ({ product }) => {
       const { id, name, price, description, image } = product;
       return (
-        <div className="col-md-3" >
+        <div className="col-md-3">
           <p>{id}</p>
           <h1>{name}</h1>
           <p>{price}</p>
           <p>{description}</p>
           <img src={image} width={230} height={110} />
-          <button class="buttonProducts1">AGREGAR</button>
-
+          <button className="buttonProducts1">AGREGAR</button>
         </div>
       );
     }
 
+    const MyRow = () => {
+      return (
+        <div className="row">
+          {products.map(product => <Product key={product.id} product={product} />)}
+        </div>
+      );
+    };
 
-   
-// Componente principal
-const App = () => {
-  return (
-    
-    <div className="row" style={{ backgroundColor: 'white', alignItems: 'center', height: 'auto', padding: 'auto', width: '100%' }}>
-      <h1></h1>
-      <h1></h1>
-      <h1>Lista de Productos</h1>
-      {products.map(product => (
-        <Product key={product.id} product={product} />
-      ))}
-    </div>
+    const CarouselItem = ({ product, active }) => {
+      return (
+        <div className={active ? "carousel-item active" : "carousel-item"}>
+          <img src={product.image} width="100%" />
+          <div className="container">
+            <div className="carousel-caption">
+              <h1>{product.name}</h1>
+              <p className="opacity-75">Precio: ${product.price}</p>
+              <p className="opacity-75">Descripción: {product.description}</p>
+              <p><a className="btn btn-lg btn-primary" href="#">Ver</a></p>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
-    
-  );
-}
+    const Carousel = () => {
+      return (
+        <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
+          <div className="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
 
-  ReactDOM.render(<App/>, document.getElementById('root'));
+          <div className="carousel-inner">
+            {products.slice(-3).map((product, index) => <CarouselItem key={index} product={product} active={index === 0} />)}
+          </div>
+
+          <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
+          </button>
+        </div>
+      );
+    }
+
+    // Componente principal
+    const App = () => {
+      return (
+        <div className="container">
+          <h1>Lista de Productos</h1>
+          <MyRow />
+          <Carousel />
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
   </script>
   
 
