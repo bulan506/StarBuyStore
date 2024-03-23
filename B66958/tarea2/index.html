@@ -15,6 +15,8 @@
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <!-- Agregar Babel para compilar JSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
 </head>
 <header>
   <div class="header">
@@ -231,6 +233,7 @@
     </div>
 </body>
 <script type="text/babel">
+
   const products = [
     { id: 1, name: 'Producto 1', description: 'Un producto', imageUrl: 'https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg', price: 75.0 },
     { id: 2, name: 'Producto 2', description: 'Un producto', imageUrl: 'https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$', price: 700.0 },
@@ -256,7 +259,7 @@
         <img
           src={product.imageUrl}
           width="230" height="110" />
-        <button>Comprar</button>
+        <button>Hiciste clic {count} veces</button>
       </div>
     );
   };
