@@ -66,9 +66,13 @@
       { id: 6, name: "Producto 6", price: 15, description: "Descripción del producto 6", image: "img/amazonProducto.jpg" },
       { id: 7, name: "Producto 7", price: 15, description: "Descripción del producto 7", image: "img/amazonProducto.jpg" },
       { id: 8, name: "Producto 8", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
-      { id: 9, name: "Producto 9", price: 55, description: "Headsets", image: "img/Producto1.jpg" },
-      { id: 10, name: "Producto 10", price: 2000, description: "Laptop", image: "img/Producto2.jpg" },
-      { id: 11, name: "Producto 11", price: 80, description: "Teclado", image: "img/Producto3.jpg" }
+      { id: 9, name: "Producto 9", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
+      { id: 10, name: "Producto 10", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
+      { id: 11, name: "Producto 11", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
+      { id: 12, name: "Producto 12", price: 15, description: "Descripción del producto 8", image: "img/amazonProducto.jpg" },
+      { id: 13, name: "Producto 13", price: 55, description: "Headsets", image: "img/Producto1.jpg" },
+      { id: 14, name: "Producto 14", price: 2000, description: "Laptop", image: "img/Producto2.jpg" },
+      { id: 15, name: "Producto 15", price: 80, description: "Teclado", image: "img/Producto3.jpg" }
     ];
 
     //Componente Producto
@@ -87,12 +91,22 @@
     }
 
     const MyRow = () => {
-      return (
-        <div className="row">
-          {products.map(product => <Product key={product.id} product={product} />)}
-        </div>
-      );
-    };
+  const first12Products = products.slice(0, 12);
+  return (
+    <div className="row">
+      {first12Products.map(product => <Product key={product.id} product={product} />)}
+    </div>
+  );
+};
+
+
+   // const MyRow = () => {
+   //   return (
+    //    <div className="row">
+    //      {products.map(product => <Product key={product.id} product={product} />)}
+    //    </div>
+    //  );
+   // };
 
     const CarouselItem = ({ product, active }) => {
       return (
