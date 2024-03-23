@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-	<meta charset="utf-8" />
-	<title>Pagina Web</title>
+	<meta charset="UTF-8" />
+	<title>Library</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 
@@ -13,6 +13,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
+
 
 	<!-- Cargar React. -->
 	<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
@@ -29,7 +30,6 @@
 
 		header {
 			background-color: lightgrey;
-			padding: 20px;
 		}
 
 		footer {
@@ -47,152 +47,271 @@
 		const products = [
 			{
 				id: 1,
-				name: 'Book 1',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Cinder',
+				autor: 'Marissa Meyer',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768889_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 9500
 			},
 			{
 				id: 2,
-				name: 'Book 2',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Scarlet',
+				autor: 'Marissa Meyer',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768896_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 9500
 			},
 			{
 				id: 3,
-				name: 'Book 3',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Cress',
+				autor: 'Marissa Meyer',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768902_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 9500
 			},
 			{
 				id: 4,
-				name: 'Book 4',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Winter',
+				autor: 'Marissa Meyer',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768926_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 11900
 			},
 			{
 				id: 5,
-				name: 'Book 5',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Fairest',
+				autor: 'Marissa Meyer',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250774057_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 8700
 			},
 			{
 				id: 6,
-				name: 'Book 6',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'La Sociedad de la Nieve',
+				autor: 'Pablo Vierci',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9786070794162_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 12800
 			},
 			{
 				id: 7,
-				name: 'Book 7',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'En Agosto nos vemos',
+				autor: 'Gabriel García Márquez',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9786073911290_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 14900
 			},
 			{
 				id: 8,
-				name: 'Book 8',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'El estrecho sendero entre deseos',
+				autor: 'Patrick Rothfuss',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9789585457935_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 12800
 			},
 			{
 				id: 9,
-				name: 'Book 9',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Alas de Sangre',
+				autor: 'Rebecca Yarros',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9788408279990_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 19800
 			},
 			{
 				id: 10,
-				name: 'Book 10',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Corona de Medianoche',
+				autor: 'Sarah J. Mass',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9786073143691_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 15800
 			},
 			{
 				id: 11,
-				name: 'Book 11',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Carta de Amor a los Muertos',
+				autor: "Ava Dellaira",
+				imageurl: 'https://m.media-amazon.com/images/I/41IETN4YxGL._SY445_SX342_.jpg',
+				price: 8900
 			},
 			{
 				id: 12,
-				name: 'Book 12',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
+				name: 'Alicia en el país de las Maravillas',
+				autor: 'Lewis Carrol',
+				imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
+				price: 7900
 			}
 		];
 
-		const products = [
-			{
-				id: 1,
-				name: 'Book 1',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
-			},
-			{
-				id: 2,
-				name: 'Book 2',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
-			},
-			{
-				id: 3,
-				name: 'Book 3',
-				imageurl: 'https://i.etsystatic.com/6131302/r/il/f554be/3919826248/il_794xN.3919826248_453z.jpg',
-				price: 9.99
-			},
-			
-		];
-
 		const Product = ({ product }) => {
-			const { name, imageurl, price } = product;
+			const { name, autor, imageurl, price } = product;
 			return (
 				<div className='col-md-3' style={{ background: 'white', width: '300px', margin: '0.5rem' }}>
 					<img src={imageurl} style={{ margin: '1.4rem', width: '250px', class: 'img-fluid' }} />
-					<h2> {product.name} </h2>
-					<p> Precio: ${product.price}</p>
+					<h2> {name} </h2>
+					<p> Autor: {autor} </p>
+					<p>Precio: ₡{price}</p>
 					<button> Comprar </button>
 				</div>
 			);
 		};
 
+		const Row = () => {
+			return (
+				<div className="row">
+					{products.map(product => (
+						<Product key={product.id} product={product} />
+					))}
+				</div>
+			);
+		};
+
+
 		const App = () => {
 			return (
 				<div>
-					<h1>Lista de Productos </h1>
-					<div className="row" style={{ display: 'flex', flexWrap: 'Wrap' }}>
-						{products.map(product => (
-							<Product key={product.id} product={product} />
-
-						))}
+					<h1>Lista de Libros </h1>
+					<div style={{ display: 'flex', flexWrap: 'Wrap' }}>
+						<Row />
 					</div>
 				</div>
 			);
 		};
 
+
 		ReactDOM.render(<App />, document.getElementById('Start'));
+
+
+
+		//<!--Carrusel con React-->
+
+		const carruselParts = [
+			{
+				id: 0,
+				name: 'Lion',
+				imgurl: 'https://vidanomada.com/wp-content/2012/11/portadas-twitter-5.jpg',
+				description: 'An wild life'
+			},
+			{
+				id: 1,
+				name: 'Turtle',
+				imgurl: 'https://vidanomada.com/wp-content/2012/11/portadas-twitter-2.jpg',
+				description: 'An amazing life'
+			},
+			{
+				id: 2,
+				name: 'Mountain',
+				imgurl: 'https://vidanomada.com/wp-content/2012/11/portadas-twitter-1.jpg',
+				description: 'A beautiful life'
+			}
+		];
+		const CarouselButtons = ({ carruselParts, currentIndex, handleSlide }) => {
+			return (
+				<div>
+					{carruselParts.map((carruselPart, index) => (
+						<button
+							key={index}
+							type="button"
+							data-bs-target="#carouselExample"
+							data-bs-slide-to={index}
+							className={index === currentIndex ? "active" : ""}
+							onClick={() => handleSlide(index)}
+							aria-label={`Slide ${index + 1}`}
+						></button>
+					))}
+				</div>
+			);
+		}; const CarruselComponent = ({ carruselParts }) => {
+			const [currentIndex, setCurrentIndex] = React.useState(0);
+
+			const handlePrev = () => {
+				setCurrentIndex(prevIndex => {
+					if (prevIndex === 0) {
+						return carruselParts.length - 1;
+					} else {
+						return prevIndex - 1;
+					}
+				});
+			};
+
+			const handleNext = () => {
+				setCurrentIndex(prevIndex => {
+					if (prevIndex === 0) {
+						return carruselParts.length - 1;
+					} else {
+						return prevIndex + 1;
+					}
+				});
+			};
+
+			const handleSlide = index => {
+				setCurrentIndex(index);
+			};
+
+			return (
+				<div id="carrouselReact" className="carousel slide mb-6" data-bs-ride="carousel">
+					<ol className="carousel-indicators">
+						<CarouselButtons
+							carruselParts={carruselParts}
+							currentIndex={currentIndex}
+							handleSlide={handleSlide}
+						/>
+					</ol>
+					<div className="carousel-inner">
+						{carruselParts.map((carruselPart, index) => (
+							<div
+								key={index}
+								className={`carousel-item ${index === currentIndex ? "active" : ""}`}>
+								<img className="d-block w-100" src={carruselPart.imgurl} width="100%" alt={carruselPart.name} />
+								<div className="carousel-caption d-none d-md-block" style={{ color: 'white' }}>
+									<h5>{carruselPart.name}</h5>
+									<p>{carruselPart.description}</p>
+								</div>
+							</div>
+						))}
+					</div>
+					<button
+						className="carousel-control-prev"
+						type="button"
+						data-bs-target="#carrouselReact"
+						data-bs-slide="prev"
+						onClick={handlePrev}
+					>
+						<span className="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span className="sr-only">Previous</span>
+					</button>
+					<button
+						className="carousel-control-next"
+						type="button"
+						data-bs-target="#carrouselReact"
+						data-bs-slide="next"
+						onClick={handleNext}
+					>
+						<span className="carousel-control-next-icon" aria-hidden="true"></span>
+						<span className="sr-only">Next</span>
+					</button>
+				</div>
+			);
+		};
+
+		ReactDOM.render(<CarruselComponent carruselParts={carruselParts} />, document.getElementById('Carrusel'));
 
 	</script>
 
 
-
-	<div class="row">
-		<div class="col-sm-2">
-			<img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-				style="height: 35px; margin: 1.4rem; " class="img-fluid">
+	<header>
+		<div class="row">
+			<div class="col-sm-2">
+				<img src="Logo1.jpg" style="height: 75px; width: 200px; margin: 1.4rem; " class="img-fluid">
+			</div>
+			<div class="col-sm-8 d-flex justify-content-center align-items-center">
+				<form class="d-flex justify-content-center">
+					<input type="search" name="search" style="width: 805%;" placeholder="Buscar"></input>
+					<button type="submit">Buscar</button>
+				</form>
+			</div>
+			<div class="col-sm-2 d-flex justify-content-end align-items-center">
+				<button type="button">Cart</button>
+			</div>
 		</div>
-		<div class="col-sm-6">
-			<form>
-				<input type="search" name="search" size="80px"> </input>
-				<input type="submit"></input>
-			</form>
-
-		</div>
-		<div class="col-sm-4">
-			<button type="button" style="text-align: right ;"> Cart</button>
-		</div>
-	</div>
 	</header>
 
-	<div id="Start"></div>
+
+
 	<div class="container">
+		
+		<div id="Start"></div>
+
+		<div id="Carrusel" style="padding: 10px;"></div>
+
 
 		<div class="row">
 			<div class="col-md-3" style="background-color: white; width: 300px; margin: 0.5rem;">
@@ -257,6 +376,9 @@
 				<button>Comprar </button>
 			</div>
 		</div>
+
+
+
 
 		<section style="margin: 25px;">
 			<div id="carouselExample" class="carousel slide carousel-fade">
@@ -309,10 +431,10 @@
 		</section>
 
 		<footer>
-			<div class="row">
-				<div class="col-sm-12">
-					<h5>Dev: Paula Chaves </h5>
-				</div>
+			<div class="text-center p-3">
+
+				<h5 class="text-body">Dev: Paula Chaves </h5>
+
 			</div>
 		</footer>
 	</div>
