@@ -84,17 +84,47 @@
 
     ];
 
+    //Componente Producto
+
     const Product = ({ product }) => {
-      const{name, imageURL, price}= product;
-      return(
-        <div class="products col-sm-6">
-          <div class="product col-sm-6"><img src={imageURL} /> </div>
-          <p class="col-sm-6">{name}</p>
-          <p class="col-sm-6">Precio: ${price}</p>
-          <button class="button">Comprar</button> 
+  if (product.id === 9) {
+    return (
+      <div className="products col-sm-6" style={{ margin: '0 auto' }}>
+        <div id="productsCarouselControl" className="carousel" data-bs-ride="carousel">
+          <div className="carousel-inner">
+            <div className="carousel-item active">
+              <img src="img/Chromecast.jpg" className="d-block w-100"/>
+            </div>
+            <div className="carousel-item">
+              <img src="img/teclado.jpg" className="d-block w-100"/>
+            </div>
+            <div className="carousel-item">
+              <img src="img/Pantalla.jpg" className="d-block w-100" />
+            </div>
+          </div>
+          <button className="carousel-control-prev" type="button" data-bs-target="#productsCarouselControl" data-bs-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button className="carousel-control-next" type="button" data-bs-target="#productsCarouselControl" data-bs-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
+          </button>
         </div>
-      );
-    };
+      </div>
+    );
+  } else {
+    const { name, imageURL, price } = product;
+    return (
+      <div className="products col-sm-6">
+        <div className="product col-sm-6"><img src={imageURL} alt={name} /></div>
+        <p className="col-sm-6">{name}</p>
+        <p className="col-sm-6">Precio: ${price}</p>
+        <button className="button">Comprar</button>
+      </div>
+    );
+  }
+};
 
     //Componente principal
     const App= () => {
