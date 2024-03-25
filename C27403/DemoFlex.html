@@ -185,23 +185,87 @@
             return (
                 <div>
                     <h1>Lista de Productos</h1>
-                    <div className="row" style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <div className="row" style={{ display: 'flex', flexWrap: 'wrap' , textAlign:"center"}}>
                         {products.map((product) => (
                             <Product key={product.id} product={product} />
                         ))}
                     </div>
+                    <div>
+                        <Carousel /></div>
                 </div>
+
             );
         };
 
-        //Renderizar el componente principal en el elemento root
+
+        const carouselImages = [
+            [
+                "https://todoaplazo.com/images/products/2feb67f6-52b9-4931-9900-ace9fab8d79f-AMAZON-37.png",
+                "https://m.media-amazon.com/images/I/616vyWhcZaL._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/717xxg1Qn4L._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/71wl1AtXdCL._AC_SY200_.jpg"
+            ],
+            [
+                "https://m.media-amazon.com/images/I/71CTPbqGkIL._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/61jCoTv9b0L._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/710bNparTlL._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/51kNn7n0dRL._AC_SY200_.jpg"
+            ],
+            [
+                "https://m.media-amazon.com/images/I/81AOpcqJfHL._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/61l7VLu78ZL._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/71lYwpEFaqL._AC_SY200_.jpg",
+                "https://m.media-amazon.com/images/I/81xiJRmOwUL._AC_SY200_.jpg"
+            ],
+        ];
+
+        // Componente Carousel
+        function Carousel() {
+            return (
+                <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
+                    <div id="myCarousel" className="carousel carousel-dark slide" data-bs-ride="carousel">
+                        <ol className="carousel-indicators">
+                            {carouselImages.map((_, index) => (
+                                <li key={index} data-bs-target="#myCarousel" data-bs-slide-to={index} className={index === 0 ? 'active' : ''}></li>
+                            ))}
+                        </ol>
+                        <div className="carousel-inner" style={{ backgroundColor: "white"}}>
+                            <div><h3 style={{margin:"0.5rem"}}>Popular</h3></div>
+                            {carouselImages.map((imageGroup, index) => (
+                                <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                                    <div className="row" style={{ backgroundColor: "white", textAlign: "center", height: "250px" }}>
+                                        {imageGroup.map((imageUrl, i) => (
+                                            <div key={i} className="col-md-3" style={{ textAlign: "center" }}>
+                                                <img src={imageUrl} alt={`Slide ${index + 1}`} className="img-fluid" style={{ height: "190px" }} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <a className="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Previous</span>
+                        </a>
+                        <a className="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Next</span>
+                        </a>
+                    </div>
+                </div>
+            );
+        }
         ReactDOM.render(<APP />, document.getElementById('products-container'));
+
     </script>
+    <br>
+    <footer style="background-color: rgb(48, 47, 47); height: 70px;">
+        <br>
+        <h3 style="text-align: center; color: white; font-family: fantasy;">sigystore.com</h3>
+    </footer>
 
-
-
-    <div class="container">
-        <!-- <div class="row">
+    <!-- <div class="container"> -->
+    <!-- <div class="row">
             <div class="col-md-3" style="background-color: white; width: 260px; margin: 0.5rem;">
                 <h4 style="font-family: 'Trebuchet MS', sans-serif">Towel</h4>
                 <div style="text-align: center;"><img
@@ -277,7 +341,7 @@
             </div>
         </div>
     </div> -->
-        <br>
+    <!-- <br>
         <div class="container-lg my-3" style="background-color: white;">
             <div id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
 
@@ -362,12 +426,12 @@
                     <span class="carousel-control-next-icon"></span>
                 </a>
             </div>
-        </div>
+        </div> -->
 
-        <footer style="background-color: rgb(48, 47, 47); height: 70px;">
+    <!-- <footer style="background-color: rgb(48, 47, 47); height: 70px;">
             <br>
             <h3 style="text-align: center; color: white; font-family: fantasy;">sigystore.com</h3>
-        </footer>
+        </footer> -->
 </body>
 
 </html>
