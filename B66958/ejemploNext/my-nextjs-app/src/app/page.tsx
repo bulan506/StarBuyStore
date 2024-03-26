@@ -1,10 +1,12 @@
 'use client';
-import './css/style.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from 'react';
-import NavBar from "./navbar/page";
+import NavBar from "./Navbar/page";
+import Cart from './Cart/page';
 
 export default function Home() {
+
+  const [isCartActive, setIsCartActive] = useState(false);
 
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
@@ -23,20 +25,47 @@ export default function Home() {
     }
   );
 
+  function productAlreadyAdded({ product }) {
+    return idList.includes(product.id);
+  }
+
+  function addProductToCart({ product }) {
+    const newProductos = [...cart.carrito.productos, product];
+    setCart(cart => ({
+      ...cart,
+      carrito: {
+        ...cart.carrito,
+        productos: newProductos
+      }
+    }));
+    console.log(newProductos);
+  }
+
+  function calculateTotals({ product }) {
+    const newSubTotal = cart.carrito.subtotal + product.price;
+    const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+
+    setCart(cart => ({
+      ...cart,
+      carrito: {
+        ...cart.carrito,
+        subtotal: newSubTotal,
+        total: newTotal
+      }
+    }));
+  }
+
   const handleAddToCart = ({ product }) => {
-    if (!idList.includes(product.id)) {
+    if (!productAlreadyAdded({ product })) {
       idList.push(product.id);
-      const newProductos = [...cart.carrito.productos, product];
-      setCart(cart => ({
-        ...cart,
-        carrito: {
-          ...cart.carrito,
-          productos: newProductos
-        }
-      }));
-      console.log(newProductos);
+      addProductToCart({ product });
+      calculateTotals({ product });
       setCount(count + 1);
     }
+  };
+
+  const toggleCart = () => {
+    setIsCartActive(isCartActive => !isCartActive);
   };
 
   const products = [
@@ -75,9 +104,12 @@ export default function Home() {
 
   const MyRow = () => {
     return (
-      <div className="row justify-content-md-center">
-        {products.map(product => <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />)}
-      </div>
+      <>
+        <h1>Lista de productos</h1>
+        <div className="row justify-content-md-center">
+          {products.map(product => <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />)}
+        </div>
+      </>
     );
   };
 
@@ -121,10 +153,10 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <NavBar productCount={count} />
-      <h1>Lista de productos</h1>
-      <MyRow />
+    <div className="d-grid gap-2">
+      <NavBar productCount={count} toggleCart={toggleCart} />
+      <div></div>
+      {isCartActive ? <Cart cart={cart} /> : <MyRow />}
       {/* <Carousel />*/}
     </div>
   );
