@@ -41,7 +41,7 @@ export default function Home() {
     console.log(newProductos);
   }
 
-  function calculateTotals({ product }) {
+  function calculateTotals({ product }: any) {
     const newSubTotal = cart.carrito.subtotal + product.price;
     const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
 
@@ -55,7 +55,7 @@ export default function Home() {
     }));
   }
 
-  const handleAddToCart = ({ product }) => {
+  const handleAddToCart = ({ product }: any) => {
     if (!productAlreadyAdded({ product })) {
       idList.push(product.id);
       addProductToCart({ product });
@@ -64,7 +64,7 @@ export default function Home() {
     }
   };
 
-  const toggleCart = ({ action }) => {
+  const toggleCart = ({ action }: any) => {
     setIsCartActive(action ? true : false);
   };
 

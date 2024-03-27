@@ -23,7 +23,7 @@ const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) =
                         </div>
                     </div>
                 </a>
-                {cart.carrito.productos.map(producto =>
+                {cart.carrito.productos.map((producto: any) =>
                     <a className="list-group-item list-group-item-action flex-column align-items-start">
                         <div className="d-flex justify-content-start align-items-center">
                             <img className="card-img-top mr-3"
@@ -58,13 +58,10 @@ const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) =
                 <div className="d-flex w-100 justify-content-center">
                     <button type="button" className="btn btn-primary mr-2"
                         data-mdb-ripple-init onClick={() => toggleCart(false)}>Atrás</button>
-                    {(cart.carrito.productos.length > 0) ? (
-                        <button type="button" className="btn btn-primary"
-                            data-mdb-ripple-init onClick={handleAddressForm}>Continuar compra</button>
-                    ) : (
-                        <button type="button" className="btn btn-primary"
-                            data-mdb-ripple- disabled>Continuar compra</button>
-                    )}
+                    <button type="button" className="btn btn-primary"
+                        data-mdb-ripple-init
+                        disabled={cart.carrito.productos.length === 0}
+                        onClick={handleAddressForm}>Continuar compra</button>
                 </div>
             </div>
         </div>
