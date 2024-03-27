@@ -1,14 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const NavBar = ({ productCount, toggleCart }: { productCount: number, toggleCart: () => void }) => {
+const NavBar = ({ productCount, toggleCart }: { productCount: number, toggleCart: (action: boolean) => void }) => {
 
     return <>
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
-            <a className="navbar-brand" onClick={toggleCart}>Andromeda</a>
+            <a className="navbar-brand" onClick={() => toggleCart(false)}>Andromeda</a>
             <ul className="navbar-nav mr-auto">
                 <li className="nav-item active">
-                    <a className="nav-link" onClick={toggleCart}>
+                    <a className="nav-link" onClick={() => toggleCart(true)}>
                         {productCount}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
                             className="bi bi-cart" viewBox="0 0 16 16">

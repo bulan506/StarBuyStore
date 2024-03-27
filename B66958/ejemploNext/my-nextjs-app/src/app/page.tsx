@@ -64,8 +64,8 @@ export default function Home() {
     }
   };
 
-  const toggleCart = () => {
-    setIsCartActive(isCartActive => !isCartActive);
+  const toggleCart = ({ action }) => {
+    setIsCartActive(action ? true : false);
   };
 
   const products = [
@@ -154,9 +154,8 @@ export default function Home() {
 
   return (
     <div className="d-grid gap-2">
-      <NavBar productCount={count} toggleCart={toggleCart} />
-      <div></div>
-      {isCartActive ? <Cart cart={cart} /> : <MyRow />}
+      <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
+      {isCartActive ? <Cart cart={cart} toggleCart={(action) => toggleCart({ action })} /> : <MyRow />}
       {/* <Carousel />*/}
     </div>
   );
