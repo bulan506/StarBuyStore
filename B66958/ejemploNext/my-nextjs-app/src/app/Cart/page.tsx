@@ -5,10 +5,10 @@ import AddressForm from "../Address/page";
 
 const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) => void }) => {
 
-    const [showAddressForm, setAddressForm] = useState(false);
+    const [showAddressForm, setShowAddressForm] = useState(false);
 
     function handleAddressForm() {
-        setAddressForm(!showAddressForm);
+        setShowAddressForm(!showAddressForm);
     }
 
     return (
