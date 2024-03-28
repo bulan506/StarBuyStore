@@ -1,3 +1,5 @@
+//Prompts y State
+
 import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -5,7 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "app/ui/styles/products.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'app/ui/styles/products.css';
-
 
 
 // Lista de Productos
@@ -96,9 +97,7 @@ const Carousel = () => {
 export default function Page() {
   
   return (
-
     <main className="flex min-h-screen flex-col p-6">
-
       <div className="header">
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
@@ -126,7 +125,6 @@ export default function Page() {
       </div>
     </nav>
   </div>
-
       <div className="container">
         <h1>Lista de Productos</h1>
          <div className="row">
