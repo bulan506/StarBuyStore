@@ -3,7 +3,8 @@
 import { useState } from "react";
 import AddressForm from "../Address/page";
 
-const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) => void }) => {
+const Cart = ({ cart, setCart, toggleCart, clearProducts }:
+    { cart: any, setCart: (cart: any) => void, toggleCart: (action: boolean) => void, clearProducts: () => void }) => {
 
     const [showAddressForm, setShowAddressForm] = useState(false);
 
@@ -12,7 +13,7 @@ const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) =
     }
 
     return (
-        showAddressForm ? <AddressForm handleAddressForm={handleAddressForm} /> : <div className="container">
+        showAddressForm ? <AddressForm handleAddressForm={handleAddressForm} setCart={setCart} /> : <div className="container">
             <h1>Tu carrito de compras:</h1>
             <div className="list-group">
                 <a className="list-group-item list-group-item-action flex-column align-items-start">
@@ -58,10 +59,14 @@ const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) =
                 <div className="d-flex w-100 justify-content-center">
                     <button type="button" className="btn btn-primary mr-2"
                         data-mdb-ripple-init onClick={() => toggleCart(false)}>Atrás</button>
-                    <button type="button" className="btn btn-primary"
+                    <button type="button" className="btn btn-primary mr-2"
                         data-mdb-ripple-init
                         disabled={cart.carrito.productos.length === 0}
                         onClick={handleAddressForm}>Continuar compra</button>
+                    <button type="button" className="btn btn-danger mr-2"
+                        data-mdb-ripple-init
+                        disabled={cart.carrito.productos.length === 0}
+                        onClick={clearProducts}>Cancelar compra</button>
                 </div>
             </div>
         </div>

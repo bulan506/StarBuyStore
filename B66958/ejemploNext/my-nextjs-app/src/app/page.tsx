@@ -25,10 +25,28 @@ export default function Home() {
     necesitaVerificacion: false
   });
 
+  function clearProducts() {
+    localStorage.removeItem('cart');
+    setIdList([]);
+    setCart({
+      carrito: {
+        productos: [],
+        subtotal: 0,
+        porcentajeImpuesto: 13,
+        total: 0,
+        direccionEntrega: '',
+        metodoDePago: ''
+      },
+      metodosDePago: ['Efectivo', 'Sinpe'],
+      necesitaVerificacion: false
+    });
+  }
+
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
     if (storedCart && !cartLoaded) {
       try {
+        console.log(JSON.parse(storedCart));
         setCart(JSON.parse(storedCart));
         setCartLoaded(true);
       } catch (error) {
@@ -57,6 +75,7 @@ export default function Home() {
         productos: newProductos
       }
     }));
+    setCartLoaded(true);
   }
 
   function calculateTotals({ product }: any) {
@@ -173,7 +192,8 @@ export default function Home() {
   return (
     <div className="d-grid gap-2">
       <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
-      {isCartActive ? <Cart cart={cart} toggleCart={(action) => toggleCart({ action })} /> : <MyRow />}
+      {isCartActive ? <Cart cart={cart} setCart={setCart}
+        toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} /> : <MyRow />}
       {/* <Carousel />*/}
     </div>
   );

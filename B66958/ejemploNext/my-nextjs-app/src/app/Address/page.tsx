@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PaymentForm from "../Payment/page";
 
-const AddressForm = ({ handleAddressForm }: { handleAddressForm: () => void }) => {
+const AddressForm = ({ handleAddressForm, setCart }: { handleAddressForm: () => void, setCart: (cart: any) => void }) => {
 
     const [activeAddress, setActiveAdress] = useState(false);
     const [address, setAddress] = useState('');
@@ -12,6 +12,13 @@ const AddressForm = ({ handleAddressForm }: { handleAddressForm: () => void }) =
     function handleAddressChange(event: any) {
         const inputValue = event.target.value;
         setAddress(inputValue);
+        setCart(cart => ({
+            ...cart,
+            carrito: {
+                ...cart.carrito,
+                direccionEntrega: inputValue
+            }
+        }));
         setActiveAdress(inputValue.trim().length > 0);
     }
 
@@ -19,7 +26,7 @@ const AddressForm = ({ handleAddressForm }: { handleAddressForm: () => void }) =
         setShowPaymentForm(show);
     }
 
-    return showPaymentForm ? <PaymentForm /> : <div className="d-flex justify-content-center gap-2">
+    return showPaymentForm ? <PaymentForm setCart={setCart} /> : <div className="d-flex justify-content-center gap-2">
         <div className="card w-25">
             <div className="card-body">
                 <div className="d-flex w-100 justify-content-center">
