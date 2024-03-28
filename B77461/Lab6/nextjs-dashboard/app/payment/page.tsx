@@ -40,7 +40,7 @@ const PaymentForm = () => {
             <div className="card-body">
                 <div className="d-grid w-100 justify-content-center">
                     <label>Número de compra: {orderNumber}</label>
-                    <label>Número para realizar el pago: +506 8888 8888</label>
+                    <label>Número para realizar el pago: +506 6270 6880</label>
                     <label>Por favor espere la confirmación de pago por parte del administrador</label>
                 </div>
             </div>

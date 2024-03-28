@@ -28,6 +28,7 @@ const AddressForm = ({ handleAddressForm }: { handleAddressForm: () => void }) =
                         <input type="text" className="form-control"
                             id="exampleFormControlInput1" placeholder="Ingrese su dirección"
                             value={address} onChange={handleAddressChange} />
+                            
                         <div className="d-flex w-100 justify-content-center">
                             <a className="btn btn-primary mr-2" onClick={() => handleAddressForm()}>Atrás</a>
                             <button className="btn btn-primary" disabled={!activeAddress}
