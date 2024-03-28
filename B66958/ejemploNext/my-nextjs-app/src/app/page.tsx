@@ -1,6 +1,6 @@
 'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NavBar from "./Navbar/page";
 import Cart from './Cart/page';
 
@@ -10,27 +10,46 @@ export default function Home() {
 
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
-  const [cart, setCart] = useState(
-    {
-      carrito: {
-        productos: [],
-        subtotal: 0,
-        porcentajeImpuesto: 13,
-        total: 0,
-        direccionEntrega: '',
-        metodosDePago: {}
-      },
-      metodosDePago: [],
-      necesitaVerificacion: false
+
+  const [cartLoaded, setCartLoaded] = useState(false);
+  const [cart, setCart] = useState({
+    carrito: {
+      productos: [],
+      subtotal: 0,
+      porcentajeImpuesto: 13,
+      total: 0,
+      direccionEntrega: '',
+      metodoDePago: ''
+    },
+    metodosDePago: ['Efectivo', 'Sinpe'],
+    necesitaVerificacion: false
+  });
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart && !cartLoaded) {
+      try {
+        setCart(JSON.parse(storedCart));
+        setCartLoaded(true);
+      } catch (error) {
+        console.error('Error parsing cart from localStorage:', error);
+      }
     }
-  );
+  }, [cartLoaded]);
+
+  useEffect(() => {
+    if (cartLoaded) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    setCount(cart.carrito.productos.length);
+  }, [cart, cartLoaded]);
 
   function productAlreadyAdded({ product }) {
     return idList.includes(product.id);
   }
 
-  function addProductToCart({ product }) {
-    const newProductos = [...cart.carrito.productos, product];
+  function addProductToCart({ product }: any) {
+    const newProductos = [...(cart.carrito.productos || []), product];
     setCart(cart => ({
       ...cart,
       carrito: {
@@ -38,7 +57,6 @@ export default function Home() {
         productos: newProductos
       }
     }));
-    console.log(newProductos);
   }
 
   function calculateTotals({ product }: any) {

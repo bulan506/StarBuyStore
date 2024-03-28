@@ -10,7 +10,6 @@ const PaymentForm = () => {
 
     function handleSelectPayment(event: any) {
         const selectedIndex = event.target.selectedIndex;
-        console.log(event.target.selectedIndex);
         setSelectedPayment(selectedIndex);
     }
 
