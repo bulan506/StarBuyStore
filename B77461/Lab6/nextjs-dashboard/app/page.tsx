@@ -1,6 +1,6 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from 'react';
 import NavBar from "./navBar/page";
 import Cart from './shoppingCar/page';
 import '../app/css/style.css';
@@ -8,7 +8,6 @@ import '../app/css/style.css';
 export default function Home() {
 
   const [isCartActive, setIsCartActive] = useState(false);
-
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
   const [cart, setCart] = useState(
@@ -26,6 +25,27 @@ export default function Home() {
     }
   );
 
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart'));
+    if (storedCart) {
+      setCart(storedCart);
+    }
+    const storedIdList = JSON.parse(localStorage.getItem('idList'));
+    if (storedIdList) {
+      setIdList(storedIdList);
+    }
+    const storedCount = JSON.parse(localStorage.getItem('count'));
+    if (storedCount) {
+      setCount(storedCount);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('idList', JSON.stringify(idList));
+    localStorage.setItem('count', JSON.stringify(count));
+  }, [cart, idList, count]);
+
   function productAlreadyAdded({ product }) {
     return idList.includes(product.id);
   }
@@ -42,7 +62,25 @@ export default function Home() {
     console.log(newProductos);
   }
 
-  function calculateTotals({ product }: any) {
+  function removeProduct( product ) {
+    const newProductos = cart.carrito.productos.filter((prod) => prod.id !== product.id);
+    const newSubTotal = newProductos.reduce((acc, curr) => acc + curr.price, 0);
+    const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+
+    setCart((prevCart) => ({
+        ...prevCart,
+        carrito: {
+            ...prevCart.carrito,
+            productos: newProductos,
+            subtotal: newSubTotal,
+            total: newTotal
+        }
+    }));
+
+    setCount(count - 1); // Restar 1 al contador count
+}
+
+  function calculateTotals({ product }) {
     const newSubTotal = cart.carrito.subtotal + product.price;
     const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
 
@@ -56,16 +94,16 @@ export default function Home() {
     }));
   }
 
-  const handleAddToCart = ({ product }: any) => {
+  const handleAddToCart = ({ product }) => {
     if (!productAlreadyAdded({ product })) {
-      idList.push(product.id);
+      setIdList([...idList, product.id]);
       addProductToCart({ product });
       calculateTotals({ product });
       setCount(count + 1);
     }
   };
 
-  const toggleCart = ({ action }: any) => {
+  const toggleCart = ({ action }) => {
     setIsCartActive(action ? true : false);
   };
 
@@ -156,7 +194,8 @@ export default function Home() {
   return (
     <div className="d-grid gap-2">
       <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
-      {isCartActive ? <Cart cart={cart} toggleCart={(action) => toggleCart({ action })} /> : <MyRow />}
+      {isCartActive ? <Cart cart={cart} setCart={setCart} toggleCart={(action) => toggleCart({ action })} removeProduct={removeProduct} /> : <MyRow />}
+
       {/* <Carousel />*/}
     </div>
   );

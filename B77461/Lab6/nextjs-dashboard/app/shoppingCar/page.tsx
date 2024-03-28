@@ -4,9 +4,11 @@ import { useState } from "react";
 import AddressForm from "../address/page";
 
 
-const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) => void }) => {
+const Cart = ({ cart, toggleCart, removeProduct }: 
+    { cart: any, toggleCart: (action: boolean) => void, removeProduct: (product: any) => void }) => {
 
     const [showAddressForm, setShowAddressForm] = useState(false);
+    
 
     function handleAddressForm() {
         setShowAddressForm(!showAddressForm);
@@ -33,6 +35,12 @@ const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) =
                             <div className="d-flex w-100 justify-content-between">
                                 <h5 className="mb-1">{producto.name}</h5>
                                 <small>${producto.price}</small>
+                                <button className="btn btn-outline-danger btn-sm" onClick={() => {
+                                    removeProduct(producto);
+                                    toggleCart(true);
+                                }}>
+                                    <i className="bi bi-trash"></i>
+                                </button>
                             </div>
                         </div>
                         <p className="mb-1">{producto.description}</p>
@@ -68,5 +76,6 @@ const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) =
         </div>
     )
 }
+
 
 export default Cart;
