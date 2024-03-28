@@ -1,164 +1,162 @@
-//Prompts y State
-
-import AcmeLogo from '@/app/ui/acme-logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
-import "app/ui/styles/products.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'app/ui/styles/products.css';
+import { useState } from 'react';
+import NavBar from "./navBar/page";
+import Cart from './shoppingCar/page';
 
+export default function Home() {
 
-// Lista de Productos
-const products = [
-  { id: 1, name: "Producto 1", price: 15, description: "Descripción del producto 1", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 2, name: "Producto 2", price: 15, description: "Descripción del producto 2", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 3, name: "Producto 3", price: 15, description: "Descripción del producto 3", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 4, name: "Producto 4", price: 15, description: "Descripción del producto 4", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 5, name: "Producto 5", price: 15, description: "Descripción del producto 5", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 6, name: "Producto 6", price: 15, description: "Descripción del producto 6", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 7, name: "Producto 7", price: 15, description: "Descripción del producto 7", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 8, name: "Producto 8", price: 15, description: "Descripción del producto 8", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 9, name: "Producto 9", price: 15, description: "Descripción del producto 8", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 10, name: "Producto 10", price: 15, description: "Descripción del producto 8", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 11, name: "Producto 11", price: 15, description: "Descripción del producto 8", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 12, name: "Producto 12", price: 15, description: "Descripción del producto 8", image: "https://th.bing.com/th/id/OIP.brr0YGVvwq5QuU6qHtAB8QHaEK?rs=1&pid=ImgDetMain" },
-  { id: 13, name: "Producto 13", price: 55, description: "Headsets", image: "https://th.bing.com/th/id/OIP.oKA9zP3eVseSkHTQRttipgHaHa?rs=1&pid=ImgDetMain" },
-  { id: 14, name: "Producto 14", price: 2000, description: "Laptop", image: "https://wallpaperaccess.com/full/4176969.jpg" },
-  { id: 15, name: "Producto 15", price: 80, description: "Teclado", image: "https://quantumtechnologyeg.com/wp-content/uploads/2022/11/e28-600x600.jpg" }
-];
+  const [isCartActive, setIsCartActive] = useState(false);
 
- //Componente Producto
- const Product = ({ product }) => {
-  const { id, name, price, description, image } = product;
-  return (
-    <div className="col-md-3">
-      <p>{id}</p>
-      <h1>{name}</h1>
-      <p>{price}</p>
-      <p>{description}</p>
-      <img src={image} width={230} height={110} />
-      <button className="buttonProducts1">AGREGAR</button>
-      
-    </div>
+  const [count, setCount] = useState(0);
+  const [idList, setIdList] = useState([]);
+  const [cart, setCart] = useState(
+    {
+      carrito: {
+        productos: [],
+        subtotal: 0,
+        porcentajeImpuesto: 13,
+        total: 0,
+        direccionEntrega: '',
+        metodosDePago: {}
+      },
+      metodosDePago: [],
+      necesitaVerificacion: false
+    }
   );
-}
 
-const MyRow = () => {
-  const first12Products = products.slice(0, 12);
-   return (
-    <div className="row">
-    {first12Products.map(product => <Product key={product.id} product={product} />)}
-   </div>
-  );
-};
+  function productAlreadyAdded({ product }) {
+    return idList.includes(product.id);
+  }
 
-const CarouselItem = ({ product, active }) => {
-  return (
-    <div className={active ? "carousel-item active" : "carousel-item"}>
-      <img src={product.image} width="100%" />
+  function addProductToCart({ product }) {
+    const newProductos = [...cart.carrito.productos, product];
+    setCart(cart => ({
+      ...cart,
+      carrito: {
+        ...cart.carrito,
+        productos: newProductos
+      }
+    }));
+    console.log(newProductos);
+  }
+
+  function calculateTotals({ product }: any) {
+    const newSubTotal = cart.carrito.subtotal + product.price;
+    const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+
+    setCart(cart => ({
+      ...cart,
+      carrito: {
+        ...cart.carrito,
+        subtotal: newSubTotal,
+        total: newTotal
+      }
+    }));
+  }
+
+  const handleAddToCart = ({ product }: any) => {
+    if (!productAlreadyAdded({ product })) {
+      idList.push(product.id);
+      addProductToCart({ product });
+      calculateTotals({ product });
+      setCount(count + 1);
+    }
+  };
+
+  const toggleCart = ({ action }: any) => {
+    setIsCartActive(action ? true : false);
+  };
+
+  const products = [
+    { id: 1, name: 'Audifonos', description: 'Audifonos RGB', imageUrl: 'https://tienda.starware.com.ar/wp-content/uploads/2021/05/auriculares-gamer-headset-eksa-e1000-v-surround-71-rgb-pc-ps4-verde-2331-3792.jpg', price: 60.0 },
+    { id: 2, name: 'Teclado', description: 'Teclado mecánico RGB', imageUrl: 'https://kuwait.gccgamers.com/razer-deathstalker-v2/assets/product.webp', price: 75.0 },
+    { id: 3, name: 'Mouse', description: 'Mouse inalámbrico', imageUrl: 'https://static3.tcdn.com.br/img/img_prod/374123/mouse_gamer_impact_rgb_12400_dpi_m908_redragon_29921_3_20190927170055.jpg', price: 35.0 },
+    { id: 4, name: 'Monitor', description: 'Monitor LCD', imageUrl: 'https://i5.walmartimages.ca/images/Large/956/188/6000199956188.jpg', price: 200.0 },
+    { id: 5, name: 'CASE', description: 'Case CPU', imageUrl: 'https://th.bing.com/th/id/OIP.mhKR13PBP5mQP85l2c4DWgHaHa?rs=1&pid=ImgDetMain', price: 450.0 },
+    { id: 6, name: 'MousePad', description: 'MousePad HYPER X', imageUrl: 'https://s3.amazonaws.com/static.spdigital.cl/img/products/new_web/1500590806008-36964857_0168832511.jpg', price: 15.0 },
+    { id: 7, name: 'Laptop', description: 'Laptop ASUS', imageUrl: 'https://resources.claroshop.com/medios-plazavip/s2/10252/1145258/5d13a10bac9b0-laptop-gamer-asus-rog-strix-scar-ii-i7-16gb-512gb-rtx-2070-1600x1600.jpg', price: 1000.0 },
+    { id: 8, name: 'Tarjeta de Video', description: 'Tarjeta Nvidia 4060', imageUrl: 'https://ddtech.mx/assets/uploads/861311bd60bf6ede94bfe7ab01e705a3.png', price: 600.0 },
+    { id: 9, name: 'Control', description: 'Control STEAM', imageUrl: 'https://th.bing.com/th/id/R.41203d347f95a79e668732f51b12da3e?rik=iSunp0CeEv4AGQ&riu=http%3a%2f%2fthenextweb.com%2fwp-content%2fblogs.dir%2f1%2ffiles%2f2015%2f06%2fSteam-Controller.jpg&ehk=STO1S7TrD8QWJvMz%2fINRvKtekwUIyW7nmyOhOV12%2fig%3d&risl=&pid=ImgRaw&r=0', price: 150.0 },
+    { id: 10, name: 'Gafas VR', description: 'Gafas VR PS4', imageUrl: 'https://www.discoazul.com/uploads/media/images/gafas-playstation-vr-ps4-1.jpg', price: 500.0 },
+    { id: 11, name: 'Pantalla', description: 'Pantalla LG OLED', imageUrl: 'https://th.bing.com/th/id/OIP.nC89zBQSGxR8hyVnocBvlQHaGb?rs=1&pid=ImgDetMain', price: 750.0 },
+    { id: 12, name: 'Celular', description: 'ASUS ROG', imageUrl: 'https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg', price: 900.0 },
+  ];
+
+  const Product = ({ product, handleAddToCart }) => {
+    const { id, name, description, imageUrl, price } = product;
+    return (
+      <div className="card" style={{ width: '20rem' }}>
+        <div className="col">
+          <div className="card-body">
+            <img className="card-img-top"
+              src={imageUrl}
+              width="500" height="110" />
+            <h5>{name}</h5>
+            <p>Precio: ${price}</p>
+            <p>Descripción: {description}</p>
+            <button type="button" className="btn btn-light" onClick={() => handleAddToCart({ product })}>Comprar</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const MyRow = () => {
+    return (
+      <>
+        <h1>Lista de productos</h1>
+        <div className="row justify-content-md-center">
+          {products.map(product => <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />)}
+        </div>
+      </>
+    );
+  };
+
+  const CarouselItem = ({ product, active }) => {
+    return <div className={active ? "carousel-item active" : "carousel-item"}>
+      <img src={product.imageUrl} width="100%" />
       <div className="container">
         <div className="carousel-caption">
           <h1>{product.name}</h1>
           <p className="opacity-75">Precio: ${product.price}</p>
           <p className="opacity-75">Descripción: {product.description}</p>
-          <p><a className="btn btn-lg btn-primary" href="#">Ver</a></p>
         </div>
       </div>
     </div>
-  );
-}
+  }
 
-const Carousel = () => {
-  return (
-    <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
-      <div className="carousel-indicators">
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
+  const Carousel = () => {
+    return (
+      <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
+        <div className="carousel-indicators">
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" className="active" aria-current="true"
+            aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
 
-      <div className="carousel-inner">
-        {products.slice(-3).map((product, index) => <CarouselItem key={index} product={product} active={index === 0} />)}
-      </div>
+        <div className="carousel-inner">
+          {products.map(product => <CarouselItem product={product} active={1} />)}
+        </div>
 
-      <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Previous</span>
-      </button>
-      <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Next</span>
-      </button>
-    </div>
-  );
-}
-
-export default function Page() {
-  
-  return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="header">
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          Tienda
-        </a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
+        <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <form className="d-flex" role="search">
-            <input className="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" />
-            <button className="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
-          <a className="navbar-brand" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-cart4"
-              viewBox="0 0 16 16">
-              <path
-                d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
-            </svg>
-            Carrito
-          </a>
-        </div>
+        <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </button>
       </div>
-    </nav>
-  </div>
-      <div className="container">
-        <h1>Lista de Productos</h1>
-         <div className="row">
-         <MyRow />
-         <Carousel />
-        </div>
-      </div>
+    );
+  }
 
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        {/* <AcmeLogo /> */}
-      </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Welcome to Acme.</strong> This is the example for the{' '}
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Next.js Learn Course
-            </a>
-            , brought to you by Vercel.
-          </p>
-          <Link
-            href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
-        </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Add Hero Images Here */}
-          
-        </div>
-      </div>
-    </main>
+  return (
+    <div className="d-grid gap-2">
+      <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
+      {isCartActive ? <Cart cart={cart} toggleCart={(action) => toggleCart({ action })} /> : <MyRow />}
+      {/* <Carousel />*/}
+    </div>
   );
-  
 }
-
