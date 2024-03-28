@@ -1,51 +1,78 @@
+'use client'
 import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { StaticCarousel, Product, product } from './layout';
+import {useState} from 'react';
+import { StaticCarousel, Product, product, CartShop } from './layout';
+import { ProductItem } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
-// at the top of your file add this import where you see most fit
-// import Carousel  from "react-bootstrap/Carousel";
 
 
 
 
 export default function Page() {
+
+    //Leer LocalStorage
+    function getDataLocalStorage():number{  
+        return 3
+    }
+    const itemsFromStorage : number = getDataLocalStorage();    
+
+
+    //Estado del numero del carrito
+    const [numberOfItems,setNumberOfItems] = useState(0);  
+
+
+    //Estado de la lista del carrito
+    const [allProduct, setAllProduct] = useState<ProductItem[]>([]);
+
   return (
     <main className="flex min-h-screen flex-col p-6">
 
       {/* Menu con el carrito */}
       <div className="main_banner">    
             
-        <div className="row">
-            <div className="search_container col-sm-6">
-                <input type="search" name="name" value="" placeholder="Busca cualquier cosa..."/>
-                <i className="fas fa-search"></i>                                  
-            </div>
-            
-            <div className="cart_container col-sm-6">
-                <a href="">                        
-                    <i className="fas fa-shopping-cart"></i>                    
-                    <p className="col-sm-6">Mi carrito</p>                                                                   
-                </a>                
-            </div>                          
-        </div>            
+            <div className="row">
+                <div className="search_container col-sm-6">
+                    <input type="search" name="name" placeholder="Busca cualquier cosa..."/>
+                    <i className="fas fa-search"></i>                                  
+                </div>
+                
+                <CartShop 
+                    numberOfItems={numberOfItems} 
+                    setNumberOfItems={setNumberOfItems}                     
+                    allProduct={allProduct}
+                    setAllProduct={setAllProduct}
+                />;
+            </div>            
       </div>  
-      
+
+      {/* Galeria de Productos */}
       <div>
+            {/* El uso de las Keys es importante ya que le hacen saber a React cuando hay cambios en los elementos del proyecto
+            Ademas, todas los componentes deben llevar una Key, es una buena practica
+            */}
           <h1>Lista de Productos</h1>   
-          <div className="row">
+          <div id='div_gallery' className="row">
               {product.map(product => {
                   if (product.id === 8) {
                       return(
-                          <section className="container_carousel col-sm-4">
-                              <StaticCarousel key="carousel" />;
+                          <section className="container_carousel col-sm-4" key="carousel">
+                              <StaticCarousel />;
                           </section>
                       ) 
                   } else {
                       return (
-                          <Product product={product} />
+                        <Product 
+                            key={product.id} 
+                            product={product}
+                            numberOfItems={numberOfItems} 
+                            setNumberOfItems={setNumberOfItems} 
+                            allProduct={allProduct}
+                            setAllProduct={setAllProduct}
+                        />                        
                       );
                   }
               })}
@@ -57,32 +84,3 @@ export default function Page() {
     </main>
   );
 }
-
-
-
-
-
-
-// const App = () => {            
-//   return (
-//       <div>
-//           <h1>Lista de Productos</h1>   
-//           <div className="row">
-//               {product.map(product => {
-//                   if (product.id === 8) {
-//                       return(
-//                           <section className="container_carousel col-sm-4">
-//                               <StaticCarousel key="carousel" />;
-//                           </section>
-//                       ) 
-//                   } else {
-//                       return (
-//                           <Product product={product} />
-//                       );
-//                   }
-//               })}
-//           </div>
-//       </div>
-//   );
-// };
-

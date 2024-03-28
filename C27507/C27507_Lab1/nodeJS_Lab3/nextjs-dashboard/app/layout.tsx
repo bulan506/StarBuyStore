@@ -1,3 +1,8 @@
+"use client"
+
+import {useState} from 'react';
+import { number } from 'zod';
+import { ModalCart } from './modal_cart';
 
 export default function RootLayout({
   children,
@@ -11,9 +16,7 @@ export default function RootLayout({
   );
 }
 
-
-
-interface ProductItem {
+export interface ProductItem {
   id: number;
   name: string;
   imageUrl: string;
@@ -42,8 +45,8 @@ export const product: ProductItem[] = [
   },
   {
       id: 4,
-      name: "Producto 4",                
-      imageUrl: "./img/tablet_samsung.jpg",
+      name: "Dualshock PS4",                
+      imageUrl: "./img/dualshock4.jpg",
       price: 35
   },
   {
@@ -54,30 +57,120 @@ export const product: ProductItem[] = [
   },
   {
       id: 6,
-      name: "Producto 6",                
-      imageUrl: "./img/mouse.png",
+      name: "Samsung Galaxy A54",                
+      imageUrl: "./img/a54_samsung.png",
       price: 150
   },
   {
       id: 7,
-      name: "Producto 7",
-      imageUrl: "./img/mouse.png",
+      name: "Dualshock PS5",
+      imageUrl: "./img/dualshock5.jpg",
       price: 250
   },
   {
       id: 8,                
       name: "Producto 8",
-      imageUrl: "img/mouse.png",
+      imageUrl: "./img/a54_samsung.jpg",
       price: 250
   },
   {
       id: 9,
-      name: "Producto 9",
+      name: "Mouse Microsoft",
       imageUrl: "./img/mouse.png",
       price: 2500
+  },
+  {
+    id:10,
+    name:"Módem Router - Archer VR400",
+    imageUrl: "./img/router_archerVR400.jpg",
+    price: 75,
   }
 
 ];
+
+
+interface ProductProps {
+  product: ProductItem;
+  numberOfItems: number;
+  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;
+  allProduct: ProductItem[];
+  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;
+}
+
+
+//Galeria de Productos
+export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNumberOfItems, allProduct, setAllProduct }) => {
+
+  const { id,name, imageUrl, price } = product;    
+
+  const buyItem = () =>{
+    console.log('Ultimo producto',product);
+
+    //Incrementa el numero de productos del carrito
+    setNumberOfItems(numberOfItems + 1);
+
+    //Agrega un nuevo producto a la lista global de productos del carrito
+    setAllProduct([...allProduct, product]) //spread operator
+      //setAllProduct(allProduct => allProduct.concat(allProduct))
+      //setAllProduct(allProduct.concat(allProduct))
+    console.log("Todos los productos", allProduct)
+  }
+    
+  return (
+      <div className="product col-sm-4 row">
+          <div hidden>{id}</div>
+          <div className="row-sm-3"><img src={imageUrl}/></div>
+          <p className="row-sm-3">{name}</p>
+          <p className="row-sm-3">${price}</p>
+          <button className="row-sm-3" onClick={ () => buyItem() }>Comprar</button>          
+      </div>
+  );
+}
+
+
+interface CartShopProps {
+  numberOfItems: number;
+  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;    
+  allProduct: ProductItem[];
+  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;                    
+}
+
+//Carrito
+export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItems,allProduct,setAllProduct}) => {
+
+  //States del ModalCart
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
+
+  return(
+
+    <div className="cart_container col-sm-6">
+      {/* Cuando se presione cualquier parte del Carrito, se abre el modal */}
+      <a onClick={handleShow}>
+          <div className="cart-info">
+              <i className="fas fa-shopping-cart"></i>                    
+              <div className="notify-cart">{numberOfItems}</div>
+          </div>                    
+          <p className="col-sm-6">Mi carrito</p>                                                                   
+          
+      </a>  
+
+      {/* Llamamos al carrito desde modal_cart.tsx */}
+      <ModalCart 
+        show={show} 
+        handleClose={handleClose}
+        allProduct={allProduct}
+        setAllProduct={setAllProduct}
+
+      />    
+                                      
+    </div>           
+  );
+}
+
 
 export const StaticCarousel = () => {
   return (
@@ -127,19 +220,5 @@ export const StaticCarousel = () => {
           <span className="visually-hidden">Next</span>
           </button>
       </div>                            
-  );
-}
-
-
-// Lista de Productos
-export const Product = ({ product }:{product: ProductItem}) => {
-  const { name, imageUrl, price } = product;            
-  return (
-      <div className="product col-sm-4 row">
-          <div className="row-sm-3"><img src={imageUrl}/></div>
-          <p className="row-sm-3">{name}</p>
-          <p className="row-sm-3">${price}</p>
-          <button className="row-sm-3">Comprar</button>
-      </div>
   );
 }
