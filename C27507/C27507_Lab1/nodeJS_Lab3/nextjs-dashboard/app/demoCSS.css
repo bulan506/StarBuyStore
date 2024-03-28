@@ -70,11 +70,7 @@ button{
 	width: 100%;
 	height: auto;
 	background: #8a9597;
-	padding: 1.4rem;
-	/* display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
-	align-items: center; */
+	padding: 1.4rem;	
 }
 
 /* Div con el buscador */
@@ -148,16 +144,6 @@ button{
 
 
 /* Menu Modal del carrito */
-.cart_title_btn{
-	position: sticky;
-	top: 0;
-}
-
-.product-menu-cart{
-	width: 100%;
-	height: auto;	
-	
-}
 
 .product-menu-cart div{
 	width: 100%;
@@ -178,7 +164,7 @@ button{
 }
 
 .product-menu-cart p{
-	text-align: end;
+	text-align: center;
 	margin-right: 1,2rem;
 }
 .product-menu-cart button{
@@ -187,6 +173,31 @@ button{
 	color: white;	
 	padding: 0.5rem;	
 }
+
+.modal-footer {
+	position: sticky;
+	bottom: 0;
+	background-color: white; /* Ajusta el color de fondo según tu diseño */
+  }
+
+.total-price-container{		
+	background: white;
+	position: sticky;
+	bottom: 71px;
+	padding: 0 1.2rem;
+	font-weight: bolder;
+}
+
+.total-price-cart{	
+	text-align: right;
+
+}
+
+
+
+
+
+
 
 /* Galeria de productos */
 #div_gallery{

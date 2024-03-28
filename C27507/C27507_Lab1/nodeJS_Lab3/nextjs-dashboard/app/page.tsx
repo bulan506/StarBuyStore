@@ -3,30 +3,84 @@ import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {useState} from 'react';
+import {useEffect} from 'react';
 import { StaticCarousel, Product, product, CartShop } from './layout';
-import { ProductItem } from './layout';
+import { ProductItem,CartShopItem  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
 
 
+//Calcular el total y manejarlo con stateUse para tenerlo en todos los componentes
+export const totalPriceNoTax = (allProduct: { price: number; quantity: number; }[]) => {
+    let total = 0;
+    allProduct.map((item) => {            
+        //total += (item.price * item.quantity);
+        total += (item.price);
+    });
+    return total;
+}
+export const totalPriceTax = (allProduct: { price: number; quantity: number; }[]) => {
+    let total = 0;
+    allProduct.map((item) => {                        
+        //total += ((item.price * item.quantity * 0.10) + (item.price * item.quantity));
+        total += ((item.price * 0.10) + (item.price));
+    });
+    return total;
+}
 
+//Metodos del LocalStorage
+const setCartShopStorage = (key: string, mockup: CartShopItem[]) => {
+    const cartShopData = JSON.stringify(mockup);
+    localStorage.setItem(key,cartShopData);
+}
 
-export default function Page() {
-
-    //Leer LocalStorage
-    function getDataLocalStorage():number{  
-        return 3
+const getCartShopStorage = (key: string): CartShopItem | null => {
+    const cartShopData = localStorage.getItem(key);
+    if(cartShopData){
+        return JSON.parse(cartShopData) as CartShopItem;
+    }else{
+        return null;
     }
-    const itemsFromStorage : number = getDataLocalStorage();    
+}
 
 
+export const setToLocalStorage = ({myProductsInStorage,setMyProductsInStorage}:{myProductsInStorage: ProductItem[], setMyProductsInStorage: React.Dispatch<React.SetStateAction<ProductItem[]>>}) => {
+    //Guardar en LocalStorage      
+    useEffect(() => {
+        localStorage.setItem("myProductsInStorage",JSON.stringify(myProductsInStorage))
+    },[myProductsInStorage]);
+}
+export const getFromLocalStorage = ({myProductsInStorage,setMyProductsInStorage}:{myProductsInStorage: ProductItem[], setMyProductsInStorage: React.Dispatch<React.SetStateAction<ProductItem[]>>}) => {    
+      //Leer en LocalStorage      
+    useEffect(() => {
+        const productsFromStorage = JSON.parse(localStorage.getItem("myProductsInStorage") || "{}}");
+        if (productsFromStorage !== null || productsFromStorage !== "{}") {
+            setMyProductsInStorage(productsFromStorage);
+        }        
+    }, []);    
+    return myProductsInStorage;
+}
+
+
+export default function Page() {       
+    //State para los product del local, estos deben modificarse cada vez que pasa algo en la pagina
+    const [myProductsInStorage, setMyProductsInStorage] = useState<ProductItem[]>([]);
+
+    //Codigos para llamar datos
+                 
     //Estado del numero del carrito
-    const [numberOfItems,setNumberOfItems] = useState(0);  
-
-
+    const [numberOfItems,setNumberOfItems] = useState(0);
+    
     //Estado de la lista del carrito
     const [allProduct, setAllProduct] = useState<ProductItem[]>([]);
+    
+    //Estado de los totales     
+    const [totalWithTax,setTotalWithTax] = useState(0);  
+    const [totalWithNoTax,setTotalWithNoTax] = useState(0); 
+
+    //Settear datos
+
 
   return (
     <main className="flex min-h-screen flex-col p-6">
@@ -45,6 +99,10 @@ export default function Page() {
                     setNumberOfItems={setNumberOfItems}                     
                     allProduct={allProduct}
                     setAllProduct={setAllProduct}
+                    totalWithTax={totalWithTax}
+                    setTotalWithTax={setTotalWithTax}
+                    totalWithNoTax={totalWithNoTax}
+                    setTotalWithNoTax={setTotalWithNoTax}
                 />;
             </div>            
       </div>  
@@ -72,6 +130,10 @@ export default function Page() {
                             setNumberOfItems={setNumberOfItems} 
                             allProduct={allProduct}
                             setAllProduct={setAllProduct}
+                            totalWithTax={totalWithTax}
+                            setTotalWithTax={setTotalWithTax}
+                            totalWithNoTax={totalWithNoTax}
+                            setTotalWithNoTax={setTotalWithNoTax}
                         />                        
                       );
                   }

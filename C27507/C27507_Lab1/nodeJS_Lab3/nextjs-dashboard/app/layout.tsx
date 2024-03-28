@@ -3,6 +3,8 @@
 import {useState} from 'react';
 import { number } from 'zod';
 import { ModalCart } from './modal_cart';
+import { totalPriceNoTax, totalPriceTax,setToLocalStorage,getFromLocalStorage } from './page'; //precios totales - manejor LocalStorage
+
 
 export default function RootLayout({
   children,
@@ -20,7 +22,23 @@ export interface ProductItem {
   id: number;
   name: string;
   imageUrl: string;
+  quantity: 0;
   price: number;
+}
+
+export interface CartShopItem {
+  productsInCart: ProductItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  direction: string;
+  payment: number;
+  verify: boolean
+}
+
+export interface LocalStorageItem {
+  products: ProductItem;
+  cartShop: CartShopItem;  
 }
 
 export const product: ProductItem[] = [
@@ -29,64 +47,86 @@ export const product: ProductItem[] = [
       id: 1,
       name: "Producto 1",                
       imageUrl: './img/tablet_samsung.jpg',
+      quantity: 0,
       price: 25
   },
   {
       id: 2,
       name: "Producto 2",                
       imageUrl: "./img/tv.jfif",
+      quantity: 0,
       price: 50
   },
   {
       id: 3,
       name: "Producto 3",                
       imageUrl: "./img/auri.jfif",
+      quantity: 0,
       price: 100
   },
   {
       id: 4,
       name: "Dualshock PS4",                
       imageUrl: "./img/dualshock4.jpg",
+      quantity: 0,
       price: 35
   },
   {
       id: 5,
       name: "Producto 5",                
       imageUrl: "./img/teclado.jpg",
+      quantity: 0,
       price: 75
   },
   {
       id: 6,
       name: "Samsung Galaxy A54",                
       imageUrl: "./img/a54_samsung.png",
+      quantity: 0,
       price: 150
   },
   {
       id: 7,
       name: "Dualshock PS5",
       imageUrl: "./img/dualshock5.jpg",
+      quantity: 0,
       price: 250
   },
   {
       id: 8,                
       name: "Producto 8",
       imageUrl: "./img/a54_samsung.jpg",
+      quantity: 0,
       price: 250
   },
   {
       id: 9,
       name: "Mouse Microsoft",
       imageUrl: "./img/mouse.png",
+      quantity: 0,
       price: 2500
   },
   {
     id:10,
     name:"Módem Router - Archer VR400",
     imageUrl: "./img/router_archerVR400.jpg",
+    quantity: 0,
     price: 75,
   }
 
 ];
+
+export const cart: CartShopItem = {
+  
+  productsInCart: [],
+  subtotal: 0,
+  tax: 0,
+  total: 0,
+  direction: "",
+  payment: 0,
+  verify: false  
+};
+
 
 
 interface ProductProps {
@@ -95,25 +135,33 @@ interface ProductProps {
   setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;
   allProduct: ProductItem[];
   setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;
+  totalWithTax:number;
+  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
+  totalWithNoTax: number;
+  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
 }
 
 
 //Galeria de Productos
-export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNumberOfItems, allProduct, setAllProduct }) => {
+export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNumberOfItems, allProduct, setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax }) => {
 
   const { id,name, imageUrl, price } = product;    
 
   const buyItem = () =>{
     console.log('Ultimo producto',product);
 
-    //Incrementa el numero de productos del carrito
-    setNumberOfItems(numberOfItems + 1);
+    //Incrementa el numero de productos del carrito    
+    setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);
 
     //Agrega un nuevo producto a la lista global de productos del carrito
-    setAllProduct([...allProduct, product]) //spread operator
-      //setAllProduct(allProduct => allProduct.concat(allProduct))
-      //setAllProduct(allProduct.concat(allProduct))
-    console.log("Todos los productos", allProduct)
+    //setAllProduct([...allProduct, product]) //spread operator   
+    setAllProduct(prevAllProduct => [...prevAllProduct, product])
+    
+    //Actualizar el total de los productos       
+    setTotalWithNoTax(prevTotalWithNoTax => totalPriceNoTax([...allProduct,product]));
+    setTotalWithTax(prevTotalPriceTax => totalPriceTax([...allProduct,product]));
+
+    //Actualizar lista de productos en el LocalStorage
   }
     
   return (
@@ -132,11 +180,16 @@ interface CartShopProps {
   numberOfItems: number;
   setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;    
   allProduct: ProductItem[];
-  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;                    
+  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;  
+  
+  totalWithTax:number;
+  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
+  totalWithNoTax: number;
+  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
 }
 
 //Carrito
-export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItems,allProduct,setAllProduct}) => {
+export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItems,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax}) => {
 
   //States del ModalCart
   const [show, setShow] = useState(false);
@@ -164,6 +217,10 @@ export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItem
         handleClose={handleClose}
         allProduct={allProduct}
         setAllProduct={setAllProduct}
+        totalWithTax={totalWithTax}
+        setTotalWithTax={setTotalWithTax}
+        totalWithNoTax={totalWithNoTax}
+        setTotalWithNoTax={setTotalWithNoTax}
 
       />    
                                       
