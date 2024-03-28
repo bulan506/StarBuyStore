@@ -3,6 +3,7 @@
 import { useState } from "react";
 import AddressForm from "../address/page";
 
+
 const Cart = ({ cart, toggleCart }: { cart: any, toggleCart: (action: boolean) => void }) => {
 
     const [showAddressForm, setShowAddressForm] = useState(false);

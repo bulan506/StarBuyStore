@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from 'react';
 import NavBar from "./navBar/page";
 import Cart from './shoppingCar/page';
+import '../app/css/style.css';
 
 export default function Home() {
 
@@ -77,7 +78,7 @@ export default function Home() {
     { id: 6, name: 'MousePad', description: 'MousePad HYPER X', imageUrl: 'https://s3.amazonaws.com/static.spdigital.cl/img/products/new_web/1500590806008-36964857_0168832511.jpg', price: 15.0 },
     { id: 7, name: 'Laptop', description: 'Laptop ASUS', imageUrl: 'https://resources.claroshop.com/medios-plazavip/s2/10252/1145258/5d13a10bac9b0-laptop-gamer-asus-rog-strix-scar-ii-i7-16gb-512gb-rtx-2070-1600x1600.jpg', price: 1000.0 },
     { id: 8, name: 'Tarjeta de Video', description: 'Tarjeta Nvidia 4060', imageUrl: 'https://ddtech.mx/assets/uploads/861311bd60bf6ede94bfe7ab01e705a3.png', price: 600.0 },
-    { id: 9, name: 'Control', description: 'Control STEAM', imageUrl: 'https://th.bing.com/th/id/R.41203d347f95a79e668732f51b12da3e?rik=iSunp0CeEv4AGQ&riu=http%3a%2f%2fthenextweb.com%2fwp-content%2fblogs.dir%2f1%2ffiles%2f2015%2f06%2fSteam-Controller.jpg&ehk=STO1S7TrD8QWJvMz%2fINRvKtekwUIyW7nmyOhOV12%2fig%3d&risl=&pid=ImgRaw&r=0', price: 150.0 },
+    { id: 9, name: 'Control', description: 'Control STEAM', imageUrl: 'https://th.bing.com/th/id/OIP.lNj-nw7kO0Q73XjkAvaQkwHaJJ?rs=1&pid=ImgDetMain', price: 150.0 },
     { id: 10, name: 'Gafas VR', description: 'Gafas VR PS4', imageUrl: 'https://www.discoazul.com/uploads/media/images/gafas-playstation-vr-ps4-1.jpg', price: 500.0 },
     { id: 11, name: 'Pantalla', description: 'Pantalla LG OLED', imageUrl: 'https://th.bing.com/th/id/OIP.nC89zBQSGxR8hyVnocBvlQHaGb?rs=1&pid=ImgDetMain', price: 750.0 },
     { id: 12, name: 'Celular', description: 'ASUS ROG', imageUrl: 'https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg', price: 900.0 },
@@ -95,7 +96,7 @@ export default function Home() {
             <h5>{name}</h5>
             <p>Precio: ${price}</p>
             <p>Descripción: {description}</p>
-            <button type="button" className="btn btn-light" onClick={() => handleAddToCart({ product })}>Comprar</button>
+            <button type="button" className="btn btn-buy"  onClick={() => handleAddToCart({ product })}>Agregar</button>
           </div>
         </div>
       </div>
