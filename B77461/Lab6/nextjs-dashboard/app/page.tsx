@@ -10,6 +10,7 @@ export default function Home() {
   const [isCartActive, setIsCartActive] = useState(false);
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
+  const [cartLoaded, setCartLoaded] = useState(false);
   const [cart, setCart] = useState(
     {
       carrito: {
@@ -26,25 +27,25 @@ export default function Home() {
   );
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart'));
-    if (storedCart) {
-      setCart(storedCart);
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart && !cartLoaded) {
+      try {
+        console.log(JSON.parse(storedCart));
+        setCart(JSON.parse(storedCart));
+        setCartLoaded(true);
+      } catch (error) {
+        console.error('Error parsing cart from localStorage:', error);
+      }
     }
-    const storedIdList = JSON.parse(localStorage.getItem('idList'));
-    if (storedIdList) {
-      setIdList(storedIdList);
-    }
-    const storedCount = JSON.parse(localStorage.getItem('count'));
-    if (storedCount) {
-      setCount(storedCount);
-    }
-  }, []);
-
+  }, [cartLoaded]);
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    localStorage.setItem('idList', JSON.stringify(idList));
-    localStorage.setItem('count', JSON.stringify(count));
-  }, [cart, idList, count]);
+    if (cartLoaded) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    setCount(cart.carrito.productos.length);
+  }, [cart, cartLoaded]);
+
+
 
   function productAlreadyAdded({ product }) {
     return idList.includes(product.id);
@@ -77,7 +78,7 @@ export default function Home() {
         }
     }));
 
-    setCount(count - 1); // Restar 1 al contador count
+     setCount(count - 1); // Restar 1 al contador count
 }
 
   function calculateTotals({ product }) {

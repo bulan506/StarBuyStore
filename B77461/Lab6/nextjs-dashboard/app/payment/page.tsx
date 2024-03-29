@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const PaymentForm = () => {
+const PaymentForm = ({ setCart }: { setCart: (cart: any) => void }) => {
 
     const paymentMethods = ['Efectivo', 'Sinpe'];
     const [selectedPayment, setSelectedPayment] = useState(0);
@@ -12,6 +12,13 @@ const PaymentForm = () => {
         const selectedIndex = event.target.selectedIndex;
         console.log(event.target.selectedIndex);
         setSelectedPayment(selectedIndex);
+        setCart(cart => ({
+            ...cart,
+            carrito: {
+                ...cart.carrito,
+                metodoDePago: selectedIndex === 0 ? 'Efectivo' : 'Sinpe'
+            }
+        }));
     }
 
     function generateReceiptNumber() {
