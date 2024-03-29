@@ -13,16 +13,37 @@ interface ModalCartProps {
     show: boolean;
     handleClose: () => void;
     allProduct: ProductItem[];
-    //recibir todos los productos actuales del carrito
     setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;         
     totalWithTax:number;
     setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
     totalWithNoTax: number;
     setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
-    myCartInStorage:  CartShopItem | null;
+    payment: string;
+    setPayment: React.Dispatch<React.SetStateAction<string>>;
+    direction: string;
+    setDirection: React.Dispatch<React.SetStateAction<string>>;
+    verify: boolean;
+    setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+    myCartInStorage: CartShopItem | null;    
   }
   
-export const ModalCart: React.FC<ModalCartProps> = ({ show, handleClose,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,myCartInStorage }) => {
+export const ModalCart: React.FC<ModalCartProps> = ({ 
+    show, 
+    handleClose,
+    allProduct,
+    setAllProduct,
+    totalWithTax,
+    setTotalWithTax,
+    totalWithNoTax,
+    setTotalWithNoTax,
+    payment,
+    setPayment,
+    direction,
+    setDirection,
+    verify,
+    setVerify,    
+    myCartInStorage    
+}) => {
 
 
     //States del ModalDirection (activarlo despues de presionar el boton "iniciar Compra")
@@ -97,7 +118,14 @@ export const ModalCart: React.FC<ModalCartProps> = ({ show, handleClose,allProdu
             totalWithTax={totalWithTax}
             setTotalWithTax={setTotalWithTax}
             totalWithNoTax={totalWithNoTax}
-            setTotalWithNoTax={setTotalWithNoTax}
+            setTotalWithNoTax={setTotalWithNoTax}            
+            payment={payment}
+            setPayment={setPayment}
+            direction={direction}
+            setDirection={setDirection}
+            verify={verify}
+            setVerify={setVerify}            
+            myCartInStorage={myCartInStorage}
             />
         </>
     );

@@ -1,9 +1,10 @@
 // import React from "react"
+import {useEffect} from 'react';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { ProductItem } from './layout';
+import { CartShopItem, ProductItem } from './layout';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 
@@ -18,33 +19,62 @@ interface ModalDirectionProps {
     setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
     totalWithNoTax: number;
     setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+    payment: string;
+    setPayment: React.Dispatch<React.SetStateAction<string>>;
+    direction: string;
+    setDirection: React.Dispatch<React.SetStateAction<string>>;
+    verify: boolean;
+    setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+    myCartInStorage: CartShopItem | null;
   }
 
-export const ModalDirection: React.FC<ModalDirectionProps> = ({show,onHide,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax }) => {  
+export const ModalDirection: React.FC<ModalDirectionProps> = ({
+    show,onHide,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,
+    payment,setPayment,direction,setDirection,verify,setVerify,myCartInStorage
+}) => {  
 
     const [finish,setFinish] = useState(false); //para activar o desactivar el boton "Finalizar Compra"    
-    const [textAreaData, setTextAreaData] = useState("");//para activar o desactivar el boton segun haya texto o no en el textarea
-    const [typePayment, setTypePayment] = useState("");//para activar o desactivar el boton segun haya texto o no en el textarea
-
+    const [textAreaData, setTextAreaData] = useState(direction);//para activar o desactivar el boton segun haya texto o no en el textarea
+    const [typePayment, setTypePayment] = useState(payment);//para activar o desactivar el boton segun haya texto o no en el textarea
+    const [textAreaSinpe, setTextAreaSinpe] = useState("");//para
+    const [adminVerify,setAdminVerify] = useState(verify);        
 
     //Para habilitar o deshabilitar las opciones extra segun el tipo de pago
     const getSelectPayment = (event: React.ChangeEvent<HTMLSelectElement>) =>{
         //activamos el evento de escucha, con el value capturamos el valor del textArea
         const actualValue = event.target.value;
-        //fijamos el valor al estado
         setTypePayment(actualValue);
+        //Guardamos los datos en el LocalStorage        
+        if (myCartInStorage) {
+            myCartInStorage.payment = actualValue;            
+            setCartShopStorage("A", myCartInStorage);            
+            setPayment(actualValue);
+        }        
     }
-
-
     //Para habilitar o deshabilitar las opciones despues de la direccion de entrega
-    const getTextAreaValue = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{
-        //activamos el evento de escucha, con el value capturamos el valor del textArea
-        const actualValue = event.target.value;
-        //fijamos el valor al estado
-        setTextAreaData(actualValue);                  
+    const getTextAreaValue = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
+        const actualValue = event.target.value;        
+        setTextAreaData(actualValue);           
+        if (myCartInStorage) {
+            myCartInStorage.direction = textAreaData;
+            setCartShopStorage("A", myCartInStorage);            
+        }            
+    }
+    const getTextAreaSinpe = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
+        const actualValue = event.target.value;        
+        setTextAreaSinpe(actualValue);                  
+    }
+    const getCheckBoxVerify = (event: React.ChangeEvent<HTMLInputElement>)=>{
+
+        const isChecked = event.target.checked        
+        setAdminVerify(isChecked);        
+        if (myCartInStorage) {
+            myCartInStorage.verify = isChecked;
+            setCartShopStorage("A", myCartInStorage);            
+        }            
     }
 
-    //Cada vez que capturamos datos se guarda en el textAreaData
+    //Cambiar el estado del modal, segun haya contenido o no en el campo de Direccion
     const verifyTextArea = () =>{
         if(textAreaData.trim() !== ""){
             setFinish(true);
@@ -57,27 +87,47 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({show,onHide,allPr
     const resetModal = () =>{
         setFinish(false);
         setTextAreaData("");
+        setTextAreaSinpe("");
         setTypePayment("");
+        setAdminVerify(false);
         onHide();
+    }
+
+    //Validcacion de inputs
+    const purchaseProcess = () =>{
+        //Verificar direccion
+        if(textAreaData.trim() === ""){
+            alert("Por favor, verifique el campo de direccón no esté vacío...");
+            return;
+        }
+        //Verificar tipo de pago
+        if(finish){//verifica que estemos en la ultima pantalla
+            if(typePayment.trim() === "Seleccione un tipo de pago:" || typePayment.trim() === ""){
+                alert("Por favor, indique un método de pago...");
+                return;
+            }
+        }     
+
+        //Verificar que value de la caja Sinpe sea igual al codigo
+        if(typePayment === "Sinpe"){
+            if(textAreaSinpe.trim() !== "1"){
+                alert("El codigo de compra introducido no coincide por el brindado por el sistema");
+                return;
+            }
+        }
+        alert("La compra se ha realizado");
     }
     
 
     return (
         <>
-        <Modal
-         show={show}
-         onHide={onHide}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        >
+        <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                Modal heading
+                Ventanas de Compras:
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-
-
             <Form>
                 <fieldset>
                     <Form.Group className="mb-3">
@@ -94,14 +144,14 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({show,onHide,allPr
 
                             <Form.Group className="mb-3">
                                 <Form.Label htmlFor="disabledSelect">Forma de pago:</Form.Label>
-                                <Form.Select id="disabledSelect" onChange={getSelectPayment}>
-                                    <option>Selecciones un tipo de pago:</option>
-                                    <option>Efectivo</option>
-                                    <option>Sinpe</option>
+                                <Form.Select id="disabledSelect" value={payment} onChange={getSelectPayment}>
+                                    <option value="">Seleccione un tipo de pago:</option>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Sinpe">Sinpe</option>
                                 </Form.Select>
                             </Form.Group>
 
-                            {typePayment == "SinpeEfectivo" && (
+                            {typePayment == "Efectivo" && (
 
                                 <>
                                     <Form.Group className="mb-3">
@@ -115,36 +165,37 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({show,onHide,allPr
 
                             <>
                                 <Form.Group className="mb-3">
+                                    <Form.Label>1</Form.Label>      
+                                    <br />                                  
+                                    <br />                                  
                                     <Form.Label>Código de Compra:</Form.Label>
-                                    <Form.Control rows={5} as="textarea" placeholder="Ingrese su código"/>
+                                    <Form.Control rows={5} as="textarea" placeholder="Ingrese su código" onChange={getTextAreaSinpe}/>
                                 </Form.Group>
                             </>
 
                             )}
 
                             <Form.Group>                                
-                                <Form.Label htmlFor="disabledSelect">Verificación</Form.Label>
-                                <Form.Select id="disabledSelect">
-                                    <option>Disabled select</option>
-                                </Form.Select>                                
+                                <Form.Label htmlFor="disabledSelect">Indique si el pago requiere Verificación:</Form.Label>
+                                <Form.Check 
+                                    type="checkbox" label="Marque la casilla si requiere Verificación"
+                                    checked={adminVerify}
+                                    onChange={getCheckBoxVerify}
+                                />
                             </Form.Group>
                         </>
                     ):null}
                                                             
                 </fieldset>
-            </Form>
-
-
-                
+            </Form>                
             </Modal.Body>
             <Modal.Footer>
                 {
-                    finish ? <Button type="submit">Finalizar Compra</Button> : null
+                    finish ? <Button type="submit" onClick={purchaseProcess}>Finalizar Compra</Button> : null
                 }                
                 {
                     finish ? null :  <Button onClick={verifyTextArea} onChange={verifyTextArea}>Continuar con la compra</Button>
-                }
-                                
+                }                                
                 <Button onClick={()=>{onHide(); resetModal()}}>Close</Button>                
             </Modal.Footer>
         </Modal>                

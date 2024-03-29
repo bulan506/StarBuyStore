@@ -52,7 +52,7 @@ export const getCartShopStorage = (key: string): CartShopItem | null => {
             tax: 0,
             total: 0,
             direction: "",
-            payment: 0,
+            payment: "",
             verify: false  
         };
         //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
@@ -67,8 +67,6 @@ export default function Page() {
     //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
     //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
 
-
-    //const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(null);
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
                
     //El carrito puede venir como nulo, por eso el ternario    
@@ -76,17 +74,11 @@ export default function Page() {
     const [allProduct, setAllProduct] = useState<ProductItem[]>(myCartInStorage ? myCartInStorage.allProduct : []);    
     const [totalWithTax, setTotalWithTax] = useState<number>(myCartInStorage ? myCartInStorage.total : 0);  
     const [totalWithNoTax, setTotalWithNoTax] = useState<number>(myCartInStorage ? myCartInStorage.subtotal : 0); 
-                        
-    //Estado del numero del carrito
-    // const [numberOfItems,setNumberOfItems] = useState(0);    
-    
-    //Estado de la lista de productos del carrito
-    // const [allProduct, setAllProduct] = useState<ProductItem[]>([]);    
-    
-    //Estado de los totales     
-    // const [totalWithTax,setTotalWithTax] = useState(0);  
-    // const [totalWithNoTax,setTotalWithNoTax] = useState(0);     
-
+    // const [codPurchase, setCodPurchase] = useState<number>(myCartInStorage ? myCartInStorage.c : 0); 
+    const [payment, setPayment] = useState<string>(myCartInStorage ? myCartInStorage.payment : ""); 
+    const [direction, setDirection] = useState<string>(myCartInStorage ? myCartInStorage.direction : ""); 
+    const [verify, setVerify] = useState<boolean>(myCartInStorage ? myCartInStorage.verify : false); 
+                          
   return (
     <main className="flex min-h-screen flex-col p-6">
 
@@ -108,6 +100,12 @@ export default function Page() {
                     setTotalWithTax={setTotalWithTax}
                     totalWithNoTax={totalWithNoTax}
                     setTotalWithNoTax={setTotalWithNoTax}
+                    payment={payment}
+                    setPayment={setPayment}
+                    direction={direction}
+                    setDirection={setDirection}
+                    verify={verify}
+                    setVerify={setVerify}
                     myCartInStorage={myCartInStorage}
                 />;
             </div>            
@@ -141,6 +139,12 @@ export default function Page() {
                             totalWithNoTax={totalWithNoTax}
                             setTotalWithNoTax={setTotalWithNoTax}
                             myCartInStorage={myCartInStorage}
+                            payment={payment}
+                            setPayment={setPayment}
+                            direction={direction}
+                            setDirection={setDirection}
+                            verify={verify}
+                            setVerify={setVerify}                            
                         />                        
                       );
                   }

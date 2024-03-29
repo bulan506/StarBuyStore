@@ -30,21 +30,21 @@ export const product: ProductItem[] = [
   // const product = [
   {
       id: 1,
-      name: "Producto 1",                
+      name: "Tablet Samsing",                
       imageUrl: './img/tablet_samsung.jpg',
       quantity: 0,
       price: 25
   },
   {
       id: 2,
-      name: "Producto 2",                
+      name: "TB",                
       imageUrl: "./img/tv.jfif",
       quantity: 0,
       price: 50
   },
   {
       id: 3,
-      name: "Producto 3",                
+      name: "Auriculares Genericos",                
       imageUrl: "./img/auri.jfif",
       quantity: 0,
       price: 100
@@ -58,7 +58,7 @@ export const product: ProductItem[] = [
   },
   {
       id: 5,
-      name: "Producto 5",                
+      name: "Teclado LED",                
       imageUrl: "./img/teclado.jpg",
       quantity: 0,
       price: 75
@@ -79,7 +79,7 @@ export const product: ProductItem[] = [
   },
   {
       id: 8,                
-      name: "Producto 8",
+      name: "Samsing A54",
       imageUrl: "./img/a54_samsung.jpg",
       quantity: 0,
       price: 250
@@ -107,21 +107,9 @@ export interface CartShopItem {
   tax: number;
   total: number;
   direction: string;
-  payment: number;
+  payment: string;
   verify: boolean
 }
-
-// export interface LocalStorageItem {
-//   allProduct: ProductItem[];
-//   cartShop: CartShopItem;  
-// }
-
-// export const myLocalStorage: LocalStorageItem = {
-//   allProduct: [], //estan vacio en un principio
-//   cartShop: cart
-// };
-
-
 
 interface ProductProps {
   product: ProductItem;
@@ -133,12 +121,35 @@ interface ProductProps {
   setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
   totalWithNoTax: number;
   setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+  payment: string;
+  setPayment: React.Dispatch<React.SetStateAction<string>>;
+  direction: string;
+  setDirection: React.Dispatch<React.SetStateAction<string>>;
+  verify: boolean;
+  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
   myCartInStorage: CartShopItem | null;
 }
 
 
 //Galeria de Productos
-export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNumberOfItems, allProduct, setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,myCartInStorage }) => {
+export const Product: React.FC<ProductProps> = ({
+  product,
+  numberOfItems,
+  setNumberOfItems,
+  allProduct,
+  setAllProduct,
+  totalWithTax,
+  setTotalWithTax,
+  totalWithNoTax,
+  setTotalWithNoTax,
+  payment,
+  setPayment,
+  direction,
+  setDirection,
+  verify,
+  setVerify,    
+  myCartInStorage
+  }) => {
 
   const { id,name, imageUrl, price } = product;    
 
@@ -164,7 +175,7 @@ export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNum
       updatedCart.subtotal = newTotalWithNoTax
       updatedCart.total = newTotalWithTax;      
       
-      //sobbrescrimos el carrito clonado sobre el original
+      //sobbreescrimos el carrito clonado sobre el original
       setCartShopStorage("A", updatedCart);
                 
     } else {
@@ -194,12 +205,34 @@ interface CartShopProps {
   totalWithTax:number;
   setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
   totalWithNoTax: number;
-  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;  
+  payment: string;
+  setPayment: React.Dispatch<React.SetStateAction<string>>;
+  direction: string;
+  setDirection: React.Dispatch<React.SetStateAction<string>>;
+  verify: boolean;
+  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
   myCartInStorage: CartShopItem | null;
 }
 
 //Carrito
-export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItems,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,myCartInStorage}) => {
+export const CartShop: React.FC<CartShopProps> = ({
+    numberOfItems,
+    setNumberOfItems,
+    allProduct,
+    setAllProduct,
+    totalWithTax,
+    setTotalWithTax,
+    totalWithNoTax,
+    setTotalWithNoTax,
+    payment,
+    setPayment,
+    direction,
+    setDirection,
+    verify,
+    setVerify,    
+    myCartInStorage
+  }) => {
 
   //States del ModalCart
   const [show, setShow] = useState(false);
@@ -227,6 +260,12 @@ export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItem
         setTotalWithTax={setTotalWithTax}
         totalWithNoTax={totalWithNoTax}
         setTotalWithNoTax={setTotalWithNoTax}
+        payment={payment}
+        setPayment={setPayment}
+        direction={direction}
+        setDirection={setDirection}
+        verify={verify}
+        setVerify={setVerify}
         myCartInStorage={myCartInStorage}
       />                                                    
     </div>           
