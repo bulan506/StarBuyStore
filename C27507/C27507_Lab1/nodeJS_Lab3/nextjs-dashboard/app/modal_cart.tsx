@@ -2,7 +2,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ProductItem } from './layout';
-import { totalPriceNoTax, totalPriceTax,setToLocalStorage,getFromLocalStorage } from './page'; //precios totales - manejor LocalStorage
+import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal

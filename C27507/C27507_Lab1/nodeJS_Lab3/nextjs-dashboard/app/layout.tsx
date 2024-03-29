@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import { number } from 'zod';
 import { ModalCart } from './modal_cart';
-import { totalPriceNoTax, totalPriceTax,setToLocalStorage,getFromLocalStorage } from './page'; //precios totales - manejor LocalStorage
+import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 
 export default function RootLayout({
@@ -24,21 +24,6 @@ export interface ProductItem {
   imageUrl: string;
   quantity: 0;
   price: number;
-}
-
-export interface CartShopItem {
-  productsInCart: ProductItem[];
-  subtotal: number;
-  tax: number;
-  total: number;
-  direction: string;
-  payment: number;
-  verify: boolean
-}
-
-export interface LocalStorageItem {
-  products: ProductItem;
-  cartShop: CartShopItem;  
 }
 
 export const product: ProductItem[] = [
@@ -116,16 +101,36 @@ export const product: ProductItem[] = [
 
 ];
 
-export const cart: CartShopItem = {
+export interface CartShopItem {
+  allProduct: ProductItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  direction: string;
+  payment: number;
+  verify: boolean
+}
+
+// export interface LocalStorageItem {
+//   allProduct: ProductItem[];
+//   cartShop: CartShopItem;  
+// }
+
+// export const cart: CartShopItem = {
   
-  productsInCart: [],
-  subtotal: 0,
-  tax: 0,
-  total: 0,
-  direction: "",
-  payment: 0,
-  verify: false  
-};
+//   allProduct: [],
+//   subtotal: 0,
+//   tax: 0,
+//   total: 0,
+//   direction: "",
+//   payment: 0,
+//   verify: false  
+// };
+
+// export const myLocalStorage: LocalStorageItem = {
+//   allProduct: [], //estan vacio en un principio
+//   cartShop: cart
+// };
 
 
 
@@ -151,15 +156,20 @@ export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNum
     console.log('Ultimo producto',product);
 
     //Incrementa el numero de productos del carrito    
-    setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);
+    setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);    
 
     //Agrega un nuevo producto a la lista global de productos del carrito
-    //setAllProduct([...allProduct, product]) //spread operator   
-    setAllProduct(prevAllProduct => [...prevAllProduct, product])
+    const newAllProduct = [...allProduct, product];
+    setAllProduct(newAllProduct);
+    // setAllProduct(prevAllProduct => [...prevAllProduct, product])    //no borrar
     
     //Actualizar el total de los productos       
-    setTotalWithNoTax(prevTotalWithNoTax => totalPriceNoTax([...allProduct,product]));
-    setTotalWithTax(prevTotalPriceTax => totalPriceTax([...allProduct,product]));
+    const newTotalWithNoTax = totalPriceNoTax(newAllProduct);
+    const newTotalWithTax = totalPriceTax(newAllProduct);
+    setTotalWithNoTax(newTotalWithNoTax);
+    setTotalWithTax(newTotalWithTax);
+    // setTotalWithNoTax(prevTotalWithNoTax => totalPriceNoTax([...allProduct,product]));    //no borrar
+    // setTotalWithTax(prevTotalPriceTax => totalPriceTax([...allProduct,product]));    //no borrar
 
     //Actualizar lista de productos en el LocalStorage
   }

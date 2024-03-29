@@ -30,57 +30,75 @@ export const totalPriceTax = (allProduct: { price: number; quantity: number; }[]
 }
 
 //Metodos del LocalStorage
-const setCartShopStorage = (key: string, mockup: CartShopItem[]) => {
-    const cartShopData = JSON.stringify(mockup);
-    localStorage.setItem(key,cartShopData);
+    //Guardamos algo dentro del storage (si es nulo, no se hace nada)
+export const setCartShopStorage = (key: string, mockup: CartShopItem | null) => {
+    if(mockup !== null){
+        //como no es nulo, se guarda en el localStorage
+        const cartShopData = JSON.stringify(mockup);
+        localStorage.setItem(key,cartShopData);
+    }
 }
 
-const getCartShopStorage = (key: string): CartShopItem | null => {
+    //Leemos lo que esta dentro del carrito o sea cartShopItem    
+export const getCartShopStorage = (key: string): CartShopItem | null => {
+        
     const cartShopData = localStorage.getItem(key);
-    if(cartShopData){
-        return JSON.parse(cartShopData) as CartShopItem;
+    if(cartShopData !== null){
+        return JSON.parse(cartShopData) as CartShopItem;        
     }else{
-        return null;
+        let cart: CartShopItem = {  
+            allProduct: [],
+            subtotal: 0,
+            tax: 0,
+            total: 0,
+            direction: "",
+            payment: 0,
+            verify: false  
+        };
+        //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
+        setCartShopStorage("PPP",cart);
+        return cart;
     }
 }
 
 
-export const setToLocalStorage = ({myProductsInStorage,setMyProductsInStorage}:{myProductsInStorage: ProductItem[], setMyProductsInStorage: React.Dispatch<React.SetStateAction<ProductItem[]>>}) => {
-    //Guardar en LocalStorage      
-    useEffect(() => {
-        localStorage.setItem("myProductsInStorage",JSON.stringify(myProductsInStorage))
-    },[myProductsInStorage]);
-}
-export const getFromLocalStorage = ({myProductsInStorage,setMyProductsInStorage}:{myProductsInStorage: ProductItem[], setMyProductsInStorage: React.Dispatch<React.SetStateAction<ProductItem[]>>}) => {    
-      //Leer en LocalStorage      
-    useEffect(() => {
-        const productsFromStorage = JSON.parse(localStorage.getItem("myProductsInStorage") || "{}}");
-        if (productsFromStorage !== null || productsFromStorage !== "{}") {
-            setMyProductsInStorage(productsFromStorage);
-        }        
-    }, []);    
-    return myProductsInStorage;
-}
+export default function Page() { 
+    //Como El localstorage puede estar vacio o haberse borrado la key por muchas razones, creamos uno null. Luego lamamos
+    //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
+    //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
 
 
-export default function Page() {       
-    //State para los product del local, estos deben modificarse cada vez que pasa algo en la pagina
-    const [myProductsInStorage, setMyProductsInStorage] = useState<ProductItem[]>([]);
+    //const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(null);
+    const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
+    console.log(myCartInStorage);    
+    if (myCartInStorage !== null) {
+        console.log(myCartInStorage); // Acceso seguro a myCartInStorage
 
-    //Codigos para llamar datos
-                 
+        // Modificar un atributo de myCartInStorage
+        myCartInStorage.subtotal = 100;
+
+        // También puedes hacer otras operaciones con myCartInStorage aquí
+    } else {
+        console.log("El carrito en el almacenamiento está vacío o no existe.");
+    }
+           
+
+    //El carrito puede venir como nulo, por eso el ternario    
+    const [numberOfItems, setNumberOfItems] = useState<number>(myCartInStorage ? myCartInStorage.allProduct.length : 0);    
+    const [allProduct, setAllProduct] = useState<ProductItem[]>(myCartInStorage ? myCartInStorage.allProduct : []);    
+    const [totalWithTax, setTotalWithTax] = useState<number>(myCartInStorage ? myCartInStorage.total : 0);  
+    const [totalWithNoTax, setTotalWithNoTax] = useState<number>(myCartInStorage ? myCartInStorage.subtotal : 0); 
+                        
     //Estado del numero del carrito
-    const [numberOfItems,setNumberOfItems] = useState(0);
+    // const [numberOfItems,setNumberOfItems] = useState(0);    
+
     
-    //Estado de la lista del carrito
-    const [allProduct, setAllProduct] = useState<ProductItem[]>([]);
+    //Estado de la lista de productos del carrito
+    // const [allProduct, setAllProduct] = useState<ProductItem[]>([]);    
     
     //Estado de los totales     
-    const [totalWithTax,setTotalWithTax] = useState(0);  
-    const [totalWithNoTax,setTotalWithNoTax] = useState(0); 
-
-    //Settear datos
-
+    // const [totalWithTax,setTotalWithTax] = useState(0);  
+    // const [totalWithNoTax,setTotalWithNoTax] = useState(0);     
 
   return (
     <main className="flex min-h-screen flex-col p-6">
