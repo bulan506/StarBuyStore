@@ -144,35 +144,44 @@ interface ProductProps {
   setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
   totalWithNoTax: number;
   setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+  myCartInStorage: CartShopItem | null;
 }
 
 
 //Galeria de Productos
-export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNumberOfItems, allProduct, setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax }) => {
+export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNumberOfItems, allProduct, setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,myCartInStorage }) => {
 
   const { id,name, imageUrl, price } = product;    
 
-  const buyItem = () =>{
-    console.log('Ultimo producto',product);
+  const buyItem = () => {    
+    //como el objeto del carrito puede ser nulo, creamos una condicion para evitar estar haciendo
+    //condiciones    
+    if (myCartInStorage) {
 
-    //Incrementa el numero de productos del carrito    
-    setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);    
+      //Actualizacion de los useState            
+      setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);
+      const newAllProduct = [...allProduct, product];
+      setAllProduct(newAllProduct);
+      const newTotalWithNoTax = totalPriceNoTax(newAllProduct);
+      const newTotalWithTax = totalPriceTax(newAllProduct);
+      setTotalWithNoTax(newTotalWithNoTax);
+      setTotalWithTax(newTotalWithTax);
 
-    //Agrega un nuevo producto a la lista global de productos del carrito
-    const newAllProduct = [...allProduct, product];
-    setAllProduct(newAllProduct);
-    // setAllProduct(prevAllProduct => [...prevAllProduct, product])    //no borrar
-    
-    //Actualizar el total de los productos       
-    const newTotalWithNoTax = totalPriceNoTax(newAllProduct);
-    const newTotalWithTax = totalPriceTax(newAllProduct);
-    setTotalWithNoTax(newTotalWithNoTax);
-    setTotalWithTax(newTotalWithTax);
-    // setTotalWithNoTax(prevTotalWithNoTax => totalPriceNoTax([...allProduct,product]));    //no borrar
-    // setTotalWithTax(prevTotalPriceTax => totalPriceTax([...allProduct,product]));    //no borrar
 
-    //Actualizar lista de productos en el LocalStorage
-  }
+      //Actualizacion de los atributos del carrito
+        //lo clonamos para evitar malas asignaciones con el carrito original
+      const updatedCart = { ...myCartInStorage };      
+      updatedCart.allProduct = newAllProduct;      
+      updatedCart.subtotal = newTotalWithNoTax
+      updatedCart.total = newTotalWithTax;      
+      
+      //sobbrescrimos el carrito clonado sobre el original
+      setCartShopStorage("A", updatedCart);
+                
+    } else {
+        console.log("El carro no existe");
+    }
+};
     
   return (
       <div className="product col-sm-4 row">

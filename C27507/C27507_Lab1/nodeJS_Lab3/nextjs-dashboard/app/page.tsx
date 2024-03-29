@@ -70,19 +70,7 @@ export default function Page() {
 
     //const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(null);
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
-    console.log(myCartInStorage);    
-    if (myCartInStorage !== null) {
-        console.log(myCartInStorage); // Acceso seguro a myCartInStorage
-
-        // Modificar un atributo de myCartInStorage
-        myCartInStorage.subtotal = 100;
-
-        // También puedes hacer otras operaciones con myCartInStorage aquí
-    } else {
-        console.log("El carrito en el almacenamiento está vacío o no existe.");
-    }
-           
-
+               
     //El carrito puede venir como nulo, por eso el ternario    
     const [numberOfItems, setNumberOfItems] = useState<number>(myCartInStorage ? myCartInStorage.allProduct.length : 0);    
     const [allProduct, setAllProduct] = useState<ProductItem[]>(myCartInStorage ? myCartInStorage.allProduct : []);    
@@ -91,7 +79,6 @@ export default function Page() {
                         
     //Estado del numero del carrito
     // const [numberOfItems,setNumberOfItems] = useState(0);    
-
     
     //Estado de la lista de productos del carrito
     // const [allProduct, setAllProduct] = useState<ProductItem[]>([]);    
@@ -152,6 +139,7 @@ export default function Page() {
                             setTotalWithTax={setTotalWithTax}
                             totalWithNoTax={totalWithNoTax}
                             setTotalWithNoTax={setTotalWithNoTax}
+                            myCartInStorage={myCartInStorage}
                         />                        
                       );
                   }
