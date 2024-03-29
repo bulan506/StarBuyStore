@@ -116,17 +116,6 @@ export interface CartShopItem {
 //   cartShop: CartShopItem;  
 // }
 
-// export const cart: CartShopItem = {
-  
-//   allProduct: [],
-//   subtotal: 0,
-//   tax: 0,
-//   total: 0,
-//   direction: "",
-//   payment: 0,
-//   verify: false  
-// };
-
 // export const myLocalStorage: LocalStorageItem = {
 //   allProduct: [], //estan vacio en un principio
 //   cartShop: cart
@@ -195,6 +184,7 @@ export const Product: React.FC<ProductProps> = ({ product, numberOfItems, setNum
 }
 
 
+
 interface CartShopProps {
   numberOfItems: number;
   setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;    
@@ -205,20 +195,17 @@ interface CartShopProps {
   setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
   totalWithNoTax: number;
   setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+  myCartInStorage: CartShopItem | null;
 }
 
 //Carrito
-export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItems,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax}) => {
+export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItems,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,myCartInStorage}) => {
 
   //States del ModalCart
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-
-
+  const handleShow = () => setShow(true);  
   return(
-
     <div className="cart_container col-sm-6">
       {/* Cuando se presione cualquier parte del Carrito, se abre el modal */}
       <a onClick={handleShow}>
@@ -240,9 +227,8 @@ export const CartShop: React.FC<CartShopProps> = ({numberOfItems,setNumberOfItem
         setTotalWithTax={setTotalWithTax}
         totalWithNoTax={totalWithNoTax}
         setTotalWithNoTax={setTotalWithNoTax}
-
-      />    
-                                      
+        myCartInStorage={myCartInStorage}
+      />                                                    
     </div>           
   );
 }

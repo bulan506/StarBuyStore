@@ -108,6 +108,7 @@ export default function Page() {
                     setTotalWithTax={setTotalWithTax}
                     totalWithNoTax={totalWithNoTax}
                     setTotalWithNoTax={setTotalWithNoTax}
+                    myCartInStorage={myCartInStorage}
                 />;
             </div>            
       </div>  

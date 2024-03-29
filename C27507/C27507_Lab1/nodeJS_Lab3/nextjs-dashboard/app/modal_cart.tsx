@@ -1,10 +1,13 @@
-// import React from "react"
+import React from 'react';
+import {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { ProductItem } from './layout';
+import { ModalDirection } from './modal_direction';
+import { CartShopItem, ProductItem } from './layout';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 
+// https://react-bootstrap.netlify.app/docs/components/modal/
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalCartProps {
     show: boolean;
@@ -16,15 +19,14 @@ interface ModalCartProps {
     setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
     totalWithNoTax: number;
     setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+    myCartInStorage:  CartShopItem | null;
   }
   
-export const ModalCart: React.FC<ModalCartProps> = ({ show, handleClose,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax }) => {
+export const ModalCart: React.FC<ModalCartProps> = ({ show, handleClose,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,myCartInStorage }) => {
 
 
-    const starBuying = () =>{
-
-    }
-        
+    //States del ModalDirection (activarlo despues de presionar el boton "iniciar Compra")
+    const [modalShow, setModalShow] = React.useState(false);
 
     return (
         <>     
@@ -67,7 +69,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({ show, handleClose,allProdu
                     {
                         allProduct.length ? (
                             <>
-                                <Button variant="secondary">
+                                <Button variant="secondary" onClick={() => setModalShow(true)}>
                                     Iniciar compra
                                 </Button>                              
                             </>
@@ -84,6 +86,19 @@ export const ModalCart: React.FC<ModalCartProps> = ({ show, handleClose,allProdu
                     
                 </Modal.Footer>
             </Modal>
+
+            {/* Modal para la direccion del usuario */}
+            
+            <ModalDirection 
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+            allProduct={allProduct}
+            setAllProduct={setAllProduct}
+            totalWithTax={totalWithTax}
+            setTotalWithTax={setTotalWithTax}
+            totalWithNoTax={totalWithNoTax}
+            setTotalWithNoTax={setTotalWithNoTax}
+            />
         </>
     );
 }
