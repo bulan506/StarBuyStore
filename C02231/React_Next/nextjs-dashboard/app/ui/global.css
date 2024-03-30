@@ -1,0 +1,38 @@
+/* global.css */
+
+body {
+    background-color: silver;
+  }
+  
+  .text-bg-dark {
+    color: gray;
+  }
+  
+ 
+  .btn-dark:hover {
+    background-color: gray;
+  }
+  
+  .btn-success {
+    background-color: green;
+    color: white;
+  }
+  
+  .btn-success:hover {
+    background-color: darkgreen;
+  }
+  
+  .btn-primary {
+    background-color: blue;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: darkblue;
+  }
+  
+  .footer {
+    background-color: gray;
+    color: white;
+  }
+  
