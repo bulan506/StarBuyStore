@@ -30,14 +30,14 @@ export const product: ProductItem[] = [
   // const product = [
   {
       id: 1,
-      name: "Tablet Samsing",                
+      name: "Tablet Samsung",                
       imageUrl: './img/tablet_samsung.jpg',
       quantity: 0,
       price: 25
   },
   {
       id: 2,
-      name: "TB",                
+      name: "TV LG UHD",                
       imageUrl: "./img/tv.jfif",
       quantity: 0,
       price: 50
@@ -79,20 +79,28 @@ export const product: ProductItem[] = [
   },
   {
       id: 8,                
-      name: "Samsing A54",
+      name: "Samsung A54",
       imageUrl: "./img/a54_samsung.jpg",
       quantity: 0,
       price: 250
   },
+
   {
-      id: 9,
+    id: 9,                
+    name: "Samsung A54",
+    imageUrl: "./img/a54_samsung.jpg",
+    quantity: 0,
+    price: 250
+},
+  {
+      id: 10,
       name: "Mouse Microsoft",
       imageUrl: "./img/mouse.png",
       quantity: 0,
       price: 2500
   },
   {
-    id:10,
+    id:11,
     name:"Módem Router - Archer VR400",
     imageUrl: "./img/router_archerVR400.jpg",
     quantity: 0,
@@ -250,10 +258,13 @@ export const CartShop: React.FC<CartShopProps> = ({
           
       </a>  
 
-      {/* Llamamos al carrito desde modal_cart.tsx */}
+      {/* Llamamos al carrito desde modal_cart.tsx 
+      Le pasamos los useState al modal principal para mantener la referencia de todos los datos, en caso de usarlos
+      */}
       <ModalCart 
         show={show} 
         handleClose={handleClose}
+        setNumberOfItems={setNumberOfItems}
         allProduct={allProduct}
         setAllProduct={setAllProduct}
         totalWithTax={totalWithTax}

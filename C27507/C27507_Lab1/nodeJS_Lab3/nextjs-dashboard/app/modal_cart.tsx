@@ -6,12 +6,12 @@ import { ModalDirection } from './modal_direction';
 import { CartShopItem, ProductItem } from './layout';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
-
 // https://react-bootstrap.netlify.app/docs/components/modal/
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalCartProps {
     show: boolean;
     handleClose: () => void;
+    setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;         
     allProduct: ProductItem[];
     setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;         
     totalWithTax:number;
@@ -25,11 +25,12 @@ interface ModalCartProps {
     verify: boolean;
     setVerify: React.Dispatch<React.SetStateAction<boolean>>;
     myCartInStorage: CartShopItem | null;    
-  }
+}
   
 export const ModalCart: React.FC<ModalCartProps> = ({ 
     show, 
     handleClose,
+    setNumberOfItems,
     allProduct,
     setAllProduct,
     totalWithTax,
@@ -45,6 +46,29 @@ export const ModalCart: React.FC<ModalCartProps> = ({
     myCartInStorage    
 }) => {
 
+    //Vaciar lista de productos - Local y la del Carrito
+    const deleteAllProduct = () => {
+        if(myCartInStorage){        
+            //setteamos todo el carrito
+            const newMockup: CartShopItem = {
+                allProduct: [],
+                subtotal: 0,
+                tax: 0,
+                total: 0,
+                direction: '',
+                payment: '',
+                verify: false,
+            };            
+            setCartShopStorage("A",newMockup);            
+            setAllProduct(newMockup.allProduct);
+            setDirection(newMockup.direction);
+            setPayment(newMockup.payment);
+            setTotalWithNoTax(newMockup.subtotal);
+            setTotalWithTax(newMockup.total);
+            setVerify(newMockup.verify);
+            setNumberOfItems(0);
+        }        
+    }
 
     //States del ModalDirection (activarlo despues de presionar el boton "iniciar Compra")
     const [modalShow, setModalShow] = React.useState(false);
@@ -98,7 +122,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                             <></>
                         )
                     }
-                    <Button variant="secondary">
+                    <Button variant="secondary" onClick={deleteAllProduct}>
                         Vaciar Carrito
                     </Button>          
                     <Button variant="secondary" onClick={handleClose}>

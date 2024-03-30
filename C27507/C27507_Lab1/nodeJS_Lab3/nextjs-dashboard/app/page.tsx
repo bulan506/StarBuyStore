@@ -9,6 +9,7 @@ import { ProductItem,CartShopItem  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
+import { mock } from 'node:test';
 
 
 //Calcular el total y manejarlo con stateUse para tenerlo en todos los componentes
@@ -69,12 +70,11 @@ export default function Page() {
 
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
                
-    //El carrito puede venir como nulo, por eso el ternario    
+    //El carrito puede venir como nulo hacemos un condicional  
     const [numberOfItems, setNumberOfItems] = useState<number>(myCartInStorage ? myCartInStorage.allProduct.length : 0);    
     const [allProduct, setAllProduct] = useState<ProductItem[]>(myCartInStorage ? myCartInStorage.allProduct : []);    
     const [totalWithTax, setTotalWithTax] = useState<number>(myCartInStorage ? myCartInStorage.total : 0);  
     const [totalWithNoTax, setTotalWithNoTax] = useState<number>(myCartInStorage ? myCartInStorage.subtotal : 0); 
-    // const [codPurchase, setCodPurchase] = useState<number>(myCartInStorage ? myCartInStorage.c : 0); 
     const [payment, setPayment] = useState<string>(myCartInStorage ? myCartInStorage.payment : ""); 
     const [direction, setDirection] = useState<string>(myCartInStorage ? myCartInStorage.direction : ""); 
     const [verify, setVerify] = useState<boolean>(myCartInStorage ? myCartInStorage.verify : false); 
