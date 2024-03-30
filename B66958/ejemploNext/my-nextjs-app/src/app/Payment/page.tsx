@@ -1,12 +1,20 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
-const PaymentForm = ({ setCart }: { setCart: (cart: any) => void }) => {
-
-    const paymentMethods = ['Efectivo', 'Sinpe'];
+const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => void }) => {
     const [selectedPayment, setSelectedPayment] = useState(0);
     const [orderNumber, setOrderNumber] = useState('');
+
+    useEffect(() => {
+        setCart(cart => ({
+            ...cart,
+            carrito: {
+                ...cart.carrito,
+                metodoDePago: selectedPayment === 0 ? 'Efectivo' : 'Sinpe'
+            }
+        }));
+    }, []);
 
     function handleSelectPayment(event: any) {
         const selectedIndex = event.target.selectedIndex;
@@ -59,7 +67,7 @@ const PaymentForm = ({ setCart }: { setCart: (cart: any) => void }) => {
                 <h3>Métodos de pago</h3>
                 <div className="form-group">
                     <select className="form-control" onChange={handleSelectPayment}>
-                        {paymentMethods.map(method => <option>{method}</option>)}
+                        {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
                     </select>
                 </div>
             </div>

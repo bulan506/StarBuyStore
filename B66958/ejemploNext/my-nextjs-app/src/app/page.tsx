@@ -45,13 +45,9 @@ export default function Home() {
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
     if (storedCart && !cartLoaded) {
-      try {
-        console.log(JSON.parse(storedCart));
-        setCart(JSON.parse(storedCart));
-        setCartLoaded(true);
-      } catch (error) {
-        console.error('Error parsing cart from localStorage:', error);
-      }
+      console.log(JSON.parse(storedCart));
+      setCart(JSON.parse(storedCart));
+      setCartLoaded(true);
     }
   }, [cartLoaded]);
 
