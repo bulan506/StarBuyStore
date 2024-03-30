@@ -40,4 +40,12 @@ body {
     top: -10px;
     position: relative;
   }
+
+  .main {
+    margin: 2rem;
+  }
+
+  .imagenContainer {
+    min-height: 100px;
+  }
   

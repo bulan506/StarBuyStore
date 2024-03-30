@@ -1,23 +1,27 @@
 'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
-import "./stylecarrito.css"
+import "./css/stylecarrito.css";
+import { getUserData } from "../store/store";
 
 export default function Carrito() {
-  const [carrito, setCarrito] = useState([]);
-  const [Factura, setFactura] = useState(0);
+  const [datos, setDatos] = useState({
+    "productos": [],
+    "carrito":[],
+    "subtotal": 0,
+  });
 
   useEffect(() => {
-    const carritoGuardado = localStorage.getItem("carrito");
-    if (carritoGuardado) {
-      setCarrito(JSON.parse(carritoGuardado));
-    }
+    const data = getUserData();
+    setDatos(data);
   }, []);
 
   useEffect(() => {
-    const total = carrito.reduce((acc, producto) => acc + producto.precio, 0);
-    setFactura(total);
-  }, [carrito]);
+    const subtotal = datos.carrito.reduce((acc, producto) => acc + producto.precio, 0);
+    setDatos(previousState => {
+      return { ...previousState, subtotal:  subtotal}
+    });
+  }, [datos.carrito]);
 
   return (
     <main className="flex min-h-screen flex-col p-6">
@@ -26,7 +30,7 @@ export default function Carrito() {
       </header>
       <div className="container">
         <div className="row">
-          {carrito.map((producto, index) => (
+          {datos.carrito.map((producto, index) => (
             <div className="col-sm-3" key={index}>
               <div className="card">
                 <img src={producto.imagen} className="card-img-top" alt={producto.nombre} />
@@ -40,8 +44,8 @@ export default function Carrito() {
           ))}
         </div>
       </div>
-      <footer className="footer">
-        Precio final: {Factura}$
+      <footer className="footer d-flex justify-content-center">
+        Precio final: {datos.subtotal}$
       </footer>
     </main>
   );

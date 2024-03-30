@@ -1,15 +1,18 @@
 'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/style.css"
+import "./css/style.css";
 import { useState, useEffect } from 'react';
+import { getUserData, saveUserData, clearUserData } from "../store/store";
 
 
 const Producto = ({ producto, carrito }) => (
   <div className="col-sm-3">
     <h3>{producto.nombre}</h3>
     <p>{producto.descripcion}</p>
-    <img src={producto.imagen} width="100" height="100" />
-    <p>{producto.precio}</p>
+    <div className="imagenContainer">
+      <img src={producto.imagen} width="100" height="80" />
+    </div>
+    <p>Precio: {producto.precio}$</p>
     <button onClick={() => carrito(producto)}>Agregar</button>
   </div>
 );
@@ -58,68 +61,54 @@ const CarruselImagenes = ({ lista }) => (
         <span className="visually-hidden">Next</span>
       </button>
     </div>
-    <div className="d-flex justify-content-center">
-      <button>Comprar</button>
-    </div>
   </div>
 );
 
-const productos = [
-  {
-    id: 1,
-    descripcion: "Descripcion producto 1",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT82KYYpYvwCt-r4FUr5jlFGitEWKLnnoI5-Q&usqp=CAU",
-    nombre: "objeto 1",
-    precio: 20,
-  },
-  {
-    id: 2,
-    descripcion: "Descripcion producto 2",
-    imagen: "https://falabella.scene7.com/is/image/FalabellaPE/gsc_113974681_748280_1?wid=1500&hei=1500&qlt=70",
-    nombre: "objeto ",
-    precio: 10,
-  },
-  {
-    id: 3,
-    descripcion: "Descripcion producto 3",
-    imagen: "https://http2.mlstatic.com/D_NQ_NP_822477-MLA31604607474_072019-O.webp",
-    nombre: "objeto 3",
-    precio: 15,
-  },
-  {
-    id: 4,
-    descripcion: "Descripcion producto 4",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmFTa9t1HvrkKSaKeFsB1tGZ9yCH3m2ZID1Q&usqp=CAU",
-    nombre: "objeto 4",
-    precio: 30,
-  },
-];
-
 export default function Page() {
 
-  const [carrito, setCarrito] = useState([]);
+  const [datos, setDatos] = useState({
+    "productos": [],
+    "carrito":[],
+  });
+
+  const [salir, setSalir] = useState(false);
 
   useEffect(() => {
-    const carritoGuardado = localStorage.getItem("carrito");
-    if (carritoGuardado) {
-      setCarrito(JSON.parse(carritoGuardado));
-    }
+    const data = getUserData();
+    setDatos(data);
   }, []);
 
+  useEffect(() => {
+    if(salir){
+      clearUserData();
+      setDatos(previousState => {
+        return { ...previousState, carrito: [] }
+      });
+      alert("Gracias por visitarnos");
+      setSalir(false);
+    }
+    
+  }, [salir]);
+
   const añadirProducto = (producto) => {
-    setCarrito(prevCarrito => {
-      const nuevoCarrito = [...prevCarrito, producto];
-      localStorage.setItem('carrito', JSON.stringify(nuevoCarrito));
-      return nuevoCarrito;
+    datos.carrito = [...datos.carrito, producto];
+    console.log(datos.carrito);
+    setDatos(previousState => {
+      return { ...previousState, carrito: datos.carrito }
     });
+    saveUserData(datos);
+    console.log(datos);
   }
 
-  const mitad = productos.length / 2;
-  const primero = productos.slice(0, mitad);
-  const ultimo = productos.slice(mitad, productos.length);
+  const limpiar = () => {
+    setSalir(true);
+  }
+  const mitad = datos.productos.length / 2;
+  const primero = datos.productos.slice(0, mitad);
+  const ultimo = datos.productos.slice(mitad, datos.productos.length);
 
   return (
-    <main className="flex min-h-screen flex-col p-6">
+    <main className="flex min-h-screen flex-col p-6 main">
       <header className="header">
         <span>
           Tienda
@@ -128,12 +117,13 @@ export default function Page() {
         </span>
         <span>
           <a href="/carrito">Carrito</a>
-          <span className="carritoNumero">{carrito.length}</span>
+          <span className="carritoNumero">{datos.carrito.length}</span>
+          <button onClick={limpiar}>Salir</button>
         </span>
       </header>
 
       <ListaProductos lista={primero} carrito={añadirProducto} />
-      <CarruselImagenes lista={productos} />
+      <CarruselImagenes lista={datos.productos} />
       <ListaProductos lista={ultimo} carrito={añadirProducto} />
 
       <footer className="footer">
