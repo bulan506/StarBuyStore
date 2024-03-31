@@ -8,6 +8,7 @@ export default function CartPage() {
     const [cart, setCar] = useState<any[]>([]);
     const [subtotal, setSubtotal] = useState<number>(0);
     const [total, setTotal] = useState<number>(0);
+    const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
         const itemsCart = JSON.parse(localStorage.getItem('cartItems') || '[]');
@@ -61,20 +62,22 @@ export default function CartPage() {
                     ))}
                 </div>
             </div>
-            <div className="d-flex justify-content-center">
-                <div style={{ backgroundColor: 'white', margin:'100' }}>
+
+            <div className="d-flex justify-content-end" style={{ position: 'fixed', bottom: '70px', right: '10px', zIndex: '1000' }}>
+                <div style={{ backgroundColor: 'white', margin: '100' }}>
                     <h2>Subtotal: ₡{subtotal}</h2>
                     <h2 className='my-3'>Tax: 13%</h2>
                     <h2 className='my-3'>Total: ₡{total.toFixed(2)}</h2>
-                    {cart.length > 0 && (
+                    {cart.length > 0 ? (
                         <Link href="/payment">
-                                <button  className="btn btn-success"  style={{ display: 'flex', justifyContent: 'center'}} 
-                                onClick={() => console.log('Compra realizada')}>Click to Buy</button>
+                            <button className="btn btn-success" style={{ display: 'flex', justifyContent: 'center' }} onClick={() => console.log('Compra realizada')}>Click to Buy</button>
                         </Link>
+                    ) : (
+                        <button className="btn btn-success" style={{ display: 'flex', justifyContent: 'center' }} disabled>Click to Buy</button>
                     )}
                 </div>
             </div>
-            <footer style={{ backgroundColor: '#0D0E1D', color: 'white' }}>
+            <footer style={{  backgroundColor: '#0D0E1D', color: 'white' }}>
                 <div className="text-center p-3">
                     <h5 className="text-light">Dev: Paula Chaves</h5>
                 </div>

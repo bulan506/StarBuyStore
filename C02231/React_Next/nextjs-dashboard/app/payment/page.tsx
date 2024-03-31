@@ -90,13 +90,14 @@ export default function PaymentPage() {
                 {paymentMethod === 'cash' && (
                     <div>
                         <p>Order Num: {orderNum}</p>
-                            <button className="btn btn-success" onClick={handleSubmit} >
-                                Confirm Payment
-                            </button>
+                        <button className="btn btn-success" onClick={handleSubmit} >
+                            Confirm Payment
+                        </button>
                         <p>{confirmation}</p>
                     </div>
                 )}
-                    {paymentMethod === 'sinpe' && (
+
+                {paymentMethod === 'sinpe' && (
                     <div>
                         <p>Order Number: {orderNum}</p>
                         <p>Sinpe Number: +506 86920997</p>
@@ -110,17 +111,20 @@ export default function PaymentPage() {
                                 onChange={(e) => handleVoucherChange(e.target.value)}
                             />
                         </div>
-                        {voucher.length > 0 &&(
-                        <button className="btn btn-success" onClick={handleSubmit} >
-                            Confirm Payment
-                        </button>
+                        {voucher.length > 0 ? (
+                            <button className="btn btn-success" onClick={handleSubmit} >
+                                Confirm Payment
+                            </button>
+                        ) : (
+                            <button className="btn btn-success" disabled >Confirm Payment</button>
                         )}
                         <p>{confirmation}</p>
                     </div>
                 )}
             </div>
 
-            <footer style={{ backgroundColor: '#0D0E1D', color: 'white', position: 'fixed', bottom: '0', width: '100%' }}>
+
+            <footer style={{ backgroundColor: '#0D0E1D', color: 'white', position: 'fixed', bottom: '0', width: '100%',  zIndex: '9999' }}>
                 <div className="text-center p-3">
                     <h5 className="text-light">Dev: Paula Chaves</h5>
                 </div>
