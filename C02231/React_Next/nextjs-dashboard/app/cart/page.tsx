@@ -4,23 +4,23 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Link from 'next/link'
 
 
-const EjemploPage: React.FC = () => {
-    const [car, setCar] = useState<any[]>([]);
+export default function CartPage() {
+    const [cart, setCar] = useState<any[]>([]);
     const [subtotal, setSubtotal] = useState<number>(0);
     const [total, setTotal] = useState<number>(0);
 
     useEffect(() => {
-        const carritoGuardado = JSON.parse(localStorage.getItem('cartItems') || '[]');
-        setCar(carritoGuardado);
+        const itemsCart = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        setCar(itemsCart);
     }, []);
 
     useEffect(() => {
-        const subtotalCalculado = car.reduce((total, item) => total + item.price, 0);
-        setSubtotal(subtotalCalculado);
+        const calculateSubtotal = cart.reduce((total, item) => total + item.price, 0);
+        setSubtotal(calculateSubtotal);
 
-        const totalCalculado = car.reduce((total, item) => total + (item.price * 1.13), 0);
+        const totalCalculado = cart.reduce((total, item) => total + (item.price * 0.13), 0);
         setTotal(totalCalculado);
-    }, [car]);
+    }, [cart]);
 
     return (
         <div style={{ backgroundColor: 'silver' }}>
@@ -42,16 +42,16 @@ const EjemploPage: React.FC = () => {
             </header>
 
             <div className='container'>
-                <h2>Shopping cart</h2>
+                <h2 className='text-left mt-5 mb-5'>Shopping cart</h2>
 
                 <div className="row  my-3">
-                    {car.map(item => (
+                    {cart.map(item => (
                         <div key={item.id} className="col-sm-3 mb-4" >
                             <div className="card">
                                 <img src={item.imageurl} className="card-img-top" alt={item.name} />
                                 <div className="card-body">
                                     <div className="text-center">
-                                        <h5 className="card-title my-3">{item.name}</h5>
+                                        <h4 className="card-title my-3">{item.name}</h4>
                                         <p className="card-text my-3">{item.description}</p>
                                         <p className="card-text my-3">Price: ₡{item.price}</p>
                                     </div>
@@ -61,19 +61,20 @@ const EjemploPage: React.FC = () => {
                     ))}
                 </div>
             </div>
-            <div className="d-flex flex-row-reverse bd-highlight">
-                <div className="p-2 bd-highlight" style={{backgroundColor: 'white'}}>
+            <div className="d-flex justify-content-center">
+                <div style={{ backgroundColor: 'white', margin:'100' }}>
                     <h2>Subtotal: ₡{subtotal}</h2>
-                    <h2 className='my-3'>Impuesto: 13%</h2>
-                    <h2 className='my-3'>Tax: ₡{total.toFixed(2)}</h2>
-                    {car.length > 0 && (
+                    <h2 className='my-3'>Tax: 13%</h2>
+                    <h2 className='my-3'>Total: ₡{total.toFixed(2)}</h2>
+                    {cart.length > 0 && (
                         <Link href="/payment">
-                            <button className="btn btn-success" onClick={() => console.log('Compra realizada')}>Buy</button>
+                                <button  className="btn btn-success"  style={{ display: 'flex', justifyContent: 'center'}} 
+                                onClick={() => console.log('Compra realizada')}>Click to Buy</button>
                         </Link>
                     )}
                 </div>
             </div>
-            <footer style={{ backgroundColor: '#0D0E1D', color: 'white'}}>
+            <footer style={{ backgroundColor: '#0D0E1D', color: 'white' }}>
                 <div className="text-center p-3">
                     <h5 className="text-light">Dev: Paula Chaves</h5>
                 </div>
@@ -82,4 +83,3 @@ const EjemploPage: React.FC = () => {
     );
 };
 
-export default EjemploPage;

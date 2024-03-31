@@ -4,13 +4,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../ui/global.css';
 import Link from 'next/link';
 
-const Payment: React.FC = () => {
+export default function PaymentPage() {
     const [address, setAddress] = useState('');
     const [paymentMethod, setpaymentMethod] = useState('');
     const [voucher, setVoucher] = useState('');
     const [confirmation, setConfirmation] = useState('');
-    const [orderNum, setorderNum] = useState(Math.floor(Math.random() * 500) + 1);
-    const [payNum, setPayNum] = useState(Math.floor(Math.random() * 1000) + 1);
+    const [orderNum, setorderNum] = useState(Math.floor(Math.random() * 1500) + 1);
 
 
     const handleDeliveryAddressChange = (value: string) => {
@@ -18,7 +17,7 @@ const Payment: React.FC = () => {
         setpaymentMethod('');
     };
 
-    const handleComprobanteChange = (value: string) => {
+    const handleVoucherChange = (value: string) => {
         setVoucher(value);
     };
 
@@ -88,10 +87,19 @@ const Payment: React.FC = () => {
                     </div>
                 )}
 
-                {paymentMethod === 'sinpe' && (
+                {paymentMethod === 'cash' && (
+                    <div>
+                        <p>Order Num: {orderNum}</p>
+                            <button className="btn btn-success" onClick={handleSubmit} >
+                                Confirm Payment
+                            </button>
+                        <p>{confirmation}</p>
+                    </div>
+                )}
+                    {paymentMethod === 'sinpe' && (
                     <div>
                         <p>Order Number: {orderNum}</p>
-                        <p>Payment Number: {payNum}</p>
+                        <p>Sinpe Number: +506 86920997</p>
                         <div className="form-group">
                             <label htmlFor="comprobante">Voucher:</label>
                             <input
@@ -99,21 +107,14 @@ const Payment: React.FC = () => {
                                 id="voucher"
                                 className="form-control"
                                 value={voucher}
-                                onChange={(e) => handleComprobanteChange(e.target.value)}
+                                onChange={(e) => handleVoucherChange(e.target.value)}
                             />
                         </div>
-                        <button className="btn btn-success" onClick={handleSubmit}>
+                        {voucher.length > 0 &&(
+                        <button className="btn btn-success" onClick={handleSubmit} >
                             Confirm Payment
                         </button>
-                        <p>{confirmation}</p>
-                    </div>
-                )}
-                {paymentMethod === 'cash' && (
-                    <div>
-                        <p>Order Num: {orderNum}</p>
-                        <button className="btn btn-success" onClick={handleSubmit}>
-                            Confirm Payment
-                        </button>
+                        )}
                         <p>{confirmation}</p>
                     </div>
                 )}
@@ -127,5 +128,3 @@ const Payment: React.FC = () => {
         </div>
     );
 };
-
-export default Payment;

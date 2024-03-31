@@ -3,84 +3,84 @@ const products = [
     {
       id: 1,
       name: 'Cinder',
-      autor: 'Marissa Meyer',
+      author: 'Marissa Meyer',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768889_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 9500
     },
     {
       id: 2,
       name: 'Scarlet',
-      autor: 'Marissa Meyer',
+      author: 'Marissa Meyer',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768896_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 9500
     },
     {
       id: 3,
       name: 'Cress',
-      autor: 'Marissa Meyer',
+      author: 'Marissa Meyer',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768902_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 9500
     },
     {
       id: 4,
       name: 'Winter',
-      autor: 'Marissa Meyer',
+      author: 'Marissa Meyer',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768926_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 11900
     },
     {
       id: 5,
       name: 'Fairest',
-      autor: 'Marissa Meyer',
+      author: 'Marissa Meyer',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9781250774057_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 8700
     },
     {
       id: 6,
       name: 'La Sociedad de la Nieve',
-      autor: 'Pablo Vierci',
+      author: 'Pablo Vierci',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9786070794162_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 12800
     },
     {
       id: 7,
       name: 'En Agosto nos vemos',
-      autor: 'Gabriel García Márquez',
+      author: 'Gabriel García Márquez',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9786073911290_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 14900
     },
     {
       id: 8,
       name: 'El estrecho sendero entre deseos',
-      autor: 'Patrick Rothfuss',
+      author: 'Patrick Rothfuss',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9789585457935_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 12800
     },
     {
       id: 9,
       name: 'Alas de Sangre',
-      autor: 'Rebecca Yarros',
+      author: 'Rebecca Yarros',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9788408279990_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 19800
     },
     {
       id: 10,
       name: 'Corona de Medianoche',
-      autor: 'Sarah J. Mass',
+      author: 'Sarah J. Mass',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9786073143691_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 15800
     },
     {
       id: 11,
       name: 'Carta de Amor a los Muertos',
-      autor: "Ava Dellaira",
+      author: "Ava Dellaira",
       imageurl: 'https://m.media-amazon.com/images/I/41IETN4YxGL._SY445_SX342_.jpg',
       price: 8900
     },
     {
       id: 12,
       name: 'Alicia en el país de las Maravillas',
-      autor: 'Lewis Carrol',
+      author: 'Lewis Carrol',
       imageurl: 'https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000',
       price: 7900
     }

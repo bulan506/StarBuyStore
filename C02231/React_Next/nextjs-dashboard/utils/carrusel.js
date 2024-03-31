@@ -1,21 +1,21 @@
 const carrusel = [
     {
       id: 0,
-      name: 'Lion',
-      imgurl: 'https://vidanomada.com/wp-content/2012/11/portadas-twitter-5.jpg',
-      description: 'An wild life'
+      name: 'Bookmarks',
+      imgurl: '1.png',
+      description: 'Perfect for not to lose where your story goes '
     },
     {
       id: 1,
-      name: 'Turtle',
-      imgurl: 'https://vidanomada.com/wp-content/2012/11/portadas-twitter-2.jpg',
-      description: 'An amazing life'
+      name: 'Pins',
+      imgurl: '2.png',
+      description: 'Adding a touch of literary flair to any outfit or accessory.'
     },
     {
       id: 2,
-      name: 'Mountain',
-      imgurl: 'https://vidanomada.com/wp-content/2012/11/portadas-twitter-1.jpg',
-      description: 'A beautiful life'
+      name: 'Necklace',
+      imgurl: '3.png',
+      description: 'A beautifull Necklace for all day wear'
     }
   ];
 

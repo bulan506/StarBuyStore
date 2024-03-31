@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { useContext, useState } from 'react';
+import { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import products from '../utils/products'
 import carrusel from '../utils/carrusel'
@@ -15,15 +15,13 @@ export default function Page() {
   });
 
   const handleAddToCart = (products) => {
-    // Obtener los elementos del carrito del localStorage
-    const storedCartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+    const storedItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
 
-    // Verificar si el producto ya está en el carrito
-    if (!storedCartItems.some(item => item.id === products.id)) {
-      // Si el producto no está en el carrito, agregarlo
-      const updatedCartItems = [...storedCartItems, products];
-      setCartItems(updatedCartItems);
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+
+    if (!storedItems.some(item => item.id === products.id)) {
+      const updatedCart = [...storedItems, products];
+      setCartItems(updatedCart);
+      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
 
       const updatedCount = count + 1;
       setCount(updatedCount);
@@ -64,13 +62,13 @@ export default function Page() {
           </div>
           <div className="col-sm-8 d-flex justify-content-center align-items-center">
             <form className="d-flex justify-content-center">
-              <input type="search" name="search" style={{ width: '805%' }} placeholder="Buscar"></input>
+              <input type="search" name="search" style={{ width: '805%' }} placeholder="Book..."></input>
               <button type="submit">Search</button>
             </form>
           </div>
 
           <div className="col-sm-2 d-flex justify-content-end align-items-center">
-            <Cart count={count} />
+            <Cart counter={count} />
           </div>
 
         </div>
@@ -98,7 +96,7 @@ export default function Page() {
 
 
 //Shopping Cart
-function Cart({ count }) {
+function Cart({ counter }) {
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <div >
@@ -110,7 +108,7 @@ function Cart({ count }) {
         </Link>
       </div>
       <div style={{ position: 'absolute', top: '-10px', right: '-10px', backgroundColor: 'green', borderRadius: '50%', width: '20px', height: '20px', textAlign: 'center', color: 'white' }}>
-        {count}
+        {counter}
       </div>
     </div>
   );
@@ -146,7 +144,7 @@ const CarruselComponent = ({ carrusel }) => {
   };
 
   return (
-    <section style={{ margin: '50px' }}>
+    <section style={{ margin: '50px'}}>
       <div id="carrouselReact" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <ol className="carousel-indicators">
           {carrusel.map((carrusel, index) => (
@@ -168,7 +166,7 @@ const CarruselComponent = ({ carrusel }) => {
               className={`carousel-item ${index === currentIndex ? "active" : ""}`}
             >
               <img className="d-block w-100" src={carrusel.imgurl} width="100%" alt={carrusel.name} />
-              <div className="carousel-caption d-none d-md-block" style={{ color: 'white' }}>
+              <div className="carousel-caption d-none d-md-block" style={{ color: 'black' }}>
                 <h5>{carrusel.name}</h5>
                 <p>{carrusel.description}</p>
               </div>
