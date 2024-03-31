@@ -7,7 +7,7 @@ const NavBar = ({ productCount, toggleCart }: { productCount: number, toggleCart
     return (
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
             <button className="navbar-brand btn btn-outline-dark" type="submit" onClick={() => toggleCart(false)}>
-                        Tienda Online
+                    Alsov Store
             </button>
             <ul className="navbar-nav mr-auto">
                 <li className="nav-item">

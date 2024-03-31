@@ -73,7 +73,7 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
                         <input
                             type="text"
                             className="form-control mt-3"
-                            placeholder="Ingrese el comprobante"
+                            placeholder="Indique el comprobante"
                             value={comprobante}
                             onChange={handleComprobanteChange}
                             
