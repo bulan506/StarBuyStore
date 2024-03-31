@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => void }) => {
     const [selectedPayment, setSelectedPayment] = useState(0);
     const [orderNumber, setOrderNumber] = useState('');
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         setCart(cart => ({
@@ -38,28 +39,53 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
         generateReceiptNumber();
     }, [])
 
+    const increaseProgress = () => {
+        if (progress < 100) {
+            setProgress(progress + 10);
+        }
+    };
+
     const Efectivo = () => {
-        return <div className="card w-100">
+        return <div className="card effect-card w-75">
             <div className="card-body">
                 <div className="d-grid w-100 justify-content-center">
-                    <label>Número de compra: {orderNumber}</label>
-                    <label>Por favor espere la confirmación de pago por parte del administrador</label>
+                    <strong>Número de compra: {orderNumber}</strong>
+                    <p className=""></p>
+                    <em>Por favor, espere la confirmación de pago del admin</em>
                 </div>
             </div>
         </div>
     }
 
     const Sinpe = () => {
-        return <div className="card w-100">
-            <div className="card-body">
-                <div className="d-grid w-100 justify-content-center">
-                    <label>Número de compra: {orderNumber}</label>
-                    <label>Número para realizar el pago: +506 8888 8888</label>
-                    <label>Por favor espere la confirmación de pago por parte del administrador</label>
+        const [comprobante, setComprobante] = useState('');
+    
+        const handleComprobanteChange = (event) => {
+            setComprobante(event.target.value);
+        };
+    
+        return (
+            <div className="card sinpe-card w-75">
+                <div className="card-body">
+                    <div className="d-grid w-100 justify-content-center">
+                        <strong>Número de compra: {orderNumber}</strong>
+                        <strong>Número para realizar el pago: +506 6270 6880</strong>
+                        <input
+                            type="text"
+                            className="form-control mt-3"
+                            placeholder="Ingrese el comprobante"
+                            value={comprobante}
+                            onChange={handleComprobanteChange}
+                            
+                        />
+                        <p className=""></p>
+                        <em>Por favor, espere la confirmación del admin</em>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        );
+    };
+    
 
     return <div className="container">
         <div className="d-grid justify-content-center gap-4">
@@ -73,8 +99,10 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
             </div>
             {(selectedPayment === 0 ? <Efectivo /> : <Sinpe />)}
             <div className="progress">
-                <div className="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" aria-valuenow={75} aria-valuemin={0} aria-valuemax={100} style={{ width: '100%' }}></div>
+                <div className="custom-progress">
+                <div className="custom-progress-bar" style={{ width: `${progress}%` }}></div>
+            </div>
+            <button className="btn btn-primary" onClick={increaseProgress}>Incrementar progreso</button>
             </div>
         </div>
     </div>

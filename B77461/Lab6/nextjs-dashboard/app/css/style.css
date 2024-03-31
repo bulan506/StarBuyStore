@@ -35,10 +35,12 @@ body {
   
   /* Estilos de los productos */
   .card {
+    width: 300px; /* Tamaño fijo */
     margin: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: white;
-  }
+}
+
   
   .card-body {
     text-align: center;
@@ -125,3 +127,34 @@ body {
 .form-group {
     margin-bottom: 20px; /* Agrega espacio hacia abajo */
 }
+
+/* Estilos para el formulario metodo de pago */
+.effect-card {
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.sinpe-card {
+  border: 2px solid #28a745;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.custom-progress {
+  height: 30px;
+  background: linear-gradient(to right, #007bff, #28a745);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.custom-progress-bar {
+  height: 100%;
+  width: 75%; /* Cambia este valor para ajustar el progreso */
+  background-color: #fff;
+  transition: width 0.5s ease-in-out;
+}
+
+

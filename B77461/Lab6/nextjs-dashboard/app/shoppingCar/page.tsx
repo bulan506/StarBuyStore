@@ -18,14 +18,6 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }:
         showAddressForm ? <AddressForm handleAddressForm={handleAddressForm} cart={cart} setCart={setCart} /> : <div className="container">
             <h1>Tu carrito de compras:</h1>
             <div className="list-group">
-                <a className="list-group-item list-group-item-action flex-column align-items-start">
-                    <div className="d-flex justify-content-start align-items-center">
-                        <div className="d-flex w-100 justify-content-center">
-                            <h5 className="mr-2">Cantidad de Productos:</h5>
-                            <h5>{cart.carrito.productos.length}</h5>
-                        </div>
-                    </div>
-                </a>
                 {cart.carrito.productos.map((producto: any, index: number) =>
                     <a key={index} className="list-group-item list-group-item-action flex-column align-items-start">
                         <div className="d-flex justify-content-start align-items-center">
@@ -34,7 +26,7 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }:
                                 style={{ width: "200px", height: "90px" }} />
                             <div className="d-flex w-100 justify-content-between">
                                 <h5 className="mb-1">{producto.name}</h5>
-                                <small>${producto.price}</small>
+                                <strong>${producto.price}</strong>
                                 <button className="btn btn-outline-danger btn-sm" onClick={() => {
                                     removeProduct(producto);
                                     toggleCart(true);
@@ -48,7 +40,15 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }:
                 )}
                 <a className="list-group-item list-group-item-action flex-column align-items-start">
                     <div className="d-flex justify-content-start align-items-center">
-                        <div className="d-flex w-100 justify-content-center">
+                        <div className="d-flex w-100 justify-content-end">
+                            <h5 className="mr-2">Cantidad de Productos:</h5>
+                            <h5>{cart.carrito.productos.length}</h5>
+                        </div>
+                    </div>
+                </a>
+                <a className="list-group-item list-group-item-action flex-column align-items-start">
+                    <div className="d-flex justify-content-start align-items-center">
+                        <div className="d-flex w-100 justify-content-end">
                             <h5 className="mr-2">Subtotal:</h5>
                             <h5>${cart.carrito.subtotal}</h5>
                         </div>
@@ -56,25 +56,24 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }:
                 </a>
                 <a className="list-group-item list-group-item-action flex-column align-items-start">
                     <div className="d-flex justify-content-start align-items-center">
-                        <div className="d-flex w-100 justify-content-center">
+                        <div className="d-flex w-100 justify-content-end">
                             <h5 className="mr-2">Total:</h5>
                             <h5>${cart.carrito.total}</h5>
                         </div>
                     </div>
                 </a>
             </div>
-            <div className="d-flex justify-content-start align-items-center">
-                <div className="d-flex w-100 justify-content-center">
-                    <button type="button" className="btn btn-primary mr-2"
-                        data-mdb-ripple-init onClick={() => toggleCart(false)}>Atrás</button>
-                    <button type="button" className="btn btn-primary"
-                        data-mdb-ripple-init
-                        disabled={cart.carrito.productos.length === 0}
-                        onClick={handleAddressForm}>Continuar compra</button>
-                </div>
+            <div className="d-flex justify-content-end">
+                <button type="button" className="btn btn-primary mr-2"
+                    data-mdb-ripple-init onClick={() => toggleCart(false)}>Atrás</button>
+                <button type="button" className="btn btn-primary"
+                    data-mdb-ripple-init
+                    disabled={cart.carrito.productos.length === 0}
+                    onClick={handleAddressForm}>Continuar compra</button>
             </div>
         </div>
     )
+    
 }
 
 

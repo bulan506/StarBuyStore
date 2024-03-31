@@ -1,11 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
+
 const NavBar = ({ productCount, toggleCart }: { productCount: number, toggleCart: (action: boolean) => void }) => {
 
     return (
         <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
-            <a className="navbar-brand" onClick={() => toggleCart(false)}>Tienda Online</a>
+            <button className="navbar-brand btn btn-outline-dark" type="submit" onClick={() => toggleCart(false)}>
+                        Tienda Online
+            </button>
             <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
                     <a className="nav-link" href="#">

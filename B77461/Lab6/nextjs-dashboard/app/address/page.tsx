@@ -34,9 +34,11 @@ const AddressForm = ({ handleAddressForm, cart, setCart }: { handleAddressForm: 
                 <div className="d-flex w-100 justify-content-center">
                     <div className="form-group">
                         <label htmlFor="exampleFormControlInput1">Dirección:</label>
+                        <p className=""></p>
                         <input type="text" className="form-control"
                             id="exampleFormControlInput1" placeholder="Ingrese su dirección"
                             value={cart.carrito.direccionEntrega} onChange={handleAddressChange} />
+                             <p className=""></p>
                         <div className="d-flex w-100 justify-content-center">
                             <a className="btn btn-primary mr-2" onClick={() => handleAddressForm()}>Atrás</a>
                             <button className="btn btn-primary" disabled={!activeAddress}
