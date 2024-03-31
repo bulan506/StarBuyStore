@@ -5,7 +5,7 @@ import AddressForm from "../address/page";
 
 
 const Cart = ({ cart, setCart, toggleCart, removeProduct }: 
-    { cart: any, toggleCart: (action: boolean) => void, setCart: (cart: any) => void, removeProduct: (product: any) => void }) => {
+    { cart: any, setCart: (cart: any) => void, toggleCart: (action: boolean) => void, removeProduct: (product: any) => void }) => {
 
     const [showAddressForm, setShowAddressForm] = useState(false);
     
@@ -15,7 +15,7 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }:
     }
 
     return (
-        showAddressForm ? <AddressForm handleAddressForm={handleAddressForm} setCart={setCart} /> : <div className="container">
+        showAddressForm ? <AddressForm handleAddressForm={handleAddressForm} cart={cart} setCart={setCart} /> : <div className="container">
             <h1>Tu carrito de compras:</h1>
             <div className="list-group">
                 <a className="list-group-item list-group-item-action flex-column align-items-start">
@@ -26,8 +26,8 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }:
                         </div>
                     </div>
                 </a>
-                {cart.carrito.productos.map((producto: any) =>
-                    <a className="list-group-item list-group-item-action flex-column align-items-start">
+                {cart.carrito.productos.map((producto: any, index: number) =>
+                    <a key={index} className="list-group-item list-group-item-action flex-column align-items-start">
                         <div className="d-flex justify-content-start align-items-center">
                             <img className="card-img-top mr-3"
                                 src={producto.imageUrl}

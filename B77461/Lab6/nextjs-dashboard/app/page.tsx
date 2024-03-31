@@ -11,33 +11,28 @@ export default function Home() {
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
   const [cartLoaded, setCartLoaded] = useState(false);
-  const [cart, setCart] = useState(
-    {
-      carrito: {
-        productos: [],
-        subtotal: 0,
-        porcentajeImpuesto: 13,
-        total: 0,
-        direccionEntrega: '',
-        metodosDePago: {}
-      },
-      metodosDePago: [],
-      necesitaVerificacion: false
-    }
-  );
+  const [cart, setCart] = useState({
+    carrito: {
+      productos: [],
+      subtotal: 0,
+      porcentajeImpuesto: 10,
+      total: 0,
+      direccionEntrega: '',
+      metodoDePago: ''
+    },
+    metodosDePago: ['Efectivo', 'Sinpe'],
+    necesitaVerificacion: false
+  });
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
     if (storedCart && !cartLoaded) {
-      try {
-        console.log(JSON.parse(storedCart));
-        setCart(JSON.parse(storedCart));
-        setCartLoaded(true);
-      } catch (error) {
-        console.error('Error parsing cart from localStorage:', error);
-      }
+      console.log(JSON.parse(storedCart));
+      setCart(JSON.parse(storedCart));
+      setCartLoaded(true);
     }
   }, [cartLoaded]);
+
   useEffect(() => {
     if (cartLoaded) {
       localStorage.setItem('cart', JSON.stringify(cart));
@@ -45,14 +40,12 @@ export default function Home() {
     setCount(cart.carrito.productos.length);
   }, [cart, cartLoaded]);
 
-
-
   function productAlreadyAdded({ product }) {
     return idList.includes(product.id);
   }
 
-  function addProductToCart({ product }) {
-    const newProductos = [...cart.carrito.productos, product];
+  function addProductToCart({ product }: any) {
+    const newProductos = [...(cart.carrito.productos || []), product];
     setCart(cart => ({
       ...cart,
       carrito: {
@@ -60,8 +53,35 @@ export default function Home() {
         productos: newProductos
       }
     }));
-    console.log(newProductos);
+    setCartLoaded(true);
   }
+
+  function calculateTotals({ product }: any) {
+    const newSubTotal = cart.carrito.subtotal + product.price;
+    const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+
+    setCart(cart => ({
+      ...cart,
+      carrito: {
+        ...cart.carrito,
+        subtotal: newSubTotal,
+        total: newTotal
+      }
+    }));
+  }
+
+  const handleAddToCart = ({ product }: any) => {
+    if (!productAlreadyAdded({ product })) {
+      idList.push(product.id);
+      addProductToCart({ product });
+      calculateTotals({ product });
+      setCount(count + 1);
+    }
+  };
+
+  const toggleCart = ({ action }: any) => {
+    setIsCartActive(action ? true : false);
+  };
 
   function removeProduct( product ) {
     const newProductos = cart.carrito.productos.filter((prod) => prod.id !== product.id);
@@ -80,33 +100,6 @@ export default function Home() {
 
      setCount(count - 1); // Restar 1 al contador count
 }
-
-  function calculateTotals({ product }) {
-    const newSubTotal = cart.carrito.subtotal + product.price;
-    const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
-
-    setCart(cart => ({
-      ...cart,
-      carrito: {
-        ...cart.carrito,
-        subtotal: newSubTotal,
-        total: newTotal
-      }
-    }));
-  }
-
-  const handleAddToCart = ({ product }) => {
-    if (!productAlreadyAdded({ product })) {
-      setIdList([...idList, product.id]);
-      addProductToCart({ product });
-      calculateTotals({ product });
-      setCount(count + 1);
-    }
-  };
-
-  const toggleCart = ({ action }) => {
-    setIsCartActive(action ? true : false);
-  };
 
   const products = [
     { id: 1, name: 'Audifonos', description: 'Audifonos RGB', imageUrl: 'https://tienda.starware.com.ar/wp-content/uploads/2021/05/auriculares-gamer-headset-eksa-e1000-v-surround-71-rgb-pc-ps4-verde-2331-3792.jpg', price: 60.0 },
@@ -196,7 +189,6 @@ export default function Home() {
     <div className="d-grid gap-2">
       <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
       {isCartActive ? <Cart cart={cart} setCart={setCart} toggleCart={(action) => toggleCart({ action })} removeProduct={removeProduct} /> : <MyRow />}
-
       {/* <Carousel />*/}
     </div>
   );

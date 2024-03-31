@@ -1,16 +1,23 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
-const PaymentForm = ({ setCart }: { setCart: (cart: any) => void }) => {
-
-    const paymentMethods = ['Efectivo', 'Sinpe'];
+const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => void }) => {
     const [selectedPayment, setSelectedPayment] = useState(0);
     const [orderNumber, setOrderNumber] = useState('');
 
+    useEffect(() => {
+        setCart(cart => ({
+            ...cart,
+            carrito: {
+                ...cart.carrito,
+                metodoDePago: selectedPayment === 0 ? 'Efectivo' : 'Sinpe'
+            }
+        }));
+    }, []);
+
     function handleSelectPayment(event: any) {
         const selectedIndex = event.target.selectedIndex;
-        console.log(event.target.selectedIndex);
         setSelectedPayment(selectedIndex);
         setCart(cart => ({
             ...cart,
@@ -47,7 +54,7 @@ const PaymentForm = ({ setCart }: { setCart: (cart: any) => void }) => {
             <div className="card-body">
                 <div className="d-grid w-100 justify-content-center">
                     <label>Número de compra: {orderNumber}</label>
-                    <label>Número para realizar el pago: +506 6270 6880</label>
+                    <label>Número para realizar el pago: +506 8888 8888</label>
                     <label>Por favor espere la confirmación de pago por parte del administrador</label>
                 </div>
             </div>
@@ -60,15 +67,15 @@ const PaymentForm = ({ setCart }: { setCart: (cart: any) => void }) => {
                 <h3>Métodos de pago</h3>
                 <div className="form-group">
                     <select className="form-control" onChange={handleSelectPayment}>
-                        {paymentMethods.map(method => <option>{method}</option>)}
+                        {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
                     </select>
                 </div>
             </div>
             {(selectedPayment === 0 ? <Efectivo /> : <Sinpe />)}
             <div className="progress">
                 <div className="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" aria-valuenow={75} aria-valuemin={0} aria-valuemax={100} style={{ width: '100%' }}></div>    
-            </div>  
+                    role="progressbar" aria-valuenow={75} aria-valuemin={0} aria-valuemax={100} style={{ width: '100%' }}></div>
+            </div>
         </div>
     </div>
 }

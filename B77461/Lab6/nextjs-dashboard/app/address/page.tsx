@@ -1,17 +1,15 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PaymentForm from "../payment/page";
 
-const AddressForm = ({ handleAddressForm, setCart }: { handleAddressForm: () => void, setCart: (cart: any) => void }) => {
+const AddressForm = ({ handleAddressForm, cart, setCart }: { handleAddressForm: () => void, cart: any, setCart: (cart: any) => void }) => {
 
     const [activeAddress, setActiveAdress] = useState(false);
-    const [address, setAddress] = useState('');
     const [showPaymentForm, setShowPaymentForm] = useState(false);
 
     function handleAddressChange(event: any) {
         const inputValue = event.target.value;
-        setAddress(inputValue);
         setCart(cart => ({
             ...cart,
             carrito: {
@@ -22,11 +20,15 @@ const AddressForm = ({ handleAddressForm, setCart }: { handleAddressForm: () => 
         setActiveAdress(inputValue.trim().length > 0);
     }
 
+    useEffect(() => {
+        setActiveAdress(cart.carrito.direccionEntrega ? true : false);
+    }, []);
+
     function handlePaymentChange(show: boolean) {
         setShowPaymentForm(show);
     }
 
-    return showPaymentForm ? <PaymentForm setCart={setCart} /> : <div className="d-flex justify-content-center gap-2">
+    return showPaymentForm ? <PaymentForm cart={cart} setCart={setCart} /> : <div className="d-flex justify-content-center gap-2">
         <div className="card w-25">
             <div className="card-body">
                 <div className="d-flex w-100 justify-content-center">
@@ -34,8 +36,7 @@ const AddressForm = ({ handleAddressForm, setCart }: { handleAddressForm: () => 
                         <label htmlFor="exampleFormControlInput1">Dirección:</label>
                         <input type="text" className="form-control"
                             id="exampleFormControlInput1" placeholder="Ingrese su dirección"
-                            value={address} onChange={handleAddressChange} />
-                            
+                            value={cart.carrito.direccionEntrega} onChange={handleAddressChange} />
                         <div className="d-flex w-100 justify-content-center">
                             <a className="btn btn-primary mr-2" onClick={() => handleAddressForm()}>Atrás</a>
                             <button className="btn btn-primary" disabled={!activeAddress}
