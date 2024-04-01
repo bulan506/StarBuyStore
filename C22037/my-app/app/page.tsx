@@ -166,7 +166,7 @@ export default function Home() {
       <div className="header">
         <div className="row">
           <div className="col-sm-2">
-            <h1>Amazon</h1>
+            <h1>Tienda</h1>
           </div>
           <div className="col-sm-6">
             <div className="col-sm-6 d-flex align-items-center">
@@ -206,7 +206,6 @@ export default function Home() {
                 <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />
               ))}
             </div>
-            {/* {index < rows(products, 4).length && <Carousel id={`carousel${index + 1}`} />} */}
           </div>
         ))}
       </div>
@@ -214,7 +213,7 @@ export default function Home() {
       <div className="footer">
         <div className="row">
           <div className="col-sm-12">
-            <h3>Amazon.com</h3>
+            <h3>Tienda.com</h3>
           </div>
         </div>
       </div>

@@ -29,7 +29,7 @@ export default function Address() {
         <div>
             <div className="header">
                 <Link href="/">
-                    <h1>Amazon</h1>
+                    <h1>Tienda</h1>
                 </Link>
             </div>
 
@@ -50,7 +50,7 @@ export default function Address() {
             </div>
 
             <div className="footer">
-                <h2>Amazon.com</h2>
+                <h2>Tienda.com</h2>
             </div>
         </div>
     );

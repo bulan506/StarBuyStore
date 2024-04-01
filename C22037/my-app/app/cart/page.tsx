@@ -6,6 +6,7 @@ import Link from 'next/link';
 export default function CartPage() {
   const [cartItems, setCartItems] = useState({});
   const [subtotal, setSubtotal] = useState(0);
+  const taxRate = 0.13;
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems'));
@@ -21,6 +22,10 @@ export default function CartPage() {
     });
     setSubtotal(subTotal);
   }, [cartItems]);
+
+  useEffect(() => {
+    localStorage.setItem('taxRate', taxRate.toString());
+  }, [taxRate]);
 
   const handleRemoveFromCart = (productId) => {
     const updatedCartItems = { ...cartItems };
@@ -49,7 +54,7 @@ export default function CartPage() {
     <div>
       <div className="header">
         <Link href="/">
-          <h1>Amazon</h1>
+          <h1>Tienda</h1>
         </Link>
       </div>
 
@@ -60,8 +65,8 @@ export default function CartPage() {
 
       <div className="totals">
         <p>Subtotal: ${subtotal.toFixed(2)}</p>
-        <p>Taxes (13%): ${(subtotal * 0.13).toFixed(2)}</p>
-        <p>Total: ${(subtotal + (subtotal * 0.13)).toFixed(2)}</p>
+        <p>Taxes ({(taxRate * 100)}%): ${(subtotal * taxRate)}</p> 
+        <p>Total: ${(subtotal + (subtotal * taxRate)).toFixed(2)}</p>
         <Link href={isCartEmpty ? "#" : "/checkout"}>
           <button className="Button" disabled={isCartEmpty}>Proceed to checkout</button>
         </Link>
@@ -72,7 +77,7 @@ export default function CartPage() {
       </div>
 
       <div className="footer">
-        <h2>Amazon.com</h2>
+        <h2>Tienda.com</h2>
       </div>
 
     </div>
