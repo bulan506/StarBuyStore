@@ -32,7 +32,7 @@ export default function CartPage() {
                 {Object.values(cart).map((item) => (
                     <div key={item.id} className="col-sm-3 mb-4" >
                         <div className="card">
-                            <img src={item.imageurl} className="card-img-top" alt={item.name} />
+                            <img src={item.imgUrl} className="card-img-top" alt={item.name} />
                             <div className="card-body">
                                 <div className="text-center">
                                     <h4 className="card-title my-3">{item.name}</h4>

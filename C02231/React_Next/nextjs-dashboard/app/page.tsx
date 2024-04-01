@@ -19,7 +19,7 @@ const Product = ({ product, handleAddToCart }) => {
               <h4> {name} </h4>
               <p> Author: {author} </p>
               <p>Price: ₡{price}</p>
-              <button className="btn btn-dark" onClick={() => handleAddToCart(products)}>Add to Cart</button>
+              <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
             </div>
           </div>
         </div>
@@ -36,12 +36,12 @@ export default function Home() {
     return storedCount ? parseInt(storedCount) : 0;
   });
 
-  const handleAddToCart = (products) => {
+  const handleAddToCart = (product) => {
     const storedItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
 
 
-    if (!storedItems.some(item => item.id === products.id)) {
-      const updatedCart = [...storedItems, products];
+    if (!storedItems.some(item => item.id === product.id)) {
+      const updatedCart = [...storedItems, product];
       setCartItems(updatedCart);
       localStorage.setItem('cartItems', JSON.stringify(updatedCart));
 
@@ -80,9 +80,8 @@ export default function Home() {
       <div>
         <h2 className='text-left mt-5 mb-5' style={{ margin: '100px', color: '#3E3F3E' }}>List of Books</h2>
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {/*<Product products={products} /> */}
           {products.map(product => (
-            <Product key={product.id} product={product} />
+            <Product key={product.id} product={product} handleAddToCart={handleAddToCart}  />
           ))}
           <CarruselComponent carrusel={carrusel} />
         </div>
