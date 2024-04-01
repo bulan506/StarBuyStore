@@ -8,31 +8,9 @@ body {
     color: gray;
   }
   
- 
-  .btn-dark:hover {
-    background-color: gray;
-  }
-  
-  .btn-success {
-    background-color: green;
-    color: white;
-  }
-  
-  .btn-success:hover {
-    background-color: darkgreen;
-  }
-  
-  .btn-primary {
-    background-color: blue;
-    color: white;
-  }
-  
-  .btn-primary:hover {
-    background-color: darkblue;
-  }
   
   .footer {
-    background-color: gray;
+    background-color:#0D0E1D;
     color: white;
   }
   

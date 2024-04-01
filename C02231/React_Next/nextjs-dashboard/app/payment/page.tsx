@@ -124,7 +124,7 @@ export default function PaymentPage() {
             </div>
 
 
-            <footer style={{ backgroundColor: '#0D0E1D', color: 'white', position: 'fixed', bottom: '0', width: '100%',  zIndex: '9999' }}>
+            <footer className='footer' style={{position: 'fixed', bottom: '0', width: '100%',  zIndex: '9999' }}>
                 <div className="text-center p-3">
                     <h5 className="text-light">Dev: Paula Chaves</h5>
                 </div>

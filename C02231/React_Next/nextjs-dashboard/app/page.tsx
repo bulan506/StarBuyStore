@@ -2,11 +2,33 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
-import products from '../utils/products'
+import products from '../utils/product'
 import carrusel from '../utils/carrusel'
 
 
-export default function Page() {
+
+const Product = ({ product, handleAddToCart }) => {
+  const { id, name, author, imgUrl, price } = product;
+  return (
+    <div className="row my-3">
+      <div key={id} className='col-sm-3 mb-4' style={{width: '300px', margin: '0.5rem' }}>
+        <div className="card" style={{ background: '#939393'}}>
+          <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
+          <div className="card-body">
+            <div className='text-center'>
+              <h4> {name} </h4>
+              <p> Author: {author} </p>
+              <p>Price: ₡{price}</p>
+              <button className="btn btn-dark" onClick={() => handleAddToCart(products)}>Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function Home() {
 
   const [cartItems, setCartItems] = useState([]);
   const [count, setCount] = useState(() => {
@@ -27,26 +49,6 @@ export default function Page() {
       setCount(updatedCount);
       localStorage.setItem('count', updatedCount);
     }
-  };
-
-  const Product = ({ products }) => {
-    return (
-      <div className="row my-3">
-        {products.map(products => (
-          <div key={products.id} className='col-sm-3 mb-4' style={{ background: '#939393', width: '300px', margin: '0.5rem' }}>
-            <img src={products.imageurl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={products.name} />
-            <div className="card-body">
-              <div className='text-center'>
-                <h4> {products.name} </h4>
-                <p> Author: {products.autor} </p>
-                <p>Price: ₡{products.price}</p>
-                <button className="btn btn-dark" onClick={() => handleAddToCart(products)}>Add to Cart</button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
@@ -78,12 +80,15 @@ export default function Page() {
       <div>
         <h2 className='text-left mt-5 mb-5' style={{ margin: '100px', color: '#3E3F3E' }}>List of Books</h2>
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
-          <Product products={products} />
+          {/*<Product products={products} /> */}
+          {products.map(product => (
+            <Product key={product.id} product={product} />
+          ))}
           <CarruselComponent carrusel={carrusel} />
         </div>
       </div >
 
-      <footer style={{ backgroundColor: '#0D0E1D', color: 'white' }}>
+      <footer className='footer'>
         <div className="text-center p-3">
           <h5 className="text-light">Dev: Paula Chaves</h5>
         </div>
@@ -119,7 +124,7 @@ function Cart({ counter }) {
 const CarruselComponent = ({ carrusel }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handlePrev = () => {
+  const handlePrev2 = () => {
     setCurrentIndex(prevIndex => {
       if (prevIndex === 0) {
         return carrusel.length - 1;
@@ -129,7 +134,25 @@ const CarruselComponent = ({ carrusel }) => {
     });
   };
 
+  const handlePrev = () => {
+    const isFirstIndex = currentIndex === 0;
+    if (isFirstIndex) {
+      setCurrentIndex(carrusel.length - 1);
+    } else {
+      setCurrentIndex(prevIndex => prevIndex - 1);
+    }
+  };
+
   const handleNext = () => {
+    const isLastIndex = currentIndex === carrusel.length - 1;
+    if (isLastIndex) {
+      setCurrentIndex(0);
+    } else {
+      setCurrentIndex(prevIndex => prevIndex + 1);
+    }
+  };
+
+  const handleNext2 = () => {
     setCurrentIndex(prevIndex => {
       if (prevIndex === carrusel.length - 1) {
         return 0;
@@ -144,7 +167,7 @@ const CarruselComponent = ({ carrusel }) => {
   };
 
   return (
-    <section style={{ margin: '50px'}}>
+    <section style={{ margin: '50px' }}>
       <div id="carrouselReact" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <ol className="carousel-indicators">
           {carrusel.map((carrusel, index) => (
