@@ -109,9 +109,8 @@ const Page = () => {
   });
   
   const handleAddToCart = (product) => {
-    
-    if (!cart.productos.some(item => item.id === product.id)) {
-     
+    let ProductoNoEnCart = !cart.productos.some(item => item.id === product.id);
+    if (ProductoNoEnCart) {
       const updatedProductos = [...cart.productos, product];
       const updatedCount = cart.count + 1;
       setCart({
@@ -119,11 +118,9 @@ const Page = () => {
         productos: updatedProductos,
         count: updatedCount
       });
-     
       localStorage.setItem('cartData', JSON.stringify({ productos: updatedProductos, count: updatedCount }));
     }
   };
-
   useEffect(() => {
     const storedCartData = JSON.parse(localStorage.getItem('cartData') || '{}');
     setCart({
