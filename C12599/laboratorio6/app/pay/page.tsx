@@ -65,13 +65,15 @@ if (cartDataString !== null) {
     };
 
     const handleSubmit = () => {
-        if (cart.direccionEntrega && cart.metodoPago && (cart.metodoPago === 'efectivo' || cart.metodoPago === 'sinpe' && cart.comprobante)) {
+        const CamposCompletos = cart.direccionEntrega && cart.metodoPago &&
+            (cart.metodoPago === 'efectivo' || (cart.metodoPago === 'sinpe' && cart.comprobante));
+        if (CamposCompletos) {
             const updatedCart = {
                 ...cart,
                 confirmacion: 'Esperando confirmación del administrador',
             };
             setCart(updatedCart);
-            localStorage.setItem('cartData', ''); 
+            localStorage.setItem('cartData', '');
             setCart(prevCart => ({
                 ...prevCart,
                 comprobante: '',
