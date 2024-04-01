@@ -9,25 +9,21 @@ const AddAddress = () => {
     const storedStoreP = localStorage.getItem('tienda');
     const memoryStore = JSON.parse(storedStoreP);
 
-    const handleContinue = (e) => {
-        e.preventDefault();
-        if (provincia.trim() === '' || distrito.trim() === '' || direccion.trim() === '') {
-            alert('Por favor complete todos los campos antes de continuar.');
-        } else {
-            const updatedCart = {
-                ...memoryStore,
-                carrito: {
-                    ...memoryStore.carrito,
-                    direccionEntrega: {
-                        provincia,
-                        distrito,
-                        direccion
-                    }
+    const enviarForm = (eventoDeEnvio) => {
+        eventoDeEnvio.preventDefault();
+        const updatedCart = {
+            ...memoryStore,
+            carrito: {
+                ...memoryStore.carrito,
+                direccionEntrega: {
+                    provincia,
+                    distrito,
+                    direccion
                 }
-            };
-            localStorage.setItem("tienda", JSON.stringify(updatedCart));
-            setShowMethodPay(true);
-        }
+            }
+        };
+        localStorage.setItem("tienda", JSON.stringify(updatedCart));
+        setShowMethodPay(true);
     };
 
     return (
@@ -35,18 +31,18 @@ const AddAddress = () => {
             <div className="p-pago">
                 <div className="data">
                     <h1>Agregar Dirección</h1>
-                    <form onSubmit={handleContinue}>
+                    <form onSubmit={enviarForm}>
                         <div className="form-group">
                             <label htmlFor="provincia">Provincia:</label>
-                            <input type="text" className="form-control" id="provincia" placeholder="Ingrese su provincia" value={provincia} onChange={(e) => setProvincia(e.target.value)} required/>
+                            <input type="text" className="form-control" id="provincia" placeholder="Ingrese su provincia" value={provincia} onChange={(e) => setProvincia(e.target.value)} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="distrito">Distrito:</label>
-                            <input type="text" className="form-control" id="distrito" placeholder="Ingrese su distrito" value={distrito} onChange={(e) => setDistrito(e.target.value)} required/>
+                            <input type="text" className="form-control" id="distrito" placeholder="Ingrese su distrito" value={distrito} onChange={(e) => setDistrito(e.target.value)} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="direccion">Dirección exacta:</label>
-                            <input type="text" className="form-control" id="direccion" placeholder="Ingrese su dirección exacta" value={direccion} onChange={(e) => setDireccion(e.target.value)} required/>
+                            <input type="text" className="form-control" id="direccion" placeholder="Ingrese su dirección exacta" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
                         </div>
                         <button type="submit" className="btn btn-primary">
                             Continuar

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 
-const PayMethod = () => {
+const metodoPago = () => {
     const [numOrden, setNumOrden] = useState('');
-    const [metodo, setMetodo] = useState('');
+    const [formaDePago, setFormaDePago] = useState('');
     const [accepted, setAccepted] = useState(false);
     const storedStoreP = localStorage.getItem('tienda');
+    const [showModal, setShowModal] = useState(false);
+
+
     const memoryStore = JSON.parse(storedStoreP);
 
     const generarIDCompra = () => {
@@ -14,26 +17,26 @@ const PayMethod = () => {
             autoId += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         setNumOrden(autoId)
-        return autoId; 
+        return autoId;
     };
 
     const handleAceptar = () => {
-        if (metodo.trim() === '') {
-            alert('Por favor ingrese el tipo de método de pago.');
+        if (formaDePago.trim() === '') {
+            setShowModal(true);
         } else {
-            const newID = generarIDCompra(); 
+            const newID = generarIDCompra();
             const updatedCart = {
                 ...memoryStore,
                 carrito: {
                     ...memoryStore.carrito,
-                    metodoDePago: metodo
-                    
+                    metodoDePago: formaDePago
+
                 },
-                idCompra: newID, 
-                necesitaVerificacion:true
+                idCompra: newID,
+                necesitaVerificacion: true
             };
             localStorage.setItem("tienda", JSON.stringify(updatedCart));
-            setNumOrden(newID); 
+            setNumOrden(newID);
             setAccepted(true);
         }
     };
@@ -67,26 +70,31 @@ const PayMethod = () => {
         );
     };
 
-    const handleMetodoChange = (pago) => {
-        setMetodo(pago.target.value);
+    const closeModal = () => {
+        setShowModal(false);
+    };
+    const handleMetodoChange = (metodoDePagoSelec) => {
+        setFormaDePago(metodoDePagoSelec.target.value);
     };
 
     return (
         accepted ? (
             <div>
-                {metodo === 'pagoEfectivo' ? pagoE() : metodo === 'pagoSinpe' ? pagoS() : <div className="cart-box"><h1>Ha ocurrido un error</h1></div>}
+                {formaDePago === 'pagoEfectivo' ? pagoE() : formaDePago === 'pagoSinpe' ? pagoS() : <div className="cart-box"><h1>Ha ocurrido un error</h1></div>}
             </div>
         ) : (
+
             <div>
+                {showModal && <ModalSinMetodoPago closeModal={closeModal} />}
                 <div className='metodoPago'>
                     <div className="centro">
                         <h1>Metodos de pago</h1>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" id="inlineCheckbox1" value="pagoEfectivo" onChange={handleMetodoChange} checked={metodo === 'pagoEfectivo'} />
+                            <input className="form-check-input" type="radio" id="inlineCheckbox1" value="pagoEfectivo" onChange={handleMetodoChange} checked={formaDePago === 'pagoEfectivo'} />
                             <label className="form-check-label" htmlFor="inlineCheckbox1">En Efectivo</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" id="inlineCheckbox2" value="pagoSinpe" onChange={handleMetodoChange} checked={metodo === 'pagoSinpe'} />
+                            <input className="form-check-input" type="radio" id="inlineCheckbox2" value="pagoSinpe" onChange={handleMetodoChange} checked={formaDePago === 'pagoSinpe'} />
                             <label className="form-check-label" htmlFor="inlineCheckbox2">SinpeMovil</label>
                         </div>
                         <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
@@ -97,4 +105,28 @@ const PayMethod = () => {
     );
 };
 
-export default PayMethod;
+const ModalSinMetodoPago = ({ closeModal }) => {
+    return (
+        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Método de pago</h5>
+                        <button type="button" className="close" onClick={closeModal} aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <p>Por favor seleccione un método de pago disponible.</p>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+export default metodoPago;

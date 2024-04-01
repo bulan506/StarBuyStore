@@ -1,8 +1,8 @@
 "use client";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css"; 
 import React, { useState, useEffect } from 'react';
 import "@/app/ui/styles.css";
-import HeaderAmazon from "@/app/navAmazon/page";
+import Header from "@/app/navStarBuyStore/page";
 import Carrito from "@/app/Cart/page";
 
 const Productos = [
@@ -140,9 +140,34 @@ const Amazon = ({ handleClick }) => {
   );
 };
 
+const ModalProductoYaAgregado = ({ closeModal }) => {
+  return (
+    <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Producto Ya Agregado</h5>
+            <button type="button" className="close" onClick={closeModal} aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <p>Este producto ya ha sido añadido al carrito.</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 export default function Page() {
   const [show, setShow] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+
 
   const initialCart= {
     carrito: {
@@ -161,18 +186,16 @@ export default function Page() {
     return storedStore?JSON.parse(storedStore):initialCart;
   });
 
-  
-
   useEffect(() => {
     localStorage.setItem("tienda", JSON.stringify(store));
   }, [store]);
 
   const handleClick = (item) => {
-    const isPresent = store.productos.some(producto => producto.id === item.id);
-  
+  const isPresent = store.productos.some(producto => producto.id === item.id);
 
     if (isPresent) {
-      alert("Este producto ya fue agregado anteriormente");
+      setShowModal(true);
+
     } else {
       const newProd = [...(store.productos), item];
       setStore( ({
@@ -184,14 +207,18 @@ export default function Page() {
       }));
     }
   };
-
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <div>
-      <HeaderAmazon size={store.productos.length} setShow={setShow} />
+      <Header size={store.productos.length} setShow={setShow} />
       {
         show ? <Amazon handleClick={handleClick} /> : <Carrito  />
       }
+        {showModal && <ModalProductoYaAgregado closeModal={closeModal} />}
+
       <footer>
         <p>Derechos de autor © 2024. Para mi primer sitio</p>
       </footer>
