@@ -14,6 +14,7 @@ const Producto = ({ producto, carrito }) => (
     </div>
     <p>Precio: {producto.precio}$</p>
     <button onClick={() => carrito(producto)}>Agregar</button>
+    
   </div>
 );
 
@@ -92,17 +93,18 @@ export default function Page() {
 
   const añadirProducto = (producto) => {
     datos.carrito = [...datos.carrito, producto];
-    console.log(datos.carrito);
+   
     setDatos(previousState => {
       return { ...previousState, carrito: datos.carrito }
     });
     saveUserData(datos);
-    console.log(datos);
+   
   }
 
   const limpiar = () => {
     setSalir(true);
   }
+ 
   const mitad = datos.productos.length / 2;
   const primero = datos.productos.slice(0, mitad);
   const ultimo = datos.productos.slice(mitad, datos.productos.length);

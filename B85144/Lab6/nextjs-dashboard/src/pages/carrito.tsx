@@ -2,13 +2,17 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
 import "./css/stylecarrito.css";
+import { useRouter } from 'next/navigation'
 import { getUserData } from "../store/store";
 
 export default function Carrito() {
+  const router = useRouter();
   const [datos, setDatos] = useState({
     "productos": [],
-    "carrito":[],
+    "carrito": [],
     "subtotal": 0,
+    "totalimpuesto": 0,
+    "total": 0,
   });
 
   useEffect(() => {
@@ -18,15 +22,24 @@ export default function Carrito() {
 
   useEffect(() => {
     const subtotal = datos.carrito.reduce((acc, producto) => acc + producto.precio, 0);
-    setDatos(previousState => {
-      return { ...previousState, subtotal:  subtotal}
-    });
+    const totalimpuesto = datos.carrito.reduce((acc, producto) => acc + producto.precio * (producto.impuesto / 100), 0);
+    const total = subtotal + totalimpuesto;
+    setDatos(previousState => ({
+      ...previousState,
+      subtotal: subtotal,
+      totalimpuesto: totalimpuesto,
+      total: total,
+    }));
   }, [datos.carrito]);
+
+  const continuarCompra = () => {
+    router.push("/direccion");
+  }
 
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header className="header">
-      
+
       </header>
       <div className="container">
         <div className="row">
@@ -44,8 +57,12 @@ export default function Carrito() {
           ))}
         </div>
       </div>
-      <footer className="footer d-flex justify-content-center">
-        Precio final: {datos.subtotal}$
+      <footer className="footer d-flex justify-content-end">
+        <div className="d-flex flex-column">
+          <span>Subtotal sin impuestos: {datos.subtotal}$</span>
+          <span>Total con impuestos: {datos.total}$</span>
+          <button onClick={continuarCompra}>Comprar</button>
+        </div>
       </footer>
     </main>
   );
