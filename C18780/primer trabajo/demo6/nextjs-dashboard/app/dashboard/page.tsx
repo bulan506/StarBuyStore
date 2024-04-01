@@ -8,7 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import React from 'react';
 
 const Carousel = ({ onAdd }: { onAdd: any }) => {
-  const chunkSize = 3;
+  const chunkSize = 4;
   const productChunks = [];
   for (let i = 0; i < initialStore.products.length; i += chunkSize) {
     productChunks.push(initialStore.products.slice(i, i + chunkSize));
@@ -21,7 +21,7 @@ const Carousel = ({ onAdd }: { onAdd: any }) => {
         <div className="carousel-inner">
           {productChunks.map((chunk, index) => (
             <div key={index} className={`carousel-item ${index === 0 ? "active" : ""} `}>
-              <div className="d-flex flex-row justify-content-center align-items-center">
+              <div className="row d-flex flex-row justify-content-center align-items-center">
                 {chunk.map((product) => (
                   <ProductItem key={product.id} product={product} onAdd={onAdd} />
                 ))}

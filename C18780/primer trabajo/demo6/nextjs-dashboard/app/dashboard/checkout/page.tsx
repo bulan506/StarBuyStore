@@ -1,12 +1,13 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import initialStore from '@/app/lib/products-data';
 import { Product } from '../../lib/products-data-definitions';
 import Link from 'next/link';
 import Modal from '../modal';
 import ModalInput from '../modalInput';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { ShoppingCartIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import countries from '../../lib/countries-data';
 const ListProducts = ({ product, quantity }: { product: Product, quantity: number }) => {
     return (
         <tr>
@@ -22,7 +23,7 @@ const ListProducts = ({ product, quantity }: { product: Product, quantity: numbe
                 </p>
                 <p className="text-muted mb-0 mt-1">$ {product.price} x {quantity}</p>
             </td>
-            <td>$ {product.price * quantity}</td>
+            <td>₡{product.price * quantity}</td>
         </tr>
     );
 }
@@ -123,13 +124,9 @@ const BillingInfo = () => {
                                         <label className="form-label">Country</label>
                                         <select className="form-control form-select" title="Country">
                                             <option value="0">Select Country</option>
-                                            <option value="AF">Afghanistan</option>
-                                            <option value="AL">Albania</option>
-                                            <option value="DZ">Algeria</option>
-                                            <option value="AS">American Samoa</option>
-                                            <option value="AD">Andorra</option>
-                                            <option value="AO">Angola</option>
-                                            <option value="AI">Anguilla</option>
+                                            {countries.country.map((country) => (
+                                                <option value={country.value}>{country.name}</option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>
@@ -212,11 +209,15 @@ function generateRandomString() {
 }
 
 export default function Checkout() {
-    const [payment, setPayment] = useState<string>("");
+    const [payment, setPayment] = useState<string>();
     const [text, setText] = useState<string>("");
+    const payMethod = {
+        cash: "cash",
+        sinpe: "sinpe"
+    }
     const updatePayment = (paymentOption: string) => {
         setPayment(paymentOption);
-        if (paymentOption === 'cash') {
+        if (paymentOption === payMethod.cash) {
             setText('Dear customer, \nplease wait for our administrator to confirm your method of payment.\nThank you very much for choosing us');
         } else {
             setText('Dear customer, \nour Sinpe Movil number is the following: \n70790629\nThank you very much for choosing us');
@@ -264,10 +265,10 @@ export default function Checkout() {
                         <div className="col">
                             <div className="text-end mt-2 mt-sm-0">
                                 <i className="mdi mdi-cart-outline me-1"></i>
-                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled={payment !== undefined ? false : true}>
                                     PROCCED
                                 </button>
-                                {payment === 'cash'
+                                {payment === payMethod.cash
                                     ? <Modal title={'#' + generateRandomString()} text={text} />
                                     : <ModalInput title={'#' + generateRandomString()} text={text} />}
                             </div>

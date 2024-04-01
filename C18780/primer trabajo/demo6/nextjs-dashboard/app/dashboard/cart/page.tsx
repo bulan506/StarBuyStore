@@ -10,7 +10,6 @@ const ProductCart = ({ product }: { product: Product }) => {
     return (
         <div className="table-responsive">
             <table className="table shoping-cart-table">
-
                 <tbody>
                     <tr>
                         <td width="200">
