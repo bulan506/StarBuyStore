@@ -1,32 +1,10 @@
 "use client";
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css";
 import products from '../utils/product'
 import carrusel from '../utils/carrusel'
 
-
-
-const Product = ({ product, handleAddToCart }) => {
-  const { id, name, author, imgUrl, price } = product;
-  return (
-    <div className="row my-3">
-      <div key={id} className='col-sm-3 mb-4' style={{width: '300px', margin: '0.5rem' }}>
-        <div className="card" style={{ background: '#939393'}}>
-          <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
-          <div className="card-body">
-            <div className='text-center'>
-              <h4> {name} </h4>
-              <p> Author: {author} </p>
-              <p>Price: ₡{price}</p>
-              <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default function Home() {
 
@@ -77,11 +55,11 @@ export default function Home() {
       </header>
 
 
-      <div>
-        <h2 className='text-left mt-5 mb-5' style={{ margin: '100px', color: '#3E3F3E' }}>List of Books</h2>
+      <div className='container'>
+        <h2 className='text-left mt-5 mb-5'>List of Books</h2>
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
           {products.map(product => (
-            <Product key={product.id} product={product} handleAddToCart={handleAddToCart}  />
+            <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />
           ))}
           <CarruselComponent carrusel={carrusel} />
         </div>
@@ -98,8 +76,28 @@ export default function Home() {
   );
 }
 
+const Product = ({ product, handleAddToCart }) => {
+  const { id, name, author, imgUrl, price } = product;
+  return (
+    <div className="row my-3">
+      <div key={id} className='col-sm-3 mb-4' style={{ width: '300px', margin: '0.5rem' }}>
+        <div className="card" style={{ background: 'white' }}>
+          <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
+          <div className="card-body">
+            <div className='text-center'>
+              <h4> {name} </h4>
+              <p> Author: {author} </p>
+              <p>Price: ₡{price}</p>
+              <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-//Shopping Cart
+
 function Cart({ counter }) {
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -123,43 +121,14 @@ function Cart({ counter }) {
 const CarruselComponent = ({ carrusel }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handlePrev2 = () => {
-    setCurrentIndex(prevIndex => {
-      if (prevIndex === 0) {
-        return carrusel.length - 1;
-      } else {
-        return prevIndex - 1;
-      }
-    });
-  };
-
   const handlePrev = () => {
-    const isFirstIndex = currentIndex === 0;
-    if (isFirstIndex) {
-      setCurrentIndex(carrusel.length - 1);
-    } else {
-      setCurrentIndex(prevIndex => prevIndex - 1);
-    }
+    setCurrentIndex(prevIndex => prevIndex === 0 ? carrusel.length - 1 : prevIndex - 1);
   };
 
   const handleNext = () => {
-    const isLastIndex = currentIndex === carrusel.length - 1;
-    if (isLastIndex) {
-      setCurrentIndex(0);
-    } else {
-      setCurrentIndex(prevIndex => prevIndex + 1);
-    }
+    setCurrentIndex(prevIndex => prevIndex === carrusel.length - 1 ? 0 : prevIndex + 1);
   };
 
-  const handleNext2 = () => {
-    setCurrentIndex(prevIndex => {
-      if (prevIndex === carrusel.length - 1) {
-        return 0;
-      } else {
-        return prevIndex + 1;
-      }
-    });
-  };
 
   const handleSlide = index => {
     setCurrentIndex(index);
