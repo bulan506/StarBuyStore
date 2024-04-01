@@ -27,8 +27,8 @@ const EjemploPage: React.FC = () => {
   useEffect(() => {
     let hayProductosEnCarrito = carrito.productos && carrito.productos.length > 0;
     if (hayProductosEnCarrito) {
-        const subtotalCalculado = carrito.productos.reduce((total, item) => total + item.price, 0);
-        const totalCalculado = (subtotalCalculado * 0.13) + subtotalCalculado;
+        let subtotalCalculado = carrito.productos.reduce((total, item) => total + item.price, 0);
+        let totalCalculado = (subtotalCalculado * 0.13) + subtotalCalculado;
         setCarrito(prevCarrito => ({
             ...prevCarrito,
             subtotal: subtotalCalculado,
