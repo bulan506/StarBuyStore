@@ -1,30 +1,36 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => void }) => {
-    const [selectedPayment, setSelectedPayment] = useState(0);
     const [orderNumber, setOrderNumber] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    enum PaymentMethod {
+        EFECTIVO = 'Efectivo',
+        SINPE = 'Sinpe'
+    }
 
     useEffect(() => {
         setCart(cart => ({
             ...cart,
             carrito: {
                 ...cart.carrito,
-                metodoDePago: selectedPayment === 0 ? 'Efectivo' : 'Sinpe'
+                metodoDePago: cart.carrito.metodoDePago ? cart.carrito.metodoDePago : PaymentMethod.EFECTIVO
             }
         }));
+        setSelectedIndex((cart.carrito.metodoDePago === PaymentMethod.EFECTIVO) ? 0 : 1);
     }, []);
 
     function handleSelectPayment(event: any) {
-        const selectedIndex = event.target.selectedIndex;
-        setSelectedPayment(selectedIndex);
+        setSelectedIndex(event.target.selectedIndex);
         setCart(cart => ({
             ...cart,
             carrito: {
                 ...cart.carrito,
-                metodoDePago: selectedIndex === 0 ? 'Efectivo' : 'Sinpe'
-            }
+                metodoDePago: event.target.selectedIndex === 0 ? PaymentMethod.EFECTIVO : PaymentMethod.SINPE
+            },
+            necesitaVerificacion: true
         }));
     }
 
@@ -66,12 +72,12 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
             <div className="container">
                 <h3>Métodos de pago</h3>
                 <div className="form-group">
-                    <select className="form-control" onChange={handleSelectPayment}>
+                    <select className="form-control" onChange={handleSelectPayment} value={cart.carrito.metodoDePago}>
                         {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
                     </select>
                 </div>
             </div>
-            {(selectedPayment === 0 ? <Efectivo /> : <Sinpe />)}
+            {(selectedIndex === 0 ? <Efectivo /> : <Sinpe />)}
             <div className="progress">
                 <div className="progress-bar progress-bar-striped progress-bar-animated"
                     role="progressbar" aria-valuenow={75} aria-valuemin={0} aria-valuemax={100} style={{ width: '100%' }}></div>

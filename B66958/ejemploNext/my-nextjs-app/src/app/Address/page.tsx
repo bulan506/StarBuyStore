@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import PaymentForm from "../Payment/page";
 
 const AddressForm = ({ handleAddressForm, cart, setCart }: { handleAddressForm: () => void, cart: any, setCart: (cart: any) => void }) => {
-
-    const [activeAddress, setActiveAdress] = useState(false);
     const [showPaymentForm, setShowPaymentForm] = useState(false);
 
     function handleAddressChange(event: any) {
@@ -17,12 +15,7 @@ const AddressForm = ({ handleAddressForm, cart, setCart }: { handleAddressForm: 
                 direccionEntrega: inputValue
             }
         }));
-        setActiveAdress(inputValue.trim().length > 0);
     }
-
-    useEffect(() => {
-        setActiveAdress(cart.carrito.direccionEntrega ? true : false);
-    }, []);
 
     function handlePaymentChange(show: boolean) {
         setShowPaymentForm(show);
@@ -39,7 +32,7 @@ const AddressForm = ({ handleAddressForm, cart, setCart }: { handleAddressForm: 
                             value={cart.carrito.direccionEntrega} onChange={handleAddressChange} />
                         <div className="d-flex w-100 justify-content-center">
                             <a className="btn btn-primary mr-2" onClick={() => handleAddressForm()}>Atrás</a>
-                            <button className="btn btn-primary" disabled={!activeAddress}
+                            <button className="btn btn-primary" disabled={!cart.carrito.direccionEntrega}
                                 onClick={() => handlePaymentChange(true)}>Continuar</button>
                         </div>
                     </div>
