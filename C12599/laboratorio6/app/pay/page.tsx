@@ -24,7 +24,8 @@ const PayPage: React.FC = () => {
        let cartDataString = localStorage.getItem('cartData');
 if (cartDataString !== null) {
     let cartData = JSON.parse(cartDataString);
-    if (cartData && cartData.productos && cartData.productos.length > 0) {
+    const TieneProductosValidos = cartData && Array.isArray(cartData.productos) && cartData.productos.length > 0;
+    if (TieneProductosValidos) {
         setCart(cartData);
         setCart(prevCart => ({ ...prevCart, isCartEmpty: false }));
     } else {
