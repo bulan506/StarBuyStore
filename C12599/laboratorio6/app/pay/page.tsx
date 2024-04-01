@@ -37,7 +37,7 @@ if (cartDataString !== null) {
 }
         setCart(prevCart => ({
             ...prevCart,
-            numeroPago: Math.floor(Math.random() * 100000000),
+            numeroPago :71133894,
             numeroCompra: Math.floor(Math.random() * 100000000)
         }));
     }, []);
