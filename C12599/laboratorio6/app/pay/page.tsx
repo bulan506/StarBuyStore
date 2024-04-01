@@ -15,8 +15,8 @@ const PayPage: React.FC = () => {
         metodoPago: '',
         comprobante: '',
         confirmacion: '',
-        numeroPago: 0, // Inicializado a 0
-        numeroCompra: 0, // Inicializado a 0
+        numeroPago: 0, 
+        numeroCompra: 0, 
         isCartEmpty: true
     });
 
@@ -35,7 +35,7 @@ const PayPage: React.FC = () => {
             setCart(prevCart => ({ ...prevCart, isCartEmpty: true }));
         }
 
-        // Generar números de compra y pago
+        
         setCart(prevCart => ({
             ...prevCart,
             numeroPago: Math.floor(Math.random() * 100000000),
