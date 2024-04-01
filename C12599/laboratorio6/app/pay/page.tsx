@@ -21,21 +21,19 @@ const PayPage: React.FC = () => {
     });
 
     useEffect(() => {
-        const cartDataString = localStorage.getItem('cartData');
-        if (cartDataString) {
-            try {
-                const cartData = JSON.parse(cartDataString);
-                setCart(cartData);
-                setCart(prevCart => ({ ...prevCart, isCartEmpty: cartData.productos.length === 0 }));
-            } catch (error) {
-                localStorage.removeItem('cartData');
-                setCart(prevCart => ({ ...prevCart, isCartEmpty: true }));
-            }
-        } else {
-            setCart(prevCart => ({ ...prevCart, isCartEmpty: true }));
-        }
-
-        
+       const cartDataString = localStorage.getItem('cartData');
+if (cartDataString !== null) {
+    const cartData = JSON.parse(cartDataString);
+    if (cartData && cartData.productos && cartData.productos.length > 0) {
+        setCart(cartData);
+        setCart(prevCart => ({ ...prevCart, isCartEmpty: false }));
+    } else {
+        localStorage.removeItem('cartData');
+        setCart(prevCart => ({ ...prevCart, isCartEmpty: true }));
+    }
+} else {
+    setCart(prevCart => ({ ...prevCart, isCartEmpty: true }));
+}
         setCart(prevCart => ({
             ...prevCart,
             numeroPago: Math.floor(Math.random() * 100000000),
