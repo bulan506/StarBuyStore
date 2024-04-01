@@ -111,8 +111,8 @@ const Page = () => {
   const handleAddToCart = (product) => {
     let ProductoNoEnCart = !cart.productos.some(item => item.id === product.id);
     if (ProductoNoEnCart) {
-      const updatedProductos = [...cart.productos, product];
-      const updatedCount = cart.count + 1;
+      let updatedProductos = [...cart.productos, product];
+      let updatedCount = cart.count + 1;
       setCart({
         ...cart,
         productos: updatedProductos,
