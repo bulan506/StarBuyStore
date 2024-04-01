@@ -44,8 +44,8 @@ export default function Home() {
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
-    if (storedCart && !cartLoaded) {
-      console.log(JSON.parse(storedCart));
+    let cartExistsAndIsLoaded = storedCart && !cartLoaded;
+    if (cartExistsAndIsLoaded) {
       setCart(JSON.parse(storedCart));
       setCartLoaded(true);
     }
