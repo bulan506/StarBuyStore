@@ -2,30 +2,29 @@
 import React, { useState, useEffect } from 'react';
 import { ProductItem, products, Product } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './HTMLPageDemo.css';
+import '../HTMLPageDemo.css';
 import Link from 'next/link';
 
 export default function Page() {
-  const [cartCount, setCartCount] = useState(0);
+  const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
 
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
-    setCartCount(savedCartProducts.length);
+    setCartProducts(savedCartProducts);
   }, []);
 
-  const addToCart = (product: ProductItem) => {
-    // Obtener los productos del carrito del localStorage
-    const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
 
-    // Actualizar los productos del carrito con el nuevo producto
-    const updatedCart = [...savedCartProducts, product];
+  const addToCart = (product: ProductItem) => {
+    // Obtener los productos del carrito del estado actual
+    const updatedProducts = [...cartProducts, product];
+
+    // Actualizar el estado del carrito con los nuevos productos
+    setCartProducts(updatedProducts);
 
     // Guardar los productos actualizados en el localStorage
-    localStorage.setItem('cartProducts', JSON.stringify(updatedCart));
-
-    // Actualizar el contador del carrito
-    setCartCount(updatedCart.length);
+    localStorage.setItem('cartProducts', JSON.stringify(updatedProducts));
   }
+
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header className="header-container row">
@@ -33,7 +32,7 @@ export default function Page() {
           <input type="search" placeholder="Buscar" value="" />
           <button><img src="/img/Lupa.png" className="col-sm-4" /> </button>
           <Link href="/cart">
-            <button><img src="./img/carrito.png" className="col-sm-4" />{cartCount}</button>
+            <button><img src="./img/carrito.png" className="col-sm-4" />{cartProducts.length}</button>
           </Link>
         </div>
       </header>
@@ -44,6 +43,7 @@ export default function Page() {
           {products.map(product =>
             <Product key={product.id} product={product} addToCart={() => addToCart(product)} />
           )}
+
         </div>
       </div>
 

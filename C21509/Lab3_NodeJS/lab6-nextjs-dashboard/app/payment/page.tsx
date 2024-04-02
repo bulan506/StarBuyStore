@@ -1,29 +1,47 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { ProductItem } from '../layout'
+import { ProductItem } from '../product/layout';
+import '../HTMLPageDemo.css';
+import Link from 'next/link';
 
 const PurchasedItems = () => {
-  const [deliveryAddress, setDeliveryAddress] = useState('');
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [cartState, setCartState] = useState({
+    products: [],
+    cart: {
+      products: [],
+      deliveryAddress: '',
+    },
+    paymentMethods: [
+      {
+        requiresVerification: false
+      }
+    ]
+  });
+
+  const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [paymentConfirmation, setPaymentConfirmation] = useState('');
   const [paymentReceipt, setPaymentReceipt] = useState('');
-  const [cartProducts, setCartProducts] = useState([]);
   const [purchaseNumber, setPurchaseNumber] = useState('');
-  const [showPaymentMethod, setShowPaymentMethod] = useState(false);
 
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
-    setCartProducts(savedCartProducts);
+    setCartState(prevState => ({
+      ...prevState,
+      cart: {
+        ...prevState.cart,
+        products: savedCartProducts
+      }
+    }));
   }, []);
 
   const handleContinue = () => {
-    if (deliveryAddress.trim() !== '') {
+    if (cartState.cart.products.length > 0) {
       setShowPaymentMethod(true);
     }
   };
 
   const generatePurchaseNumber = () => {
-    // Genera un número de compra aleatorio
     return Math.floor(10000000 + Math.random() * 90000000);
   };
 
@@ -31,15 +49,17 @@ const PurchasedItems = () => {
     setSelectedPaymentMethod(method);
   };
 
+  enum PaymentMethod {
+    EFECTIVO = 'Efectivo',
+    SINPE = 'Sinpe'
+  }
+
   const managePaymentConfirmation = () => {
-    // Lógica para procesar el pago según el método seleccionado
-    if (selectedPaymentMethod === 'Efectivo') {
-      // Procesar pago en efectivo
+    if (selectedPaymentMethod === PaymentMethod.EFECTIVO) {
       const purchaseNum = generatePurchaseNumber();
       setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${purchaseNum}. Espere la confirmación del administrador.`);
       setPurchaseNumber(purchaseNum.toString());
-    } else if (selectedPaymentMethod === 'Sinpe') {
-      // Procesar pago con Sinpe
+    } else if (selectedPaymentMethod === PaymentMethod.SINPE) {
       const purchaseNum = generatePurchaseNumber();
       setPaymentConfirmation(`Por favor realice el pago a la cuenta indicada. El número de teléfono al cual depositar es: ${purchaseNum}. Una vez realizado, ingrese el comprobante y espere la confirmación del administrador.`);
       setPurchaseNumber(purchaseNum.toString());
@@ -50,17 +70,29 @@ const PurchasedItems = () => {
     <div>
       <h1>Procesar Compra</h1>
 
-      <input type="text" value={deliveryAddress} onChange={(e) => setDeliveryAddress(e.target.value)} placeholder="Ingrese la dirección de entrega" />
-      <button onClick={handleContinue} disabled={!deliveryAddress} className="button">Continuar</button>
+      <input
+        type="text"
+        value={cartState.cart.deliveryAddress}
+        onChange={(e) => setCartState(prevState => ({
+          ...prevState,
+          cart: {
+            ...prevState.cart,
+            deliveryAddress: e.target.value
+          }
+        }))}
+        placeholder="Ingrese la dirección de entrega"
+      />
+
+      <button onClick={handleContinue} disabled={!cartState.cart.deliveryAddress} className="button">Continuar</button>
 
       {showPaymentMethod && (
         <div>
           <h2>Seleccione el método de pago:</h2>
-          <button onClick={() => managePaymentMethodSelection('Efectivo')} className="button">Efectivo</button>
-          <button onClick={() => managePaymentMethodSelection('Sinpe')} className="button">Sinpe</button>
+          <button onClick={() => managePaymentMethodSelection(PaymentMethod.EFECTIVO)} className="button">Efectivo</button>
+          <button onClick={() => managePaymentMethodSelection(PaymentMethod.SINPE)} className="button">Sinpe</button>
         </div>
       )}
-      {/* Confirmación de pago */}
+
       {selectedPaymentMethod && (
         <div>
           <h2>Confirmación de Pago</h2>
@@ -70,8 +102,7 @@ const PurchasedItems = () => {
           {paymentReceipt && <p>Adjunte el comprobante: {paymentReceipt}</p>}
           {purchaseNumber && <p>Número de Compra: {purchaseNumber}</p>}
 
-          {/* Funcionalidad adicional para el método de pago Sinpe */}
-          {selectedPaymentMethod === 'Sinpe'  && paymentConfirmation && (
+          {selectedPaymentMethod === PaymentMethod.SINPE && paymentConfirmation && (
             <div>
               <p>Número donde realizar el pago: {generatePurchaseNumber()}</p>
               <p>Ingrese el número de comprobante:</p>
@@ -82,11 +113,10 @@ const PurchasedItems = () => {
         </div>
       )}
 
-      {/* Mostrar productos del carrito */}
       <div>
         <h2>Productos en el Carrito</h2>
         <ul>
-          {cartProducts.map((product: ProductItem) => (
+          {cartState.cart.products.map((product: ProductItem) => (
             <li key={product.id}>
               <p>{product.name}</p>
               <p>Precio: ${product.price}</p>
@@ -94,6 +124,10 @@ const PurchasedItems = () => {
           ))}
         </ul>
       </div>
+      <Link href="/product">
+        <button className="button">Página principal</button>
+      </Link>
+
     </div>
   );
 };
