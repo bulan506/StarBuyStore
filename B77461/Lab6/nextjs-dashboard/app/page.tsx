@@ -15,19 +15,19 @@ export default function Home() {
     carrito: {
       productos: [],
       subtotal: 0,
-      porcentajeImpuesto: 10,
+      porcentajeImpuesto: 13,
       total: 0,
       direccionEntrega: '',
       metodoDePago: ''
     },
     metodosDePago: ['Efectivo', 'Sinpe'],
-    necesitaVerificacion: false
+    verificacion: false
   });
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
-    if (storedCart && !cartLoaded) {
-      console.log(JSON.parse(storedCart));
+    let cartExistsAndLoaded = storedCart && !cartLoaded;
+    if (cartExistsAndLoaded) {
       setCart(JSON.parse(storedCart));
       setCartLoaded(true);
     }
@@ -40,12 +40,12 @@ export default function Home() {
     setCount(cart.carrito.productos.length);
   }, [cart, cartLoaded]);
 
-  function productAlreadyAdded({ product }) {
+  function productAdded({ product }) {
     return idList.includes(product.id);
   }
 
   function addProductToCart({ product }: any) {
-    const newProductos = [...(cart.carrito.productos || []), product];
+    let newProductos = [...(cart.carrito.productos || []), product];
     setCart(cart => ({
       ...cart,
       carrito: {
@@ -57,8 +57,8 @@ export default function Home() {
   }
 
   function calculateTotals({ product }: any) {
-    const newSubTotal = cart.carrito.subtotal + product.price;
-    const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+    let newSubTotal = cart.carrito.subtotal + product.price;
+    let newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
 
     setCart(cart => ({
       ...cart,
@@ -71,7 +71,7 @@ export default function Home() {
   }
 
   const handleAddToCart = ({ product }: any) => {
-    if (!productAlreadyAdded({ product })) {
+    if (!productAdded({ product })) {
       // Si el producto no está en el carrito, lo agregamos con cantidad 1
       idList.push(product.id);
       addProductToCart({ product });
@@ -79,12 +79,12 @@ export default function Home() {
       setCount(count + 1);
     } else {
       // Si el producto ya está en el carrito, aumentamos su cantidad y recalculamos los totales
-      const newProductos = cart.carrito.productos.map((prod: any) =>
+      let newProductos = cart.carrito.productos.map((prod: any) =>
         prod.id === product.id ? { ...prod, cantidad: prod.cantidad + 1 } : prod
       );
 
-      const newSubTotal = newProductos.reduce((acc: any, curr: any) => acc + curr.price * curr.cantidad, 0);
-      const newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+      let newSubTotal = newProductos.reduce((acc: any, curr: any) => acc + curr.price * curr.cantidad, 0);
+      let newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
 
       setCart((prevCart: any) => ({
         ...prevCart,
@@ -139,8 +139,6 @@ export default function Home() {
 
     setCount(count - 1); // Restar 1 al contador count
 }
-
-
 
   const products = [
     { id: 1, name: 'Audifonos', description: 'Audifonos RGB', imageUrl: 'https://tienda.starware.com.ar/wp-content/uploads/2021/05/auriculares-gamer-headset-eksa-e1000-v-surround-71-rgb-pc-ps4-verde-2331-3792.jpg', price: 60.0, cantidad: 1 },
