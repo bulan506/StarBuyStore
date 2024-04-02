@@ -1,3 +1,10 @@
+"use client"
+
+import {useState} from 'react';
+import { number } from 'zod';
+import { ModalCart } from './modal_cart';
+import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
+
 
 export default function RootLayout({
   children,
@@ -11,12 +18,11 @@ export default function RootLayout({
   );
 }
 
-
-
-interface ProductItem {
+export interface ProductItem {
   id: number;
   name: string;
   imageUrl: string;
+  quantity: number;
   price: number;
 }
 
@@ -24,60 +30,259 @@ export const product: ProductItem[] = [
   // const product = [
   {
       id: 1,
-      name: "Producto 1",                
+      name: "Tablet Samsung",                
       imageUrl: './img/tablet_samsung.jpg',
+      quantity: 0,
       price: 25
   },
   {
       id: 2,
-      name: "Producto 2",                
+      name: "TV LG UHD",                
       imageUrl: "./img/tv.jfif",
+      quantity: 0,
       price: 50
   },
   {
       id: 3,
-      name: "Producto 3",                
+      name: "Auriculares Genericos",                
       imageUrl: "./img/auri.jfif",
+      quantity: 0,
       price: 100
   },
   {
       id: 4,
-      name: "Producto 4",                
-      imageUrl: "./img/tablet_samsung.jpg",
+      name: "Dualshock PS4",                
+      imageUrl: "./img/dualshock4.jpg",
+      quantity: 0,
       price: 35
   },
   {
       id: 5,
-      name: "Producto 5",                
+      name: "Teclado LED",                
       imageUrl: "./img/teclado.jpg",
+      quantity: 0,
       price: 75
   },
   {
       id: 6,
-      name: "Producto 6",                
-      imageUrl: "./img/mouse.png",
+      name: "Samsung Galaxy A54",                
+      imageUrl: "./img/a54_samsung.png",
+      quantity: 0,
       price: 150
   },
   {
       id: 7,
-      name: "Producto 7",
-      imageUrl: "./img/mouse.png",
+      name: "Dualshock PS5",
+      imageUrl: "./img/dualshock5.jpg",
+      quantity: 0,
       price: 250
   },
   {
       id: 8,                
-      name: "Producto 8",
-      imageUrl: "img/mouse.png",
+      name: "Samsung A54",
+      imageUrl: "./img/a54_samsung.jpg",
+      quantity: 0,
       price: 250
   },
+
   {
-      id: 9,
-      name: "Producto 9",
+    id: 9,                
+    name: "Samsung A54",
+    imageUrl: "./img/a54_samsung.jpg",
+    quantity: 0,
+    price: 250
+},
+  {
+      id: 10,
+      name: "Mouse Microsoft",
       imageUrl: "./img/mouse.png",
+      quantity: 0,
       price: 2500
+  },
+  {
+    id:11,
+    name:"Módem Router - Archer VR400",
+    imageUrl: "./img/router_archerVR400.jpg",
+    quantity: 0,
+    price: 75,
   }
 
 ];
+
+export interface CartShopItem {
+  allProduct: ProductItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  direction: string;
+  payment: string;
+  verify: boolean
+}
+
+interface ProductProps {
+  product: ProductItem;
+  numberOfItems: number;
+  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;
+  allProduct: ProductItem[];
+  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;
+  totalWithTax:number;
+  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
+  totalWithNoTax: number;
+  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
+  payment: string;
+  setPayment: React.Dispatch<React.SetStateAction<string>>;
+  direction: string;
+  setDirection: React.Dispatch<React.SetStateAction<string>>;
+  verify: boolean;
+  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+  myCartInStorage: CartShopItem | null;
+}
+
+
+//Galeria de Productos
+export const Product: React.FC<ProductProps> = ({
+  product,
+  numberOfItems,
+  setNumberOfItems,
+  allProduct,
+  setAllProduct,
+  totalWithTax,
+  setTotalWithTax,
+  totalWithNoTax,
+  setTotalWithNoTax,
+  payment,
+  setPayment,
+  direction,
+  setDirection,
+  verify,
+  setVerify,    
+  myCartInStorage
+  }) => {
+
+  const { id,name, imageUrl, price } = product;    
+
+  const buyItem = () => {    
+    //como el objeto del carrito puede ser nulo, creamos una condicion para evitar estar haciendo
+    //condiciones    
+    if (myCartInStorage) {
+
+      //Actualizacion de los useState            
+      setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);
+      const newAllProduct = [...allProduct, product];
+      setAllProduct(newAllProduct);
+      const newTotalWithNoTax = totalPriceNoTax(newAllProduct);
+      const newTotalWithTax = totalPriceTax(newAllProduct);
+      setTotalWithNoTax(newTotalWithNoTax);
+      setTotalWithTax(newTotalWithTax);
+
+
+      //Actualizacion de los atributos del carrito
+        //lo clonamos para evitar malas asignaciones con el carrito original
+      const updatedCart = { ...myCartInStorage };      
+      updatedCart.allProduct = newAllProduct;      
+      updatedCart.subtotal = newTotalWithNoTax
+      updatedCart.total = newTotalWithTax;      
+      
+      //sobbreescrimos el carrito clonado sobre el original
+      setCartShopStorage("A", updatedCart);
+                
+    } else {
+        console.log("El carro no existe");
+    }
+};
+    
+  return (
+      <div className="product col-sm-4 row">
+          <div hidden>{id}</div>
+          <div className="row-sm-3"><img src={imageUrl}/></div>
+          <p className="row-sm-3">{name}</p>
+          <p className="row-sm-3">${price}</p>
+          <button className="row-sm-3" onClick={ () => buyItem() }>Comprar</button>          
+      </div>
+  );
+}
+
+
+
+interface CartShopProps {
+  numberOfItems: number;
+  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;    
+  allProduct: ProductItem[];
+  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;  
+  
+  totalWithTax:number;
+  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
+  totalWithNoTax: number;
+  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;  
+  payment: string;
+  setPayment: React.Dispatch<React.SetStateAction<string>>;
+  direction: string;
+  setDirection: React.Dispatch<React.SetStateAction<string>>;
+  verify: boolean;
+  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+  myCartInStorage: CartShopItem | null;
+}
+
+//Carrito
+export const CartShop: React.FC<CartShopProps> = ({
+    numberOfItems,
+    setNumberOfItems,
+    allProduct,
+    setAllProduct,
+    totalWithTax,
+    setTotalWithTax,
+    totalWithNoTax,
+    setTotalWithNoTax,
+    payment,
+    setPayment,
+    direction,
+    setDirection,
+    verify,
+    setVerify,    
+    myCartInStorage
+  }) => {
+
+  //States del ModalCart
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);  
+  return(
+    <div className="cart_container col-sm-6">
+      {/* Cuando se presione cualquier parte del Carrito, se abre el modal */}
+      <a onClick={handleShow}>
+          <div className="cart-info">
+              <i className="fas fa-shopping-cart"></i>                    
+              <div className="notify-cart">{numberOfItems}</div>
+          </div>                    
+          <p className="col-sm-6">Mi carrito</p>                                                                   
+          
+      </a>  
+
+      {/* Llamamos al carrito desde modal_cart.tsx 
+      Le pasamos los useState al modal principal para mantener la referencia de todos los datos, en caso de usarlos
+      */}
+      <ModalCart 
+        show={show} 
+        handleClose={handleClose}
+        setNumberOfItems={setNumberOfItems}
+        allProduct={allProduct}
+        setAllProduct={setAllProduct}
+        totalWithTax={totalWithTax}
+        setTotalWithTax={setTotalWithTax}
+        totalWithNoTax={totalWithNoTax}
+        setTotalWithNoTax={setTotalWithNoTax}
+        payment={payment}
+        setPayment={setPayment}
+        direction={direction}
+        setDirection={setDirection}
+        verify={verify}
+        setVerify={setVerify}
+        myCartInStorage={myCartInStorage}
+      />                                                    
+    </div>           
+  );
+}
+
 
 export const StaticCarousel = () => {
   return (
@@ -127,19 +332,5 @@ export const StaticCarousel = () => {
           <span className="visually-hidden">Next</span>
           </button>
       </div>                            
-  );
-}
-
-
-// Lista de Productos
-export const Product = ({ product }:{product: ProductItem}) => {
-  const { name, imageUrl, price } = product;            
-  return (
-      <div className="product col-sm-4 row">
-          <div className="row-sm-3"><img src={imageUrl}/></div>
-          <p className="row-sm-3">{name}</p>
-          <p className="row-sm-3">${price}</p>
-          <button className="row-sm-3">Comprar</button>
-      </div>
   );
 }
