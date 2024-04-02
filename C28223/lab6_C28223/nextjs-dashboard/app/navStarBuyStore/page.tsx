@@ -3,9 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import React, { useState, useEffect } from 'react';
 import "@/app/ui/styles.css";
 
-const HeaderAmazon = ({ size, setShow }) => {
+const Header = ({ size, setShow }) => {
 
- 
   const handleReloadPage = () => {
     window.location.reload();
   };
@@ -35,4 +34,4 @@ const HeaderAmazon = ({ size, setShow }) => {
   );
 };
 
-export default HeaderAmazon;
+export default Header;

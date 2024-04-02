@@ -127,7 +127,7 @@ const Product = ({ product, handleClick }) => {
   );
 };
 
-const Amazon = ({ handleClick }) => {
+const MostrarProductos = ({ handleClick }) => {
   return (
     <div>
       <h3> Lista de productos</h3>
@@ -146,7 +146,7 @@ const ModalProductoYaAgregado = ({ closeModal }) => {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Producto Ya Agregado</h5>
+            <h5 className="modal-title">Producto ya agregado</h5>
             <button type="button" className="close" onClick={closeModal} aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -168,17 +168,16 @@ export default function Page() {
   const [show, setShow] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-
   const initialCart= {
     carrito: {
       subtotal: 0,
       porcentajeImpuesto: 13,
       total: 0,
-      direccionEntrega: [],
+      direccionEntrega: '',
       metodoDePago: ''
     },
     necesitaVerificacion: false,
-    productos: [], 
+    productos: [],
     idCompra:''
   };
   const [store,setStore]= useState(()=> {
@@ -187,7 +186,7 @@ export default function Page() {
   });
 
   useEffect(() => {
-    localStorage.setItem("tienda", JSON.stringify(store));
+    handlePrice();
   }, [store]);
 
   const handleClick = (item) => {
@@ -195,29 +194,53 @@ export default function Page() {
 
     if (isPresent) {
       setShowModal(true);
-
     } else {
       const newProd = [...(store.productos), item];
       setStore( ({
         ...store,
         carrito: {
           ...store.carrito
+          
         },
         productos: newProd
       }));
+      
     }
   };
+
   const closeModal = () => {
     setShowModal(false);
   };
+  const handlePrice = () => {
+    let subtotalCalc = 0;
+    store.productos.forEach((item) => {
+        subtotalCalc += item.price;
+    });
+
+    let subtotalImpuestoCalc = subtotalCalc * (store.carrito.porcentajeImpuesto / 100);
+    let totalCompraCalc = subtotalCalc + subtotalImpuestoCalc;
+
+    const updatedCarrito = {
+        ...store.carrito,
+        subtotal: subtotalCalc,
+        total: totalCompraCalc,
+    };
+
+    const updatedStore = {
+        ...store,
+        carrito: updatedCarrito,
+    };
+
+    localStorage.setItem("tienda", JSON.stringify(updatedStore));
+};
 
   return (
     <div>
       <Header size={store.productos.length} setShow={setShow} />
       {
-        show ? <Amazon handleClick={handleClick} /> : <Carrito  />
+        show ? <MostrarProductos handleClick={handleClick} /> : <Carrito  />
       }
-        {showModal && <ModalProductoYaAgregado closeModal={closeModal} />}
+      {showModal && <ModalProductoYaAgregado closeModal={closeModal} />}
 
       <footer>
         <p>Derechos de autor © 2024. Para mi primer sitio</p>

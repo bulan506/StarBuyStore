@@ -5,32 +5,38 @@ import "@/app/ui/styles.css";
 import AddAddress from "@/app/Address/page";
 
 const Carrito = () => {
-    const storedStoreP = localStorage.getItem('tienda');
-    const memoryStore = JSON.parse(storedStoreP);
-
-    const [subtotal, setSubtotal] = useState(0);
-    const [subtotalImpuesto, setSubtotalImpuesto] = useState(0);
-    const [totalCompra, setTotalCompra] = useState(0);
+    const memoryStore = JSON.parse(localStorage.getItem('tienda'));
     const [showAddAddress, setShowAddAddress] = useState(false);
-    const [cartUpdated, setCartUpdated] = useState(false); // State to trigger update
+    const [cartUpdated, setCartUpdated] = useState(false); 
+    const [tienda, setTienda]=useState(memoryStore);
     
+    useEffect(() => {
+        handlePrice();
+    }, [cartUpdated]); 
 
+    // hace un calculo del precio mientras agrega productos
     const handlePrice = () => {
         let subtotalCalc = 0;
         memoryStore.productos.forEach((item) => {
-          subtotalCalc += item.price;
+            subtotalCalc += item.price;
         });
-      
-        const subtotalImpuestoCalc = subtotalCalc * (memoryStore.carrito.porcentajeImpuesto / 100);
-        const totalCompraCalc = subtotalCalc + subtotalImpuestoCalc;
-      
-        setSubtotal(subtotalCalc);
-        setSubtotalImpuesto(subtotalImpuestoCalc);
-        setTotalCompra(totalCompraCalc);
-        updateStore(subtotalCalc, subtotalImpuestoCalc); 
-
-      };
-      
+    
+        let subtotalImpuestoCalc = subtotalCalc * (memoryStore.carrito.porcentajeImpuesto / 100);
+        let totalCompraCalc = subtotalCalc + subtotalImpuestoCalc;
+    
+        const updatedCarrito = {
+            ...memoryStore.carrito,
+            subtotal: subtotalCalc,
+            total: totalCompraCalc,
+        };
+    
+        const updatedStore = {
+            ...memoryStore,
+            carrito: updatedCarrito,
+        };
+        setTienda(updatedStore)
+        localStorage.setItem("tienda", JSON.stringify(updatedStore));
+    };
       
     const handlePayment = () => {
         setShowAddAddress(true);
@@ -42,23 +48,9 @@ const Carrito = () => {
         localStorage.setItem("tienda", JSON.stringify(updatedStore));
         setCartUpdated(!cartUpdated); 
     };
-    const updateStore = (subtotalCalc, subtotalImpuestoCalc) => {
-        const updatedStore = { 
-          ...memoryStore, 
-          carrito: {
-            ...memoryStore.carrito,
-            subtotal: subtotalCalc,
-            total: subtotalCalc + subtotalImpuestoCalc,
-          },
-        };
-        localStorage.setItem("tienda", JSON.stringify(updatedStore));
-    };
-
-    useEffect(() => {
-        handlePrice();
-    }, [cartUpdated]); 
-
-    if (!(memoryStore.productos.length>0)){
+    
+    var esCarritoVacio = memoryStore.productos.length === 0;
+    if (esCarritoVacio){
         return (
             <div className='total'>
                 <span >Tu carrito está vacío</span>
@@ -67,6 +59,7 @@ const Carrito = () => {
     }
 
     return (
+        
         showAddAddress ? <AddAddress /> : <div className='Compra'>
             {
                 memoryStore.productos?.map((item) => (
@@ -91,15 +84,15 @@ const Carrito = () => {
             <div className='total'>
                 <div>
                     <h3>Subtotal sin impuesto:</h3>
-                    <span>₡ {subtotal.toFixed(2)} colones</span>
+                    <span>₡ {tienda.carrito.subtotal} colones</span>
                 </div>
                 <div>
-                    <h3>Subtotal con impuesto (13%):</h3>
-                    <span>₡ {subtotalImpuesto.toFixed(2)} colones</span>
+                    <h3>Impuesto del Carrito (13%):</h3>
+                    <span>₡ {tienda.carrito.subtotal * (tienda.carrito.porcentajeImpuesto / 100)} colones</span>
                 </div>
                 <div>
                     <h3>Total de la compra:</h3>
-                    <span>₡ {totalCompra.toFixed(2)} colones</span>
+                    <span>₡ {tienda.carrito.total} colones</span>
                 </div>
                 <button className="btn btn-primary" onClick={handlePayment} disabled={showAddAddress} >Pagar</button>
             </div>

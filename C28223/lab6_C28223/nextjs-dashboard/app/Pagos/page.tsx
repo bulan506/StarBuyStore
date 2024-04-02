@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 
 const metodoPago = () => {
-    const [numOrden, setNumOrden] = useState('');
-    const [formaDePago, setFormaDePago] = useState('');
-    const [accepted, setAccepted] = useState(false);
-    const storedStoreP = localStorage.getItem('tienda');
     const [showModal, setShowModal] = useState(false);
-
-
-    const memoryStore = JSON.parse(storedStoreP);
+    const [formaDePago, setFormaDePago] = useState('');
+    const [accepted, setAccepted] =useState(false);
+    const memoryStore = JSON.parse(localStorage.getItem('tienda'));
+    let numOrden='';
 
     const generarIDCompra = () => {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -16,7 +13,7 @@ const metodoPago = () => {
         for (let i = 0; i < 10; i++) {
             autoId += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        setNumOrden(autoId)
+        numOrden=autoId;
         return autoId;
     };
 
@@ -30,13 +27,11 @@ const metodoPago = () => {
                 carrito: {
                     ...memoryStore.carrito,
                     metodoDePago: formaDePago
-
                 },
                 idCompra: newID,
                 necesitaVerificacion: true
             };
             localStorage.setItem("tienda", JSON.stringify(updatedCart));
-            setNumOrden(newID);
             setAccepted(true);
         }
     };
@@ -60,7 +55,7 @@ const metodoPago = () => {
                 <div className="smsFinal">
                     <div className="text-center">
                         <h5>Número de compra: {numOrden}</h5>
-                        <h4>Número de SinpeMovil: +506 3875 8524</h4>
+                        <h4>Número de SinpeMóvil: +506 3875 8524</h4>
                         <input type="text" placeholder="Número de comprobante"></input>
                         <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
                         <h3>Esperando la confirmación del Administrador</h3>
@@ -88,14 +83,14 @@ const metodoPago = () => {
                 {showModal && <ModalSinMetodoPago closeModal={closeModal} />}
                 <div className='metodoPago'>
                     <div className="centro">
-                        <h1>Metodos de pago</h1>
+                        <h1>Métodos de pago</h1>
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" id="inlineCheckbox1" value="pagoEfectivo" onChange={handleMetodoChange} checked={formaDePago === 'pagoEfectivo'} />
                             <label className="form-check-label" htmlFor="inlineCheckbox1">En Efectivo</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" id="inlineCheckbox2" value="pagoSinpe" onChange={handleMetodoChange} checked={formaDePago === 'pagoSinpe'} />
-                            <label className="form-check-label" htmlFor="inlineCheckbox2">SinpeMovil</label>
+                            <label className="form-check-label" htmlFor="inlineCheckbox2">SinpeMóvil</label>
                         </div>
                         <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
                     </div>
