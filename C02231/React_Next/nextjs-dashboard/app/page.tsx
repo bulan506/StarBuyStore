@@ -8,7 +8,17 @@ import carrusel from '../utils/carrusel'
 
 export default function Home() {
 
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState({
+    products: [],
+    subtotal: [],
+    taxes: 0.13,
+    total: 0.0,
+    deliveryAddress: '',
+    payMethods: {},
+    voucher: '',
+    buyNumber: ''
+  });
+
   const [count, setCount] = useState(() => {
     const storedCount = localStorage.getItem('count');
     return storedCount ? parseInt(storedCount) : 0;
