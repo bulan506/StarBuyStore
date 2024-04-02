@@ -6,7 +6,6 @@ import { ModalDirection } from './modal_direction';
 import { CartShopItem, ProductItem } from './layout';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
-// https://react-bootstrap.netlify.app/docs/components/modal/
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalCartProps {
     show: boolean;

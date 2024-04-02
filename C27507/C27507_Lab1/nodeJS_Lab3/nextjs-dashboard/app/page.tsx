@@ -15,17 +15,15 @@ import { mock } from 'node:test';
 //Calcular el total y manejarlo con stateUse para tenerlo en todos los componentes
 export const totalPriceNoTax = (allProduct: { price: number; quantity: number; }[]) => {
     let total = 0;
-    allProduct.map((item) => {            
-        //total += (item.price * item.quantity);
+    allProduct.map((item) => {                    
         total += (item.price);
     });
     return total;
 }
 export const totalPriceTax = (allProduct: { price: number; quantity: number; }[]) => {
     let total = 0;
-    allProduct.map((item) => {                        
-        //total += ((item.price * item.quantity * 0.10) + (item.price * item.quantity));
-        total += ((item.price * 0.10) + (item.price));
+    allProduct.map((item) => {                                
+        total += ((item.price * 0.13) + (item.price));
     });
     return total;
 }
@@ -50,18 +48,17 @@ export const getCartShopStorage = (key: string): CartShopItem | null => {
         let cart: CartShopItem = {  
             allProduct: [],
             subtotal: 0,
-            tax: 0,
+            tax: 0.13,
             total: 0,
             direction: "",
             payment: "",
             verify: false  
         };
         //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
-        setCartShopStorage("PPP",cart);
+        setCartShopStorage("A",cart);
         return cart;
     }
 }
-
 
 export default function Page() { 
     //Como El localstorage puede estar vacio o haberse borrado la key por muchas razones, creamos uno null. Luego lamamos
@@ -107,7 +104,7 @@ export default function Page() {
                     verify={verify}
                     setVerify={setVerify}
                     myCartInStorage={myCartInStorage}
-                />;
+                />
             </div>            
       </div>  
 

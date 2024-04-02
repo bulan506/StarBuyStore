@@ -22,7 +22,7 @@ export interface ProductItem {
   id: number;
   name: string;
   imageUrl: string;
-  quantity: 0;
+  quantity: number;
   price: number;
 }
 

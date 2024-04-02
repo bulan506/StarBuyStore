@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { CartShopItem, ProductItem } from './layout';
+import { AlertShop } from './generic_overlay';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 
@@ -33,12 +34,31 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     payment,setPayment,direction,setDirection,verify,setVerify,myCartInStorage
 }) => {  
 
+    //Estados de los campos del formulario
     const [finish,setFinish] = useState(false); //para activar o desactivar el boton "Finalizar Compra"    
-    const [textAreaData, setTextAreaData] = useState(direction);//para activar o desactivar el boton segun haya texto o no en el textarea
+    const [textAreaDataDirection, setTextAreaDataDirection] = useState(direction);//para activar o desactivar el boton segun haya texto o no en el textarea direction
     const [typePayment, setTypePayment] = useState(payment);//para activar o desactivar el boton segun haya texto o no en el textarea
-    const [textAreaSinpe, setTextAreaSinpe] = useState("");//para
-    const [adminVerify,setAdminVerify] = useState(verify);        
+    const [textAreaSinpe, setTextAreaSinpe] = useState(""); //campo del codigo del sinpe
+    const [adminVerify,setAdminVerify] = useState(verify); //campo de verificacion
 
+    //Estados  para los alert de Boostrap
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertInfo,setAlertInfo] = useState("");
+    const [alertTitle,setAlertTitle] = useState("");
+    const [alertType,setAlertType] = useState("");
+
+    // //funciones para gestionar los alert
+    function closeAlertShop(): void {
+        setShowAlert(false);     
+    }
+    function callAlertShop (alertType:string,alertTitle:string,alertInfo:string): void {
+        setAlertTitle(alertTitle);
+        setAlertInfo(alertInfo);
+        setAlertType(alertType)
+        setShowAlert(true);
+    }
+    
+ 
     //Para habilitar o deshabilitar las opciones extra segun el tipo de pago
     const getSelectPayment = (event: React.ChangeEvent<HTMLSelectElement>) =>{
         //activamos el evento de escucha, con el value capturamos el valor del textArea
@@ -47,16 +67,16 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
         //Guardamos los datos en el LocalStorage        
         if (myCartInStorage) {
             myCartInStorage.payment = actualValue;            
-            setCartShopStorage("A", myCartInStorage);            
-            setPayment(actualValue);
+            setCartShopStorage("A", myCartInStorage);                        
+            setTypePayment(actualValue);
         }        
     }
     //Para habilitar o deshabilitar las opciones despues de la direccion de entrega
-    const getTextAreaValue = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
+    const getTextAreaDirection = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
         const actualValue = event.target.value;        
-        setTextAreaData(actualValue);           
+        setTextAreaDataDirection(actualValue);           
         if (myCartInStorage) {
-            myCartInStorage.direction = textAreaData;
+            myCartInStorage.direction = textAreaDataDirection;
             setCartShopStorage("A", myCartInStorage);            
         }            
     }
@@ -76,17 +96,15 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
 
     //Cambiar el estado del modal, segun haya contenido o no en el campo de Direccion
     const verifyTextArea = () =>{
-        if(textAreaData.trim() !== ""){
-            setFinish(true);
-        }else{            
-            setFinish(false);                        
-        }                
+        let isEmpty = textAreaDataDirection.trim() !== "";
+        //en vez de un if
+        setFinish(isEmpty);        
     }           
     
     //Reiniciar los datos al cerrar el modal
     const resetModal = () =>{
         setFinish(false);
-        setTextAreaData("");
+        setTextAreaDataDirection("");
         setTextAreaSinpe("");
         setTypePayment("");
         setAdminVerify(false);
@@ -96,28 +114,28 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     //Validcacion de inputs
     const purchaseProcess = () =>{
         //Verificar direccion
-        if(textAreaData.trim() === ""){
-            alert("Por favor, verifique el campo de direccón no esté vacío...");
+        if(textAreaDataDirection.trim() === ""){
+            callAlertShop("danger","Campo de entrega vacío","Por favor, verifique el campo de direccón no esté vacío...")
             return;
         }
-        //Verificar tipo de pago
-        if(finish){//verifica que estemos en la ultima pantalla
-            if(typePayment.trim() === "Seleccione un tipo de pago:" || typePayment.trim() === ""){
-                alert("Por favor, indique un método de pago...");
-                return;
-            }
+        //Verificar que estemos tanto en la ultima pantalla y que haya un tipo de pago seleccionado
+        //se deben verificar al mismo tiempo, ya que el tipo de pago solo aparece si estamos en la utlima pantalla        
+        let isFinishAndSelectPaymentEmpty = finish && typePayment.trim() === "Seleccione un tipo de pago:" || typePayment.trim() === ""
+        if(isFinishAndSelectPaymentEmpty){            
+            callAlertShop("danger","Campo de pago vacío","Por favor, indique un método de pago...")
+            return;
         }     
 
-        //Verificar que value de la caja Sinpe sea igual al codigo
-        if(typePayment === "Sinpe"){
-            if(textAreaSinpe.trim() !== "1"){
-                alert("El codigo de compra introducido no coincide por el brindado por el sistema");
-                return;
-            }
-        }
-        alert("La compra se ha realizado");
-    }
-    
+        //Verificar que el value de la caja Sinpe sea igual al codigo dado por el sistema
+        let isSinpeCodeOk = typePayment === "Sinpe" && textAreaSinpe.trim() !== "24";
+        if(isSinpeCodeOk){                        
+            callAlertShop("danger","Código de compra no coincide","El codigo de compra introducido no coincide con el brindado por el sistema")
+            return;            
+        }            
+        callAlertShop("success","Compra finalizada","Compra realizada con éxito")
+        
+        //resetModal();
+    }    
 
     return (
         <>
@@ -132,7 +150,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                 <fieldset>
                     <Form.Group className="mb-3">
                         <Form.Label>Dirección de entrega:</Form.Label>
-                        <Form.Control rows={5} as="textarea" placeholder="Ingresa tu dirección para la entrega" value={textAreaData} onChange={getTextAreaValue} />
+                        <Form.Control rows={5} as="textarea" placeholder="Ingresa tu dirección para la entrega" value={textAreaDataDirection} onChange={getTextAreaDirection} />
                         <Form.Text className="text-muted">
                             Tu información es confidencial con nosotros
                         </Form.Text>
@@ -144,7 +162,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
 
                             <Form.Group className="mb-3">
                                 <Form.Label htmlFor="disabledSelect">Forma de pago:</Form.Label>
-                                <Form.Select id="disabledSelect" value={payment} onChange={getSelectPayment}>
+                                <Form.Select id="disabledSelect" value={typePayment} onChange={getSelectPayment}>
                                     <option value="">Seleccione un tipo de pago:</option>
                                     <option value="Efectivo">Efectivo</option>
                                     <option value="Sinpe">Sinpe</option>
@@ -154,8 +172,8 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                             {typePayment == "Efectivo" && (
 
                                 <>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Numero de Compra: 1</Form.Label>                                        
+                                    <Form.Group className="mb-3">                                                                                
+                                        <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>
                                     </Form.Group>
                                 </>
 
@@ -165,7 +183,10 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
 
                             <>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>1</Form.Label>      
+                                    <Form.Label><span style={{ fontWeight: 'bolder' }}>Número de teléfono:</span> 62889872</Form.Label>
+                                    <br />                                  
+                                    <br />                                  
+                                    <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>      
                                     <br />                                  
                                     <br />                                  
                                     <Form.Label>Código de Compra:</Form.Label>
@@ -198,7 +219,8 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                 }                                
                 <Button onClick={()=>{onHide(); resetModal()}}>Close</Button>                
             </Modal.Footer>
-        </Modal>                
+        </Modal>            
+        <AlertShop alertTitle={alertTitle} alertInfo={alertInfo} alertType={alertType} showAlert={showAlert} onClose={closeAlertShop}/>        
         </>
     );
 }
