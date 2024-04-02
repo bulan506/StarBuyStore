@@ -7,7 +7,8 @@ const Cart_Store = () => {
 
     const storedData = localStorage.getItem('tienda');
     const dataObject = JSON.parse(storedData);
-    
+    const carritoVacio = dataObject.products.length === 0;
+
     const [cartEmpty, setCartEmpty] = useState(true); 
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [cartUpdated, setCartUpdated] = useState(false);
@@ -36,7 +37,7 @@ const Cart_Store = () => {
         totalCompra = totalPriceWithoutTax + totalPriceWithTax;
         subtotal = totalPriceWithoutTax;
         subtotalImpuesto = totalPriceWithTax;
-        setCartEmpty(dataObject.products.length === 0);
+        setCartEmpty(carritoVacio);
         updateStore(subtotal, subtotalImpuesto, totalCompra);
     }
 
@@ -65,7 +66,7 @@ const Cart_Store = () => {
         handlePrice();
     }, [cartUpdated]);
 
-    if (!(dataObject.products.length > 0)) {
+    if (carritoVacio) {
         return (
             <div>
                 <p>No hay productos en el carrito.</p>
