@@ -41,17 +41,26 @@ export default function Page() {
     const handleChangeSelect = (event) => {
         const slctPaymentMethodValue = event.target.value;
         let hideComponentsCopy = { ...hideComponents };
+        let paymentMethod = ''
         // console.log(slctPaymentMethodValue);
-        if (slctPaymentMethodValue === '0') {
+        if (slctPaymentMethodValue === '0') { //Efectivo
             hideComponentsCopy.hideConfirmation = false;
             hideComponentsCopy.hideSinpe = true;
-        } else if (slctPaymentMethodValue === '1') {
+            paymentMethod = 'Efectivo'
+        } else if (slctPaymentMethodValue === '1') { //sinpe
             hideComponentsCopy.hideConfirmation = true;
             hideComponentsCopy.hideSinpe = false;
-        } else {
+            paymentMethod = 'Sinpe'
+        } else { //default
             hideComponentsCopy.hideConfirmation = true;
             hideComponentsCopy.hideSinpe = true;
+            paymentMethod = ''
         }
+
+        let copyOfMock = { ...mock };
+        copyOfMock.cart.paymentMethod = paymentMethod;
+        setMock(copyOfMock)
+        localStorage.setItem('Mock', JSON.stringify(mock));
 
         setHideComponents(hideComponentsCopy);
     }
