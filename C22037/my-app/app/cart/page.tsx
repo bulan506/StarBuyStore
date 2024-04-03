@@ -9,10 +9,9 @@ export default function CartPage() {
   const taxRate = 0.13;
 
   useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem('cartItems'));
-    if (storedCartItems) {
-      setCartItems(storedCartItems);
-    }
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
+    setCartItems(storedCart.products);
+    setSubtotal(storedCart.subtotal || 0);
   }, []);
 
   useEffect(() => {
@@ -21,7 +20,10 @@ export default function CartPage() {
       subTotal += item.price;
     });
     setSubtotal(subTotal);
-  }, [cartItems]);
+    const total = subTotal + (subTotal * taxRate);
+    localStorage.setItem('subtotal', subTotal.toFixed(2));
+    localStorage.setItem('total', total.toFixed(2));
+  }, [cartItems, taxRate]);
 
   useEffect(() => {
     localStorage.setItem('taxRate', taxRate.toString());
@@ -31,7 +33,7 @@ export default function CartPage() {
     const updatedCartItems = { ...cartItems };
     delete updatedCartItems[productId];
     setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    localStorage.setItem('cart', JSON.stringify({ products: updatedCartItems }));
   };
 
   const CartItems = () => {
@@ -40,7 +42,7 @@ export default function CartPage() {
         <img src={item.imageURL} alt={item.name} />
         <div>
           <h3>{item.name}</h3>
-          <p>{item.description}</p>
+          <p>{item.decription}</p>
           <p>Precio: ${item.price}</p>
           <button className="Button" onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
         </div>
@@ -59,13 +61,13 @@ export default function CartPage() {
       </div>
 
       <div className="body">
-        <h2>Products</h2>
+        <h2>Productos</h2>
         {CartItems()}
       </div>
 
       <div className="totals">
         <p>Subtotal: ${subtotal.toFixed(2)}</p>
-        <p>Taxes ({(taxRate * 100)}%): ${(subtotal * taxRate)}</p> 
+        <p>Impuestos ({(taxRate * 100)}%): ${(subtotal * taxRate).toFixed(2)}</p> 
         <p>Total: ${(subtotal + (subtotal * taxRate)).toFixed(2)}</p>
         <Link href={isCartEmpty ? "#" : "/checkout"}>
           <button className="Button" disabled={isCartEmpty}>Proceed to checkout</button>
@@ -81,5 +83,5 @@ export default function CartPage() {
       </div>
 
     </div>
-  );
+  )
 }

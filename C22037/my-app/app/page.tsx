@@ -145,21 +145,35 @@ export default function Home() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem('cartItems'));
-    if (storedCartItems) {
-      setCount(Object.keys(storedCartItems).length);
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || {};
+    if (storedCart.products) {
+      setCount(Object.keys(storedCart.products).length);
     }
   }, []);
 
   const handleAddToCart = (productId) => {
-    const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
     const productToAdd = products.find(product => product.id === productId);
     if (productToAdd) {
-      const updatedCartItems = { ...storedCartItems, [productId]: productToAdd };
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-      setCount(Object.keys(updatedCartItems).length);
+      const updatedCart = { 
+        ...storedCart, 
+        products: { ...storedCart.products, [productId]: productToAdd }
+      };
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setCount(Object.keys(updatedCart.products).length);
     }
-  }
+  };
+
+  useEffect(() => {
+    const initialCart = JSON.parse(localStorage.getItem('cart')) || {
+      products: {},
+    };
+    localStorage.setItem('cart', JSON.stringify(initialCart));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('products', JSON.stringify(products));
+  }, []);
 
   return (
     <div>
