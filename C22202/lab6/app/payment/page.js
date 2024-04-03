@@ -15,7 +15,7 @@ export default function Page() {
     const [validated, setValidated] = useState(false);
     const [empty, setEmpty] = useState(true);
     const [address, setAddress] = useState('');
-    const [hideComponents, setHideComponents] = useState({ hideEfectivo: true, hideSinpe: true, hideConfirmation: true })
+    const [hideComponents, setHideComponents] = useState({ hideSinpe: true, hideConfirmation: true })
 
 
     const handleSubmit = (event) => {
@@ -44,15 +44,12 @@ export default function Page() {
         // console.log(slctPaymentMethodValue);
         if (slctPaymentMethodValue === '0') {
             hideComponentsCopy.hideConfirmation = false;
-            hideComponentsCopy.hideEfectivo = false;
             hideComponentsCopy.hideSinpe = true;
         } else if (slctPaymentMethodValue === '1') {
             hideComponentsCopy.hideConfirmation = true;
-            hideComponentsCopy.hideEfectivo = true;
             hideComponentsCopy.hideSinpe = false;
         } else {
             hideComponentsCopy.hideConfirmation = true;
-            hideComponentsCopy.hideEfectivo = true;
             hideComponentsCopy.hideSinpe = true;
         }
 
@@ -88,7 +85,7 @@ export default function Page() {
             <div hidden={hideComponents.hideConfirmation}>
                 <h4>Por favor, esperar la confirmacion del administrador con respecto al pago</h4>
                 <Link href={'/.'}>
-                    <h5>Volver a la pantalla principal</h5>
+                    <h5 className="text-center">Volver a la pantalla principal</h5>
                 </Link>
             </div>
         </Container>
