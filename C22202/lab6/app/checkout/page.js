@@ -14,22 +14,22 @@ export default function Page() {
 
 
     const handleSubmit = (event) => {
-        const addressFormData = event.currentTarget;
-        if (addressFormData.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            let copyOfMock = { ...mock };
-            copyOfMock.cart.address = address;
-            setMock(copyOfMock)
-            localStorage.setItem('Mock', JSON.stringify(mock));
-            navigate('/.')
-        }
+        let copyOfMock = { ...mock };
+        copyOfMock.cart.address = address;
+        setMock(copyOfMock)
+        localStorage.setItem('Mock', JSON.stringify(mock));
 
         setValidated(true);
     };
 
     const handleChange = (event) => {
+
+        const addressFormData = event.currentTarget;
+        if (addressFormData.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
         setValidated(true);
         setAddress(event.target.value);
         console.log(address)
@@ -38,7 +38,7 @@ export default function Page() {
 
     return (
         <Container>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form noValidate validated={validated}>
                 <Form.Group controlId="validationCustom01">
                     <FloatingLabel
                         controlId="floatingInput"
@@ -48,7 +48,7 @@ export default function Page() {
                         <Form.Control required name="address" type="text" placeholder="Address" onChange={handleChange} />
                     </FloatingLabel>
                 </Form.Group>
-                <Button type="submit" disabled={empty} active={!empty} href='/.'>Continuar Compra</Button>
+                <Button type="submit" disabled={empty} active={!empty} href='/.' onClick={handleSubmit}>Continuar Compra</Button>
             </Form>
         </Container>
 
