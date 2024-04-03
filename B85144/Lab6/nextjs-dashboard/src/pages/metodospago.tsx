@@ -1,20 +1,29 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { getUserData, saveUserData } from "../store/store";
+import "./css/metodopago.css";
 
 export default function MetodosDePago() {
     const [metodoPago, setMetodoPago] = useState('');
     const [comprobante, setComprobante] = useState('');
     const [numeroCompra, setNumeroCompra] = useState('');
-        const [datos, setDatos] = useState({
-        "productos": [],
-        "carrito": [],
-        "subtotal": 0,
-        "totalimpuesto": 0,
-        "total": 0,
-        "direccionEntrega": "",
-        "metodoDePago": "",
-    });
+    const [compraMensaje, setcompraMensaje] = useState("");
+    const [datos, setDatos] = useState({
+        "productos":[],
+        "carrito": {
+          "productos": [],
+          "subtotal": 0,
+          "porcentajeImpuesto": 13,
+          "total": 0,
+          "direccionEntrega": "",
+          "metodosDePago": {}
+        },
+        "metodosDePago": [
+          {
+            "necesitaVerificacion": true
+          }]
+    
+      });
 
     const selecionarMetodoPago = (evento) => {
         setMetodoPago(evento.target.value);
@@ -31,7 +40,11 @@ export default function MetodosDePago() {
     };
 
     const confirmarPago = () => {
-        alert(`Se ha seleccionado el método de pago: ${metodoPago}\nNúmero de compra: ${numeroCompra}\nComprobante: ${comprobante}`);
+        if(metodoPago=="Sinpe"){
+            setcompraMensaje(`Se ha seleccionado el método de pago: ${metodoPago}\nNúmero de compra: ${numeroCompra}\nComprobante: ${comprobante}`);    
+        }else{
+            setcompraMensaje(`Se ha seleccionado el método de pago: ${metodoPago}\nNúmero de compra: ${numeroCompra}`);    
+        }
         console.log(datos);
     };
 
@@ -41,11 +54,13 @@ export default function MetodosDePago() {
     }, []);
     
     useEffect(() => {
-        setDatos(previousState => ({
-          ...previousState,
-          metodoDePago: metodoPago,  
-        }));
-        saveUserData(datos);
+        setDatos(previousState => {
+            return { ...previousState, carrito: { ...previousState.carrito, metodosDePago: metodoPago } }
+          });
+          if(datos.productos.length>0){
+            saveUserData(datos);
+            setcompraMensaje("");
+        }
     }, [metodoPago]);
 
 
@@ -86,7 +101,11 @@ export default function MetodosDePago() {
                     <p>Por favor, espere la confirmación del administrador con respecto al pago.</p>
                     <button onClick={confirmarPago}>Confirmar Pago</button>
                 </div>
+
             )}
+            <pre className='mensaje'>
+                {compraMensaje}
+            </pre>
         </div>
     );
 }

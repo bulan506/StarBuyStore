@@ -7,12 +7,21 @@ import { getUserData } from "../store/store";
 
 export default function Carrito() {
   const router = useRouter();
+
   const [datos, setDatos] = useState({
-    "productos": [],
-    "carrito": [],
-    "subtotal": 0,
-    "totalimpuesto": 0,
-    "total": 0,
+    "carrito": {
+      "productos": [],
+      "subtotal": 0,
+      "porcentajeImpuesto": 13,
+      "total": 0,
+      "direccionEntrega": "",
+      "metodosDePago": {}
+    },
+    "metodosDePago": [
+      {
+        "necesitaVerificacion": true
+      }]
+
   });
 
   useEffect(() => {
@@ -21,21 +30,16 @@ export default function Carrito() {
   }, []);
 
   useEffect(() => {
-    const subtotal = datos.carrito.reduce((acc, producto) => acc + producto.precio, 0);
-    const totalimpuesto = datos.carrito.reduce((acc, producto) => acc + producto.precio * (producto.impuesto / 100), 0);
-    const total = subtotal + totalimpuesto;
-    setDatos(previousState => ({
-      ...previousState,
-      subtotal: subtotal,
-      totalimpuesto: totalimpuesto,
-      total: total,
-    }));
-  }, [datos.carrito]);
+    const subtotal = datos.carrito.productos.reduce((acc, producto) => acc + producto.precio, 0);
+    setDatos(previousState => {
+      return { ...previousState, carrito: { ...previousState.carrito, subtotal: subtotal } }
+    });
+  }, [datos.carrito.productos]);
 
   const continuarCompra = () => {
     router.push("/direccion");
   }
-
+  
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header className="header">
@@ -43,7 +47,7 @@ export default function Carrito() {
       </header>
       <div className="container">
         <div className="row">
-          {datos.carrito.map((producto, index) => (
+          {datos.carrito.productos.map((producto, index) => (
             <div className="col-sm-3" key={index}>
               <div className="card">
                 <img src={producto.imagen} className="card-img-top" alt={producto.nombre} />
@@ -59,11 +63,12 @@ export default function Carrito() {
       </div>
       <footer className="footer d-flex justify-content-end">
         <div className="d-flex flex-column">
-          <span>Subtotal sin impuestos: {datos.subtotal}$</span>
-          <span>Total con impuestos: {datos.total}$</span>
+          <span>Subtotal sin impuestos: {datos.carrito.subtotal}$</span>
+          <span>Total con impuestos: {(datos.carrito.subtotal) + (datos.carrito.subtotal * (datos.carrito.porcentajeImpuesto / 100))}$</span>
           <button onClick={continuarCompra}>Comprar</button>
         </div>
       </footer>
+      
     </main>
   );
 }

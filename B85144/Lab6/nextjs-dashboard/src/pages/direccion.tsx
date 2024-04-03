@@ -6,14 +6,21 @@ import { useRouter } from 'next/navigation'
 export default function DirecciónEntrega() {
     const router = useRouter();
     const [datos, setDatos] = useState({
-        "productos": [],
-        "carrito": [],
-        "subtotal": 0,
-        "totalimpuesto": 0,
-        "total": 0,
-        "direccionEntrega": "",
-        "metodoDePago": "",
-    });
+        "productos":[],
+        "carrito": {
+          "productos": [],
+          "subtotal": 0,
+          "porcentajeImpuesto": 13,
+          "total": 0,
+          "direccionEntrega": "",
+          "metodosDePago": {}
+        },
+        "metodosDePago": [
+          {
+            "necesitaVerificacion": true
+          }]
+    
+      });
 
     useEffect(() => {
         const data = getUserData();
@@ -21,11 +28,13 @@ export default function DirecciónEntrega() {
     }, []);
     const [dirección, setDirección] = useState('');
     useEffect(() => {
-        setDatos(previousState => ({
-          ...previousState,
-          direccionEntrega: dirección  
-        }));
-        saveUserData(datos);
+        setDatos(previousState => {
+            return { ...previousState, carrito: { ...previousState.carrito, direccionEntrega: dirección } }
+          });
+        if(datos.productos.length>0){
+            saveUserData(datos);
+        }
+       
     }, [dirección]);
 
 

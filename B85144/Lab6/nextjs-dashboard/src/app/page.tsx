@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/style.css";
 import { useState, useEffect } from 'react';
 import { getUserData, saveUserData, clearUserData } from "../store/store";
+import Carrito from "../pages/carrito";
 
 
 const Producto = ({ producto, carrito }) => (
@@ -14,7 +15,7 @@ const Producto = ({ producto, carrito }) => (
     </div>
     <p>Precio: {producto.precio}$</p>
     <button onClick={() => carrito(producto)}>Agregar</button>
-    
+
   </div>
 );
 
@@ -66,10 +67,21 @@ const CarruselImagenes = ({ lista }) => (
 );
 
 export default function Page() {
-
   const [datos, setDatos] = useState({
     "productos": [],
-    "carrito":[],
+    "carrito": {
+      "productos": [],
+      "subtotal": 0,
+      "porcentajeImpuesto": 13,
+      "total": 0,
+      "direccionEntrega": "",
+      "metodosDePago": {}
+    },
+    "metodosDePago": [
+      {
+        "necesitaVerificacion": true
+      }]
+
   });
 
   const [salir, setSalir] = useState(false);
@@ -80,31 +92,47 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if(salir){
+    if (salir) {
       clearUserData();
       setDatos(previousState => {
-        return { ...previousState, carrito: [] }
+        return {
+          ...previousState, "carrito": {
+            "productos": [],
+            "subtotal": 0,
+            "porcentajeImpuesto": 13,
+            "total": 0,
+            "direccionEntrega": "",
+            "metodosDePago": {}
+          },
+        }
       });
-      alert("Gracias por visitarnos");
+     
+  
       setSalir(false);
     }
-    
+
   }, [salir]);
 
   const añadirProducto = (producto) => {
-    datos.carrito = [...datos.carrito, producto];
+    const carrito = [...datos.carrito.productos, producto];
    
     setDatos(previousState => {
-      return { ...previousState, carrito: datos.carrito }
+      return { ...previousState, carrito: { ...previousState.carrito, productos: carrito } }
     });
-    saveUserData(datos);
-   
+  
+
   }
+  useEffect(() => {
+    
+    if (datos.productos.length>0) {
+      saveUserData(datos);
+    }
+  }, [datos]);
 
   const limpiar = () => {
     setSalir(true);
   }
- 
+
   const mitad = datos.productos.length / 2;
   const primero = datos.productos.slice(0, mitad);
   const ultimo = datos.productos.slice(mitad, datos.productos.length);
@@ -119,7 +147,7 @@ export default function Page() {
         </span>
         <span>
           <a href="/carrito">Carrito</a>
-          <span className="carritoNumero">{datos.carrito.length}</span>
+          <span className="carritoNumero">{datos.carrito.productos.length}</span>
           <button onClick={limpiar}>Salir</button>
         </span>
       </header>
