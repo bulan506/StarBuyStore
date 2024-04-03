@@ -6,10 +6,14 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar los estilos de Bootstrap
 import 'bootstrap/dist/js/bootstrap.bundle.min'; // Importar los scripts de Bootstrap
 import { useState } from 'react';
-import { Button } from './ui/button';
-
-
-const products = [
+interface Product {
+  id: number;
+  name: string;
+  imgurl: string;
+  width: string;
+  price: string;
+}
+const products: Product[] = [
   {
     id: 1,
     name: 'Towel',
@@ -70,7 +74,7 @@ const products = [
 
 
 //componente producto
-const Product = ({ product, addToCart}) => {
+const Product = ({ product, addToCart }) => {
   const { id, name, imgurl, width, price } = product;
   return (
     <div className="col-md-3" style={{ backgroundColor: "white", width: "260px", margin: "0.5rem" }}>
@@ -78,7 +82,7 @@ const Product = ({ product, addToCart}) => {
         <img src={imgurl} alt="centered image" style={{ height: "5cm" }} className="img-fluid" />
       </div><br></br>
       <h4 style={{ fontFamily: 'Trebuchet MS, sans-serif' }}>{name}</h4>
-      <button className="button" style={{textAlign: "end", backgroundColor:"black", color:"white" }} onClick={addToCart} >Agregar al carrito</button>
+      <button className="button" style={{textAlign: "end", backgroundColor: "black", color: "white" }} onClick={() => addToCart(id)}>Agregar al carrito</button>
       <div style={{ textAlign: 'left' }}><h5>{price}</h5></div>
       <br></br>
 
@@ -149,14 +153,20 @@ function Carousel() {
 
 
 export default function Page() {
-  const [cartCount, setCartCount] = useState(0);
-  
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const [cartCount, setCartCount] = useState(cart.length);
+  const [cartOpen, setCartOpen] = useState(false);
   const addToCart = (productId) => {
     setCartCount(cartCount + 1);
-    
+    const product = products.find(product => product.id === productId);
+    setCartCount(cart.length + 1);
+    cart.push(product);
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
-  
+  const toggleCart = () => {
+    setCartOpen(!cartOpen);
+  };
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header style={{ backgroundColor: "rgb(180, 180, 180);" }}>
@@ -175,9 +185,9 @@ export default function Page() {
                       style={{ margin: '1rem', width: '15cm' }} />
                     <button className="btn" type="submit"
                       style={{ height: '1cm', margin: '1rem' }}>🔍</button>
-                    <button style={{ margin: '0.6rem', textAlign: 'center', height: '1.5cm', borderColor: "white", backgroundColor:"white" }}><img
+                    <Link href="/cart"><button style={{ margin: '0.6rem', textAlign: 'center', height: '1.4cm', backgroundColor:"white", borderColor:"white" }}><img
                       src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png"
-                      style={{ height: '0.6cm', width: '0.8cm', }} className="img-fluid" /><p>{cartCount}</p></button>
+                      style={{ height: '0.6cm', width: '0.8cm' }} className="img-fluid" /><p>{cartCount}</p></button></Link>
                   </form>
                 </div>
               </nav>
