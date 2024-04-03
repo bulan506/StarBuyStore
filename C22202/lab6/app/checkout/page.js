@@ -14,8 +14,8 @@ export default function Page() {
 
 
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
+        const addressFormData = event.currentTarget;
+        if (addressFormData.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
         } else {
