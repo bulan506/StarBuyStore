@@ -74,8 +74,11 @@ export const Products = ({ }) => {
     setShowModal(false);
   };
 
+  const isProductAlreadyAdded = storeData.productos.some(item => item.id === product.id);
+
+
   const onAddProduct = product => {
-    if (storeData.productos.some(item => item.id === product.id)) {
+    if (isProductAlreadyAdded) {
       setShowModal(true);
       console.log(showModal);
     } else {

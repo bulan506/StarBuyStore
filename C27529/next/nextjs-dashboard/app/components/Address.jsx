@@ -11,8 +11,10 @@ export const Address = ({
     return JSON.parse(storedStoreData); 
   });
 
+  var hasStoredData =storeData && storeData.carrito.direccionEntrega;
+  
   useEffect(() => {
-    if (storeData && storeData.carrito.direccionEntrega) {
+    if (hasStoredData) {
       setDeliveryAddress(storeData.carrito.direccionEntrega);
     }
   }, [storeData]);
@@ -33,7 +35,7 @@ export const Address = ({
     goToPage(3);
   };  
 
-  const isAddressEmpty = deliveryAddress.trim() === '';
+  const isDeliveryAddressEmpty = deliveryAddress.trim() === '';
 
   return (
     <>
@@ -48,7 +50,7 @@ export const Address = ({
             />
           </label>
 
-          <button type="submit" className='btn-cartPayment' disabled={isAddressEmpty}>
+          <button type="submit" className='btn-cartPayment' disabled={isDeliveryAddressEmpty}>
             Continuar
           </button>
         </form>
