@@ -1,67 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css"; // Importar CSS de Bootstrap
 
 export const Address = ({
   goToPage,
 }) => {
-  const [addressDelivery, setAddressDelivery] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
 
-  const [store, setStore] = useState(() => {
-    const storedStore = localStorage.getItem("tienda");
-    return JSON.parse(storedStore); 
+  const [storeData, setStoreData] = useState(() => {
+    const storedStoreData = localStorage.getItem("tienda");
+    return JSON.parse(storedStoreData); 
   });
 
   useEffect(() => {
-    if (store && store.carrito.direccionEntrega) {
-      setAddressDelivery(store.carrito.direccionEntrega);
+    if (storeData && storeData.carrito.direccionEntrega) {
+      setDeliveryAddress(storeData.carrito.direccionEntrega);
     }
-  }, [store]);
+  }, [storeData]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(addressDelivery);
 
-    const updatedStore = {
-      ...store,
+    const updatedStoreData = {
+      ...storeData,
       carrito: {
-        ...store.carrito,
-        direccionEntrega: addressDelivery
+        ...storeData.carrito,
+        direccionEntrega: deliveryAddress
       }
     };
 
-    localStorage.setItem("tienda", JSON.stringify(updatedStore));
-    setStore(updatedStore);
-    console.log("Texto:", updatedStore.carrito.direccionEntrega);
-
-    setTimeout(() => {
-      console.log("Esta línea se ejecuta después de 3 segundos");
-      goToPage(3);
-      // Aquí puedes poner la línea de código que deseas ejecutar después de esperar unos segundos
-    }, 3000);
-
-    
+    localStorage.setItem("tienda", JSON.stringify(updatedStoreData));
+    setStoreData(updatedStoreData);
+    goToPage(3);
   };  
-  
 
-  const isEmpty = addressDelivery.trim() === '';
+  const isAddressEmpty = deliveryAddress.trim() === '';
 
   return (
     <>
       <div className='address'>
         <form onSubmit={handleSubmit}>
           <label>
-            Direccion de Entrega:
+            Dirección de Entrega:
             <input
               type="text"
-              value={addressDelivery}
-              onChange={(e) => setAddressDelivery(e.target.value)}
+              value={deliveryAddress}
+              onChange={(e) => setDeliveryAddress(e.target.value)}
             />
           </label>
 
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-          <button type="submit" className='btn-cartPayment' disabled={isEmpty}>
+          <button type="submit" className='btn-cartPayment' disabled={isAddressEmpty}>
             Continuar
           </button>
         </form>

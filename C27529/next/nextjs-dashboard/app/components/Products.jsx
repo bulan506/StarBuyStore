@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 export const Products = ({ }) => {
 
-  const productsList = [
+  const productList = [
     {
       id: 1,
       name: 'Producto 1',
@@ -63,11 +63,10 @@ export const Products = ({ }) => {
     }
   ];
 
-  const [store, setStore] = useState(() => {
-    const storedStore = localStorage.getItem("tienda");
-    return (JSON.parse(storedStore))
+  const [storeData, setStoreData] = useState(() => {
+    const storedStoreData = localStorage.getItem("tienda");
+    return JSON.parse(storedStoreData);
   });
-  
   
   const [showModal, setShowModal] = useState(false);
 
@@ -75,23 +74,22 @@ export const Products = ({ }) => {
     setShowModal(false);
   };
 
-
   const onAddProduct = product => {
-    if (store.productos.some(item => item.id === product.id)) {
+    if (storeData.productos.some(item => item.id === product.id)) {
       setShowModal(true);
       console.log(showModal);
     } else {
       const updatedStore = {
-        ...store,
+        ...storeData,
         carrito: {
-          ...store.carrito,
-          subtotal: store.carrito.subtotal + product.price,
-          total: ((store.carrito.subtotal + product.price)*store.carrito.porcentajeImpuesto) +(store.carrito.subtotal + product.price)
+          ...storeData.carrito,
+          subtotal: storeData.carrito.subtotal + product.price,
+          total: ((storeData.carrito.subtotal + product.price) * storeData.carrito.porcentajeImpuesto) + (storeData.carrito.subtotal + product.price)
         },
-        productos: [...store.productos, product]
+        productos: [...storeData.productos, product]
       };
   
-      setStore(updatedStore); // Actualiza el estado usando setStore
+      setStoreData(updatedStore); 
       localStorage.setItem("tienda", JSON.stringify(updatedStore));
     }
   };
@@ -99,10 +97,7 @@ export const Products = ({ }) => {
   const Product = ({ product }) => {
     const { name, description, imageURL, price } = product;
     return (
-
       <div className="col-sm-3">
-
-
         <div className='info-product'>
           <h2>{name}</h2>
           <div className='price'>{description}</div>
@@ -111,42 +106,31 @@ export const Products = ({ }) => {
           <button onClick={() => onAddProduct(product)}>
             Agregar al Carrito
           </button>
-
         </div>
-
-
       </div>
-
-
     );
   };
 
   return (
-
-
     <div>
-      
       {showModal && <ModalError closeModal={closeModal} />}
       <div className="row">
-        {productsList.map(product => (
+        {productList.map(product => (
           <Product key={product.id} product={product} onAddProduct={onAddProduct} />
         ))}
       </div>
-      
-
     </div>
-
-  )
+  );
 }
 
 const ModalError = ({ closeModal }) => {
   return (
-    <div className="modal" tabIndex="-1" role="dialog"style={{ display: 'block' }}>
+    <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Producto ya agregado</h5>
-            <button type="button"  onClick={closeModal}  className="close" aria-label="Close">
+            <button type="button" onClick={closeModal} className="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -154,11 +138,10 @@ const ModalError = ({ closeModal }) => {
             <p>Este producto ya ha sido añadido al carrito.</p>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={closeModal} >Cerrar</button>
+            <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 };
-
