@@ -8,36 +8,38 @@ import carrusel from '../utils/carrusel'
 
 export default function Home() {
 
-  const [cartItems, setCartItems] = useState({
+  const [cart, setCart] = useState({
     products: [],
-    subtotal: [],
+    subtotal: 0,
     taxes: 0.13,
     total: 0.0,
     deliveryAddress: '',
     payMethods: {},
-    voucher: '',
-    buyNumber: ''
-  });
-
-  const [count, setCount] = useState(() => {
-    const storedCount = localStorage.getItem('count');
-    return storedCount ? parseInt(storedCount) : 0;
+    receipt: '',
+    orderNumber: ''
   });
 
   const handleAddToCart = (product) => {
-    const storedItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-
-
-    if (!storedItems.some(item => item.id === product.id)) {
-      const updatedCart = [...storedItems, product];
-      setCartItems(updatedCart);
-      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-
-      const updatedCount = count + 1;
-      setCount(updatedCount);
-      localStorage.setItem('count', updatedCount);
+    let productsNotInCart  = !cart.product.some(item => item.id === product.id);
+    if (productsNotInCart) {
+      let updatedProductos = [...cart.product, product];
+      let updatedCount = cart.count + 1;
+      setCart({
+        ...cart,
+        product: updatedProductos,
+        count: updatedCount
+      });
+      localStorage.setItem('cartItem', JSON.stringify({ productos: updatedProductos, count: updatedCount }));
     }
   };
+  useEffect(() => {
+    const storedCartData = JSON.parse(localStorage.getItem('cartItem') || '{}');
+    setCart({
+      ...cart,
+      product: storedCartData.productos || [],
+      count: storedCartData.count || 0
+    });
+  }, []);
 
   return (
 
@@ -58,7 +60,19 @@ export default function Home() {
           </div>
 
           <div className="col-sm-2 d-flex justify-content-end align-items-center">
-            <Cart counter={count} />
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <div >
+                <Link href="/cart">
+                  <button className="btn btn-success">
+                    <img src="https://miguelrevelles.com/wp-content/uploads/carrito-de-la-compra-1.png"
+                      style={{ height: '100px', width: '100px' }} className="img-fluid" />
+                  </button>
+                </Link>
+              </div>
+              <div style={{ position: 'absolute', top: '-10px', right: '-10px', backgroundColor: 'green', borderRadius: '50%', width: '20px', height: '20px', textAlign: 'center', color: 'white' }}>
+                {cart.count}
+              </div>
+            </div>
           </div>
 
         </div>
@@ -77,7 +91,7 @@ export default function Home() {
 
       <footer className='footer'>
         <div className="text-center p-3">
-          <h5 className="text-light">Dev: Paula Chaves</h5>
+          <h5 className="text-light">  Paula's Library</h5>
         </div>
       </footer>
 
@@ -107,24 +121,6 @@ const Product = ({ product, handleAddToCart }) => {
   );
 };
 
-
-function Cart({ counter }) {
-  return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
-      <div >
-        <Link href="/cart">
-          <button className="btn btn-success">
-            <img src="https://miguelrevelles.com/wp-content/uploads/carrito-de-la-compra-1.png"
-              style={{ height: '100px', width: '100px' }} className="img-fluid" />
-          </button>
-        </Link>
-      </div>
-      <div style={{ position: 'absolute', top: '-10px', right: '-10px', backgroundColor: 'green', borderRadius: '50%', width: '20px', height: '20px', textAlign: 'center', color: 'white' }}>
-        {counter}
-      </div>
-    </div>
-  );
-}
 
 //Carrusel
 
