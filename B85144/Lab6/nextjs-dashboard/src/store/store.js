@@ -53,23 +53,20 @@ export function createUserData() {
     }
     localStorage.setItem("userData", JSON.stringify(data));
   }
-  console.log("Creando...");
+
 
 }
 
 export function saveUserData(data) {
   localStorage.setItem("userData", JSON.stringify(data));
-  console.log("Guardando...");
 }
 
 export function getUserData() {
   const data = localStorage.getItem("userData");
-  console.log("Obteniendo...");
   return JSON.parse(data);
 }
 
 export function clearUserData() {
   localStorage.clear();
-  console.log("Limpiando...");
 }
 

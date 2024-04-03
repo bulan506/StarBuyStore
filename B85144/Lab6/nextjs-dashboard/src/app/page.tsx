@@ -123,8 +123,8 @@ export default function Page() {
 
   }
   useEffect(() => {
-    
-    if (datos.productos.length>0) {
+    const cantidadProductos=datos.productos.length;
+    if (cantidadProductos>0) {
       saveUserData(datos);
     }
   }, [datos]);
