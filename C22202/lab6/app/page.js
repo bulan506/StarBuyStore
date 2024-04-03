@@ -84,8 +84,10 @@ const Mock = {
     subtotal: 0,
     taxFare: 0.13,
     address: '',
-    paymentMethod: ''
-  }
+    paymentMethod: '',
+    orderId: 0
+  },
+  paymentMethods: ['Efectivo', 'Sinpe']
 };
 
 
@@ -171,7 +173,7 @@ export default function Home() {
   }
   // const [count, setCount] = useState(mockStoraged.cart.products.length);
   const [mock, setMock] = useState(mockStoraged)
-
+  
   const handleClick = (id) => {
     let copyOfMock = { ...mock };
     // const localStorageMock = JSON.parse(localStorage.getItem('Mock'));
