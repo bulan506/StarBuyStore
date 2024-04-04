@@ -6,18 +6,20 @@ namespace StoreApi.Models
     public string ImageUrl { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
-    public Guid Uuid { get; set; }
+    public int Id { get; set; }
+    public int Quantity { get; set; }
 
         // Implementation of the ICloneable interface
     public object Clone()
     {
         return new Product
         {
-            Uuid = this.Uuid,
+            Id = this.Id,
             Name = this.Name,
             ImageUrl = this.ImageUrl,
             Price = this.Price,
-            Description = this.Description
+            Description = this.Description,
+            Quantity = this.Quantity
         };
     }
 }

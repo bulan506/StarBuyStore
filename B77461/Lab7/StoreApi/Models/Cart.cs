@@ -4,5 +4,6 @@ namespace StoreApi.Models
 {
     public List<string> ProductIds { get; set; }
     public string Address { get; set; }
+
 }
 }

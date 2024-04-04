@@ -7,10 +7,26 @@ import '../app/css/style.css';
 
 export default function Home() {
 
+  const [products, setProducts] = useState([]);
   const [isCartActive, setIsCartActive] = useState(false);
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
   const [cartLoaded, setCartLoaded] = useState(false);
+
+  async function getProducts() {
+    const res = await fetch('https://localhost:7075/api/Store');
+    if (!res.ok) {
+      throw new Error('Failed to fetch products');
+    }
+    return res.json();
+  }
+
+  useEffect(() => {
+    getProducts()
+      .then(data => setProducts(data.products))
+      .catch(error => console.error(error));
+  }, []);
+
   const [cart, setCart] = useState({
     carrito: {
       productos: [],
@@ -23,6 +39,7 @@ export default function Home() {
     metodosDePago: ['Efectivo', 'Sinpe'],
     verificacion: false
   });
+  
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
@@ -140,20 +157,7 @@ export default function Home() {
     setCount(count - 1); // Restar 1 al contador count
 }
 
-  const products = [
-    { id: 1, name: 'Audifonos', description: 'Audifonos RGB', imageUrl: 'https://tienda.starware.com.ar/wp-content/uploads/2021/05/auriculares-gamer-headset-eksa-e1000-v-surround-71-rgb-pc-ps4-verde-2331-3792.jpg', price: 60.0, cantidad: 1 },
-    { id: 2, name: 'Teclado', description: 'Teclado mecánico RGB', imageUrl: 'https://kuwait.gccgamers.com/razer-deathstalker-v2/assets/product.webp', price: 75.0, cantidad: 1 },
-    { id: 3, name: 'Mouse', description: 'Mouse inalámbrico', imageUrl: 'https://static3.tcdn.com.br/img/img_prod/374123/mouse_gamer_impact_rgb_12400_dpi_m908_redragon_29921_3_20190927170055.jpg', price: 35.0, cantidad: 1 },
-    { id: 4, name: 'Monitor', description: 'Monitor LCD', imageUrl: 'https://i5.walmartimages.ca/images/Large/956/188/6000199956188.jpg', price: 200.0, cantidad: 1 },
-    { id: 5, name: 'CASE', description: 'Case CPU', imageUrl: 'https://th.bing.com/th/id/OIP.mhKR13PBP5mQP85l2c4DWgHaHa?rs=1&pid=ImgDetMain', price: 450.0, cantidad: 1 },
-    { id: 6, name: 'MousePad', description: 'MousePad HYPER X', imageUrl: 'https://s3.amazonaws.com/static.spdigital.cl/img/products/new_web/1500590806008-36964857_0168832511.jpg', price: 15.0, cantidad: 1 },
-    { id: 7, name: 'Laptop', description: 'Laptop ASUS', imageUrl: 'https://resources.claroshop.com/medios-plazavip/s2/10252/1145258/5d13a10bac9b0-laptop-gamer-asus-rog-strix-scar-ii-i7-16gb-512gb-rtx-2070-1600x1600.jpg', price: 1000.0, cantidad: 1 },
-    { id: 8, name: 'Tarjeta de Video', description: 'Tarjeta Nvidia 4060', imageUrl: 'https://ddtech.mx/assets/uploads/861311bd60bf6ede94bfe7ab01e705a3.png', price: 600.0, cantidad: 1 },
-    { id: 9, name: 'Control', description: 'Control STEAM', imageUrl: 'https://th.bing.com/th/id/OIP.lNj-nw7kO0Q73XjkAvaQkwHaJJ?rs=1&pid=ImgDetMain', price: 150.0, cantidad: 1 },
-    { id: 10, name: 'Gafas VR', description: 'Gafas VR PS4', imageUrl: 'https://www.discoazul.com/uploads/media/images/gafas-playstation-vr-ps4-1.jpg', price: 500.0, cantidad: 1 },
-    { id: 11, name: 'Pantalla', description: 'Pantalla LG OLED', imageUrl: 'https://th.bing.com/th/id/OIP.nC89zBQSGxR8hyVnocBvlQHaGb?rs=1&pid=ImgDetMain', price: 750.0, cantidad: 1 },
-    { id: 12, name: 'Celular', description: 'ASUS ROG', imageUrl: 'https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg', price: 900.0, cantidad: 1 },
-  ];
+  
 
   const Product = ({ product, handleAddToCart }) => {
     const { id, name, description, imageUrl, price } = product;

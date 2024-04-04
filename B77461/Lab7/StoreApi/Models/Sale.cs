@@ -6,11 +6,11 @@ namespace StoreApi.Models
     public string Address { get; }
     public decimal Amount { get; }
 
-    public Sale(IEnumerable<Product> products, string address, decimal Amount)
+    public Sale(IEnumerable<Product> products, string address, decimal amount)
     {
         Products = products;
         Address = address;
-        Amount = Amount;
+        Amount = amount;
     }
 }
 }
