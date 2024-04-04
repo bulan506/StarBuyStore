@@ -218,7 +218,6 @@ export default function Pagina() {
     useEffect(() => {
       const productosCarritoAlmacenados = JSON.parse(localStorage.getItem('productosCarrito'));
       if (productosCarritoAlmacenados) {
-       
         setContadorCarritoSesion(Object.keys(productosCarritoAlmacenados).length);
         let subtotalCalculado = 0;
         Object.values(productosCarritoAlmacenados).forEach(item => {

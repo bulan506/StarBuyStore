@@ -13,7 +13,9 @@ export default function Direccion() {
     };
 
     const manejarGuardarDireccion = () => {
-        if (direccion.trim() !== '') {
+        let isDireccionFull = direccion.trim() !== ''
+       
+        if (isDireccionFull) {
             localStorage.setItem('direccion', direccion);
         }
     };
