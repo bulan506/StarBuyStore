@@ -121,3 +121,9 @@ table.shoping-cart-table tr td:last-child {
   padding: 0;
   width: 400%;
 }
+
+@media (max-width: 576px) {
+  .interested .card {
+    width: 100%; /* Reducir el tamaño a la mitad en dispositivos medianos y grandes */
+  }
+}

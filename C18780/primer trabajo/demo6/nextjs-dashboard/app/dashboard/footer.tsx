@@ -69,7 +69,7 @@ export default function Footer() {
 
         {/*Copyright*/}
         <div className="text-center p-3" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
-          © 2020 Copyright:
+          © 2024 Copyright:
           <a className="text-body" href="https://mdbootstrap.com/"> Abacaxi Store </a>
         </div>
 

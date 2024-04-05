@@ -1,17 +1,17 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductItem from '../dashboard/product';
-import initialStore from '../lib/products-data';
 import SideNav from '../ui/dashboard/sidenav';
 import { Product } from '../lib/products-data-definitions';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import React from 'react';
+import useInitialStore from '../lib/products-data';
 
-const Carousel = ({ onAdd }: { onAdd: any }) => {
+const Carousel = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
   const chunkSize = 4;
   const productChunks = [];
-  for (let i = 0; i < initialStore.products.length; i += chunkSize) {
-    productChunks.push(initialStore.products.slice(i, i + chunkSize));
+  for (let i = 0; i < products.length; i += chunkSize) {
+    productChunks.push(products.slice(i, i + chunkSize));
   }
   return (
     <div className="container-products">
@@ -22,8 +22,8 @@ const Carousel = ({ onAdd }: { onAdd: any }) => {
           {productChunks.map((chunk, index) => (
             <div key={index} className={`carousel-item ${index === 0 ? "active" : ""} `}>
               <div className="row d-flex flex-row justify-content-center align-items-center">
-                {chunk.map((product) => (
-                  <ProductItem key={product.id} product={product} onAdd={onAdd} />
+                {chunk.map((product, index) => (
+                  <ProductItem key={index} product={product} onAdd={onAdd} />
                 ))}
               </div>
             </div>
@@ -47,15 +47,15 @@ const Carousel = ({ onAdd }: { onAdd: any }) => {
 
 
 //Componente principal
-const ProductsRow = ({ onAdd }: { onAdd: any }) => {
-  let number = (initialStore.products.length - (initialStore.products.length % 4))/2
+const ProductsRow = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
+  let number = (products.length - (products.length % 4)) / 2
   return (
     <div className='containerProducts'>
       <div className="row">
-        {initialStore.products.map((product, index, array) => (
-          <React.Fragment key={product.id}>
-            {index === number && <Carousel onAdd={onAdd} />}
-            <ProductItem product={product} onAdd={onAdd} />
+        {products.map((product, index) => (
+          <React.Fragment key={index}>
+            {index === number && <Carousel key={`carousel-${index}`} onAdd={onAdd} products={products} />} {/* Ensure each Carousel has a unique key */}
+            <ProductItem key={`product-${product.id}`} product={product} onAdd={onAdd} /> {/* Ensure each ProductItem has a unique key */}
           </React.Fragment>
         ))}
       </div>
@@ -64,13 +64,20 @@ const ProductsRow = ({ onAdd }: { onAdd: any }) => {
 };
 
 
+
 export default function Page() {
-  const [count, setCount] = useState(initialStore.cart.products.length);
+  const [count, setCount] = useState(0);
+  const initialStore = useInitialStore();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (initialStore.products.length > 0) {
+      setLoading(false);
+    }
+  }, [initialStore.products]);
 
   const handleAddToCart = ({ product }: { product: Product }) => {
-
     setCount(count + 1);
-
     initialStore.cart.products.push(product);
 
     initialStore.cart.subtotal = initialStore.cart.subtotal + product.price;
@@ -81,7 +88,8 @@ export default function Page() {
   return (
     <>
       <SideNav countCart={initialStore.cart.products.length > count ? initialStore.cart.products.length : count} />
-      <ProductsRow onAdd={handleAddToCart} />
+      {!loading && <ProductsRow products={initialStore.products} onAdd={handleAddToCart} />}
+
     </>
   );
 }

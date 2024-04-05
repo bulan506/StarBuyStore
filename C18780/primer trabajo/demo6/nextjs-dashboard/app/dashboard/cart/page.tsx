@@ -1,7 +1,7 @@
 'use client'
-import { Product } from '../../lib/products-data-definitions';
+import { InitialStore, Product } from '../../lib/products-data-definitions';
 import Image from 'next/image';
-import initialStore from '../../lib/products-data';
+import useInitialStore from '../../lib/products-data';
 import { ShoppingCartIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import ProductItem from '../product';
@@ -53,7 +53,7 @@ const ProductCart = ({ product }: { product: Product }) => {
         </div>
     );
 };
-const ProductsCart = () => {
+const ProductsCart = ({initialStore}:{initialStore:InitialStore}) => {
 
     return (
         <div className='container'>
@@ -65,8 +65,7 @@ const ProductsCart = () => {
         </div>
     );
 };
-
-const CartSummary = () => {
+const CartSummary = ({initialStore}:{initialStore:InitialStore}) => {
     return (
         <div className="ibox">
             <div className="ibox-title">
@@ -107,14 +106,12 @@ const Support = () => {
     );
 };
 
-const InterestingProducts = ({ onAdd }: { onAdd: any }) => {
+const InterestingProducts = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
     const [randomProduct, setRandomProduct] = useState<Product>();
-
+    const randomIndex = Math.floor(Math.random() * products.length);
     useEffect(() => {
-        const randomIndex = Math.floor(Math.random() * initialStore.products.length);
-        const randomProduct = initialStore.products[randomIndex];
-        setRandomProduct(randomProduct);
-    }, []);
+        setRandomProduct(products[randomIndex]);
+    }, [randomIndex]);
 
     return (
         <div className="ibox">
@@ -133,6 +130,7 @@ const InterestingProducts = ({ onAdd }: { onAdd: any }) => {
 }
 
 export default function Cart() {
+    const initialStore = useInitialStore();
     const handleAddToCart = ({ product }: { product: Product }) => {
         initialStore.cart.products.push(product);
 
@@ -154,7 +152,14 @@ export default function Cart() {
                             </div>
 
                             <div className="ibox-content">
-                                <ProductsCart />
+                                <div className='flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12'>
+                                    {initialStore.cart.total === 0 ? <Image src='/others/cat.jpg'
+                                        width={300}
+                                        height={300}
+                                        className="hidden md:block" alt='cat' /> : <ProductsCart initialStore={initialStore} />}
+                                </div>
+
+
                             </div>
 
                             <div className="ibox-content">
@@ -169,11 +174,11 @@ export default function Cart() {
                     </div>
 
                     <div className="col-md-3">
-                        <CartSummary />
+                        <CartSummary initialStore={initialStore} />
 
                         <Support />
 
-                        <InterestingProducts onAdd={handleAddToCart} />
+                        <InterestingProducts onAdd={handleAddToCart} products={initialStore.products} />
                     </div>
                 </div>
             </div>
