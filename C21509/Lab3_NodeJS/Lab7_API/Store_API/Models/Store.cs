@@ -112,7 +112,7 @@ namespace Store_API.Models
             }
 
             // Create a sale object
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
 
 
             return sale;

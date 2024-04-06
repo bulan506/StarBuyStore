@@ -8,6 +8,21 @@ import Link from 'next/link';
 export default function Page() {
   const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
 
+  const loadProductApiData = async () => {
+    try {
+      const response = await fetch('https://api.example.com/products');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const json = await response.json();
+      return json;
+    } catch (error) {
+      throw new Error('Failed to fetch data');
+    }
+  };
+
+  const productData= loadProductApiData();
+
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
     setCartProducts(savedCartProducts);
