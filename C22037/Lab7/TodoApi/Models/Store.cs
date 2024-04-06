@@ -1,11 +1,11 @@
-namespace TodoApi
+namespace TodoApi.Models
 {
     public sealed class Store
     {
         public List<Product> Products { get; private set; }
         public int TaxPercentage { get; private set; }
 
-        private Store( List<Product> products, int TaxPercentage )
+        private Store(List<Product> products, int TaxPercentage)
         {
             this.Products = products;
             this.TaxPercentage = TaxPercentage;
@@ -13,7 +13,8 @@ namespace TodoApi
 
         public readonly static Store Instance;
         // Static constructor
-        static Store(){
+        static Store()
+        {
 
             var products = new List<Product>
             {
@@ -89,7 +90,7 @@ namespace TodoApi
                     Description= "Descripción 9",
                     ImageURL= "https=//m.media-amazon.com/images/I/81mzvAGkHkL._AC_SY100_.jpg",
                     Price= 90
-                }, 
+                },
                 new Product
                 {
                     Id= 10,
@@ -105,7 +106,7 @@ namespace TodoApi
                     Description= "Descripción 11",
                     ImageURL= "https=//m.media-amazon.com/images/I/71cj5cNm7ZL._AC_UY218_.jpg",
                     Price= 110
-                }, 
+                },
                 new Product
                 {
                     Id= 12,
@@ -151,9 +152,10 @@ namespace TodoApi
             Store.Instance = new Store(products, 13);
         }
 
-        public Sale Purchase (Cart cart) {
-            if (cart.ProductIds.Count == 0)throw new ArgumentException("Cart must contain at least one product.");
-            if (string.IsNullOrWhiteSpace(cart.Address))throw new ArgumentException("Address must be provIded.");
+        public Sale Purchase(Cart cart)
+        {
+            if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
+            if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provIded.");
 
             // Find matching products based on the product Ids in the cart
             IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();

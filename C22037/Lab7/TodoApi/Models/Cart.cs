@@ -1,4 +1,4 @@
-namespace TodoApi;
+namespace TodoApi.Models;
 public sealed class Cart
 {
     public List<string> ProductIds { get; set; }
