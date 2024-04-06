@@ -2,9 +2,27 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export const Products = ({ }) => {
 
-  const productList = [
+export const Products = ({}) => {
+   
+  const [productList, setProductList] = useState([]);
+    const loadData = async () => {
+      try {
+        const response = await fetch(`https://localhost:7280/api/Store`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        console.log('Data received:', json);
+        setProductList(json);
+      } catch (error) {
+         throw new Error('Failed to fetch data');
+      }
+    };
+
+    loadData();
+    
+ /* const productList = [
     {
       id: 1,
       name: 'Producto 1',
@@ -61,7 +79,7 @@ export const Products = ({ }) => {
       price: 20000,
       imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Oculus2.jpg'
     }
-  ];
+  ];*/
 
   const [storeData, setStoreData] = useState(() => {
     const storedStoreData = localStorage.getItem("tienda");
@@ -74,11 +92,10 @@ export const Products = ({ }) => {
     setShowModal(false);
   };
 
-  const isProductAlreadyAdded = storeData.productos.some(item => item.id === product.id);
 
 
-  const onAddProduct = product => {
-    if (isProductAlreadyAdded) {
+  const onAddProduct = (product) => {
+    if (storeData.productos.some(item => item.id === product.id)) {
       setShowModal(true);
       console.log(showModal);
     } else {
@@ -96,6 +113,7 @@ export const Products = ({ }) => {
       localStorage.setItem("tienda", JSON.stringify(updatedStore));
     }
   };
+  
 
   const Product = ({ product }) => {
     const { name, description, imageURL, price } = product;
@@ -116,13 +134,13 @@ export const Products = ({ }) => {
 
   return (
     <div>
-      {showModal && <ModalError closeModal={closeModal} />}
-      <div className="row">
-        {productList.map(product => (
-          <Product key={product.id} product={product} onAddProduct={onAddProduct} />
-        ))}
-      </div>
+    {showModal && <ModalError closeModal={closeModal} />}
+    <div className="row">
+      {productList && productList.products && productList.products.map(product => (
+        <Product key={product.id} product={product} onAddProduct={onAddProduct} />
+      ))}
     </div>
+  </div>
   );
 }
 
