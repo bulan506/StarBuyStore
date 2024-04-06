@@ -16,90 +16,100 @@ public sealed class Store
     {
         var products = new List<Product>();
 
-        // Generate 30 sample products
            products.Add(new Product {
                 Name = "Cinder",
                 Author = "Marissa Meyer",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768889_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
                 Price = 9500,
-                Uuid = Guid.NewGuid()
+                Id= 1
             });
 
             products.Add(new Product {
                 Name = "Scarlet",
                 Author = "Marissa Meyer",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768896_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 9500
+                Price = 9500,
+                Id= 2
             });
 
             products.Add(new Product    {
                 Name = "Cress",
                 Author = "Marissa Meyer",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768902_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 9500
+                Price = 9500,
+                Id= 3
             });
 
             products.Add(new Product {
                 Name = "Winter",
                 Author = "Marissa Meyer",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768926_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 11900
+                Price = 11900,
+                Id= 4
             });
 
             products.Add(new Product {
                 Name = "Fairest",
                 Author = "Marissa Meyer",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250774057_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 8700
+                Price = 8700,
+                Id= 5
             });
 
             products.Add(new Product {
                 Name = "La Sociedad de la Nieve",
                 Author = "Pablo Vierci",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786070794162_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 12800
+                Price = 12800,
+                Id= 6
             });
 
             products.Add(new Product{
                 Name = "En Agosto nos vemos",
                 Author = "Gabriel García Márquez",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073911290_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 14900
+                Price = 14900,
+                Id= 7
             });
 
             products.Add(new Product {
                 Name = "El estrecho sendero entre deseos",
                 Author = "Patrick Rothfuss",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9789585457935_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 12800
+                Price = 12800,
+                Id= 8
             });
 
             products.Add(new Product{
                 Name = "Alas de Sangre",
                 Author = "Rebecca Yarros",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788408279990_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 19800
+                Price = 19800,
+                Id= 9
             });
 
             products.Add(new Product   {
                 Name = "Corona de Medianoche",
                 Author = "Sarah J. Mass",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073143691_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 15800
+                Price = 15800,
+                Id= 10
             });
 
             products.Add(new Product {
                 Name = "Carta de Amor a los Muertos",
                 Author = "Ava Dellaira",
                 ImgUrl = "https://m.media-amazon.com/images/I/41IETN4YxGL._SY445_SX342_.jpg",
-                Price = 8900
+                Price = 8900,
+                Id= 11
             });
 
             products.Add(new Product   {
                 Name = "Alicia en el país de las Maravillas",
                 Author = "Lewis Carrol",
                 ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-                Price = 7900
+                Price = 7900,
+                Id= 0
             });
 
 

@@ -2,11 +2,28 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import products from '../utils/product'
+//import products from '../utils/product'
 import carrusel from '../utils/carrusel'
 
 
 export default function Home() {
+
+  const [storeProducts, setStoreProducts] = useState([]);
+  const loadData = async () => {
+    try {
+      const response = await fetch('http://localhost:5207/api/Store');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      console.log(data);
+      setStoreProducts(data);
+    } catch (error) {
+       throw new Error('Failed to fetch data');
+    } 
+  };
+  
+  loadData();
 
   const [cart, setCart] = useState({
     products: [],
@@ -16,13 +33,14 @@ export default function Home() {
     deliveryAddress: '',
     payMethods: {},
     receipt: '',
-    orderNumber: ''
+    orderNumber: '',
+    count: 0
   });
 
   const handleAddToCart = (product) => {
-    let productsNotInCart  = !cart.product.some(item => item.id === product.id);
+    let productsNotInCart  = !cart.product.some(item => item.id === storeProducts.id);
     if (productsNotInCart) {
-      let updatedProductos = [...cart.product, product];
+      let updatedProductos = [...cart.product, storeProducts];
       let updatedCount = cart.count + 1;
       setCart({
         ...cart,
@@ -82,8 +100,8 @@ export default function Home() {
       <div className='container'>
         <h2 className='text-left mt-5 mb-5'>List of Books</h2>
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {products.map(product => (
-            <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />
+          {storeProducts && storeProducts.products &&  storeProducts.products.map(carro => (
+            <Products key={carro.id} product={carro} handleAddToCart={handleAddToCart} />
           ))}
           <CarruselComponent carrusel={carrusel} />
         </div>
@@ -100,7 +118,7 @@ export default function Home() {
   );
 }
 
-const Product = ({ product, handleAddToCart }) => {
+const Products = ({ product, handleAddToCart }) => {
   const { id, name, author, imgUrl, price } = product;
   return (
     <div className="row my-3">
