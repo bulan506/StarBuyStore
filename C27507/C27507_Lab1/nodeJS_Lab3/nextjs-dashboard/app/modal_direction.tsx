@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { CartShopItem, ProductItem } from './layout';
+import { CartShopItem, ProductItem,PaymentMethods,PaymentMethodNumber} from './layout';
 import { AlertShop } from './generic_overlay';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
@@ -22,18 +22,19 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
 }) => {  
 
     //Estados de los campos del formulario    
-    const [finish, setFinish] = useState(false);//para activar o desactivar el boton "Finalizar Compra"    
-    const [textAreaDataDirection, setTextAreaDataDirection] = useState("");//para activar o desactivar el boton "Finalizar Compra"    
-    const [typePayment, setTypePayment] = useState("");//para activar o desactivar el boton segun haya texto o no en el textarea
-    const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe
-    const [adminVerify, setAdminVerify] = useState(false);//campo de verificacion
+        //para activar o desactivar el boton "Finalizar Compra"    
+    const [finish, setFinish] = useState(false);
+        //para activar o desactivar el boton "Finalizar Compra"            
+    const [textAreaDataDirection, setTextAreaDataDirection] = useState("");
+        //asi evitamos que el myCartInStorage o el valor guardado de PaymentMethodNumber pueda ser nulo 
+    const [payment, setPayment] = useState<PaymentMethodNumber>(myCartInStorage?.paymentMethod.payment ?? PaymentMethodNumber.CASH);
+    // const [verify, setVerify] = useState<boolean>(false); //    
+    const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe    
 
     //Cada vez que alguno de los campos del formulario cambia, que se aguarde en el atributo correspondiente del carrito
     useEffect(() => {
         if (myCartInStorage) {
-            setTextAreaDataDirection(myCartInStorage.direction || "");
-            setTypePayment(myCartInStorage.payment || "");
-            setAdminVerify(myCartInStorage.verify || false);
+            setTextAreaDataDirection(myCartInStorage.direction || "");            
         }
     }, [myCartInStorage]);
 
@@ -54,19 +55,27 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
         setShowAlert(true);
     }
     
- 
-    //Para habilitar o deshabilitar las opciones extra segun el tipo de pago
-    const getSelectPayment = (event: React.ChangeEvent<HTMLSelectElement>) =>{
-        //activamos el evento de escucha, con el value capturamos el valor del textArea
-        const actualValue = event.target.value;
-        setTypePayment(actualValue);
-        //Guardamos los datos en el LocalStorage        
+    const getSelectPayment = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        //Obtenemos el valor 1,2,3 o 4  del Select
+        const actualValue = parseInt(event.target.value);        
+
         if (myCartInStorage) {
-            myCartInStorage.payment = actualValue;            
+            // Verificamos si existe paymentMethod antes de modificarlo
+            if (myCartInStorage.paymentMethod) {
+                myCartInStorage.paymentMethod.payment = actualValue;
+            } else {
+                // Si no existe paymentMethod lo creamos
+                myCartInStorage.paymentMethod = {
+                    payment: actualValue,
+                    verify: false
+                };
+            }
             setCartShopStorage("A", myCartInStorage);                        
-            setTypePayment(actualValue);
+            setPayment(actualValue);
         }        
-    }
+    };
+
+
     //Para habilitar o deshabilitar las opciones despues de la direccion de entrega
     const getTextAreaDirection = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
         const actualValue = event.target.value;        
@@ -80,15 +89,16 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
         const actualValue = event.target.value;        
         setTextAreaSinpe(actualValue);                  
     }
-    const getCheckBoxVerify = (event: React.ChangeEvent<HTMLInputElement>)=>{
+    //Todo lo relacionado a verify dejarlo quedito por mientras (preguntarle al profe)
+    // const getCheckBoxVerify = (event: React.ChangeEvent<HTMLInputElement>)=>{
 
-        const isChecked = event.target.checked        
-        setAdminVerify(isChecked);        
-        if (myCartInStorage) {
-            myCartInStorage.verify = isChecked;
-            setCartShopStorage("A", myCartInStorage);            
-        }            
-    }
+    //     const isChecked = event.target.checked        
+    //     setVerify(isChecked);        
+    //     if (myCartInStorage) {
+    //         myCartInStorage.paymentMethod.verify = isChecked;
+    //         setCartShopStorage("A", myCartInStorage);            
+    //     }            
+    // }
 
     //Cambiar el estado del modal, segun haya contenido o no en el campo de Direccion
     const verifyTextArea = () =>{
@@ -101,9 +111,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     const resetModal = () =>{
         setFinish(false);
         setTextAreaDataDirection("");
-        setTextAreaSinpe("");
-        setTypePayment("");
-        setAdminVerify(false);
+        setTextAreaSinpe("");        
         onHide();
     }
 
@@ -116,14 +124,14 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
         }
         //Verificar que estemos tanto en la ultima pantalla y que haya un tipo de pago seleccionado
         //se deben verificar al mismo tiempo, ya que el tipo de pago solo aparece si estamos en la utlima pantalla        
-        let isFinishAndSelectPaymentEmpty = finish && typePayment.trim() === "Seleccione un tipo de pago:" || typePayment.trim() === ""
+        let isFinishAndSelectPaymentEmpty = finish && !payment
         if(isFinishAndSelectPaymentEmpty){            
             callAlertShop("danger","Campo de pago vacío","Por favor, indique un método de pago...")
             return;
         }     
 
         //Verificar que el value de la caja Sinpe sea igual al codigo dado por el sistema
-        let isSinpeCodeOk = typePayment === "Sinpe" && textAreaSinpe.trim() !== "24";
+        let isSinpeCodeOk = payment === PaymentMethodNumber.SINPE && textAreaSinpe.trim() !== "";
         if(isSinpeCodeOk){                        
             callAlertShop("danger","Código de compra no coincide","El codigo de compra introducido no coincide con el brindado por el sistema")
             return;            
@@ -152,56 +160,51 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                         </Form.Text>
                     </Form.Group>    
 
-                    {/* Si finish es true se muestran el resto de campos */}
+                    {/*Cuando el useState "finish=true", mostrar las demas opciones del Select*/}
                     {finish ? (
                         <>
-
                             <Form.Group className="mb-3">
                                 <Form.Label htmlFor="disabledSelect">Forma de pago:</Form.Label>
-                                <Form.Select id="disabledSelect" value={typePayment} onChange={getSelectPayment}>
+                                {/* El Form Select tiene un valor por defecto (el del useState) */}
+                                <Form.Select id="disabledSelect" value={payment} onChange={getSelectPayment}>
                                     <option value="">Seleccione un tipo de pago:</option>
-                                    <option value="Efectivo">Efectivo</option>
-                                    <option value="Sinpe">Sinpe</option>
+                                    {/* PaymentMethods son los pagos ya definidos en layout.tsx ya que no tiene sentido
+                                    que el usuario cree los */}
+                                    {PaymentMethods.map((method) => (
+                                        <option key={method.payment} value={method.payment}>{PaymentMethodNumber[method.payment]}</option>
+                                    ))}
                                 </Form.Select>
                             </Form.Group>
-
-                            {typePayment == "Efectivo" && (
-
-                                <>
-                                    <Form.Group className="mb-3">                                                                                
-                                        <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>
-                                    </Form.Group>
-                                </>
-
-                            )}
-
-                            {typePayment == "Sinpe" && (
+                            
+                            {payment == PaymentMethodNumber.SINPE && (
 
                             <>
                                 <Form.Group className="mb-3">
-                                    <Form.Label><span style={{ fontWeight: 'bolder' }}>Número de teléfono:</span> 62889872</Form.Label>
+                                    <Form.Label><span style={{ fontWeight: 'bolder' }}>Nuestro número de teléfono:</span> 62889872</Form.Label>
+                                    <br />                                                                      
                                     <br />                                  
-                                    <br />                                  
-                                    <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>      
-                                    <br />                                  
-                                    <br />                                  
-                                    <Form.Label>Código de Compra:</Form.Label>
-                                    <Form.Control rows={5} as="textarea" placeholder="Ingrese su código" onChange={getTextAreaSinpe}/>
+                                    <Form.Label>Comprobante del SINPE:</Form.Label>
+                                    <Form.Control rows={5} as="textarea" placeholder="Ingrese su comprobante" onChange={getTextAreaSinpe}/>
                                 </Form.Group>
                             </>
 
                             )}
 
-                            <Form.Group>                                
+                            <Form.Group className="mb-3">                                                                                
+                                <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>
+                            </Form.Group>
+
+                            {/* <Form.Group>                                
                                 <Form.Label htmlFor="disabledSelect">Indique si el pago requiere Verificación:</Form.Label>
                                 <Form.Check 
                                     type="checkbox" label="Marque la casilla si requiere Verificación"
-                                    checked={adminVerify}
+                                    checked={verify}
                                     onChange={getCheckBoxVerify}
                                 />
-                            </Form.Group>
+                            </Form.Group> */}
                         </>
-                    ):null}
+
+                    ):null}                    
                                                             
                 </fieldset>
             </Form>                

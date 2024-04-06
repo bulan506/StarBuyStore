@@ -22,26 +22,6 @@ export const ModalCart: React.FC<ModalCartProps> = ({
     setMyCartInStorage
 }) => {
 
-    //Vaciar lista de productos - Local y la del Carrito
-    // const deleteAllProduct = () => {
-    //     console.log("Vaciamos el carrito")        
-    //     if(myCartInStorage){        
-    //         //setteamos todo el carrito
-    //         const newMockup: CartShopItem = {
-    //             allProduct: [],
-    //             subtotal: 0,
-    //             tax: 0.13,
-    //             total: 0,
-    //             direction: '',
-    //             payment: '',
-    //             verify: false,
-    //         };   
-    //         //Revisar porque ncesito los dos
-    //         setCartShopStorage("A",newMockup)         
-    //         setMyCartInStorage(newMockup);
-    //     }        
-    // }
-
     //States del ModalDirection (activarlo despues de presionar el boton "iniciar Compra")
     const [modalShow, setModalShow] = React.useState(false);
 

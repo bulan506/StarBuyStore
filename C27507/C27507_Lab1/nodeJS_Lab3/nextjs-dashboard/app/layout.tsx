@@ -115,46 +115,44 @@ export interface CartShopItem {
   tax: number;
   total: number;
   direction: string;
-  payment: string;
-  verify: boolean
-  //paymentMethods: PaymentMethods
+  // payment: string;
+  // verify: boolean
+  paymentMethod: PaymentMethod
 }
 
 
-enum PaymentMethods {
+export enum PaymentMethodNumber {
   CASH = 1,
   CREDIT_CARD = 2,
   DEBIT_CARD = 3,
   SINPE = 4  
 }
 
-interface PaymentMethod {
-  payment: PaymentMethods; // Usamos el enum PaymentMethods para definir los tipos de pago
+export interface PaymentMethod {
+  payment: PaymentMethodNumber; // Usamos el enum PaymentMethods para definir los tipos de pago
   verify: boolean;
 }
 
-const allPaymentMethods: PaymentMethod[] = [
+export const PaymentMethods: PaymentMethod[] = [
   {
-    payment: PaymentMethods.CASH,
+    payment: PaymentMethodNumber.CASH,
     verify: false
   },
   {
-    payment: PaymentMethods.CREDIT_CARD,
-    verify: true // Ejemplo de un método de pago que no necesita verificación
+    payment: PaymentMethodNumber.CREDIT_CARD,
+    verify: true
   },
   {
-    payment: PaymentMethods.DEBIT_CARD,
-    verify: true // Ejemplo de un método de pago que no necesita verificación
+    payment: PaymentMethodNumber.DEBIT_CARD,
+    verify: true
   },
   {
-    payment: PaymentMethods.SINPE,
-    verify: true // Ejemplo de un método de pago que no necesita verificación
+    payment: PaymentMethodNumber.SINPE,
+    verify: true
   }
 ];
 
 
-
-//
 interface ProductProps {
   product: ProductItem;  
   myCartInStorage: CartShopItem | null;

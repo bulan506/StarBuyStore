@@ -6,7 +6,7 @@ import {useState} from 'react';
 import {useEffect} from 'react';
 import { StaticCarousel} from './carousel';
 import {Product, product, CartShop } from './layout';
-import { ProductItem,CartShopItem  } from './layout';
+import { ProductItem,CartShopItem,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
@@ -46,14 +46,22 @@ export const getCartShopStorage = (key: string): CartShopItem | null => {
     if(cartShopData !== null){
         return JSON.parse(cartShopData) as CartShopItem;        
     }else{
+
+        const defaultPaymentMethod: PaymentMethod = {
+            payment: PaymentMethodNumber.CASH,
+            verify: false
+        };
+
         let cart: CartShopItem = {  
             allProduct: [],
             subtotal: 0,
             tax: 0.13,
             total: 0,
             direction: "",
-            payment: "",
-            verify: false  
+            // payment: "",
+            // verify: false  
+            paymentMethod: defaultPaymentMethod 
+
         };
         //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
         setCartShopStorage("A",cart);
@@ -103,14 +111,22 @@ export const addProductInCart = (index: number, product: ProductItem, myCartInSt
 export const deleteAllProduct = (myCartInStorage: CartShopItem | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
     if(myCartInStorage !== null){        
         //setteamos todo el carrito
+
+        //Setteamos un metodo de pago por defecto
+        const defaultPaymentMethod: PaymentMethod = {
+            payment: PaymentMethodNumber.CASH, // Establecer el método de pago predeterminado
+            verify: false // Establecer la verificación a falso o verdadero según corresponda
+        };
+
         const newMockup: CartShopItem = {
             allProduct: [],
             subtotal: 0,
             tax: 0.13,
             total: 0,
             direction: '',
-            payment: '',
-            verify: false,
+            // payment: '',
+            // verify: false,
+            paymentMethod: defaultPaymentMethod 
         };   
         //Limpiamos el storage y el estado actual
         setCartShopStorage("A",newMockup)         
