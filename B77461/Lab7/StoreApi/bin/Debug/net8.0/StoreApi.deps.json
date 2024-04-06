@@ -9,6 +9,7 @@
       "StoreApi/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.InMemory": "8.0.3",
+          "MySqlConnector": "2.3.6",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
@@ -94,6 +95,17 @@
           "lib/netstandard2.0/Microsoft.OpenApi.dll": {
             "assemblyVersion": "1.2.3.0",
             "fileVersion": "1.2.3.0"
+          }
+        }
+      },
+      "MySqlConnector/2.3.6": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/MySqlConnector.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.3.6.0"
           }
         }
       },
@@ -240,6 +252,13 @@
       "sha512": "sha512-Nug3rO+7Kl5/SBAadzSMAVgqDlfGjJZ0GenQrLywJ84XGKO0uRqkunz5Wyl0SDwcR71bAATXvSdbdzPrYRYKGw==",
       "path": "microsoft.openapi/1.2.3",
       "hashPath": "microsoft.openapi.1.2.3.nupkg.sha512"
+    },
+    "MySqlConnector/2.3.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DyWErA3jFsJAAn4x6ha09cmmrw/zvjM0/lYUXzV45f0CiY0ZCIwDHGb7wMsIlXr9JaCBOp4i3uZF/HumEPeV+A==",
+      "path": "mysqlconnector/2.3.6",
+      "hashPath": "mysqlconnector.2.3.6.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.4.0": {
       "type": "package",

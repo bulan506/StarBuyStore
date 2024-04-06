@@ -34,3 +34,4 @@ C:\Users\UsuarioRemoto\Desktop\Laptop\Lenguajes 2024\Lenguajes24Labs\lenguajes24
 C:\Users\UsuarioRemoto\Desktop\Laptop\Lenguajes 2024\Lenguajes24Labs\lenguajes24\B77461\Lab7\StoreApi\obj\Debug\net8.0\StoreApi.pdb
 C:\Users\UsuarioRemoto\Desktop\Laptop\Lenguajes 2024\Lenguajes24Labs\lenguajes24\B77461\Lab7\StoreApi\obj\Debug\net8.0\StoreApi.genruntimeconfig.cache
 C:\Users\UsuarioRemoto\Desktop\Laptop\Lenguajes 2024\Lenguajes24Labs\lenguajes24\B77461\Lab7\StoreApi\obj\Debug\net8.0\ref\StoreApi.dll
+C:\Users\UsuarioRemoto\Desktop\Laptop\Lenguajes 2024\Lenguajes24Labs\lenguajes24\B77461\Lab7\StoreApi\bin\Debug\net8.0\MySqlConnector.dll
