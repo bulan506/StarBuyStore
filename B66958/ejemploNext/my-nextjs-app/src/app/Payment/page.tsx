@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => void }) => {
+const PaymentForm = ({ cart, setCart, clearProducts }:
+    { cart: any, setCart: (cart: any) => void, clearProducts: () => void }) => {
     const [orderNumber, setOrderNumber] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [finishedSale, setFinishedSale] = useState(false);
 
     enum PaymentMethod {
         EFECTIVO = 'Efectivo',
@@ -40,9 +42,11 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
         setOrderNumber(timestamp + randomNumber);
     }
 
-    useEffect(() => {
+    function finishPurchase() {
         generateReceiptNumber();
-    }, [])
+        setFinishedSale(true);
+        clearProducts();
+    }
 
     const Efectivo = () => {
         return <div className="card w-100">
@@ -76,12 +80,18 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
                         {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
                     </select>
                 </div>
+                <div className="d-flex w-100 justify-content-center">
+                    <button className="btn btn-primary"
+                        disabled={finishedSale} onClick={finishPurchase}>
+                        Finalizar Compra</button>
+                </div>
             </div>
-            {(selectedIndex === 0 ? <Efectivo /> : <Sinpe />)}
-            <div className="progress">
+            {finishedSale ? (selectedIndex === 0 ? <Efectivo /> : <Sinpe />) : ''}
+            {finishedSale ? <div className="progress">
                 <div className="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" aria-valuenow={75} aria-valuemin={0} aria-valuemax={100} style={{ width: '100%' }}></div>
-            </div>
+                    role="progressbar" aria-valuenow={75} aria-valuemin={0}
+                    aria-valuemax={100} style={{ width: '100%' }}></div>
+            </div> : ''}
         </div>
     </div>
 }

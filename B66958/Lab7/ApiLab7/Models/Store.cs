@@ -16,15 +16,24 @@ public sealed class Store
     {
         var products = new List<Product>();
 
-        // Generate 30 sample products
-        for (int i = 1; i <= 30; i++)
+        var productsData = new[]
         {
+            new { id = 1, name = "Producto", description = "Gaming Mouse", imageUrl = "https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg", price = 75.0 },
+            new { id = 2, name = "Producto", description = "Monitor", imageUrl = "https://images.samsung.com/is/image/samsung/assets/nz/members/article-assets/gaming-monitors/img-kv-2.jpg?$ORIGIN_JPG$", price = 700.0 },
+            new { id = 3, name = "Producto", description = "Mousepad", imageUrl = "https://media.steelseriescdn.com/blog/posts/how-to-choose-your-mousepad/38569118cb1443abb9b88cf9b3f10da0.jpg", price = 30.0 },
+            new { id = 4, name = "Producto", description = "Gaming keyboard", imageUrl = "https://png.pngtree.com/png-vector/20220728/ourmid/pngtree-gaming-keyboard-rgb-effect-png-image_6087818.png", price = 30.0 }
+        };
+
+        for (int i = 1; i <= 40; i++)
+        {
+            var productData = productsData[(i - 1) % productsData.Length]; // Cycling through the options
+
             products.Add(new Product
             {
-                Name = $"Product {i}",
-                ImageUrl = $"https://example.com/image{i}.jpg",
-                Price = 10.99m * i,
-                Description = $"Description of Product {i}",
+                Name = $"Producto {i}",
+                ImageUrl = productData.imageUrl,
+                Price = Convert.ToDecimal(productData.price) * i,
+                Description = $"{productData.description} {i}",
                 Uuid = Guid.NewGuid()
             });
         }
@@ -51,8 +60,10 @@ public sealed class Store
             purchaseAmount += product.Price;
         }
 
+        PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
+
         // Create a sale object
-        var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
+        var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
 
         return sale;
 
