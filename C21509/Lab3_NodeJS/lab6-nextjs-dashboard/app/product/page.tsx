@@ -47,7 +47,7 @@ export default function Page() {
           <input type="search" placeholder="Buscar" value="" />
           <button><img src="/img/Lupa.png" className="col-sm-4" /> </button>
           <Link href="/cart">
-            <button><img src="./img/carrito.png" className="col-sm-4" />{cartProducts.length}</button>
+            <button ><img src="./img/carrito.png" className="col-sm-4" />{cartProducts.length}</button>
           </Link>
         </div>
       </header>
