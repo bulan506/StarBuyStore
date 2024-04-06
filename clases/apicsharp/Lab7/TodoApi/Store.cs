@@ -1,3 +1,6 @@
+using System;
+using MySqlConnector;
+
 namespace TodoApi;
 public sealed class Store
 {
@@ -30,6 +33,62 @@ public sealed class Store
         }
 
         Store.Instance = new Store(products, 13);
+
+        string connectionString = "Server=your_server;Database=your_database;Uid=your_username;Pwd=your_password;";
+        using (var connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
+
+            // Create the products table if it does not exist
+            string createTableQuery = @"
+                CREATE TABLE IF NOT EXISTS products (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(100),
+                    price DECIMAL(10, 2)
+                );";
+
+            using (var command = new MySqlCommand(createTableQuery, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            // Begin a transaction
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    // Insert 30 products into the table
+                    int i =0;
+                    foreach(Product prodduct in products)
+                    {
+                        i++;
+                        string productName = $"Product {i}";
+                        decimal productPrice = i * 10.0m;
+
+                        string insertProductQuery = @"
+                            INSERT INTO products (name, price)
+                            VALUES (@name, @price);";
+
+                        using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
+                        {
+                            insertCommand.Parameters.AddWithValue("@name", productName);
+                            insertCommand.Parameters.AddWithValue("@price", productPrice);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Commit the transaction if all inserts are successful
+                    transaction.Commit();
+                    Console.WriteLine("Products inserted successfully.");
+                }
+                catch (Exception ex)
+                {
+                    // Rollback the transaction if an error occurs
+                    transaction.Rollback();
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+        }
     }
 
     public Sale Purchase (Cart cart)
