@@ -1,13 +1,15 @@
 "use client";
 import Image from "next/image";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import React from 'react';
 import { Card, Container } from "react-bootstrap";
+
+// const products = await fetch('https://localhost:7194/api/Store').JSON()
 
 const Mock = {
 
@@ -90,7 +92,68 @@ const Mock = {
   paymentMethods: ['Efectivo', 'Sinpe']
 };
 
+const ProductComponent = () => {
 
+  const loadData = async () => {
+    try {
+      const response = await fetch('https://localhost:7194/api/Store');
+      if (!response.ok) {
+        throw new Error('response not ok');
+      }
+      const json = await response.json();
+      debugger
+      return json;
+    } catch (error) {
+      throw new Error('Failed to fetch data');
+    }
+  };
+
+  const products = loadData()();
+  debugger
+  console.log(products.products)
+
+  return (
+    <></>
+    // <Row className="justify-content-md-center">
+    //   {products.map(product =>
+    //     <Product key={product.id} product={product} addToCart={handleClick} />)}
+    // </Row>
+  );
+};
+
+const ProductC = ({handleClick}) => {
+  const [shop, setShop] = useState({products: []});
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://localhost:7194/api/Store'); // Replace with your API endpoint
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      const data = await response.json();
+      console.log(data)
+      setShop(data);
+      // debugger
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  console.log(shop.products)
+
+  return (
+    // <></>
+    <Row className="justify-content-md-center">
+      {shop.products.map(product =>
+        <Product key={product.id} product={product} addToCart={handleClick} />)}
+    </Row>
+  );
+}
 
 const Cart = ({ count, total }) => {
 
@@ -166,14 +229,14 @@ const Item = React.forwardRef(({ carrouselItem }, ref) => {
 
 export default function Home() {
 
-  var mockStoraged = JSON.parse(localStorage.getItem('Mock'));
-  if (mockStoraged === null) {
+  var mockStoraged = JSON.parse(localStorage.getItem('Mock')) || {};
+  if (mockStoraged) {
     localStorage.setItem('Mock', JSON.stringify(Mock));
     mockStoraged = JSON.parse(localStorage.getItem('Mock'));
   }
-  // const [count, setCount] = useState(mockStoraged.cart.products.length);
+  const [count, setCount] = useState(mockStoraged.cart.products.length);
   const [mock, setMock] = useState(mockStoraged)
-  
+
   const handleClick = (id) => {
     let copyOfMock = { ...mock };
     // const localStorageMock = JSON.parse(localStorage.getItem('Mock'));
@@ -205,6 +268,7 @@ export default function Home() {
           <Product key={product.id} product={product} addToCart={handleClick} />
         )}
       </Row>
+      <ProductC key={'productsGrid'} handleClick={handleClick}/>
     </Container>
   );
 }

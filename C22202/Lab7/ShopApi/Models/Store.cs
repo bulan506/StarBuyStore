@@ -23,7 +23,7 @@ public sealed class Store
             products.Add(new Product
             {
                 Name = $"Product {i}",
-                ImageUrl = "producto.png",
+                imgSource = "producto.jpg",
                 Price = 10.99m * i,
                 Description = $"Description of Product {i}",
                 id = i
