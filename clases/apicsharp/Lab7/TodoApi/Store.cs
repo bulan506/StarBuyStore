@@ -51,8 +51,12 @@ public sealed class Store
             purchaseAmount += product.Price;
         }
 
+        PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
+
         // Create a sale object
-        var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
+        var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
+
+
 
         return sale;
 
