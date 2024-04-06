@@ -157,8 +157,6 @@ export default function Home() {
     setCount(count - 1); // Restar 1 al contador count
 }
 
-  
-
   const Product = ({ product, handleAddToCart }) => {
     const { id, name, description, imageUrl, price } = product;
     return (

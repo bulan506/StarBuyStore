@@ -222,7 +222,7 @@ namespace StoreApi.Models
 
     };
 
-        Store.Instance = new Store(products, 13);
+        Store.Instance = new Store(products, 20);
     }
 
 
