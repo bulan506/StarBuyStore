@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 
-namespace TodoApi.Controllers
+namespace TodoApi.Models
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,10 +15,10 @@ namespace TodoApi.Controllers
         {
             // Add the cart to the list
             Carts.Add(cart);
-
+            //Purchase Cart
+            //Store.Instance.Purchase(cart);
             // Return the newly created cart
             return Ok(cart);
         }
     }
-
 }

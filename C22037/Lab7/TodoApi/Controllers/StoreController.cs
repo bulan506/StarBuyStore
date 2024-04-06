@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 
-namespace TodoApi.Controllers
+namespace TodoApi.Models
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,5 +14,4 @@ namespace TodoApi.Controllers
             return Store.Instance;
         }
     }
-
 }

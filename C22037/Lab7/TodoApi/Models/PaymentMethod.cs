@@ -1,10 +1,35 @@
-namespace TodoApi.Models;
-public sealed class PaymentMethod
-{
-    enum PaymentMethods
+namespace TodoApi;
+
+public abstract class PaymentMethods{
+    public enum Type 
     {
-        SINPE = 1,
-        CASH = 2
+        CASH=0,
+        SINPE=1
     }
-    
+
+    public Type PaymentType { get; set; }
+
+    public PaymentMethods(PaymentMethods.Type paymentType)
+    {
+        PaymentType= paymentType;
+    }
+
+    public static PaymentMethods Find(PaymentMethods.Type type)
+    {
+        return null;
+    }
+}
+
+public sealed class Sinpe:PaymentMethods{
+    public Sinpe(): base(PaymentMethods.Type.SINPE)
+    {
+
+    }
+}
+
+public sealed class Cash:PaymentMethods{
+    public Cash(): base(PaymentMethods.Type.CASH)
+    {
+
+    }
 }

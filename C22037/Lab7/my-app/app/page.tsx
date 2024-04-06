@@ -2,29 +2,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@/public/styles.css";
 import { useState, useEffect } from "react";
+import { Carousel } from 'react-bootstrap';
 import Link from 'next/link';
-
-const Product = ({ product, handleAddToCart }) => {
-  const { id, name, description, imageURL, price } = product;
-
-  return (
-    <div className="col-sm-3">
-      <img src={imageURL} alt={name} style={{ width: '50%', height: '50%' }} />
-      <h3>{name}</h3>
-      <p>{description}</p>
-      <p>Precio: ${price}</p>
-      <button type="button" onClick={() => handleAddToCart(id)} className="Button">Add to Cart</button>
-    </div>
-  );
-};
-
-function rows(array, size) {
-  const row = [];
-  for (let i = 0; i < array.length; i += size) {
-    row.push(array.slice(i, i + size));
-  }
-  return row;
-}
 
 export default function Home() {
   const [count, setCount] = useState(0);
@@ -44,8 +23,6 @@ export default function Home() {
       }
     };
 
-    loadData();
-
     const storedCart = JSON.parse(localStorage.getItem('cart')) || {};
     if (storedCart.products) {
       setCount(Object.keys(storedCart.products).length);
@@ -54,8 +31,12 @@ export default function Home() {
     const initialCart = JSON.parse(localStorage.getItem('cart')) || {
       products: {},
     };
+
     localStorage.setItem('cart', JSON.stringify(initialCart));
+
+    loadData();
   }, []);
+
 
   const handleAddToCart = (productId) => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
@@ -69,6 +50,50 @@ export default function Home() {
       setCount(Object.keys(updatedCart.products).length);
     }
   };
+
+  const Product = ({ product }) => {
+    return (
+      <div className="col-sm-3">
+        <div className="Product">
+          <img src={product.imageURL} alt={product.name} style={{ width: '50%', height: '50%' }} />
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+          <p>Precio: ${product.price}</p>
+          <button onClick={() => handleAddToCart(product.id)} className="Button">Add to Cart</button>
+        </div>
+      </div>
+    );
+  };
+
+  const Carousel = ({ id }) => {
+    return (
+      <div id={id} className="carousel slide" data-bs-ride="carousel">
+        <div className="carousel-inner">
+          {productList.products.map(product => (
+            <div key={product.id} className={product.id === 1 ? "carousel-item active" : "carousel-item"}>
+              <img src={product.imageURL} className="d-block w-100" alt={product.name} />
+            </div>
+          ))}
+        </div>
+        <button className="carousel-control-prev" type="button" data-bs-target={`#${id}`} data-bs-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
+        </button>
+        <button className="carousel-control-next" type="button" data-bs-target={`#${id}`} data-bs-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </button>
+      </div>
+    );
+  }
+
+  function rows(array, size) {
+    const row = [];
+    for (let i = 0; i < array.length; i += size) {
+      row.push(array.slice(i, i + size));
+    }
+    return row;
+  }
 
   return (
     <div>
@@ -112,9 +137,10 @@ export default function Home() {
           <div key={index} className="body">
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.map(product => (
-                <Product key={product.id} product={product} handleAddToCart={handleAddToCart} />
+                <Product key={product.id} product={product} />
               ))}
             </div>
+            {productList && productList.products && <Carousel id="productCarousel" />}
           </div>
         ))}
       </div>
