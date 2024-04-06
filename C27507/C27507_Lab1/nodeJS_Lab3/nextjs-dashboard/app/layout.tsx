@@ -3,7 +3,8 @@
 import {useState} from 'react';
 import { number } from 'zod';
 import { ModalCart } from './modal_cart';
-import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
+import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage,verifyProductInCart,addProductInCart } from './page'; //precios totales - manejor LocalStorage
+import { verify } from 'crypto';
 
 
 export default function RootLayout({
@@ -27,7 +28,6 @@ export interface ProductItem {
 }
 
 export const product: ProductItem[] = [
-  // const product = [
   {
       id: 1,
       name: "Tablet Samsung",                
@@ -117,79 +117,70 @@ export interface CartShopItem {
   direction: string;
   payment: string;
   verify: boolean
+  //paymentMethods: PaymentMethods
 }
 
-interface ProductProps {
-  product: ProductItem;
-  numberOfItems: number;
-  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;
-  allProduct: ProductItem[];
-  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;
-  totalWithTax:number;
-  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
-  totalWithNoTax: number;
-  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
-  payment: string;
-  setPayment: React.Dispatch<React.SetStateAction<string>>;
-  direction: string;
-  setDirection: React.Dispatch<React.SetStateAction<string>>;
+
+enum PaymentMethods {
+  CASH = 1,
+  CREDIT_CARD = 2,
+  DEBIT_CARD = 3,
+  SINPE = 4  
+}
+
+interface PaymentMethod {
+  payment: PaymentMethods; // Usamos el enum PaymentMethods para definir los tipos de pago
   verify: boolean;
-  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const allPaymentMethods: PaymentMethod[] = [
+  {
+    payment: PaymentMethods.CASH,
+    verify: false
+  },
+  {
+    payment: PaymentMethods.CREDIT_CARD,
+    verify: true // Ejemplo de un método de pago que no necesita verificación
+  },
+  {
+    payment: PaymentMethods.DEBIT_CARD,
+    verify: true // Ejemplo de un método de pago que no necesita verificación
+  },
+  {
+    payment: PaymentMethods.SINPE,
+    verify: true // Ejemplo de un método de pago que no necesita verificación
+  }
+];
+
+
+
+//
+interface ProductProps {
+  product: ProductItem;  
   myCartInStorage: CartShopItem | null;
+  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
 }
 
 
 //Galeria de Productos
-export const Product: React.FC<ProductProps> = ({
-  product,
-  numberOfItems,
-  setNumberOfItems,
-  allProduct,
-  setAllProduct,
-  totalWithTax,
-  setTotalWithTax,
-  totalWithNoTax,
-  setTotalWithNoTax,
-  payment,
-  setPayment,
-  direction,
-  setDirection,
-  verify,
-  setVerify,    
-  myCartInStorage
-  }) => {
+export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCartInStorage}) => {
 
   const { id,name, imageUrl, price } = product;    
 
   const buyItem = () => {    
+    
     //como el objeto del carrito puede ser nulo, creamos una condicion para evitar estar haciendo
     //condiciones    
     if (myCartInStorage) {
 
-      //Actualizacion de los useState            
-      setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);
-      const newAllProduct = [...allProduct, product];
-      setAllProduct(newAllProduct);
-      const newTotalWithNoTax = totalPriceNoTax(newAllProduct);
-      const newTotalWithTax = totalPriceTax(newAllProduct);
-      setTotalWithNoTax(newTotalWithNoTax);
-      setTotalWithTax(newTotalWithTax);
-
-
-      //Actualizacion de los atributos del carrito
-        //lo clonamos para evitar malas asignaciones con el carrito original
-      const updatedCart = { ...myCartInStorage };      
-      updatedCart.allProduct = newAllProduct;      
-      updatedCart.subtotal = newTotalWithNoTax
-      updatedCart.total = newTotalWithTax;      
+      let indexInCart = verifyProductInCart(id,myCartInStorage.allProduct);      
+      console.log("Indice actual del ultimo producto",indexInCart)
+      addProductInCart(indexInCart,product,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
       
-      //sobbreescrimos el carrito clonado sobre el original
-      setCartShopStorage("A", updatedCart);
-                
     } else {
-        console.log("El carro no existe");
+      console.log("El carro no existe");
     }
-};
+  };  
     
   return (
       <div className="product col-sm-4 row">
@@ -202,45 +193,13 @@ export const Product: React.FC<ProductProps> = ({
   );
 }
 
-
-
-interface CartShopProps {
-  numberOfItems: number;
-  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;    
-  allProduct: ProductItem[];
-  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;  
-  
-  totalWithTax:number;
-  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
-  totalWithNoTax: number;
-  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;  
-  payment: string;
-  setPayment: React.Dispatch<React.SetStateAction<string>>;
-  direction: string;
-  setDirection: React.Dispatch<React.SetStateAction<string>>;
-  verify: boolean;
-  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+interface CartShopProps {    
   myCartInStorage: CartShopItem | null;
+  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
 }
 
 //Carrito
-export const CartShop: React.FC<CartShopProps> = ({
-    numberOfItems,
-    setNumberOfItems,
-    allProduct,
-    setAllProduct,
-    totalWithTax,
-    setTotalWithTax,
-    totalWithNoTax,
-    setTotalWithNoTax,
-    payment,
-    setPayment,
-    direction,
-    setDirection,
-    verify,
-    setVerify,    
-    myCartInStorage
-  }) => {
+export const CartShop: React.FC<CartShopProps> = ({myCartInStorage,setMyCartInStorage}) => {
 
   //States del ModalCart
   const [show, setShow] = useState(false);
@@ -252,7 +211,7 @@ export const CartShop: React.FC<CartShopProps> = ({
       <a onClick={handleShow}>
           <div className="cart-info">
               <i className="fas fa-shopping-cart"></i>                    
-              <div className="notify-cart">{numberOfItems}</div>
+              <div className="notify-cart">{myCartInStorage?.allProduct.length}</div>
           </div>                    
           <p className="col-sm-6">Mi carrito</p>                                                                   
           
@@ -262,75 +221,12 @@ export const CartShop: React.FC<CartShopProps> = ({
       Le pasamos los useState al modal principal para mantener la referencia de todos los datos, en caso de usarlos
       */}
       <ModalCart 
-        show={show} 
+        show={show}
         handleClose={handleClose}
-        setNumberOfItems={setNumberOfItems}
-        allProduct={allProduct}
-        setAllProduct={setAllProduct}
-        totalWithTax={totalWithTax}
-        setTotalWithTax={setTotalWithTax}
-        totalWithNoTax={totalWithNoTax}
-        setTotalWithNoTax={setTotalWithNoTax}
-        payment={payment}
-        setPayment={setPayment}
-        direction={direction}
-        setDirection={setDirection}
-        verify={verify}
-        setVerify={setVerify}
         myCartInStorage={myCartInStorage}
+        setMyCartInStorage={setMyCartInStorage}
+
       />                                                    
     </div>           
-  );
-}
-
-
-export const StaticCarousel = () => {
-  return (
-      
-      <div id="carouselExampleCaptions" className="carousel slide">
-          <div className="cover"></div>
-          <div className="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-          </div>
-          <div className="carousel-inner">
-          <div className="carousel-item active">
-              <div className="cover_img"></div>
-              <img src="img/mouse.png" className="d-block w-100" alt="Mouse" />
-              <div className="carousel-caption d-none d-md-block">
-              <h5>First slide label</h5>
-              <p>Some representative placeholder content for the first slide.</p>
-              <div className="cover_info"></div>
-              </div>
-          </div>
-          <div className="carousel-item">
-              <img src="img/teclado.jpg" className="d-block w-100" alt="Teclado" />
-              <div className="cover_img"></div>
-              <div className="carousel-caption d-none d-md-block">
-              <h5>Second slide label</h5>
-              <p>Some representative placeholder content for the second slide.</p>
-              <div className="cover_info"></div>
-              </div>
-          </div>
-          <div className="carousel-item">
-              <img src="img/tablet_samsung.jpg" className="d-block w-100" alt="Tablet Samsung" />
-              <div className="cover_img"></div>
-              <div className="carousel-caption d-none d-md-block">
-              <h5>Third slide label</h5>
-              <p>Some representative placeholder content for the third slide.</p>
-              <div className="cover_info"></div>
-              </div>
-          </div>
-          </div>
-          <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-          </button>
-          <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-          </button>
-      </div>                            
   );
 }

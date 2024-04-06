@@ -4,7 +4,8 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
-import { StaticCarousel, Product, product, CartShop } from './layout';
+import { StaticCarousel} from './carousel';
+import {Product, product, CartShop } from './layout';
 import { ProductItem,CartShopItem  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
@@ -16,20 +17,20 @@ import { mock } from 'node:test';
 export const totalPriceNoTax = (allProduct: { price: number; quantity: number; }[]) => {
     let total = 0;
     allProduct.map((item) => {                    
-        total += (item.price);
+        total += ( item.price * item.quantity );
     });
     return total;
 }
 export const totalPriceTax = (allProduct: { price: number; quantity: number; }[]) => {
     let total = 0;
     allProduct.map((item) => {                                
-        total += ((item.price * 0.13) + (item.price));
+        total += ((item.price * 0.13 + item.price) * item.quantity);
     });
     return total;
 }
 
 //Metodos del LocalStorage
-    //Guardamos algo dentro del storage (si es nulo, no se hace nada)
+    //Crear un nuevo carrito
 export const setCartShopStorage = (key: string, mockup: CartShopItem | null) => {
     if(mockup !== null){
         //como no es nulo, se guarda en el localStorage
@@ -60,22 +61,69 @@ export const getCartShopStorage = (key: string): CartShopItem | null => {
     }
 }
 
+    //verficar si un producto ha sido agregado o no
+export const verifyProductInCart = (id:number, allProductsInCart: ProductItem[]) => {
+
+    for (let i = 0; i < allProductsInCart.length; i++) {
+        let elementID = allProductsInCart[i].id;
+        if(elementID === id){
+            //rompemos el bucle y devolvemos la posicion
+            return i;
+        }        
+    }
+    //si no lo encuentra
+    return -1;
+}
+
+    //agregar un producto al carrito (dependiendo si ya ha sido agregado antes)
+export const addProductInCart = (index: number, product: ProductItem, myCartInStorage: CartShopItem, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>, setCartShopStorage: (key: string, value: any) => void) => {
+    
+    //Una clonacion del carrito para sobreescribir de golpe en el antiguo y evitar
+    //malas actualziaciones por la asincronia                    
+    const cloneCart = { ...myCartInStorage };
+    if(index === -1){        
+        //Spread operator, aqui creamos una copia del producto y el resto del parametro son modificaciones a ese mismo producto
+        cloneCart.allProduct.push({...product,quantity:1});                
+
+    }else{
+        //se aumenta en 1 la cantidad de ese producto
+        cloneCart.allProduct[index].quantity += 1;        
+    }
+    //Se calculan los totales
+    cloneCart.subtotal = totalPriceNoTax(cloneCart.allProduct);
+    cloneCart.total = totalPriceTax(cloneCart.allProduct);        
+
+    // actualizamos el estado del carrito
+    setMyCartInStorage(cloneCart);
+    //sobbreescrimos el carrito clonado sobre el original
+    setCartShopStorage("A", cloneCart);          
+}
+
+ //Vaciar lista de productos - Local y la del Carrito
+export const deleteAllProduct = (myCartInStorage: CartShopItem | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
+    if(myCartInStorage !== null){        
+        //setteamos todo el carrito
+        const newMockup: CartShopItem = {
+            allProduct: [],
+            subtotal: 0,
+            tax: 0.13,
+            total: 0,
+            direction: '',
+            payment: '',
+            verify: false,
+        };   
+        //Limpiamos el storage y el estado actual
+        setCartShopStorage("A",newMockup)         
+        setMyCartInStorage(newMockup);
+    }            
+}
+
 export default function Page() { 
     //Como El localstorage puede estar vacio o haberse borrado la key por muchas razones, creamos uno null. Luego lamamos
     //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
     //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
-
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
-               
-    //El carrito puede venir como nulo hacemos un condicional  
-    const [numberOfItems, setNumberOfItems] = useState<number>(myCartInStorage ? myCartInStorage.allProduct.length : 0);    
-    const [allProduct, setAllProduct] = useState<ProductItem[]>(myCartInStorage ? myCartInStorage.allProduct : []);    
-    const [totalWithTax, setTotalWithTax] = useState<number>(myCartInStorage ? myCartInStorage.total : 0);  
-    const [totalWithNoTax, setTotalWithNoTax] = useState<number>(myCartInStorage ? myCartInStorage.subtotal : 0); 
-    const [payment, setPayment] = useState<string>(myCartInStorage ? myCartInStorage.payment : ""); 
-    const [direction, setDirection] = useState<string>(myCartInStorage ? myCartInStorage.direction : ""); 
-    const [verify, setVerify] = useState<boolean>(myCartInStorage ? myCartInStorage.verify : false); 
-                          
+                                             
   return (
     <main className="flex min-h-screen flex-col p-6">
 
@@ -88,22 +136,9 @@ export default function Page() {
                     <i className="fas fa-search"></i>                                  
                 </div>
                 
-                <CartShop 
-                    numberOfItems={numberOfItems} 
-                    setNumberOfItems={setNumberOfItems}                     
-                    allProduct={allProduct}
-                    setAllProduct={setAllProduct}
-                    totalWithTax={totalWithTax}
-                    setTotalWithTax={setTotalWithTax}
-                    totalWithNoTax={totalWithNoTax}
-                    setTotalWithNoTax={setTotalWithNoTax}
-                    payment={payment}
-                    setPayment={setPayment}
-                    direction={direction}
-                    setDirection={setDirection}
-                    verify={verify}
-                    setVerify={setVerify}
-                    myCartInStorage={myCartInStorage}
+                <CartShop                     
+                    myCartInStorage={myCartInStorage}  
+                    setMyCartInStorage={setMyCartInStorage}                             
                 />
             </div>            
       </div>  
@@ -126,22 +161,9 @@ export default function Page() {
                       return (
                         <Product 
                             key={product.id} 
-                            product={product}
-                            numberOfItems={numberOfItems} 
-                            setNumberOfItems={setNumberOfItems} 
-                            allProduct={allProduct}
-                            setAllProduct={setAllProduct}
-                            totalWithTax={totalWithTax}
-                            setTotalWithTax={setTotalWithTax}
-                            totalWithNoTax={totalWithNoTax}
-                            setTotalWithNoTax={setTotalWithNoTax}
-                            myCartInStorage={myCartInStorage}
-                            payment={payment}
-                            setPayment={setPayment}
-                            direction={direction}
-                            setDirection={setDirection}
-                            verify={verify}
-                            setVerify={setVerify}                            
+                            product={product}                        
+                            myCartInStorage={myCartInStorage}                                    
+                            setMyCartInStorage={setMyCartInStorage}           
                         />                        
                       );
                   }

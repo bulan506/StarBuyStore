@@ -1,5 +1,5 @@
 // import React from "react"
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -12,34 +12,30 @@ import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalDirectionProps {    
     show: boolean;
-    onHide: () => void;
-    allProduct: ProductItem[];
-    //recibir todos los productos actuales del carrito
-    setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;         
-    totalWithTax:number;
-    setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
-    totalWithNoTax: number;
-    setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
-    payment: string;
-    setPayment: React.Dispatch<React.SetStateAction<string>>;
-    direction: string;
-    setDirection: React.Dispatch<React.SetStateAction<string>>;
-    verify: boolean;
-    setVerify: React.Dispatch<React.SetStateAction<boolean>>;
+    onHide: () => void;            
     myCartInStorage: CartShopItem | null;
+    setMyCartStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
   }
 
 export const ModalDirection: React.FC<ModalDirectionProps> = ({
-    show,onHide,allProduct,setAllProduct,totalWithTax,setTotalWithTax,totalWithNoTax,setTotalWithNoTax,
-    payment,setPayment,direction,setDirection,verify,setVerify,myCartInStorage
+    show,onHide,myCartInStorage,setMyCartStorage
 }) => {  
 
-    //Estados de los campos del formulario
-    const [finish,setFinish] = useState(false); //para activar o desactivar el boton "Finalizar Compra"    
-    const [textAreaDataDirection, setTextAreaDataDirection] = useState(direction);//para activar o desactivar el boton segun haya texto o no en el textarea direction
-    const [typePayment, setTypePayment] = useState(payment);//para activar o desactivar el boton segun haya texto o no en el textarea
-    const [textAreaSinpe, setTextAreaSinpe] = useState(""); //campo del codigo del sinpe
-    const [adminVerify,setAdminVerify] = useState(verify); //campo de verificacion
+    //Estados de los campos del formulario    
+    const [finish, setFinish] = useState(false);//para activar o desactivar el boton "Finalizar Compra"    
+    const [textAreaDataDirection, setTextAreaDataDirection] = useState("");//para activar o desactivar el boton "Finalizar Compra"    
+    const [typePayment, setTypePayment] = useState("");//para activar o desactivar el boton segun haya texto o no en el textarea
+    const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe
+    const [adminVerify, setAdminVerify] = useState(false);//campo de verificacion
+
+    //Cada vez que alguno de los campos del formulario cambia, que se aguarde en el atributo correspondiente del carrito
+    useEffect(() => {
+        if (myCartInStorage) {
+            setTextAreaDataDirection(myCartInStorage.direction || "");
+            setTypePayment(myCartInStorage.payment || "");
+            setAdminVerify(myCartInStorage.verify || false);
+        }
+    }, [myCartInStorage]);
 
     //Estados  para los alert de Boostrap
     const [showAlert, setShowAlert] = useState(false);
@@ -47,7 +43,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     const [alertTitle,setAlertTitle] = useState("");
     const [alertType,setAlertType] = useState("");
 
-    // //funciones para gestionar los alert
+    //funciones para gestionar los alert
     function closeAlertShop(): void {
         setShowAlert(false);     
     }
