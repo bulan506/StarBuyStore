@@ -56,7 +56,6 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const result = await getData();
-        console.log(result);
       } catch (error) {
         throw new Error('Error fetching data:' + error)
       }
