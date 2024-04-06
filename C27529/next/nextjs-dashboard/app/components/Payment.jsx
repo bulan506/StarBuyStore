@@ -46,7 +46,7 @@ export const Payment = () => {
             {page === 0 ? (
                 <>
                     <p>Efectivo</p>
-                    <p>Numero de transacción: {randomNumber}</p>
+                    <p>Número de transacción: {randomNumber}</p>
                     <div className="d-flex justify-content-center">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Cargando...</span>
@@ -59,7 +59,7 @@ export const Payment = () => {
             ) : (
                 <>
                     <p>Sinpe</p>
-                    <p>Numero de transacción: {randomNumber}</p>
+                    <p>Número de transacción: {randomNumber}</p>
                     <div className="d-flex justify-content-center">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Cargando...</span>
