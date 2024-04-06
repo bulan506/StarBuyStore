@@ -1,7 +1,7 @@
 'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
-import NavBar from "./Navbar/page";
+import NavBar from "./navbar/page";
 import Cart from './Cart/page';
 
 export default function Home() {
@@ -41,6 +41,29 @@ export default function Home() {
       necesitaVerificacion: false
     });
   }
+
+  async function getData() {
+    const res = await fetch('https://localhost:7151/api/Store')
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getData();
+        console.log(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
