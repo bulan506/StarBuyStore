@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-const metodoPago = () => {
+const MetodoPago = () => {
     const [showModal, setShowModal] = useState(false);
-    const [formaDePago, setFormaDePago] = useState('');
-    const [accepted, setAccepted] =useState(false);
+    const [formaDePago, setFormaDePago] = useState(0); // 0 para efectivo, 1 para SinpeMóvil
+    const [accepted, setAccepted] = useState(false);
     const memoryStore = JSON.parse(localStorage.getItem('tienda'));
-    let numOrden='';
+    let numOrden = '';
 
     const generarIDCompra = () => {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -13,12 +13,12 @@ const metodoPago = () => {
         for (let i = 0; i < 10; i++) {
             autoId += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        numOrden=autoId;
+        numOrden = autoId;
         return autoId;
     };
 
     const handleAceptar = () => {
-        if (formaDePago.trim() === '') {
+        if (formaDePago === '') {
             setShowModal(true);
         } else {
             const newID = generarIDCompra();
@@ -68,14 +68,15 @@ const metodoPago = () => {
     const closeModal = () => {
         setShowModal(false);
     };
+    
     const handleMetodoChange = (metodoDePagoSelec) => {
-        setFormaDePago(metodoDePagoSelec.target.value);
+        setFormaDePago(metodoDePagoSelec.target.value === 'pagoEfectivo' ? 0 : 1);
     };
 
     return (
         accepted ? (
             <div>
-                {formaDePago === 'pagoEfectivo' ? pagoE() : formaDePago === 'pagoSinpe' ? pagoS() : <div className="cart-box"><h1>Ha ocurrido un error</h1></div>}
+                {formaDePago === 0 ? pagoE() : formaDePago === 1 ? pagoS() : <div className="cart-box"><h1>Ha ocurrido un error</h1></div>}
             </div>
         ) : (
 
@@ -85,11 +86,11 @@ const metodoPago = () => {
                     <div className="centro">
                         <h1>Métodos de pago</h1>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" id="inlineCheckbox1" value="pagoEfectivo" onChange={handleMetodoChange} checked={formaDePago === 'pagoEfectivo'} />
+                            <input className="form-check-input" type="radio" id="inlineCheckbox1" value="pagoEfectivo" onChange={handleMetodoChange} checked={formaDePago === 0} required />
                             <label className="form-check-label" htmlFor="inlineCheckbox1">En Efectivo</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" id="inlineCheckbox2" value="pagoSinpe" onChange={handleMetodoChange} checked={formaDePago === 'pagoSinpe'} />
+                            <input className="form-check-input" type="radio" id="inlineCheckbox2" value="pagoSinpe" onChange={handleMetodoChange} checked={formaDePago === 1} required />
                             <label className="form-check-label" htmlFor="inlineCheckbox2">SinpeMóvil</label>
                         </div>
                         <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
@@ -123,5 +124,4 @@ const ModalSinMetodoPago = ({ closeModal }) => {
     );
 };
 
-
-export default metodoPago;
+export default MetodoPago;

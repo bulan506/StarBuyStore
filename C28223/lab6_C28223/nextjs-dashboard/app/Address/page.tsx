@@ -27,7 +27,7 @@ const AddAddress = () => {
                     <form onSubmit={enviarForm}>
                         <div className="form-group">
                             <label htmlFor="direccion">Dirección exacta:</label>
-                            <input type="text" className="form-control" id="direccion" placeholder="Ingrese su dirección exacta" onChange={(e) => (direccionDelEnvio = e.target.value)} required />
+                            <input type="text" className="form-control" id="direccion" placeholder="Ingrese su dirección exacta" onChange={(e) => (direccionDelEnvio = e.target.value)} minLength={5}required />
                         </div>
                         <button type="submit" className="btn btn-primary">
                             Continuar
