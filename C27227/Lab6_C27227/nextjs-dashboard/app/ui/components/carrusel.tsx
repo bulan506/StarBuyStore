@@ -1,5 +1,6 @@
 
 import React from 'react';
+const CarouselBanner = ({banner}) =>  {
 
 const CarouselBanner = ({banner}) =>  {
 
@@ -8,6 +9,8 @@ const CarouselBanner = ({banner}) =>  {
     className = banner.id  === 1 ? className + ' active ' : className;
     return(
         <div className={className}>
+            <img src={imageUrl} className="d-block w-90" alt={name}/>
+
             <img src={imageUrl} className="d-block w-100" alt={name}/>
         </div>
     );
