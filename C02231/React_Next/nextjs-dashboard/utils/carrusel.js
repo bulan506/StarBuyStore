@@ -1,4 +1,4 @@
-const carrusel = [
+/*const carrusel = [
     {
       id: 0,
       name: 'Bookmarks',
@@ -19,4 +19,4 @@ const carrusel = [
     }
   ];
 
-  export default carrusel
+  export default carrusel*/
