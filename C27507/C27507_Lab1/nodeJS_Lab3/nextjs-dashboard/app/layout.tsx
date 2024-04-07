@@ -19,29 +19,6 @@ export default function RootLayout({
   );
 }
 
-
-//Interfaces para serializar las json de la API
-export interface StoreAPI{
- products: ProductAPI[],
- taxPorcentage: number
-}
-export interface ProductAPI {
-  uuid: string;
-  name: string;
-  imageUrl: string;
-  price: number;
-  quantity: number;  
-  description: string  
-}
-
-export interface ProductItem {
-  id: number;
-  name: string;
-  imageUrl: string;
-  quantity: number;
-  price: number;
-}
-
 // export const product: ProductItem[] = [
 //   {
 //       id: 1,
@@ -124,6 +101,49 @@ export interface ProductItem {
 
 // ];
 
+export interface ProductItem {
+  id: number;
+  name: string;
+  imageUrl: string;
+  quantity: number;
+  price: number;
+}
+
+
+//Interfaces para serializar las json de la API
+export interface StoreAPI{
+ products: ProductAPI[],
+ taxPorcentage: number
+}
+export interface ProductAPI {
+  uuid: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+  quantity: number;  
+  description: string  
+}
+
+export interface CartShopAPI {
+  allProduct: ProductAPI[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  direction: string; 
+  paymentMethod: PaymentMethod
+}
+// export interface PaymentMethodAPI {
+//   payment: PaymentMethodNumber;
+//   verify: boolean;
+// }
+
+// export enum PaymentMethodNumberAPI {
+//   CASH = 1,
+//   CREDIT_CARD = 2,
+//   DEBIT_CARD = 3,
+//   SINPE = 4
+// }
+
 export interface CartShopItem {
   allProduct: ProductItem[];
   subtotal: number;
@@ -168,29 +188,32 @@ export const PaymentMethods: PaymentMethod[] = [
 
 interface ProductProps {
   product: ProductAPI;  
-  myCartInStorage: CartShopItem | null;
-  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
+  myCartInStorage: CartShopAPI | null;
+  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
 }
 
 
 //Galeria de Productos
 export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCartInStorage}) => {
 
+  //Antigua forma con ProductItem
   //const { uuid,name, imageUrl, price,quantity } = products;    
+
+  let uuid = product.uuid;
 
   const buyItem = () => {    
     
     //como el objeto del carrito puede ser nulo, creamos una condicion para evitar estar haciendo
     //condiciones    
-    // if (myCartInStorage) {
+    if (myCartInStorage) {
 
-    //   let indexInCart = verifyProductInCart(id,myCartInStorage.allProduct);      
-    //   console.log("Indice actual del ultimo producto",indexInCart)
-    //   addProductInCart(indexInCart,product,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
+      let indexInCart = verifyProductInCart(uuid,myCartInStorage.allProduct);      
+      console.log("Indice actual del ultimo producto",indexInCart)
+      addProductInCart(indexInCart,product,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
       
-    // } else {
-    //   console.log("El carro no existe");
-    // }
+    } else {
+      console.log("El carro no existe");
+    }
   };  
     
   return (
@@ -206,8 +229,8 @@ export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCa
 }
 
 interface CartShopProps {    
-  myCartInStorage: CartShopItem | null;
-  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
+  myCartInStorage: CartShopAPI| null;
+  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
 }
 
 //Carrito
@@ -237,7 +260,6 @@ export const CartShop: React.FC<CartShopProps> = ({myCartInStorage,setMyCartInSt
         handleClose={handleClose}
         myCartInStorage={myCartInStorage}
         setMyCartInStorage={setMyCartInStorage}
-
       />                                                    
     </div>           
   );

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { CartShopItem, ProductItem,PaymentMethods,PaymentMethodNumber} from './layout';
+import { CartShopItem,CartShopAPI, ProductItem,ProductAPI,PaymentMethods,PaymentMethodNumber} from './layout';
 import { AlertShop } from './generic_overlay';
 import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
@@ -13,8 +13,8 @@ import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } 
 interface ModalDirectionProps {    
     show: boolean;
     onHide: () => void;            
-    myCartInStorage: CartShopItem | null;
-    setMyCartStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
+    myCartInStorage: CartShopAPI | null;
+    setMyCartStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
   }
 
 export const ModalDirection: React.FC<ModalDirectionProps> = ({

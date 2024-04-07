@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import { StaticCarousel} from './carousel';
-import {Product,ProductAPI, CartShop } from './layout';
+import {Product,ProductAPI,CartShopAPI, CartShop } from './layout';
 import { ProductItem,CartShopItem,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
@@ -31,7 +31,7 @@ export const totalPriceTax = (allProduct: { price: number; quantity: number; }[]
 
 //Metodos del LocalStorage
     //Crear un nuevo carrito
-export const setCartShopStorage = (key: string, mockup: CartShopItem | null) => {
+export const setCartShopStorage = (key: string, mockup: CartShopAPI | null) => {
     if(mockup !== null){
         //como no es nulo, se guarda en el localStorage
         const cartShopData = JSON.stringify(mockup);
@@ -40,39 +40,39 @@ export const setCartShopStorage = (key: string, mockup: CartShopItem | null) => 
 }
 
     //Leemos lo que esta dentro del carrito o sea cartShopItem    
-export const getCartShopStorage = (key: string): CartShopItem | null => {
+export const getCartShopStorage = (key: string): CartShopAPI | null => {
         
     const cartShopData = localStorage.getItem(key);
     if(cartShopData !== null){
-        return JSON.parse(cartShopData) as CartShopItem;        
-    }else{
-
-        const defaultPaymentMethod: PaymentMethod = {
-            payment: PaymentMethodNumber.CASH,
-            verify: false
-        };
-
-        let cart: CartShopItem = {  
-            allProduct: [],
-            subtotal: 0,
-            tax: 0.13,
-            total: 0,
-            direction: "",            
-            paymentMethod: defaultPaymentMethod 
-
-        };
-        //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
-        setCartShopStorage("A",cart);
-        return cart;
+        return JSON.parse(cartShopData) as CartShopAPI;        
     }
+
+    const defaultPaymentMethod: PaymentMethod = {
+        payment: PaymentMethodNumber.CASH,
+        verify: false
+    };
+
+    let cart: CartShopAPI = {  
+        allProduct: [],
+        subtotal: 0,
+        tax: 0.13,
+        total: 0,
+        direction: "",            
+        paymentMethod: defaultPaymentMethod 
+
+    };
+    //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
+    setCartShopStorage("A",cart);
+    return cart;    
 }
 
     //verficar si un producto ha sido agregado o no
-export const verifyProductInCart = (id:number, allProductsInCart: ProductItem[]) => {
+export const verifyProductInCart = (id:string, allProductsInCart: ProductAPI[]) => {
 
     for (let i = 0; i < allProductsInCart.length; i++) {
-        let elementID = allProductsInCart[i].id;
-        if(elementID === id){
+        let elementID = allProductsInCart[i].uuid;
+        let isSameID = elementID.localeCompare(id) === 0
+        if( isSameID ){
             //rompemos el bucle y devolvemos la posicion
             return i;
         }        
@@ -82,7 +82,7 @@ export const verifyProductInCart = (id:number, allProductsInCart: ProductItem[])
 }
 
     //agregar un producto al carrito (dependiendo si ya ha sido agregado antes)
-export const addProductInCart = (index: number, product: ProductItem, myCartInStorage: CartShopItem, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>, setCartShopStorage: (key: string, value: any) => void) => {
+export const addProductInCart = (index: number, product: ProductAPI, myCartInStorage: CartShopAPI, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {
     
     //Una clonacion del carrito para sobreescribir de golpe en el antiguo y evitar
     //malas actualziaciones por la asincronia                    
@@ -106,7 +106,7 @@ export const addProductInCart = (index: number, product: ProductItem, myCartInSt
 }
 
  //Vaciar lista de productos - Local y la del Carrito
-export const deleteAllProduct = (myCartInStorage: CartShopItem | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
+export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
     if(myCartInStorage !== null){        
         //setteamos todo el carrito
 
@@ -116,7 +116,7 @@ export const deleteAllProduct = (myCartInStorage: CartShopItem | null, setMyCart
             verify: false // Establecer la verificación a falso o verdadero según corresponda
         };
 
-        const newMockup: CartShopItem = {
+        const newMockup: CartShopAPI = {
             allProduct: [],
             subtotal: 0,
             tax: 0.13,
@@ -134,7 +134,7 @@ export default function Page() {
     //Como El localstorage puede estar vacio o haberse borrado la key por muchas razones, creamos uno null. Luego lamamos
     //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
     //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
-    const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
+    const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);
     //const [products, setProduct] = useState<ProductAPI[]>([]);
     //cargamos los datos desde la API (StoreController por Metodo Get)

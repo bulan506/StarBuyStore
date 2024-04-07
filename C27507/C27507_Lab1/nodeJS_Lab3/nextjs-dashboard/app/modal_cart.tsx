@@ -3,15 +3,15 @@ import {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ModalDirection } from './modal_direction';
-import { CartShopItem, ProductItem } from './layout';
+import { CartShopItem, CartShopAPI, ProductItem,ProductAPI } from './layout';
 import { totalPriceNoTax, totalPriceTax,deleteAllProduct,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalCartProps {
     show: boolean;
     handleClose: () => void;    
-    myCartInStorage: CartShopItem | null;    
-    setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopItem | null>>;
+    myCartInStorage: CartShopAPI | null;    
+    setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
 
 }
   
@@ -43,7 +43,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                         {myCartInStorage && myCartInStorage.allProduct.map((productItem, index) => (
                             //Tecnica rapida para evitar colocar otro div
                             <>                    
-                                <div key={productItem.id}>
+                                <div key={productItem.uuid}>
                                     <img src={productItem.imageUrl} alt="" />
                                     <p>{productItem.name}</p>
                                     <p><span>Cantidad:</span> {productItem.quantity}</p>
