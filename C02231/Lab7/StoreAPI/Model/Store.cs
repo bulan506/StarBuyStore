@@ -2,11 +2,13 @@ namespace StoreAPI;
 public sealed class Store
 {
     public List<Product> Products { get; private set; }
+    public List<Product> ProductsCarrusel { get; private set; }
     public int TaxPercentage { get; private set; }
 
-    private Store( List<Product> products, int TaxPercentage )
+    private Store( List<Product> products, List<Product> productsCarrusel, int TaxPercentage )
     {
         this.Products = products;
+        this.ProductsCarrusel = productsCarrusel;
         this.TaxPercentage = TaxPercentage;
     }
 
@@ -112,8 +114,34 @@ public sealed class Store
                 Id= 0
             });
 
+        var productsCarrusel = new List<Product>();
 
-        Store.Instance = new Store(products, 13);
+           productsCarrusel.Add(new Product {
+                Name = "Bookmarks",
+                Author = "Perfect for not to lose where your story goes",
+                ImgUrl = "1.png",
+                Price = 9500,
+                Id= 0
+            });
+
+            productsCarrusel.Add(new Product {
+                Name = "Pins",
+                Author = "Adding a touch of literary flair to any outfit or accessory",
+                ImgUrl = "2.png",
+                Price = 9500,
+                Id= 1
+            });
+
+            productsCarrusel.Add(new Product    {
+                Name = "Necklace",
+                Author = "A beautifull Necklace for all day wear",
+                ImgUrl = "3.png",
+                Price = 9500,
+                Id= 2
+            });
+
+            Store.Instance = new Store(products,productsCarrusel, 13);
+
     }
 
  /*   public Sale Purchase (Cart cart)

@@ -2,13 +2,12 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-//import products from '../utils/product'
-import carrusel from '../utils/carrusel'
 
 
 export default function Home() {
 
   const [storeProducts, setStoreProducts] = useState([]);
+  const [carrusel, setCarrusel] = useState([]);
   const loadData = async () => {
     try {
       const response = await fetch('http://localhost:5207/api/Store');
@@ -18,6 +17,7 @@ export default function Home() {
       const data = await response.json();
       console.log(data);
       setStoreProducts(data);
+      setCarrusel(data);
     } catch (error) {
        throw new Error('Failed to fetch data');
     } 
@@ -100,8 +100,8 @@ export default function Home() {
       <div className='container'>
         <h2 className='text-left mt-5 mb-5'>List of Books</h2>
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {storeProducts && storeProducts.products &&  storeProducts.products.map(carro => (
-            <Products key={carro.id} product={carro} handleAddToCart={handleAddToCart} />
+          {storeProducts && storeProducts.products &&  storeProducts.products.map(item => (
+            <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
           ))}
           <CarruselComponent carrusel={carrusel} />
         </div>
@@ -146,11 +146,11 @@ const CarruselComponent = ({ carrusel }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
-    setCurrentIndex(prevIndex => prevIndex === 0 ? carrusel.length - 1 : prevIndex - 1);
+    setCurrentIndex(prevIndex => prevIndex === 0 ? carrusel.productsCarrusel.length - 1 : prevIndex - 1);
   };
 
   const handleNext = () => {
-    setCurrentIndex(prevIndex => prevIndex === carrusel.length - 1 ? 0 : prevIndex + 1);
+    setCurrentIndex(prevIndex => prevIndex === carrusel.productsCarrusel.length - 1 ? 0 : prevIndex + 1);
   };
 
 
@@ -162,7 +162,7 @@ const CarruselComponent = ({ carrusel }) => {
     <section style={{ margin: '50px' }}>
       <div id="carrouselReact" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <ol className="carousel-indicators">
-          {carrusel.map((carrusel, index) => (
+          {carrusel && carrusel.productsCarrusel && carrusel.productsCarrusel.map((carruselItem, index) => (
             <button
               key={index}
               type="button"
@@ -174,16 +174,18 @@ const CarruselComponent = ({ carrusel }) => {
             ></button>
           ))}
         </ol>
+        
         <div className="carousel-inner">
-          {carrusel.map((carrusel, index) => (
+          {carrusel && carrusel.productsCarrusel && carrusel.productsCarrusel.map((carruselItem, index) => (
             <div
               key={index}
               className={`carousel-item ${index === currentIndex ? "active" : ""}`}
             >
-              <img className="d-block w-100" src={carrusel.imgurl} width="100%" alt={carrusel.name} />
+              <img className="d-block w-100" src={carruselItem.imgUrl} width="100%" alt={carruselItem.name} />
               <div className="carousel-caption d-none d-md-block" style={{ color: 'black' }}>
-                <h5>{carrusel.name}</h5>
-                <p>{carrusel.description}</p>
+                <h5>{carruselItem.name}</h5>
+                <p>{carruselItem.author}</p>
+                <p>{carruselItem.price}</p>
               </div>
             </div>
           ))}
