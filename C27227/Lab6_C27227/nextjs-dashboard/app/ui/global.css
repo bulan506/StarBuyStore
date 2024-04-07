@@ -23,6 +23,12 @@ input[type='number']::-webkit-outer-spin-button {
 .carousel-item img {
   max-height: 1000px; 
   object-fit: cover; 
+  height: 400px; /* Altura deseada para cada slide */
+}
+
+.carousel-item img {
+  max-height: 800px; 
+  object-fit: cover; /* Ajustar la imagen para que cubra todo el espacio */
 }
 
 .product {

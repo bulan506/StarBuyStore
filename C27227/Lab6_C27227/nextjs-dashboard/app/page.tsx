@@ -54,6 +54,15 @@ const Page = () => {
     const currentProduct = productList.products[currentProductIndex];
     const isPresent = tienda.products.some(product => product.id === currentProduct.id);
     
+  const [show, set_show] = useState(true);
+  const [warning, setWarning] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("tienda", JSON.stringify(tienda));
+  }, [tienda]);
+
+  const handleClick = (newProduct) => {
+    const isPresent = tienda.products.some(product => product.id === newProduct.id);
     if (isPresent) {
       setWarning(true);
       setTimeout(() => {
@@ -106,6 +115,27 @@ const Page = () => {
           © 2024: Derechos reservados para Kendall Sánchez
         </div>
       </footer>   
+    const newProd = [...tienda.products, newProduct];
+    setTienda({
+    ...tienda,
+    products: newProd
+});
+  };
+
+  return (
+    
+    <div>
+      
+      <Navbar size={tienda.products.length} setShow={set_show} />
+      {
+			warning && <div className='alert'>El producto ya se encuentra en el carrito</div>
+		  }
+      {show ? <Products_Store handleClick={handleClick} /> : <Cart_Store />}
+      <footer className="bg-dark text-white text-center text-lg-start d-flex justify-content-center align-items-center">
+        <div className="row row-cols-4">
+            © 2024: Derechos reservados para Kendall Sánchez
+        </div>
+    </footer>   
     </div>
   );
 };

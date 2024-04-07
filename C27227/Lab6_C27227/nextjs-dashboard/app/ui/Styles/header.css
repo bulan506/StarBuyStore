@@ -75,6 +75,7 @@
     left: 30px;
     cursor: pointer
 }
+
 .AddFromCarousel {
   display: flex; /* Usa flexbox */
   justify-content: center; /* Centra horizontalmente */

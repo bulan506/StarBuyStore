@@ -15,6 +15,32 @@ const PaymentMethods = ({ methods }) => {
     setpaymentmethod(event.target.value);
     const newPurchaseNumber = Math.floor(Math.random() * 1000000);
     setPurchaseNumber(newPurchaseNumber);
+const PaymentMethods = () => {
+
+  const tiendaEnLocalStorage = localStorage.getItem('tienda');
+  const datosTienda = JSON.parse(tiendaEnLocalStorage);  
+
+  const [purchaseNumber, setPurchaseNumber] = useState(null);
+  const [paymentCode, setPaymentCode] = useState('');
+  const [confirmationPurchase, setConfirmationPurchase] = useState(false);
+  const [warning, setWarning] = useState(false);
+
+  const handleMethodChange = (event) => {
+    const newPurchaseNumber = Math.floor(Math.random() * 1000000);
+    setPurchaseNumber(newPurchaseNumber);
+
+    if (event.target.value) {
+      const newp = {
+        ...datosTienda,
+        cart: {
+          ...datosTienda.cart,
+          metodoPago: event.target.value
+        },
+        necesitaVerifica: true,
+        idCompra: newPurchaseNumber
+      };
+      localStorage.setItem("tienda", JSON.stringify(newp));
+    }
   };
 
   const handlePaymentCodeChange = (event) => {
@@ -23,6 +49,9 @@ const PaymentMethods = ({ methods }) => {
 
   const handlePaymentMethod = () => {
     if (!paymentmethod) {
+
+    if (!datosTienda.cart.metodoPago) {
+
       setWarning(true);
       setTimeout(() => {
         setWarning(false);
@@ -68,6 +97,8 @@ const PaymentMethods = ({ methods }) => {
     <div>
       {ConfirmationPurchase ? (
         paymentmethod === 'cash' ? pagoEfectivo() : paymentmethod === 'sinpe' ? pagoSinpe() : null
+      {confirmationPurchase ? (
+        datosTienda.cart.metodoPago === 'cash' ? pagoEfectivo() : datosTienda.cart.metodoPago === 'sinpe' ? pagoSinpe() : null
       ) : (
         <fieldset className="payment-methods">
           <legend>Escoja el método de pago</legend>
@@ -77,6 +108,11 @@ const PaymentMethods = ({ methods }) => {
           </div>
           <div className="payment-method">
             <input type="radio" id="cash" name="paymentMethod" value="cash" checked={paymentmethod === 'cash'} onChange={handleMethodChange} />
+            <input type="radio" id="sinpe" name="paymentMethod" value="sinpe" checked={datosTienda.cart.metodoPago === 'sinpe'} onChange={handleMethodChange} />
+            <label htmlFor="sinpe">Sinpe</label>
+          </div>
+          <div className="payment-method">
+            <input type="radio" id="cash" name="paymentMethod" value="cash" checked={datosTienda.cart.metodoPago === 'cash'} onChange={handleMethodChange} />
             <label htmlFor="cash">Efectivo</label>
           </div>
           <button className='BtnBuy' onClick={handlePaymentMethod}>Continuar compra</button>

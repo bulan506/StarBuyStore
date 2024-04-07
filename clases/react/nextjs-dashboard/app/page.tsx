@@ -2,11 +2,38 @@ import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
- 
-export default function Page() {
+import React, { useState } from 'react';
+
+const IncrementButton = ({ setItem }) => {
+  const handleClick = () => {
+    setItem(prevItem => ({ ...prevItem, count: prevItem.count + 1 }));
+  };
+
   return (
-    // ...
-    <p
+    <button onClick={handleClick}>Incrementar</button>
+  );
+};
+
+const DisplayItem = ({ item }) => {
+  return (
+    <div>
+      <h2>Objeto en el Estado:</h2>
+      <p>Conteo: {item.count}</p>
+    </div>
+  );
+};
+
+export default function Page() {
+  const [item, setItem] = useState({ count: 0 });
+  return (
+    <>
+      <div>
+        <h1>Ejemplo de Next.js con Componentes de React</h1>
+        <IncrementButton setItem={setItem} />
+        <DisplayItem item={item} />
+      </div>
+    
+      <p
       className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
     >
       <strong>Welcome to Acme.</strong> This is the example for the{' '}
@@ -15,6 +42,9 @@ export default function Page() {
       </a>
       , brought to you by Vercel.
     </p>
+    </>
+    // ...
+
     // ...
   );
 }
