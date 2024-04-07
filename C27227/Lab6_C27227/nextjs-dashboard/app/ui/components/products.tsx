@@ -13,7 +13,6 @@ const Products_Store = ({ handleClick }) => {
           throw new Error('Failed to fetch data');
         }
         const json = await response.json();
-        console.log("Cho:", json);
         setProductList(json);
       } catch (error) {
          console.error('Failed to fetch data:', error);

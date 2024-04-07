@@ -1,12 +1,12 @@
-"use client";
-import "bootstrap/dist/css/bootstrap.min.css";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';;
-import React, { useState, useId, useEffect} from 'react';
+"use client"
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/app/ui/components/header';
-import Products_Store from'./ui/components/products';
+import Products_Store from './ui/components/products';
 import Cart_Store from './ui/components/cart';
+import CarouselBanner from '@/app/ui/components/carrusel';
+import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '@/app/ui//styles/app.css';
-import Alert from './Alert'; 
 
 const Page = () => {
   const initialState = {
@@ -28,15 +28,32 @@ const Page = () => {
     return storedTienda ? JSON.parse(storedTienda) : initialState;
   });
 
-  const [show, set_show] = useState(true);
+  const [isMainPage, setIsMainPage] = useState(true);
   const [warning, setWarning] = useState(false);
+  const [productList, setProductList] = useState([]);
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
 
   useEffect(() => {
-    localStorage.setItem("tienda", JSON.stringify(tienda));
-  }, [tienda]);
+    const loadData = async () => {
+      try {
+        const response = await fetch('http://localhost:5072/api/Store');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        setProductList(json);
+      } catch (error) {
+         console.error('Failed to fetch data:', error);
+      }
+    };
+    
+    loadData();
+  }, []);
 
-  const handleClick = (newProduct) => {
-    const isPresent = tienda.products.some(product => product.id === newProduct.id);
+  const handleAddToCart = () => {
+    const currentProduct = productList.products[currentProductIndex];
+    const isPresent = tienda.products.some(product => product.id === currentProduct.id);
+    
     if (isPresent) {
       setWarning(true);
       setTimeout(() => {
@@ -44,31 +61,53 @@ const Page = () => {
       }, 2000);
       return;
     }
-    const newProd = [...tienda.products, newProduct];
-    setTienda({
-    ...tienda,
-    products: newProd
-});
+
+    const updatedProducts = [...tienda.products, currentProduct];
+    const updatedDataObject = { ...tienda, products: updatedProducts };
+  
+    localStorage.setItem("tienda", JSON.stringify(updatedDataObject));
+    setTienda(updatedDataObject); // Actualiza el estado después de agregar el producto al carrito
   };
 
   return (
-    
     <div>
-      
-      <Navbar size={tienda.products.length} setShow={set_show} />
-      {
-			warning && <div className='alert'>El producto ya se encuentra en el carrito</div>
-		  }
-      {show ? <Products_Store handleClick={handleClick} /> : <Cart_Store />}
+      <Navbar size={tienda.products.length} setShow={setIsMainPage} />
+      {warning && <div className='alert'>El producto ya se encuentra en el carrito</div>}
+      {isMainPage && productList && productList.products && productList.products.length > 0 && (
+        <div className='container'>
+          <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+            <div className="carousel-indicators">
+              {productList && productList.products && productList.products.map((product, i) => (
+                <button key={product.id} type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to={i} className={i === currentProductIndex ? ' active' : ''} aria-current={i === currentProductIndex ? 'true' : 'false'} aria-label={`Slide ${i + 1}`} />                                    
+              ))}
+            </div>
+            <div className="carousel-inner">
+              {productList && productList.products && productList.products.map((product, index) => (
+                <CarouselBanner key={product.id} banner={product} />
+              ))}
+            </div>
+            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" onClick={() => setCurrentProductIndex((currentProductIndex + productList.products.length - 1) % productList.products.length)}>
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" onClick={() => setCurrentProductIndex((currentProductIndex + 1) % productList.products.length)}>
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      )}
+      <div className='AddFromCarousel'>
+        {isMainPage && <button className="btn btn-primary" onClick={handleAddToCart}>Add to cart</button>}
+      </div>
+      {isMainPage ? <Products_Store handleClick={handleAddToCart} /> : <Cart_Store />}
       <footer className="bg-dark text-white text-center text-lg-start d-flex justify-content-center align-items-center">
         <div className="row row-cols-4">
-            © 2024: Derechos reservados para Kendall Sánchez
+          © 2024: Derechos reservados para Kendall Sánchez
         </div>
-    </footer>   
+      </footer>   
     </div>
   );
 };
 
 export default Page;
-
-

@@ -17,12 +17,12 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 .carousel-item {
-  height: 400px; /* Altura deseada para cada slide */
+  height: 500px; /* Altura deseada para cada slide */
 }
 
 .carousel-item img {
-  max-height: 800px; 
-  object-fit: cover; /* Ajustar la imagen para que cubra todo el espacio */
+  max-height: 1000px; 
+  object-fit: cover; 
 }
 
 .product {
