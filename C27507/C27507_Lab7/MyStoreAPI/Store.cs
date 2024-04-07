@@ -10,9 +10,9 @@ namespace MyStoreAPI
         public int TaxPercentage { get; private set; }
 
         //Constructor de Store
-        private Store( List<Product> products, int TaxPercentage )
+        private Store( List<Product> Products, int TaxPercentage )
         {
-            this.Products = products;
+            this.Products = Products;
             this.TaxPercentage = TaxPercentage;
         }
 
@@ -29,17 +29,19 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Tablet Samsung",
                 imageUrl = "./img/tablet_samsung.jpg",
-                quantity = 0,
-                price = 25
+                price = 25,
+                quantity = 0,                
+                description = "lorem ipsum"                
             });
 
             products.Add(new Product
             {
                 uuid = Guid.NewGuid(),
                 name = "TV LG UHD",
-                imageUrl = "./img/tv.jfif",
+                imageUrl = "./img/tv.jfif",                
+                price = 50,
                 quantity = 0,
-                price = 50
+                description = "lorem ipsum"
             });
 
             products.Add(new Product
@@ -47,8 +49,9 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Auriculares Genericos",
                 imageUrl = "./img/auri.jfif",
+                price = 100,
                 quantity = 0,
-                price = 100
+                description = "lorem ipsum"
             });
 
             products.Add(new Product
@@ -56,8 +59,9 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Dualshock PS4",
                 imageUrl = "./img/dualshock4.jpg",
-                quantity = 0,
-                price = 35
+                price = 35,
+                quantity = 0,                
+                description = "lorem ipsum"                
             });
 
             products.Add(new Product
@@ -65,26 +69,9 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Teclado LED",
                 imageUrl = "./img/teclado.jpg",
-                quantity = 0,
-                price = 75
-            });
-
-            products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
-                name = "Samsung Galaxy A54",
-                imageUrl = "./img/a54_samsung.png",
-                quantity = 0,
-                price = 150
-            });
-
-            products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
-                name = "Dualshock PS5",
-                imageUrl = "./img/dualshock5.jpg",
-                quantity = 0,
-                price = 250
+                price = 75,
+                quantity = 0,              
+                description = "lorem ipsum"  
             });
 
             products.Add(new Product
@@ -92,8 +79,29 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Samsung A54",
                 imageUrl = "./img/a54_samsung.jpg",
-                quantity = 0,
-                price = 250
+                price = 250,
+                quantity = 0,              
+                description = "lorem ipsum"                  
+            });
+
+            products.Add(new Product
+            {
+                uuid = Guid.NewGuid(),
+                name = "Dualshock PS5",
+                imageUrl = "./img/dualshock5.jpg",
+                price = 250,
+                quantity = 0,                
+                description = "lorem ipsum"
+            });
+
+            products.Add(new Product
+            {                
+                uuid = Guid.NewGuid(),
+                name = "Samsung Galaxy A54",
+                imageUrl = "./img/a54_samsung.png",
+                price = 150,
+                quantity = 0,                
+                description = "carousel"
             });
 
             products.Add(new Product
@@ -101,8 +109,9 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Mouse Microsoft",
                 imageUrl = "./img/mouse.png",
-                quantity = 0,
-                price = 2500
+                price = 2500,
+                quantity = 0,                
+                description = "lorem ipsum"
             });
 
             products.Add(new Product
@@ -110,11 +119,12 @@ namespace MyStoreAPI
                 uuid = Guid.NewGuid(),
                 name = "Módem Router - Archer VR400",
                 imageUrl = "./img/router_archerVR400.jpg",
-                quantity = 0,
-                price = 75
+                price = 75,
+                quantity = 0,                
+                description = "lorem ipsum"
             });
 
-            Store.Instance = new Store(products,13);            
+            Store.Instance = new Store(products,15);            
         }        
 
          // Método para imprimir la cantidad de productos en la tienda

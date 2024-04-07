@@ -6,6 +6,7 @@ namespace MyStoreAPI
         public string imageUrl { get; set; }
         public decimal price { get; set; }
         public decimal quantity { get; set; }        
+        public string description { get; set; }        
         public Guid uuid { get; set; }
 
         public object Clone()
@@ -16,6 +17,7 @@ namespace MyStoreAPI
                 imageUrl = this.imageUrl,
                 price = this.price,
                 quantity = this.quantity,                
+                description = this.description
             };
         }
     }

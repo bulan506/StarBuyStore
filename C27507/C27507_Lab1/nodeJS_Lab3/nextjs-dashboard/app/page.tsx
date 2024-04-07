@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import { StaticCarousel} from './carousel';
-import {Product, product,ProductAPI, CartShop } from './layout';
+import {Product,ProductAPI, CartShop } from './layout';
 import { ProductItem,CartShopItem,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
@@ -57,9 +57,7 @@ export const getCartShopStorage = (key: string): CartShopItem | null => {
             subtotal: 0,
             tax: 0.13,
             total: 0,
-            direction: "",
-            // payment: "",
-            // verify: false  
+            direction: "",            
             paymentMethod: defaultPaymentMethod 
 
         };
@@ -137,29 +135,43 @@ export default function Page() {
     //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
     //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
-    //const [products, setProducts] = useState({products:[]});
-    const [products, setProduct] = useState<ProductAPI[]>([]);
+    const [products, setProducts] = useState<ProductAPI[]>([]);
+    //const [products, setProduct] = useState<ProductAPI[]>([]);
     //cargamos los datos desde la API (StoreController por Metodo Get)
-    useEffect(() => {
+    // useEffect(() => {
 
-            const loadDataProductAPI = async ()=>{
-                try{
-                    const response = await fetch('https://localhost:7161/api/Store')
-                    if (!response.ok){
-                        throw new Error('Failed to fetch data');                
-                    }
+    //         const loadDataProductAPI = async ()=>{
+    //             try{
+    //                 const response = await fetch('https://localhost:7161/api/Store')
+    //                 if (!response.ok){
+    //                     throw new Error('Failed to fetch data');                
+    //                 }
 
-                    const json = await response.json();
-                    setProduct(json.product)
+    //                 const json = await response.json();
+    //                 setProduct(json.product)
                               
-                    return json;
-                } catch (error) {
-                    throw new Error('Failed to fetch data');
-                }
-            }
-        //console.log("LoadDataProductAPI: ",loadDataProductAPI());    
-        loadDataProductAPI();
-    }, []);           
+    //                 return json;
+    //             } catch (error) {
+    //                 throw new Error('Failed to fetch data');
+    //             }
+    //         }
+    //     //console.log("LoadDataProductAPI: ",loadDataProductAPI());    
+    //     console.log(loadDataProductAPI());        
+    // }, []);           
+    fetch('https://localhost:7161/api/Store')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        return response.json();
+    })
+    .then(data => {
+        setProducts(data.products);
+        //console.log("ora si, ",data.products);
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
             
 
   return (
@@ -186,10 +198,10 @@ export default function Page() {
             {/* El uso de las Keys es importante ya que le hacen saber a React cuando hay cambios en los elementos del proyecto
             Ademas, todas los componentes deben llevar una Key, es una buena practica
             */}
-          <h1>Lista de Productos</h1>   
+          <h1>Lista de Productos</h1>             
           <div id='div_gallery' className="row">
-              {product.map(product => {
-                  if (product.id === 8) {
+              {products.map(product => {
+                  if (product.description === "carousel") {
                       return(
                           <section className="container_carousel col-sm-4" key="carousel">
                               <StaticCarousel />;
@@ -198,15 +210,15 @@ export default function Page() {
                   } else {
                       return (
                         <Product 
-                            key={product.id} 
-                            product={product}                        
+                            key={product.uuid} 
+                            product={product}
                             myCartInStorage={myCartInStorage}                                    
                             setMyCartInStorage={setMyCartInStorage}           
                         />                        
                       );
                   }
               })}
-          </div>
+            </div>
       </div>
 
       {/*  */}
