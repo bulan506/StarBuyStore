@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import { StaticCarousel} from './carousel';
-import {Product, product, CartShop } from './layout';
+import {Product, product,ProductAPI, CartShop } from './layout';
 import { ProductItem,CartShopItem,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
@@ -123,9 +123,7 @@ export const deleteAllProduct = (myCartInStorage: CartShopItem | null, setMyCart
             subtotal: 0,
             tax: 0.13,
             total: 0,
-            direction: '',
-            // payment: '',
-            // verify: false,
+            direction: '',           
             paymentMethod: defaultPaymentMethod 
         };   
         //Limpiamos el storage y el estado actual
@@ -139,7 +137,31 @@ export default function Page() {
     //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
     //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopItem | null>(getCartShopStorage("A"));    
-                                             
+    //const [products, setProducts] = useState({products:[]});
+    const [products, setProduct] = useState<ProductAPI[]>([]);
+    //cargamos los datos desde la API (StoreController por Metodo Get)
+    useEffect(() => {
+
+            const loadDataProductAPI = async ()=>{
+                try{
+                    const response = await fetch('https://localhost:7161/api/Store')
+                    if (!response.ok){
+                        throw new Error('Failed to fetch data');                
+                    }
+
+                    const json = await response.json();
+                    setProduct(json.product)
+                              
+                    return json;
+                } catch (error) {
+                    throw new Error('Failed to fetch data');
+                }
+            }
+        //console.log("LoadDataProductAPI: ",loadDataProductAPI());    
+        loadDataProductAPI();
+    }, []);           
+            
+
   return (
     <main className="flex min-h-screen flex-col p-6">
 

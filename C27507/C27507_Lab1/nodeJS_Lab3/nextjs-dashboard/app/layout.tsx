@@ -19,6 +19,14 @@ export default function RootLayout({
   );
 }
 
+export interface ProductAPI {
+  name: string;
+  imageUrl: string;
+  price: number;
+  quantity: number;
+  uuid: string; // En TypeScript, el tipo Guid se puede representar como string
+}
+
 export interface ProductItem {
   id: number;
   name: string;
@@ -114,9 +122,7 @@ export interface CartShopItem {
   subtotal: number;
   tax: number;
   total: number;
-  direction: string;
-  // payment: string;
-  // verify: boolean
+  direction: string; 
   paymentMethod: PaymentMethod
 }
 
