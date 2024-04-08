@@ -1,13 +1,14 @@
 'use client'
 import React, { useState } from 'react';
-import initialStore from '@/app/lib/products-data';
-import { Product } from '../../lib/products-data-definitions';
+import { Cart, Product } from '../../lib/products-data-definitions';
 import Link from 'next/link';
 import Modal from '../modal';
 import ModalInput from '../modalInput';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import countries from '../../lib/countries-data';
+import { getInitialCartLocalStorage } from '@/app/lib/cart_data_localeStore';
+import { findProductsDuplicates, getProductQuantity } from '@/app/lib/utils';
 const ListProducts = ({ product, quantity }: { product: Product, quantity: number }) => {
     return (
         <tr>
@@ -28,8 +29,8 @@ const ListProducts = ({ product, quantity }: { product: Product, quantity: numbe
     );
 }
 
-const OrderSummary = () => {
-
+const OrderSummary = ({ initialCart }: { initialCart: Cart }) => {
+    const initialCartFilter = findProductsDuplicates(initialCart.cart.products);
     return (
         <div className="card-body">
             <div className="p-3 bg-light mb-3">
@@ -40,13 +41,13 @@ const OrderSummary = () => {
                     <thead>
                         <tr>
                             <th className="border-top-0" style={{ width: '110px' }} scope="col">Product</th>
-                            <th className="border-top-0" scope="col">Product Desc</th>
-                            <th className="border-top-0" scope="col">Price</th>
+                            <th className="border-top-0" scope="col">Description</th>
+                            <th className="border-top-0" scope="col">Quantity</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {initialStore.cart.products.map((item, index) =>
-                            <ListProducts key={index} product={item} quantity={1} />
+                        {initialCartFilter.map((item, index) =>
+                            <ListProducts key={index} product={item} quantity={getProductQuantity(item, initialCart.cart.products)} />
                         )}
 
                         <tr>
@@ -54,7 +55,7 @@ const OrderSummary = () => {
                                 <h5 className="font-size-14 m-0">Sub Total :</h5>
                             </td>
                             <td>
-                                ₡{initialStore.cart.subtotal}
+                                ₡{initialCart.cart.subtotal}
                             </td>
                         </tr>
 
@@ -63,7 +64,7 @@ const OrderSummary = () => {
                                 <h5 className="font-size-14 m-0">Estimated Tax :</h5>
                             </td>
                             <td>
-                                ₡{initialStore.cart.subtotal * initialStore.cart.taxPercentage}
+                                ₡{initialCart.cart.subtotal * initialCart.taxPercentage}
                             </td>
                         </tr>
 
@@ -72,7 +73,7 @@ const OrderSummary = () => {
                                 <h5 className="font-size-14 m-0">Total:</h5>
                             </td>
                             <td>
-                                ₡{initialStore.cart.total}
+                                ₡{initialCart.cart.total}
                             </td>
                         </tr>
                     </tbody>
@@ -154,7 +155,7 @@ const BillingInfo = () => {
 };
 
 const Payment = ({ onSelectPayment }: { onSelectPayment: any }) => {
-    const handlePaymentSelection = (paymentOption: string) => {
+    const handlePaymentSelection = (paymentOption: number) => {
         onSelectPayment(paymentOption);
     };
     return (
@@ -170,7 +171,7 @@ const Payment = ({ onSelectPayment }: { onSelectPayment: any }) => {
                         <div data-bs-toggle="collapse">
                             <label className="card-radio-label">
                                 <input type="radio" name="pay-method" id="pay-methodoption1" className="card-radio-input" />
-                                <span className="card-radio py-3 text-center text-truncate" onClick={() => handlePaymentSelection('cash')}>
+                                <span className="card-radio py-3 text-center text-truncate" onClick={() => handlePaymentSelection(0)}>
                                     Cash
                                 </span>
                             </label>
@@ -181,7 +182,7 @@ const Payment = ({ onSelectPayment }: { onSelectPayment: any }) => {
                         <div>
                             <label className="card-radio-label">
                                 <input type="radio" name="pay-method" id="pay-methodoption3" className="card-radio-input" checked={undefined} />
-                                <span className="card-radio py-3 text-center text-truncate" onClick={() => handlePaymentSelection('sinpeMovil')}>
+                                <span className="card-radio py-3 text-center text-truncate" onClick={() => handlePaymentSelection(1)}>
                                     Sinpe Movil
                                 </span>
                             </label>
@@ -209,13 +210,14 @@ function generateRandomString() {
 }
 
 export default function Checkout() {
-    const [payment, setPayment] = useState<string>();
+    const initialCart = getInitialCartLocalStorage();
+    const [payment, setPayment] = useState<number>();
     const [text, setText] = useState<string>("");
     const payMethod = {
-        cash: "cash",
-        sinpe: "sinpe"
+        cash: 0,
+        sinpe: 1
     }
-    const updatePayment = (paymentOption: string) => {
+    const updatePayment = (paymentOption: number) => {
         setPayment(paymentOption);
         if (paymentOption === payMethod.cash) {
             setText('Dear customer, \nplease wait for our administrator to confirm your method of payment.\nThank you very much for choosing us');
@@ -278,7 +280,7 @@ export default function Checkout() {
 
                 <div className="col-xl-4">
                     <div className="card checkout-order-summary">
-                        <OrderSummary />
+                        <OrderSummary initialCart={initialCart} />
                     </div>
                 </div>
             </div>

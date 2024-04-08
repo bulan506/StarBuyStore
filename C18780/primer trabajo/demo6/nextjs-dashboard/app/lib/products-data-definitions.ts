@@ -1,18 +1,23 @@
 import { UUID } from "crypto";
 
 export type Product = {
-    id: UUID;
+    uuid: UUID;
     name: string;
     description: string;
     imageUrl: string;
     price: number;
 }
+
 export type MethodPayment = {
     method: boolean;
 }
 
 export type InitialStore = {
     products: Product[];
+    cart: Cart;
+}
+
+export type Cart = {
     cart: {
         products: Product[];
         subtotal: number;
@@ -21,4 +26,5 @@ export type InitialStore = {
         deliveryAddress: string;
         methodPayment: MethodPayment | null;
     };
+    taxPercentage:number;
 }

@@ -1,4 +1,4 @@
-import { Product } from '../lib/products-data-definitions';
+import type { Product } from  '../lib/products-data-definitions';
 import Image from 'next/image';
 
 export default function Product({ product, onAdd }: { product: Product, onAdd: any }) {

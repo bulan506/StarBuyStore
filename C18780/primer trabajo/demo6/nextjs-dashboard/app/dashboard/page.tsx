@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import ProductItem from '../dashboard/product';
 import SideNav from '../ui/dashboard/sidenav';
-import { Product } from '../lib/products-data-definitions';
+import { Cart, Product } from '../lib/products-data-definitions';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import React from 'react';
-import useInitialStore from '../lib/products-data';
+import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '../lib/cart_data_localeStore';
+import useFetchInitialStore from '../api/http.initialStore';
 
 const Carousel = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
   const chunkSize = 4;
@@ -54,8 +55,8 @@ const ProductsRow = ({ products, onAdd }: { products: Product[], onAdd: any }) =
       <div className="row">
         {products.map((product, index) => (
           <React.Fragment key={index}>
-            {index === number && <Carousel key={`carousel-${index}`} onAdd={onAdd} products={products} />} {/* Ensure each Carousel has a unique key */}
-            <ProductItem key={`product-${product.id}`} product={product} onAdd={onAdd} /> {/* Ensure each ProductItem has a unique key */}
+            {index === number && <Carousel key={`carousel-${index}`} onAdd={onAdd} products={products} />}
+            <ProductItem key={`product-${product.uuid}`} product={product} onAdd={onAdd} />
           </React.Fragment>
         ))}
       </div>
@@ -66,30 +67,29 @@ const ProductsRow = ({ products, onAdd }: { products: Product[], onAdd: any }) =
 
 
 export default function Page() {
-  const [count, setCount] = useState(0);
-  const initialStore = useInitialStore();
+  const initialStore = useFetchInitialStore();
+  const initialCart = getInitialCartLocalStorage();
+  const [count, setCount] = useState(initialCart.cart.products.length > 0 ? initialCart.cart.products.length : 0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (initialStore.products.length > 0) {
+    if (initialStore && initialStore.length > 0) {
       setLoading(false);
     }
-  }, [initialStore.products]);
+  }, [initialStore]);
 
   const handleAddToCart = ({ product }: { product: Product }) => {
+    initialCart.cart.products.push(product);
+    initialCart.cart.subtotal = initialCart.cart.subtotal + product.price;
+    initialCart.cart.total = initialCart.cart.subtotal + initialCart.cart.subtotal * initialCart.taxPercentage;
     setCount(count + 1);
-    initialStore.cart.products.push(product);
-
-    initialStore.cart.subtotal = initialStore.cart.subtotal + product.price;
-
-    initialStore.cart.total = initialStore.cart.subtotal + initialStore.cart.subtotal * initialStore.cart.taxPercentage;
-  };
+    saveInitialCartLocalStorage(initialCart);
+  }
 
   return (
     <>
-      <SideNav countCart={initialStore.cart.products.length > count ? initialStore.cart.products.length : count} />
-      {!loading && <ProductsRow products={initialStore.products} onAdd={handleAddToCart} />}
-
+      <SideNav countCart={count} />
+      {!loading && <ProductsRow products={initialStore ? initialStore : []} onAdd={handleAddToCart} />}
     </>
   );
 }

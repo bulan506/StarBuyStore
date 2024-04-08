@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { InitialStore } from './products-data-definitions';
-import { GET, POST } from '../api/route'
+import React from 'react';
+import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '../lib/cart_data_localeStore';
 
 export function useFetchInitialStore() {
   const [products, setProducts] = useState([]);
-
+  const cart = getInitialCartLocalStorage();
+  
   useEffect(() => {
     async function getProducts() {
       try {
@@ -14,6 +15,9 @@ export function useFetchInitialStore() {
         }
         const data = await res.json();
         setProducts(data.products);
+        cart.taxPercentage = data.taxPercentage/100;
+        saveInitialCartLocalStorage(cart);
+        
       } catch (error) {
         console.error(error);
       }
@@ -21,26 +25,7 @@ export function useFetchInitialStore() {
     
     getProducts();
   }, []);
-
   return products;
 }
 
-function useInitialStore() {
-  const products = useFetchInitialStore();
-
-  const initialStore: InitialStore = {
-    products: products,
-    cart: {
-      products: [],
-      subtotal: 0,
-      taxPercentage: 0.13,
-      total: 0,
-      deliveryAddress: "",
-      methodPayment: null
-    }
-  };
-
-  return initialStore;
-}
-
-export default useInitialStore;
+export default useFetchInitialStore;

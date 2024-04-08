@@ -1,12 +1,16 @@
 'use client'
-import { InitialStore, Product } from '../../lib/products-data-definitions';
+import React from 'react';
+import { Cart, Product } from '../../lib/products-data-definitions';
 import Image from 'next/image';
-import useInitialStore from '../../lib/products-data';
+import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '../../lib/cart_data_localeStore';
 import { ShoppingCartIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import ProductItem from '../product';
 import { useEffect, useState } from 'react';
-const ProductCart = ({ product }: { product: Product }) => {
+import useFetchInitialStore from '@/app/api/http.initialStore';
+import {findProductsDuplicates, getProductQuantity} from '../../lib/utils';
+
+const ProductCart = ({ product, quantity, onRemove }: { product: Product, quantity: number, onRemove: any }) => {
     return (
         <div className="table-responsive">
             <table className="table shoping-cart-table">
@@ -31,20 +35,18 @@ const ProductCart = ({ product }: { product: Product }) => {
                                 {product.description}
                             </dl>
                             <div className="m-t-sm">
-                                <a href="#" className="text-muted"><i className="fa fa-gift"></i> Add gift package</a>
-                                |
-                                <a href="#" className="text-muted"><i className="fa fa-trash"></i> Remove item</a>
+                                <a onClick={() => onRemove({ product })} href="#" className="text-muted"><i className="fa fa-trash"></i> Remove item</a>
                             </div>
                         </td>
                         <td>
                             ₡{product.price}
                         </td>
                         <td width="65">
-                            <input type="text" className="form-control" placeholder={"1"} />
+                            <input type="text" className="form-control" placeholder={quantity.toString()} />
                         </td>
                         <td>
                             <h4>
-                                ₡{product.price}
+                                ₡{product.price * quantity}
                             </h4>
                         </td>
                     </tr>
@@ -53,19 +55,28 @@ const ProductCart = ({ product }: { product: Product }) => {
         </div>
     );
 };
-const ProductsCart = ({initialStore}:{initialStore:InitialStore}) => {
+const ProductsCart = ({ productCart, onRemove }: { productCart: Product[] | null, onRemove: any }) => {
+    let filteredCart: Product[] = [];
+    if (productCart) {
+        filteredCart = findProductsDuplicates(productCart);
+    } else {
+        return (<></>);
+    }
 
     return (
         <div className='container'>
             <div>
-                {initialStore.cart.products.map((item, index) =>
-                    <ProductCart key={index} product={item} />
+                {filteredCart.map((item, index) =>
+                    <ProductCart key={index} product={item} quantity={getProductQuantity(item, productCart)} onRemove={onRemove} />
                 )}
             </div>
         </div>
     );
 };
-const CartSummary = ({initialStore}:{initialStore:InitialStore}) => {
+const CartSummary = ({ initialCart }: { initialCart: Cart | null }) => {
+    if (!initialCart) {
+        return (<></>);
+    }
     return (
         <div className="ibox">
             <div className="ibox-title">
@@ -76,20 +87,19 @@ const CartSummary = ({initialStore}:{initialStore:InitialStore}) => {
                     SubTotal
                 </span>
                 <h2 className="font-bold">
-                    ₡{initialStore.cart.subtotal}
+                    ₡{initialCart.cart.subtotal}
                 </h2>
                 <span>
                     Total
                 </span>
                 <h2 className="font-bold">
-                    ₡{initialStore.cart.total}
+                    ₡{initialCart.cart.total}
                 </h2>
 
             </div>
         </div>
     );
 };
-
 const Support = () => {
     return (
         <div className="ibox">
@@ -105,10 +115,14 @@ const Support = () => {
         </div>
     );
 };
+const InterestingProducts = ({ products, onAdd }: { products: Product[] | null, onAdd: any }) => {
+    if (!products) {
+        return (<></>);
+    }
 
-const InterestingProducts = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
     const [randomProduct, setRandomProduct] = useState<Product>();
     const randomIndex = Math.floor(Math.random() * products.length);
+
     useEffect(() => {
         setRandomProduct(products[randomIndex]);
     }, [randomIndex]);
@@ -128,17 +142,27 @@ const InterestingProducts = ({ products, onAdd }: { products: Product[], onAdd: 
         </div>
     );
 }
-
-export default function Cart() {
-    const initialStore = useInitialStore();
+export default function MyCart() {
+    const initialStore = useFetchInitialStore();
+    const initialCart = getInitialCartLocalStorage();
     const handleAddToCart = ({ product }: { product: Product }) => {
-        initialStore.cart.products.push(product);
-
-        initialStore.cart.subtotal = initialStore.cart.subtotal + product.price;
-
-        initialStore.cart.total = initialStore.cart.subtotal + initialStore.cart.subtotal * initialStore.cart.taxPercentage;
-    };
-
+        if (initialCart) {
+            initialCart.cart.products.push(product);
+            initialCart.cart.subtotal = initialCart.cart.subtotal + product.price;
+            initialCart.cart.total = initialCart.cart.subtotal + initialCart.cart.subtotal * initialCart.taxPercentage;
+            window.location.reload();
+            saveInitialCartLocalStorage(initialCart);
+        }
+    }
+    const handleRemoveToCart = ({ product }: { product: Product }) => {
+        if (initialCart) {
+            initialCart.cart.subtotal = initialCart.cart.subtotal - product.price;
+            initialCart.cart.total = initialCart.cart.subtotal + initialCart.cart.subtotal * initialCart.taxPercentage;
+            initialCart.cart.products.splice(initialCart.cart.products.findIndex(item => item.uuid === product.uuid), 1);
+            window.location.reload();
+            saveInitialCartLocalStorage(initialCart);
+        }
+    }
     return (
         <div className="container">
             <div className="wrapper wrapper-content animated fadeInRight">
@@ -147,16 +171,16 @@ export default function Cart() {
                     <div className="col-md-9">
                         <div className="ibox">
                             <div className="ibox-title">
-                                <span className="pull-right">(<strong>{initialStore.cart.products ? initialStore.cart.products.length : 0}</strong>) items</span>
+                                <span className="pull-right">(<strong>{initialCart?.cart.products ? initialCart?.cart.products.length : 0}</strong>) items</span>
                                 <h5>Items in your cart</h5>
                             </div>
 
                             <div className="ibox-content">
                                 <div className='flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12'>
-                                    {initialStore.cart.total === 0 ? <Image src='/others/cat.jpg'
+                                    {initialCart?.cart.total === 0 ? <Image src='/others/cat.jpg'
                                         width={300}
                                         height={300}
-                                        className="hidden md:block" alt='cat' /> : <ProductsCart initialStore={initialStore} />}
+                                        className="hidden md:block" alt='cat' /> : <ProductsCart productCart={initialCart ? initialCart.cart.products : null} onRemove={handleRemoveToCart} />}
                                 </div>
 
 
@@ -167,18 +191,18 @@ export default function Cart() {
                                     <button className="btn btn-white"> <ArrowLeftIcon style={{ width: '20px' }} /> Continue shopping</button>
                                 </Link>
                                 <Link href='/dashboard/checkout'>
-                                    <button className="btn btn-primary pull-right" style={{ marginLeft: '40%', display: initialStore.cart.total > 0 ? 'inline-block' : 'none' }}><ShoppingCartIcon style={{ width: '20px' }} /> Checkout</button>
+                                    <button className="btn btn-primary pull-right" style={{ marginLeft: '40%', display: initialCart && initialCart.cart.total > 0 ? 'inline-block' : 'none' }}><ShoppingCartIcon style={{ width: '20px' }} /> Checkout</button>
                                 </Link>
                             </div>
                         </div>
                     </div>
 
                     <div className="col-md-3">
-                        <CartSummary initialStore={initialStore} />
+                        <CartSummary initialCart={initialCart ? initialCart : null} />
 
                         <Support />
 
-                        <InterestingProducts onAdd={handleAddToCart} products={initialStore.products} />
+                        <InterestingProducts onAdd={handleAddToCart} products={initialStore} />
                     </div>
                 </div>
             </div>
