@@ -15,7 +15,8 @@ namespace StoreApi.Controllers
         {
             // Add the cart to the list
             Carts.Add(cart);
-
+            
+            Store.Instance.Purchase(cart);
             // Return the newly created cart
             return Ok(cart);
         }

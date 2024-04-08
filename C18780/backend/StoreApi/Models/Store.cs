@@ -183,7 +183,7 @@ public sealed class Store
     }
 
     public Sale Purchase(Cart cart)
-    {
+    {//Handler
         if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
         if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
 
