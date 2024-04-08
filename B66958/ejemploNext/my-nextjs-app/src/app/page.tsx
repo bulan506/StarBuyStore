@@ -3,8 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
 import NavBar from "./navbar/page";
 import Cart from './Cart/page';
+import Alert from 'react-bootstrap/Alert';
 
 export default function Home() {
+  const [isErrorShowing, setIsErrorShowing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [products, setProducts] = useState([]);
 
@@ -45,13 +48,15 @@ export default function Home() {
   }
 
   async function getData() {
-    const res = await fetch('https://localhost:7151/api/Store')
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch data')
+    try {
+      const res = await fetch('https://localhost:7151/api/Store');
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      return res.json();
+    } catch (error) {
+      throw error;
     }
-
-    return res.json()
   }
 
   useEffect(() => {
@@ -60,7 +65,8 @@ export default function Home() {
         const result = await getData();
         setProducts(result.products);
       } catch (error) {
-        throw new Error('Error fetching data:' + error)
+        setErrorMessage(error)
+        setIsErrorShowing(true)
       }
     };
 
@@ -201,6 +207,20 @@ export default function Home() {
       {isCartActive ? <Cart cart={cart} setCart={setCart}
         toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} /> : <MyRow />}
       {/* <Carousel />*/}
+      {isErrorShowing ?
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 20,
+            right: 20,
+            zIndex: 9999, // Ensure it's above other content
+          }}
+        >
+          <Alert variant="danger" onClose={() => setIsErrorShowing(false)} dismissible>
+            <Alert.Heading>Error</Alert.Heading>
+            <p>{errorMessage.toString()}</p>
+          </Alert> </div> : ''
+      }
     </div>
   );
 }
