@@ -1,119 +1,76 @@
 import {useState} from 'react';
 import { number } from 'zod';
+//Componentes
+import {Product,CartShop} from './layout';
+import {AlertShop} from './generic_overlay';
+//Interfaces
+import {CartShopAPI,ProductAPI,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
+//Funciones Generales
+import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage,verifyProductInCart,addProductInCart } from './page'; //precios totales - manejor LocalStorage
 
-import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
-
-// export const StaticCarousel = () => {
-//     const [activeIndex, setActiveIndex] = useState(0);
-
-//     const handlePrevSlide = () => {
-//         const newIndex = activeIndex === 0 ? 2 : activeIndex - 1;
-//         setActiveIndex(newIndex);
-//     };
-
-//     const handleNextSlide = () => {
-//         const newIndex = activeIndex === 2 ? 0 : activeIndex + 1;
-//         setActiveIndex(newIndex);
-//     };
-//     return (
-        
-//         <div id="carouselExampleCaptions" className="carousel slide">
-//             <div className="cover"></div>
-//             <div className="carousel-indicators">
-//             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-//             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-//             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-//             </div>
-//             <div className="carousel-inner">
-//             <div className="carousel-item active">
-//                 <div className="cover_img"></div>
-//                 <img src="img/mouse.png" className="d-block w-100" alt="Mouse" />
-//                 <div className="carousel-caption d-none d-md-block">
-//                 <h5>First slide label</h5>
-//                 <p>Some representative placeholder content for the first slide.</p>
-//                 <div className="cover_info"></div>
-//                 </div>
-//             </div>
-//             <div className="carousel-item">
-//                 <img src="img/teclado.jpg" className="d-block w-100" alt="Teclado" />
-//                 <div className="cover_img"></div>
-//                 <div className="carousel-caption d-none d-md-block">
-//                 <h5>Second slide label</h5>
-//                 <p>Some representative placeholder content for the second slide.</p>
-//                 <div className="cover_info"></div>
-//                 </div>
-//             </div>
-//             <div className="carousel-item">
-//                 <img src="img/tablet_samsung.jpg" className="d-block w-100" alt="Tablet Samsung" />
-//                 <div className="cover_img"></div>
-//                 <div className="carousel-caption d-none d-md-block">
-//                 <h5>Third slide label</h5>
-//                 <p>Some representative placeholder content for the third slide.</p>
-//                 <div className="cover_info"></div>
-//                 </div>
-//             </div>
-//             </div>
-//             <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-//             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-//             <span className="visually-hidden">Previous</span>
-//             </button>
-//             <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-//             <span className="carousel-control-next-icon" aria-hidden="true"></span>
-//             <span className="visually-hidden">Next</span>
-//             </button>
-//         </div>                            
-//     );
-//   }
-
-export const StaticCarousel = () => {
+interface CarouselStaticProps {
+    products: ProductAPI[];  
+    myCartInStorage: CartShopAPI | null;
+    setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
+  }
+  
+export const StaticCarousel: React.FC<CarouselStaticProps> = ({products,myCartInStorage,setMyCartInStorage}) => { 
     const [activeIndex, setActiveIndex] = useState(0);
 
     const handlePrevSlide = () => {
-        const newIndex = activeIndex === 0 ? 2 : activeIndex - 1;
+        const newIndex = activeIndex === 0 ? products.length - 1 : activeIndex - 1;
         setActiveIndex(newIndex);
     };
 
     const handleNextSlide = () => {
-        const newIndex = activeIndex === 2 ? 0 : activeIndex + 1;
+        const newIndex = activeIndex === products.length - 1 ? 0 : activeIndex + 1;
         setActiveIndex(newIndex);
     };
+
+    const buyItem = (productInCarrusel:ProductAPI) => {    
+    
+        //como el objeto del carrito puede ser nulo, creamos una condicion para evitar estar haciendo
+        //condiciones    
+        if (myCartInStorage) {
+    
+          let indexInCart = verifyProductInCart(productInCarrusel.uuid,myCartInStorage.allProduct);            
+          addProductInCart(indexInCart,productInCarrusel,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
+          
+        } else {
+          console.log("El carro no existe");
+        }
+      };  
+
     return (
         <div id="carouselExampleCaptions" className="carousel slide">
             <div className="cover"></div>
-            <div className="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className={activeIndex === 0 ? "active" : ""} aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" className={activeIndex === 1 ? "active" : ""} aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" className={activeIndex === 2 ? "active" : ""} aria-label="Slide 3"></button>
-            </div>
+            <div className="carousel-indicators">  
+                {products.map((_, index) => (
+                    <button
+                        key={index}
+                        type="button"
+                        data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide-to={index}
+                        className={activeIndex === index ? "active" : ""}
+                        aria-current="true"
+                        aria-label={`Slide ${index + 1}`}
+                    ></button>
+                ))}                                              
+            </div>            
             <div className="carousel-inner">
-                <div className={`carousel-item ${activeIndex === 0 ? "active" : ""}`}>
-                    <div className="cover_img"></div>
-                    <img src="img/mouse.png" className="d-block w-100" alt="Mouse" />
-                    <div className="carousel-caption d-md-block">
-                        <h5>First slide label</h5>
-                        <p>Some representative placeholder content for the first slide.</p>
-                        <div className="cover_info"></div>
-                    </div>          
-                </div>
-                <div className={`carousel-item ${activeIndex === 1 ? "active" : ""}`}>
-                    <img src="img/teclado.jpg" className="d-block w-100" alt="Teclado" />
-                    <div className="cover_img"></div>
-                    <div className="carousel-caption d-md-block">
-                        <h5>Second slide label</h5>
-                        <p>Some representative placeholder content for the second slide.</p>
-                        <div className="cover_info"></div>
-                    </div>          
-                </div>
-                <div className={`carousel-item ${activeIndex === 2 ? "active" : ""}`}>
-
-                    <img src="img/tablet_samsung.jpg" className="d-block w-100" alt="Tablet Samsung" />
-                    <div className="cover_img"></div>
-                    <div className="carousel-caption d-none d-md-block">
-                        <h5>Third slide label</h5>
-                        <p>Some representative placeholder content for the third slide.</p>
-                        <div className="cover_info"></div>
-                    </div>          
-                </div>
+                {products.map((product,index) => {
+                    return(
+                        <div key={index} className={`carousel-item ${activeIndex === index ? "active" : ""}`}>
+                            <div className="cover_img"></div>
+                            <div className='info_carousel'>
+                                <h5>{product.name}</h5>
+                                <p>${product.price}</p>
+                                <button onClick={ () => buyItem(product) }>Agregar a carrito</button>
+                            </div>
+                            <img src={product.imageUrl} className="d-block w-100" alt="Mouse" />
+                        </div>
+                    )
+                })}                
             </div>
             <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev" onClick={handlePrevSlide}>
                 <span className="carousel-control-prev-icon" aria-hidden="true"></span>

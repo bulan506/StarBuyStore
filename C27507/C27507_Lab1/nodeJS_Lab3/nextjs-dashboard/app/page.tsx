@@ -4,9 +4,12 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
+//Componentes
+import {Product,CartShop} from './layout';
 import { StaticCarousel} from './carousel';
-import {Product,ProductAPI,CartShopAPI, CartShop } from './layout';
-import { ProductItem,CartShopItem,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
+import {AlertShop} from './generic_overlay';
+//Interfaces
+import {CartShopAPI,ProductAPI,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
@@ -73,7 +76,6 @@ export const verifyProductInCart = (id:string, allProductsInCart: ProductAPI[]) 
         let elementID = allProductsInCart[i].uuid;
         let isSameID = elementID.localeCompare(id) === 0
         if( isSameID ){
-            //rompemos el bucle y devolvemos la posicion
             return i;
         }        
     }
@@ -108,14 +110,14 @@ export const addProductInCart = (index: number, product: ProductAPI, myCartInSto
  //Vaciar lista de productos - Local y la del Carrito
 export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
     if(myCartInStorage !== null){        
-        //setteamos todo el carrito
-
+        
         //Setteamos un metodo de pago por defecto
         const defaultPaymentMethod: PaymentMethod = {
             payment: PaymentMethodNumber.CASH, // Establecer el método de pago predeterminado
             verify: false // Establecer la verificación a falso o verdadero según corresponda
         };
 
+        //setteamos todo el carrito
         const newMockup: CartShopAPI = {
             allProduct: [],
             subtotal: 0,
@@ -135,29 +137,42 @@ export default function Page() {
     //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
     //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
-    const [products, setProducts] = useState<ProductAPI[]>([]);
-    //const [products, setProduct] = useState<ProductAPI[]>([]);
-    //cargamos los datos desde la API (StoreController por Metodo Get)
-    // useEffect(() => {
-
-    //         const loadDataProductAPI = async ()=>{
-    //             try{
-    //                 const response = await fetch('https://localhost:7161/api/Store')
-    //                 if (!response.ok){
-    //                     throw new Error('Failed to fetch data');                
-    //                 }
-
-    //                 const json = await response.json();
-    //                 setProduct(json.product)
-                              
-    //                 return json;
-    //             } catch (error) {
-    //                 throw new Error('Failed to fetch data');
-    //             }
+    const [products, setProducts] = useState<ProductAPI[]>([]);    
+    //cargamos los datos desde la API (StoreController por Metodo Get)    
+    // const loadDataProductAPI = async ()=>{
+    //     try{
+    //         console.log('Iniciando carga de datos desde la API...');
+    //         const response = await fetch('https://localhost:7161/api/Store')
+    //         if (!response.ok){
+    //             throw new Error('Failed to fetch data');                
     //         }
-    //     //console.log("LoadDataProductAPI: ",loadDataProductAPI());    
-    //     console.log(loadDataProductAPI());        
-    // }, []);           
+
+    //         const json = await response.json();
+    //         console.log('Datos recibidos desde la API:', json);
+
+    //         setProducts(json.product);                        
+    //         return json;
+    //     } catch (error) {
+    //         console.error('Error al cargar datos desde la API:', error);
+
+    //         throw new Error('Failed to fetch data');
+    //     }
+    // }        
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             console.log('Comenzando la solicitud de datos...');
+
+    //             await loadDataProductAPI(); // Esperar a que loadDataProductAPI() se resuelva
+    //             console.log('Solicitud de datos completada correctamente.');
+
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     };
+    //     fetchData();
+    // }, []);
+      
     fetch('https://localhost:7161/api/Store')
     .then(response => {
         if (!response.ok) {
@@ -200,11 +215,16 @@ export default function Page() {
             */}
           <h1>Lista de Productos</h1>             
           <div id='div_gallery' className="row">
-              {products.map(product => {
+              {products && products.length >= 0 && products.map(product => {
                   if (product.description === "carousel") {
                       return(
                           <section className="container_carousel col-sm-4" key="carousel">
-                              <StaticCarousel />;
+                              <StaticCarousel 
+                                    key={product.uuid} 
+                                    products={products}
+                                    myCartInStorage={myCartInStorage}                                    
+                                    setMyCartInStorage={setMyCartInStorage}           
+                              />;
                           </section>
                       ) 
                   } else {
@@ -222,7 +242,7 @@ export default function Page() {
       </div>
 
       {/*  */}
-      <footer>@ Derechos Reservados 2024</footer>
+      <footer>@ Derechos Reservados 2024</footer>      
     </main>
   );
 }

@@ -3,7 +3,7 @@ import {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ModalDirection } from './modal_direction';
-import { CartShopItem, CartShopAPI, ProductItem,ProductAPI } from './layout';
+import { CartShopAPI,ProductAPI } from './layout';
 import { totalPriceNoTax, totalPriceTax,deleteAllProduct,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
@@ -89,9 +89,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
             
             <ModalDirection 
                 show={modalShow}
-                onHide={() => setModalShow(false)}
-                // allProduct={allProduct}
-                // setAllProduct={setAllProduct}       
+                onHide={() => setModalShow(false)}                     
                 myCartInStorage={myCartInStorage}
                 setMyCartStorage={setMyCartInStorage}
             />

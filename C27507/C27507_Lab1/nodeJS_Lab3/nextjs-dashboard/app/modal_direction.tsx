@@ -4,9 +4,12 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { CartShopItem,CartShopAPI, ProductItem,ProductAPI,PaymentMethods,PaymentMethodNumber} from './layout';
+//Interfaces
+import {CartShopAPI,ProductAPI,PaymentMethods,PaymentMethodNumber} from './layout';
+//Componentes
 import { AlertShop } from './generic_overlay';
-import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
+//Metodos exportados
+import {setCartShopStorage } from './page';
 
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
@@ -89,6 +92,8 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
         const actualValue = event.target.value;        
         setTextAreaSinpe(actualValue);                  
     }
+
+
     //Todo lo relacionado a verify dejarlo quedito por mientras (preguntarle al profe)
     // const getCheckBoxVerify = (event: React.ChangeEvent<HTMLInputElement>)=>{
 
@@ -131,14 +136,12 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
         }     
 
         //Verificar que el value de la caja Sinpe sea igual al codigo dado por el sistema
-        let isSinpeCodeOk = payment === PaymentMethodNumber.SINPE && textAreaSinpe.trim() !== "";
+        let isSinpeCodeOk = payment === PaymentMethodNumber.SINPE && textAreaSinpe.trim() === "";
         if(isSinpeCodeOk){                        
-            callAlertShop("danger","Código de compra no coincide","El codigo de compra introducido no coincide con el brindado por el sistema")
+            callAlertShop("danger","Código de SINPE vacío","Debe colocar el cÓdigo de la transaccion SINPE")
             return;            
         }            
-        callAlertShop("success","Compra finalizada","Compra realizada con éxito")
-        
-        //resetModal();
+        callAlertShop("success","Compra finalizada","Compra realizada con éxito")        
     }    
 
     return (
@@ -153,7 +156,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
             <Form>
                 <fieldset>
                     <Form.Group className="mb-3">
-                        <Form.Label>Dirección de entrega:</Form.Label>
+                        <Form.Label style={{ fontWeight: 'bolder' }}>Dirección de entrega:</Form.Label>
                         <Form.Control rows={5} as="textarea" placeholder="Ingresa tu dirección para la entrega" value={textAreaDataDirection} onChange={getTextAreaDirection} />
                         <Form.Text className="text-muted">
                             Tu información es confidencial con nosotros
@@ -164,7 +167,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                     {finish ? (
                         <>
                             <Form.Group className="mb-3">
-                                <Form.Label htmlFor="disabledSelect">Forma de pago:</Form.Label>
+                                <Form.Label htmlFor="disabledSelect" style={{ fontWeight: 'bolder' }}>Forma de pago:</Form.Label>
                                 {/* El Form Select tiene un valor por defecto (el del useState) */}
                                 <Form.Select id="disabledSelect" value={payment} onChange={getSelectPayment}>
                                     <option value="">Seleccione un tipo de pago:</option>
@@ -183,7 +186,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                                     <Form.Label><span style={{ fontWeight: 'bolder' }}>Nuestro número de teléfono:</span> 62889872</Form.Label>
                                     <br />                                                                      
                                     <br />                                  
-                                    <Form.Label>Comprobante del SINPE:</Form.Label>
+                                    <Form.Label style={{ fontWeight: 'bolder' }}>Comprobante del SINPE:</Form.Label>
                                     <Form.Control rows={5} as="textarea" placeholder="Ingrese su comprobante" onChange={getTextAreaSinpe}/>
                                 </Form.Group>
                             </>
@@ -194,6 +197,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
                                 <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>
                             </Form.Group>
 
+                            {/* No borrar aun */}
                             {/* <Form.Group>                                
                                 <Form.Label htmlFor="disabledSelect">Indique si el pago requiere Verificación:</Form.Label>
                                 <Form.Check 

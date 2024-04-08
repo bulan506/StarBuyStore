@@ -19,101 +19,15 @@ export default function RootLayout({
   );
 }
 
-// export const product: ProductItem[] = [
-//   {
-//       id: 1,
-//       name: "Tablet Samsung",                
-//       imageUrl: './img/tablet_samsung.jpg',
-//       quantity: 0,
-//       price: 25
-//   },
-//   {
-//       id: 2,
-//       name: "TV LG UHD",                
-//       imageUrl: "./img/tv.jfif",
-//       quantity: 0,
-//       price: 50
-//   },
-//   {
-//       id: 3,
-//       name: "Auriculares Genericos",                
-//       imageUrl: "./img/auri.jfif",
-//       quantity: 0,
-//       price: 100
-//   },
-//   {
-//       id: 4,
-//       name: "Dualshock PS4",                
-//       imageUrl: "./img/dualshock4.jpg",
-//       quantity: 0,
-//       price: 35
-//   },
-//   {
-//       id: 5,
-//       name: "Teclado LED",                
-//       imageUrl: "./img/teclado.jpg",
-//       quantity: 0,
-//       price: 75
-//   },
-//   {
-//       id: 6,
-//       name: "Samsung Galaxy A54",                
-//       imageUrl: "./img/a54_samsung.png",
-//       quantity: 0,
-//       price: 150
-//   },
-//   {
-//       id: 7,
-//       name: "Dualshock PS5",
-//       imageUrl: "./img/dualshock5.jpg",
-//       quantity: 0,
-//       price: 250
-//   },
-//   {
-//       id: 8,                
-//       name: "Samsung A54",
-//       imageUrl: "./img/a54_samsung.jpg",
-//       quantity: 0,
-//       price: 250
-//   },
 
-//   {
-//     id: 9,                
-//     name: "Samsung A54",
-//     imageUrl: "./img/a54_samsung.jpg",
-//     quantity: 0,
-//     price: 250
-// },
-//   {
-//       id: 10,
-//       name: "Mouse Microsoft",
-//       imageUrl: "./img/mouse.png",
-//       quantity: 0,
-//       price: 2500
-//   },
-//   {
-//     id:11,
-//     name:"Módem Router - Archer VR400",
-//     imageUrl: "./img/router_archerVR400.jpg",
-//     quantity: 0,
-//     price: 75,
-//   }
-
-// ];
-
-export interface ProductItem {
-  id: number;
-  name: string;
-  imageUrl: string;
-  quantity: number;
-  price: number;
-}
-
-
-//Interfaces para serializar las json de la API
+//Interfaces para serializar las objetos JSON de la API
 export interface StoreAPI{
  products: ProductAPI[],
  taxPorcentage: number
+}
+
+export interface SaleAPI{ 
+  sale: CartShopAPI[]
 }
 export interface ProductAPI {
   uuid: string;
@@ -124,7 +38,7 @@ export interface ProductAPI {
   description: string  
 }
 
-export interface CartShopAPI {
+export interface CartShopAPI {  
   allProduct: ProductAPI[];
   subtotal: number;
   tax: number;
@@ -132,27 +46,6 @@ export interface CartShopAPI {
   direction: string; 
   paymentMethod: PaymentMethod
 }
-// export interface PaymentMethodAPI {
-//   payment: PaymentMethodNumber;
-//   verify: boolean;
-// }
-
-// export enum PaymentMethodNumberAPI {
-//   CASH = 1,
-//   CREDIT_CARD = 2,
-//   DEBIT_CARD = 3,
-//   SINPE = 4
-// }
-
-export interface CartShopItem {
-  allProduct: ProductItem[];
-  subtotal: number;
-  tax: number;
-  total: number;
-  direction: string; 
-  paymentMethod: PaymentMethod
-}
-
 
 export enum PaymentMethodNumber {
   CASH = 1,
@@ -191,14 +84,8 @@ interface ProductProps {
   myCartInStorage: CartShopAPI | null;
   setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
 }
-
-
 //Galeria de Productos
-export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCartInStorage}) => {
-
-  //Antigua forma con ProductItem
-  //const { uuid,name, imageUrl, price,quantity } = products;    
-
+export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCartInStorage}) => { 
   let uuid = product.uuid;
 
   const buyItem = () => {    
@@ -207,8 +94,7 @@ export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCa
     //condiciones    
     if (myCartInStorage) {
 
-      let indexInCart = verifyProductInCart(uuid,myCartInStorage.allProduct);      
-      console.log("Indice actual del ultimo producto",indexInCart)
+      let indexInCart = verifyProductInCart(uuid,myCartInStorage.allProduct);            
       addProductInCart(indexInCart,product,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
       
     } else {
