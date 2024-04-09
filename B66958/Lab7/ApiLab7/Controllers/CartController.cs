@@ -10,13 +10,16 @@ namespace ApiLab7.Controllers
     {
         private static List<Cart> Carts = new List<Cart>();
 
+        public CartController()
+        {
+            _cartHandler = new CartHandler();
+        }
+
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            // Add the cart to the list
             Carts.Add(cart);
 
-            // Return the newly created cart
             return Ok(cart);
         }
     }

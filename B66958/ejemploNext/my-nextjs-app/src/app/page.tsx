@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import NavBar from "./navbar/page";
 import Cart from './Cart/page';
 import Alert from 'react-bootstrap/Alert';
+import Carousel from 'react-bootstrap/Carousel';
 
 export default function Home() {
   const [isErrorShowing, setIsErrorShowing] = useState(false);
@@ -30,46 +31,16 @@ export default function Home() {
     necesitaVerificacion: false
   });
 
-  function clearProducts() {
-    localStorage.removeItem('cart');
-    setIdList([]);
-    setCart({
-      carrito: {
-        productos: [],
-        subtotal: 0,
-        porcentajeImpuesto: 13,
-        total: 0,
-        direccionEntrega: '',
-        metodoDePago: ''
-      },
-      metodosDePago: ['Efectivo', 'Sinpe'],
-      necesitaVerificacion: false
-    });
-  }
-
-  async function getData() {
-    try {
-      const res = await fetch('https://localhost:7151/api/Store');
-      if (!res.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      return res.json();
-    } catch (error) {
-      throw error;
-    }
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getData();
-        setProducts(result.products);
+        setProducts(result.products)
       } catch (error) {
         setErrorMessage(error)
         setIsErrorShowing(true)
       }
     };
-
     fetchData();
   }, []);
 
@@ -88,6 +59,23 @@ export default function Home() {
     }
     setCount(cart.carrito.productos.length);
   }, [cart, cartLoaded]);
+
+  function clearProducts() {
+    localStorage.removeItem('cart');
+    setIdList([]);
+    setCart({
+      carrito: {
+        productos: [],
+        subtotal: 0,
+        porcentajeImpuesto: 13,
+        total: 0,
+        direccionEntrega: '',
+        metodoDePago: ''
+      },
+      metodosDePago: ['Efectivo', 'Sinpe'],
+      necesitaVerificacion: false
+    });
+  }
 
   function productAlreadyAdded({ product }) {
     return idList.includes(product.uuid);
@@ -132,6 +120,18 @@ export default function Home() {
     setIsCartActive(action ? true : false);
   };
 
+  async function getData() {
+    try {
+      const res = await fetch('https://localhost:7151/api/Store');
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      return res.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   const Product = ({ product, handleAddToCart }) => {
     const { uuid, name, description, imageUrl, price } = product;
     return (
@@ -162,42 +162,24 @@ export default function Home() {
     );
   };
 
-  const CarouselItem = ({ product, active }) => {
-    return <div className={active ? "carousel-item active" : "carousel-item"}>
-      <img src={product.imageUrl} width="100%" />
-      <div className="container">
-        <div className="carousel-caption">
-          <h1>{product.name}</h1>
-          <p className="opacity-75">Precio: ${product.price}</p>
-          <p className="opacity-75">Descripción: {product.description}</p>
-        </div>
-      </div>
-    </div>
-  }
-
-  const Carousel = () => {
+  const CarouselBootstrap = () => {
     return (
-      <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
-        <div className="carousel-indicators">
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" className="active" aria-current="true"
-            aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-
-        <div className="carousel-inner">
-          {products.map(product => <CarouselItem product={product} active={1} />)}
-        </div>
-
-        <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-        </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-        </button>
-      </div>
+      <Carousel>
+        {products.map(product =>
+          <Carousel.Item key={product.uuid}>
+            <img
+              className="d-block w-100"
+              src={product.imageUrl}
+              alt="First slide"
+            />
+            <Carousel.Caption>
+              <h3>{product.name}</h3>
+              <p>${product.price}</p>
+              <p>{product.description}</p>
+              <button type="button" className="btn btn-light" onClick={() => handleAddToCart({ product })}>Comprar</button>
+            </Carousel.Caption>
+          </Carousel.Item>)}
+      </Carousel>
     );
   }
 
@@ -205,21 +187,21 @@ export default function Home() {
     <div className="d-grid gap-2">
       <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
       {isCartActive ? <Cart cart={cart} setCart={setCart}
-        toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} /> : <MyRow />}
-      {/* <Carousel />*/}
+        toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} /> : <><MyRow /> <CarouselBootstrap /></>}
       {isErrorShowing ?
         <div
           style={{
             position: 'fixed',
             bottom: 20,
             right: 20,
-            zIndex: 9999, // Ensure it's above other content
+            zIndex: 9999,
           }}
         >
           <Alert variant="danger" onClose={() => setIsErrorShowing(false)} dismissible>
             <Alert.Heading>Error</Alert.Heading>
             <p>{errorMessage.toString()}</p>
-          </Alert> </div> : ''
+          </Alert>
+        </div> : ''
       }
     </div>
   );
