@@ -1,5 +1,4 @@
 
-namespace StoreApi;
 public class CartRepository
 {
     public CartRepository();

@@ -1,5 +1,7 @@
-namespace StoreApi.Models
-{
+using StoreApi.Models;
+
+namespace StoreApi;
+
 public sealed class Store
 {
     public List<Product> Products { get; private set; }
@@ -225,5 +227,4 @@ public sealed class Store
 
         Store.Instance = new Store(products, 13, paymentMethods);
     }
-}
 }

@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using StoreApi.Models;
 using System;
 using System.Collections.Generic;
 
-namespace ApiLab7.Controllers
+namespace StoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

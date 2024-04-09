@@ -1,4 +1,8 @@
-namespace StoreApi;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using StoreApi.Models;
+
 public class CartHandler
 {
     private readonly CartRepository _cartRepository;

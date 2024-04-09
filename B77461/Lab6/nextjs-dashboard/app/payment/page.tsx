@@ -1,16 +1,23 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import Alert from 'react-bootstrap/Alert';
 
-const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => void }) => {
+const PaymentForm = ({ cart, setCart, clearProducts }:
+    { cart: any, setCart: (cart: any) => void, clearProducts: () => void }) => {
+
+    const [isMessageShowing, setIsMessageShowing] = useState(false);
+    const [message, setMessage] = useState('');
+    const [alertType, setAlertType] = useState(0);
     const [orderNumber, setOrderNumber] = useState('');
-    const [progress, setProgress] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [finishedSale, setFinishedSale] = useState(false);
 
     enum PaymentMethod {
-        EFECTIVO = 'Efectivo',
-        SINPE = 'Sinpe'
+        EFECTIVO = 0,
+        SINPE = 1
     }
+
     useEffect(() => {
         setCart(cart => ({
             ...cart,
@@ -30,7 +37,7 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
                 ...cart.carrito,
                 metodoDePago: event.target.selectedIndex === 0 ? PaymentMethod.EFECTIVO : PaymentMethod.SINPE
             },
-            verificacion: true
+            necesitaVerificacion: true
         }));
     }
 
@@ -40,75 +47,99 @@ const PaymentForm = ({ cart, setCart }: { cart: any, setCart: (cart: any) => voi
         setOrderNumber(timestamp + randomNumber);
     }
 
-    useEffect(() => {
-        generateReceiptNumber();
-    }, [])
+    async function persistPurchase() {
 
-    const increaseProgress = () => {
-        if (progress < 100) {
-            setProgress(progress + 10);
+        let purchaseToPersist = {
+            "productIds": cart.carrito.productos.map(product => product.uuid),
+            "address": cart.carrito.direccionEntrega,
+            "paymentMethod": cart.carrito.metodoDePago
         }
-    };
+
+        try {
+            const res = await fetch('https://localhost:7151/api/Cart', {
+                method: 'POST',
+                body: JSON.stringify(purchaseToPersist),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+            if (res.ok) { setMessage("Se realizó su compra"); setAlertType(0) }
+            else { setMessage("Error al realizar la compra"); setAlertType(1) }
+        } catch (error) {
+            setMessage(error);
+            setAlertType(1)
+        } finally {
+            setIsMessageShowing(true);
+        }
+    }
+
+    async function finishPurchase() {
+        generateReceiptNumber();
+        setFinishedSale(true);
+        clearProducts();
+        await persistPurchase();
+    }
 
     const Efectivo = () => {
-        return <div className="card effect-card w-75">
+        return <div className="card w-100">
             <div className="card-body">
                 <div className="d-grid w-100 justify-content-center">
-                    <strong>Número de compra: {orderNumber}</strong>
-                    <p className=""></p>
-                    <em>Por favor, espere la confirmación de pago del admin</em>
+                    <label>Número de compra: {orderNumber}</label>
+                    <label>Por favor espere la confirmación de pago por parte del administrador</label>
                 </div>
             </div>
         </div>
     }
 
     const Sinpe = () => {
-        const [comprobante, setComprobante] = useState('');
-    
-        const handleComprobanteChange = (event) => {
-            setComprobante(event.target.value);
-        };
-    
-        return (
-            <div className="card sinpe-card w-75">
-                <div className="card-body">
-                    <div className="d-grid w-100 justify-content-center">
-                        <strong>Número de compra: {orderNumber}</strong>
-                        <strong>Número para realizar el pago: +506 6270 6880</strong>
-                        <input
-                            type="text"
-                            className="form-control mt-3"
-                            placeholder="Indique el comprobante"
-                            value={comprobante}
-                            onChange={handleComprobanteChange}
-                            
-                        />
-                        <p className=""></p>
-                        <em>Por favor, espere la confirmación del admin</em>
-                    </div>
+        return <div className="card w-100">
+            <div className="card-body">
+                <div className="d-grid w-100 justify-content-center">
+                    <label>Número de compra: {orderNumber}</label>
+                    <label>Número para realizar el pago: +506 8888 8888</label>
+                    <label>Por favor espere la confirmación de pago por parte del administrador</label>
                 </div>
             </div>
-        );
-    };
-    
+        </div>
+    }
 
     return <div className="container">
         <div className="d-grid justify-content-center gap-4">
             <div className="container">
                 <h3>Métodos de pago</h3>
                 <div className="form-group">
-                    <select className="form-control" onChange={handleSelectPayment} value={cart.carrito.metodoDePago}>
+                    <select className="form-control" onChange={handleSelectPayment}
+                        value={cart.carrito.metodoDePago} disabled={finishedSale}>
                         {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
                     </select>
                 </div>
+                <div className="d-flex w-100 justify-content-center">
+                    <button className="btn btn-primary"
+                        disabled={finishedSale} onClick={finishPurchase}>
+                        Finalizar Compra</button>
+                </div>
             </div>
-            {(selectedIndex === 0 ? <Efectivo /> : <Sinpe />)}
-            <div className="progress">
-                <div className="custom-progress">
-                <div className="custom-progress-bar" style={{ width: `${progress}%` }}></div>
-            </div>
-            <button className="btn btn-primary" onClick={increaseProgress}>Incrementar progreso</button>
-            </div>
+            {finishedSale ? (selectedIndex === 0 ? <Efectivo /> : <Sinpe />) : ''}
+            {finishedSale ? <div className="progress">
+                <div className="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" aria-valuenow={75} aria-valuemin={0}
+                    aria-valuemax={100} style={{ width: '100%' }}></div>
+            </div> : ''}
+            {isMessageShowing ?
+                <div
+                    style={{
+                        position: 'fixed',
+                        bottom: 20,
+                        right: 20,
+                        zIndex: 9999, // Ensure it's above other content
+                    }}
+                >
+                    <Alert variant={alertType === 0 ? "success" : "danger"}
+                        onClose={() => setIsMessageShowing(false)} dismissible>
+                        <Alert.Heading>{alertType === 0 ? 'Información' : 'Error'}</Alert.Heading>
+                        <p>{message.toString()}</p>
+                    </Alert> </div> : ''
+            }
         </div>
     </div>
 }
