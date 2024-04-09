@@ -1,27 +1,28 @@
 namespace StoreApi.Models
 {
-    public sealed class Store
+public sealed class Store
 {
     public List<Product> Products { get; private set; }
     public int TaxPercentage { get; private set; }
+    public List<PaymentMethods> paymentMethods{ get; private set; }
 
-    private Store( List<Product> products, int TaxPercentage )
+    private Store( List<Product> products, int TaxPercentage, List<PaymentMethods> paymentMethods )
     {
         this.Products = products;
         this.TaxPercentage = TaxPercentage;
+        this.paymentMethods = paymentMethods;
     }
 
     public readonly static Store Instance;
-    // Static constructor
+    
     static Store()
     {
-        //var products = new List<Product>();
+        var products = new List<Product>();
 
-    var products = new List<Product>
+        var productsData = new[]
+        {
+            new Product
     {
-    new Product
-    {
-        Id = 1,
         Name = "Audifonos",
         Description = "Audifonos RGB",
         ImageUrl = "https://tienda.starware.com.ar/wp-content/uploads/2021/05/auriculares-gamer-headset-eksa-e1000-v-surround-71-rgb-pc-ps4-verde-2331-3792.jpg",
@@ -31,7 +32,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 2,
         Name = "Teclado",
         Description = "Teclado mecánico RGB",
         ImageUrl = "https://kuwait.gccgamers.com/razer-deathstalker-v2/assets/product.webp",
@@ -41,7 +41,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 3,
         Name = "Mouse",
         Description = "Mouse inalámbrico",
         ImageUrl = "https://static3.tcdn.com.br/img/img_prod/374123/mouse_gamer_impact_rgb_12400_dpi_m908_redragon_29921_3_20190927170055.jpg",
@@ -51,7 +50,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 4,
         Name = "Monitor",
         Description = "Monitor LCD",
         ImageUrl = "https://i5.walmartimages.ca/images/Large/956/188/6000199956188.jpg",
@@ -61,7 +59,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 5,
         Name = "CASE",
         Description = "Case CPU",
         ImageUrl = "https://th.bing.com/th/id/OIP.mhKR13PBP5mQP85l2c4DWgHaHa?rs=1&pid=ImgDetMain",
@@ -71,7 +68,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 6,
         Name = "MousePad",
         Description = "MousePad HYPER X",
         ImageUrl = "https://s3.amazonaws.com/static.spdigital.cl/img/products/new_web/1500590806008-36964857_0168832511.jpg",
@@ -81,7 +77,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 7,
         Name = "Laptop",
         Description = "Laptop ASUS",
         ImageUrl = "https://resources.claroshop.com/medios-plazavip/s2/10252/1145258/5d13a10bac9b0-laptop-gamer-asus-rog-strix-scar-ii-i7-16gb-512gb-rtx-2070-1600x1600.jpg",
@@ -91,7 +86,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 8,
         Name = "Tarjeta de Video",
         Description = "Tarjeta Nvidia 4060",
         ImageUrl = "https://ddtech.mx/assets/uploads/861311bd60bf6ede94bfe7ab01e705a3.png",
@@ -101,7 +95,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 9,
         Name = "Control",
         Description = "Control STEAM",
         ImageUrl = "https://th.bing.com/th/id/OIP.lNj-nw7kO0Q73XjkAvaQkwHaJJ?rs=1&pid=ImgDetMain",
@@ -111,7 +104,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 10,
         Name = "Gafas VR",
         Description = "Gafas VR PS4",
         ImageUrl = "https://www.discoazul.com/uploads/media/images/gafas-playstation-vr-ps4-1.jpg",
@@ -121,7 +113,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 11,
         Name = "Pantalla",
         Description = "Pantalla LG OLED",
         ImageUrl = "https://th.bing.com/th/id/OIP.nC89zBQSGxR8hyVnocBvlQHaGb?rs=1&pid=ImgDetMain",
@@ -131,7 +122,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 12,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -140,7 +130,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 13,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -149,7 +138,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 14,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -158,7 +146,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 15,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -167,7 +154,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 15,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -176,7 +162,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 16,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -185,7 +170,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 17,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -194,7 +178,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 18,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -203,7 +186,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 19,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -212,7 +194,6 @@ namespace StoreApi.Models
     },
     new Product
     {
-        Id = 20,
         Name = "Celular",
         Description = "ASUS ROG",
         ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
@@ -222,34 +203,27 @@ namespace StoreApi.Models
 
     };
 
-        Store.Instance = new Store(products, 20);
-    }
 
-
-    public Sale Purchase (Cart cart)
-    {
-        if (cart.ProductIds.Count == 0)  throw new ArgumentException("Cart must contain at least one product.");
-        if (string.IsNullOrWhiteSpace(cart.Address))throw new ArgumentException("Address must be provided.");
-
-         // Find matching products based on the product IDs in the cart
-        IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();
-
-        // Create shadow copies of the matching products
-        IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
-
-        // Calculate purchase amount by multiplying each product's price with the store's tax percentage
-        decimal purchaseAmount = 0;
-        foreach (var product in shadowCopyProducts)
+        for (int i = 1; i <= 40; i++)
         {
-            product.Price *= (1 + (decimal)TaxPercentage / 100);
-            purchaseAmount += product.Price;
+            var productData = productsData[(i - 1) % productsData.Length];
+
+            products.Add(new Product
+            {
+                Name = $"Producto {i}",
+                ImageUrl = productData.imageUrl,
+                Price = Convert.ToDecimal(productData.price) * i,
+                Description = $"{productData.description} {i}",
+                Uuid = Guid.NewGuid(),
+                Quantity = productData.Quantity
+            });
         }
 
-        // Create a sale object
-        var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
+        var paymentMethods = new List<PaymentMethods>();
+        paymentMethods.Add(new Sinpe());
+        paymentMethods.Add(new Cash());
 
-        return sale;
-
+        Store.Instance = new Store(products, 13, paymentMethods);
     }
 }
 }

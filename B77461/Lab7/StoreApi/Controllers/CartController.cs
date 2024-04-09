@@ -1,24 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using StoreApi.Models;
 using System;
 using System.Collections.Generic;
 
-
-namespace StoreApi.Controllers
-{[Route("api/[controller]")]
+namespace ApiLab7.Controllers
+{
+    [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
     {
         private static List<Cart> Carts = new List<Cart>();
 
+        public CartController()
+        {
+            _cartHandler = new CartHandler();
+        }
+
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            // Add the cart to the list
             Carts.Add(cart);
 
-            // Return the newly created cart
             return Ok(cart);
         }
     }
+
 }
