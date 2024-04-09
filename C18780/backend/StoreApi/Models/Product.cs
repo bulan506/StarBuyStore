@@ -7,7 +7,7 @@ public class Product : ICloneable
     public string Description { get; set; }
     public Guid Uuid { get; set; }
 
-        // Implementation of the ICloneable interface
+    // Implementation of the ICloneable interface
     public object Clone()
     {
         return new Product
