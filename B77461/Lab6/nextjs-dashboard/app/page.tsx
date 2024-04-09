@@ -78,6 +78,42 @@ export default function Home() {
     });
   }
 
+  function removeProduct(product) {
+    let newProductos;
+    let newSubTotal;
+    let newTotal;
+
+    if (product.cantidad > 1) {
+        // Si la cantidad es mayor que 1, simplemente restamos uno a la cantidad
+        newProductos = cart.carrito.productos.map(prod =>
+            prod.id === product.id ? { ...prod, cantidad: prod.cantidad - 1 } : prod
+        );
+
+        newSubTotal = cart.carrito.subtotal - product.price;
+        newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+    } else {
+        // Si la cantidad es igual a 1, eliminamos el producto del carrito
+        newProductos = cart.carrito.productos.filter(prod => prod.id !== product.id);
+        newSubTotal = newProductos.reduce((acc, curr) => acc + curr.price * curr.cantidad, 0);
+        newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+
+        setIdList(prevList => prevList.filter(id => id !== product.id)); // Eliminar el producto del idList
+    }
+
+    setCart(prevCart => ({
+        ...prevCart,
+        carrito: {
+            ...prevCart.carrito,
+            productos: newProductos,
+            subtotal: newSubTotal,
+            total: newTotal
+        }
+    }));
+
+    setCount(count - 1); // Restar 1 al contador count
+}
+
+
   function productAlreadyAdded({ product }) {
     return idList.includes(product.uuid);
   }
@@ -123,7 +159,7 @@ export default function Home() {
 
   async function getData() {
     try {
-      const res = await fetch('https://localhost:7151/api/Store');
+      const res = await fetch('https://localhost:7075/api/Store');
       if (!res.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -188,7 +224,7 @@ export default function Home() {
     <div className="d-grid gap-2">
       <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
       {isCartActive ? <Cart cart={cart} setCart={setCart}
-        toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} /> : <><MyRow /> <CarouselBootstrap /></>}
+        toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} removeProduct={removeProduct}/> : <><MyRow /> <CarouselBootstrap /></>}
       {isErrorShowing ?
         <div
           style={{
