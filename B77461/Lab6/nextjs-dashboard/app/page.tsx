@@ -29,7 +29,7 @@ export default function Home() {
       metodoDePago: ''
     },
     metodosDePago: ['Efectivo', 'Sinpe'],
-    necesitaVerificacion: false
+    verificacion: false
   });
 
   useEffect(() => {
@@ -47,8 +47,8 @@ export default function Home() {
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
-    let cartExistsAndIsLoaded = storedCart && !cartLoaded;
-    if (cartExistsAndIsLoaded) {
+    let cartExistsAndLoaded = storedCart && !cartLoaded;
+    if (cartExistsAndLoaded) {
       setCart(JSON.parse(storedCart));
       setCartLoaded(true);
     }
@@ -74,7 +74,7 @@ export default function Home() {
         metodoDePago: ''
       },
       metodosDePago: ['Efectivo', 'Sinpe'],
-      necesitaVerificacion: false
+      verificacion: false
     });
   }
 
@@ -114,7 +114,7 @@ export default function Home() {
 }
 
 
-  function productAlreadyAdded({ product }) {
+  function productAdded({ product }) {
     return idList.includes(product.uuid);
   }
 
@@ -145,7 +145,7 @@ export default function Home() {
   }
 
   const handleAddToCart = ({ product }: any) => {
-    if (!productAlreadyAdded({ product })) {
+    if (!productAdded({ product })) {
       idList.push(product.uuid);
       addProductToCart({ product });
       calculateTotals({ product });
