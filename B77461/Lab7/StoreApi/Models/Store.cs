@@ -213,9 +213,9 @@ public sealed class Store
             products.Add(new Product
             {
                 Name = $"Producto {i}",
-                ImageUrl = productData.imageUrl,
-                Price = Convert.ToDecimal(productData.price) * i,
-                Description = $"{productData.description} {i}",
+                ImageUrl = productData.ImageUrl,
+                Price = Convert.ToDecimal(productData.Price) * i,
+                Description = $"{productData.Description} {i}",
                 Uuid = Guid.NewGuid(),
                 Quantity = productData.Quantity
             });
