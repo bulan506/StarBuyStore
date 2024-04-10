@@ -139,54 +139,41 @@ export default function Page() {
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);    
     //cargamos los datos desde la API (StoreController por Metodo Get)    
-    // const loadDataProductAPI = async ()=>{
-    //     try{
-    //         console.log('Iniciando carga de datos desde la API...');
-    //         const response = await fetch('https://localhost:7161/api/Store')
-    //         if (!response.ok){
-    //             throw new Error('Failed to fetch data');                
-    //         }
+    const loadDataProductAPI = async ()=>{
+        try{
+            console.log('Iniciando carga de datos desde la API...');
+            const response = await fetch('https://localhost:7161/api/Store')
+            if (!response.ok){
+                throw new Error('Failed to fetch data');                
+            }
 
-    //         const json = await response.json();
-    //         console.log('Datos recibidos desde la API:', json);
+            const json = await response.json();
+            console.log('Datos recibidos desde la API:', json);
 
-    //         setProducts(json.product);                        
-    //         return json;
-    //     } catch (error) {
-    //         console.error('Error al cargar datos desde la API:', error);
+            setProducts(json.products);                        
+            return json;
+        } catch (error) {
+            console.error('Error al cargar datos desde la API:', error);
 
-    //         throw new Error('Failed to fetch data');
-    //     }
-    // }        
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             console.log('Comenzando la solicitud de datos...');
-
-    //             await loadDataProductAPI(); // Esperar a que loadDataProductAPI() se resuelva
-    //             console.log('Solicitud de datos completada correctamente.');
-
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     };
-    //     fetchData();
-    // }, []);
-      
-    fetch('https://localhost:7161/api/Store')
-    .then(response => {
-        if (!response.ok) {
             throw new Error('Failed to fetch data');
         }
-        return response.json();
-    })
-    .then(data => {
-        setProducts(data.products);
-        //console.log("ora si, ",data.products);
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
+    }     
+    loadDataProductAPI();
+      
+    // fetch('https://localhost:7161/api/Store')
+    // .then(response => {
+    //     if (!response.ok) {
+    //         throw new Error('Failed to fetch data');
+    //     }
+    //     return response.json();
+    // })
+    // .then(data => {
+    //     setProducts(data.products);
+    //     //console.log("ora si, ",data.products);
+    // })
+    // .catch(error => {
+    //     console.error('Error fetching data:', error);
+    // });
             
 
   return (
