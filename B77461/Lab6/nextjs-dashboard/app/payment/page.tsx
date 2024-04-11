@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Alert from 'react-bootstrap/Alert';
+import AddressForm from "../address/page";
 
 const PaymentForm = ({ cart, setCart }:
     { cart: any, setCart: (cart: any) => void }) => {
@@ -12,6 +13,12 @@ const PaymentForm = ({ cart, setCart }:
     const [orderNumber, setOrderNumber] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [finishedSale, setFinishedSale] = useState(false);
+
+    const [showAddressForm, setShowAddressForm] = useState(false);
+
+    function handleAddressForm() {
+        setShowAddressForm(!showAddressForm);
+    }
 
     enum PaymentMethod {
         CASH = 0,
@@ -121,40 +128,55 @@ const PaymentForm = ({ cart, setCart }:
         </div>
     }
 
-    return <div className="container">
-    <div className="d-grid justify-content-center gap-4">
-        <div className="container">
-            <h3>Métodos de pago</h3>
-            <div className="form-group">
-                <select className="form-control" onChange={handleSelectPayment}
-                    value={cart.carrito.metodoDePago} disabled={finishedSale}>
-                    {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
-                </select>
-            </div>
-            <div className="d-flex w-100 justify-content-center">
-                <button className="btn btn-primary"
-                    disabled={finishedSale} onClick={finishPurchase}>
-                    Finalizar Compra</button>
-            </div>
-        </div>
-        {finishedSale ? (selectedIndex === 0 ? <Cash /> : <Sinpe />) : ''}
-        {MessageShowing ?
-            <div
-                style={{
-                    position: 'fixed',
-                    bottom: 20,
-                    right: 20,
-                    zIndex: 9999, // Ensure it's above other content
-                }}
-            >
-                <Alert variant={alertType === 0 ? "success" : "danger"}
-                    onClose={() => setMessageShowing(false)} dismissible>
-                    <Alert.Heading>{alertType === 0 ? 'Información' : 'Error'}</Alert.Heading>
-                    <p>{message.toString()}</p>
-                </Alert> </div> : ''
-        }
-    </div>
-</div>
+    return (
+      <div className="container">
+          {showAddressForm ? (
+              <AddressForm handleAddressForm={handleAddressForm} cart={cart} setCart={setCart} />
+          ) : (
+              <div className="d-grid justify-content-center gap-4">
+                  <div className="container">
+                      <h3>Métodos de pago</h3>
+                      <div className="form-group">
+                          <select className="form-control" onChange={handleSelectPayment} value={cart.carrito.metodoDePago} disabled={finishedSale}>
+                              {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
+                          </select>
+                      </div>
+                      <div className="d-flex w-100 justify-content-center">
+                          <button className="btn btn-primary" disabled={finishedSale} onClick={finishPurchase}>
+                              Finalizar Compra
+                          </button>
+                      </div>
+                  </div>
+  
+                  <div className="d-flex w-100 justify-content-center">
+                      <button type="button" className="btn btn-primary mr-2" >
+                          Atrás
+                      </button>
+                  </div>
+  
+                  {finishedSale ? (selectedIndex === 0 ? <Cash /> : <Sinpe />) : ''}
+                  {MessageShowing ? (
+                      <div
+                          style={{
+                              position: 'fixed',
+                              bottom: 20,
+                              right: 20,
+                              zIndex: 9999,
+                          }}
+                      >
+                          <Alert variant={alertType === 0 ? 'success' : 'danger'} onClose={() => setMessageShowing(false)} dismissible>
+                              <Alert.Heading>{alertType === 0 ? 'Información' : 'Error'}</Alert.Heading>
+                              <p>{message.toString()}</p>
+                          </Alert>
+                      </div>
+                  ) : (
+                      ''
+                  )}
+              </div>
+          )}
+      </div>
+  );
+  
       
 }
 

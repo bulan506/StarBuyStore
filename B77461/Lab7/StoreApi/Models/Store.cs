@@ -130,89 +130,18 @@ public sealed class Store
         Price = 900.0m,
         Quantity = 1
     },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    },
-    new Product
-    {
-        Name = "Celular",
-        Description = "ASUS ROG",
-        ImageUrl = "https://www.latercera.com/resizer/E392-vfE0PVd1xTj8wEKR6Ud7Z0=/800x0/smart/cloudfront-us-east-1.images.arcpublishing.com/copesa/3QACWYB2FNENTINU4KTAXU2D2A.jpg",
-        Price = 900.0m,
-        Quantity = 1
-    }
+    
 
     };
 
 
-        for (int i = 1; i <= 40; i++)
+        for (int i = 1; i <= 30; i++)
         {
             var productData = productsData[(i - 1) % productsData.Length];
 
             products.Add(new Product
             {
-                Name = $"Producto {i}",
+                Name = productData.Name,
                 ImageUrl = productData.ImageUrl,
                 Price = Convert.ToDecimal(productData.Price) * i,
                 Description = $"{productData.Description} {i}",

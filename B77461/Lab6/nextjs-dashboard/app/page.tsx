@@ -186,7 +186,7 @@ export default function Home() {
   const CarouselBootstrap = () => {
     return (
       <Carousel>
-        {products.map(product =>
+        {products.slice(0, 10).map(product =>
           <Carousel.Item key={product.uuid}>
             <img
               className="d-block w-100"
@@ -196,7 +196,7 @@ export default function Home() {
               <h3>{product.name}</h3>
               <p>${product.price}</p>
               <p>{product.description}</p>
-              <button type="button" className="btn btn-buy"  onClick={() => handleAddToCart({ product })}>Agregar</button>
+              <button type="button" className="btn btn-buy"  onClick={() => handleAddCart({ product })}>Agregar</button>
             </Carousel.Caption>
           </Carousel.Item>)}
       </Carousel>

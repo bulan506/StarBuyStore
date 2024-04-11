@@ -21,6 +21,7 @@ const AddressForm = ({ handleAddressForm, cart, setCart }:
     }
 
     function handlePaymentChange(show: boolean) {
+       
         setShowPaymentForm(show);
     }
 
