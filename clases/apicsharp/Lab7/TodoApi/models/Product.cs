@@ -1,4 +1,4 @@
-namespace TodoApi;
+namespace TodoApi.models;
 public class Product : ICloneable
 {
     public string Name { get; set; }

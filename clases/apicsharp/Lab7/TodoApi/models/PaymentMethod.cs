@@ -1,5 +1,5 @@
 
-namespace TodoApi;
+namespace TodoApi.models;
 
 
 public abstract class PaymentMethods{
