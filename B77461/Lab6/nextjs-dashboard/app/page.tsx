@@ -8,12 +8,12 @@ import Alert from 'react-bootstrap/Alert';
 import Carousel from 'react-bootstrap/Carousel';
 
 export default function Home() {
-  const [isErrorShowing, setIsErrorShowing] = useState(false);
+  const [ErrorShowing, setErrorShowing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [products, setProducts] = useState([]);
 
-  const [isCartActive, setIsCartActive] = useState(false);
+  const [CartActive, setCartActive] = useState(false);
 
   const [count, setCount] = useState(0);
   const [idList, setIdList] = useState([]);
@@ -35,20 +35,56 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getData();
+        const result = await getProducts();
         setProducts(result.products)
       } catch (error) {
         setErrorMessage(error)
-        setIsErrorShowing(true)
+        setErrorShowing(true)
       }
     };
     fetchData();
   }, []);
 
+
+  function removeProduct(product: any) {
+    let newProductos;
+    let newSubTotal;
+    let newTotal;
+
+    if (product.cantidad > 1) {
+      // Si la cantidad es mayor que 1, simplemente restamos uno a la cantidad
+      newProductos = cart.carrito.productos.map((prod: any) =>
+        prod.id === product.id ? { ...prod, cantidad: prod.cantidad - 1 } : prod
+      );
+
+      newSubTotal = cart.carrito.subtotal - product.price;
+      newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+    } else {
+      // Si la cantidad es igual a 1, eliminamos el producto del carrito
+      newProductos = cart.carrito.productos.filter((prod: any) => prod.id !== product.id);
+      newSubTotal = newProductos.reduce((acc: any, curr: any) => acc + curr.price * curr.cantidad, 0);
+      newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
+
+      setIdList(prevList => prevList.filter(id => id !== product.id)); // Eliminar el producto del idList
+    }
+
+    setCart((prevCart: any) => ({
+      ...prevCart,
+      carrito: {
+        ...prevCart.carrito,
+        productos: newProductos,
+        subtotal: newSubTotal,
+        total: newTotal
+      }
+    }));
+
+    setCount(count - 1); // Restar 1 al contador count
+}
+
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
-    let cartExistsAndLoaded = storedCart && !cartLoaded;
-    if (cartExistsAndLoaded) {
+    let cartExistsLoaded = storedCart && !cartLoaded;
+    if (cartExistsLoaded) {
       setCart(JSON.parse(storedCart));
       setCartLoaded(true);
     }
@@ -61,64 +97,12 @@ export default function Home() {
     setCount(cart.carrito.productos.length);
   }, [cart, cartLoaded]);
 
-  function clearProducts() {
-    localStorage.removeItem('cart');
-    setIdList([]);
-    setCart({
-      carrito: {
-        productos: [],
-        subtotal: 0,
-        porcentajeImpuesto: 13,
-        total: 0,
-        direccionEntrega: '',
-        metodoDePago: ''
-      },
-      metodosDePago: ['Efectivo', 'Sinpe'],
-      verificacion: false
-    });
-  }
-
-  function removeProduct(product) {
-    let newProductos;
-    let newSubTotal;
-    let newTotal;
-
-    if (product.cantidad > 1) {
-        // Si la cantidad es mayor que 1, simplemente restamos uno a la cantidad
-        newProductos = cart.carrito.productos.map(prod =>
-            prod.id === product.id ? { ...prod, cantidad: prod.cantidad - 1 } : prod
-        );
-
-        newSubTotal = cart.carrito.subtotal - product.price;
-        newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
-    } else {
-        // Si la cantidad es igual a 1, eliminamos el producto del carrito
-        newProductos = cart.carrito.productos.filter(prod => prod.id !== product.id);
-        newSubTotal = newProductos.reduce((acc, curr) => acc + curr.price * curr.cantidad, 0);
-        newTotal = newSubTotal + (newSubTotal * (cart.carrito.porcentajeImpuesto / 100));
-
-        setIdList(prevList => prevList.filter(id => id !== product.id)); // Eliminar el producto del idList
-    }
-
-    setCart(prevCart => ({
-        ...prevCart,
-        carrito: {
-            ...prevCart.carrito,
-            productos: newProductos,
-            subtotal: newSubTotal,
-            total: newTotal
-        }
-    }));
-
-    setCount(count - 1); // Restar 1 al contador count
-}
-
-
+  
   function productAdded({ product }) {
     return idList.includes(product.uuid);
   }
 
-  function addProductToCart({ product }: any) {
+  function addProductCart({ product }: any) {
     const newProductos = [...(cart.carrito.productos || []), product];
     setCart(cart => ({
       ...cart,
@@ -144,20 +128,20 @@ export default function Home() {
     }));
   }
 
-  const handleAddToCart = ({ product }: any) => {
+  const handleAddCart = ({ product }: any) => {
     if (!productAdded({ product })) {
       idList.push(product.uuid);
-      addProductToCart({ product });
+      addProductCart({ product });
       calculateTotals({ product });
       setCount(count + 1);
     }
   };
 
   const toggleCart = ({ action }: any) => {
-    setIsCartActive(action ? true : false);
+    setCartActive(action ? true : false);
   };
 
-  async function getData() {
+  async function getProducts() {
     try {
       const res = await fetch('https://localhost:7075/api/Store');
       if (!res.ok) {
@@ -181,7 +165,7 @@ export default function Home() {
             <h5>{name}</h5>
             <p>Precio: ${price}</p>
             <p>Descripción: {description}</p>
-            <button type="button" className="btn btn-light" onClick={() => handleAddToCart({ product })}>Comprar</button>
+            <button type="button" className="btn btn-buy"  onClick={() => handleAddToCart({ product })}>Agregar</button>
           </div>
         </div>
       </div>
@@ -193,7 +177,7 @@ export default function Home() {
       <>
         <h1>Lista de productos</h1>
         <div className="row justify-content-md-center">
-          {products.map(product => <Product key={product.uuid} product={product} handleAddToCart={handleAddToCart} />)}
+          {products.map(product => <Product key={product.uuid} product={product} handleAddToCart={handleAddCart} />)}
         </div>
       </>
     );
@@ -206,26 +190,26 @@ export default function Home() {
           <Carousel.Item key={product.uuid}>
             <img
               className="d-block w-100"
-              src={product.imageUrl}
-              alt="First slide"
+              src={product.imageUrl} 
             />
             <Carousel.Caption>
               <h3>{product.name}</h3>
               <p>${product.price}</p>
               <p>{product.description}</p>
-              <button type="button" className="btn btn-light" onClick={() => handleAddToCart({ product })}>Comprar</button>
+              <button type="button" className="btn btn-buy"  onClick={() => handleAddToCart({ product })}>Agregar</button>
             </Carousel.Caption>
           </Carousel.Item>)}
       </Carousel>
     );
   }
+  
 
   return (
     <div className="d-grid gap-2">
       <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
-      {isCartActive ? <Cart cart={cart} setCart={setCart}
-        toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} removeProduct={removeProduct}/> : <><MyRow /> <CarouselBootstrap /></>}
-      {isErrorShowing ?
+      {CartActive ? <Cart cart={cart} setCart={setCart}
+        toggleCart={(action) => toggleCart({ action })} removeProduct={removeProduct}/> : <><MyRow /> <CarouselBootstrap /></>}
+      {ErrorShowing ?
         <div
           style={{
             position: 'fixed',
@@ -234,7 +218,7 @@ export default function Home() {
             zIndex: 9999,
           }}
         >
-          <Alert variant="danger" onClose={() => setIsErrorShowing(false)} dismissible>
+          <Alert variant="danger" onClose={() => setErrorShowing(false)} dismissible>
             <Alert.Heading>Error</Alert.Heading>
             <p>{errorMessage.toString()}</p>
           </Alert>
@@ -242,4 +226,6 @@ export default function Home() {
       }
     </div>
   );
+
+  
 }

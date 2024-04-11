@@ -3,13 +3,20 @@ using System;
 using System.Collections.Generic;
 using StoreApi.Models;
 
+namespace StoreApi.Handlers;
+
+
 public class CartHandler
 {
-    private readonly CartRepository _cartRepository;
+    private readonly CartRepository _cartRepository; 
+    public List<Product> Products { get; private set; }
+    public int TaxPercentage { get; private set; }
+
 
     public CartHandler()
     {
         _cartRepository = new CartRepository();
+        
     }
 
     public Sale Purchase(Cart cart)
@@ -45,19 +52,18 @@ public class CartHandler
             throw new ArgumentException("Cart must contain at least one product.");
         if (string.IsNullOrWhiteSpace(cart.Address))
             throw new ArgumentException("Address must be provided.");
-        if (amount <= 0) throw new ArgumentException("The final amount should be above 0");
-        if (paymentMethod == null) throw new ArgumentException("A payment method should be provided");
+        
     }
 
     private void ValidateSale(Sale sale)
     {
-        if (sale.products.Count() == 0) 
+        if (sale.Products.Count() == 0) 
             throw new ArgumentException("Sale must contain at least one product.");
-        if (string.IsNullOrWhiteSpace(sale.address)) 
+        if (string.IsNullOrWhiteSpace(sale.Address)) 
             throw new ArgumentException("Address must be provided.");
-        if (sale.amount <= 0) 
+        if (sale.Amount <= 0) 
             throw new ArgumentException("The final amount should be above 0");
-        if (sale.paymentMethod == null) 
+        if (sale.PaymentMethod == null) 
             throw new ArgumentException("A payment method should be provided");
     }
 }

@@ -1,10 +1,16 @@
 
-public class CartRepository
-{
-    public CartRepository();
+using StoreApi.Models;
 
-    public Sale Purchase(Cart cart)
+    public class CartRepository
     {
-        return null;
+        public CartRepository()
+        {
+            // Constructor vacío
+        }
+
+        public Sale Purchase(Cart cart)
+        {
+            return null; // Implementa la lógica de compra aquí
+        }
     }
-}
+

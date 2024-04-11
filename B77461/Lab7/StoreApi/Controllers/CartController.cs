@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using StoreApi.Models;
 using System;
 using System.Collections.Generic;
+using StoreApi.Handlers;
 
 namespace StoreApi.Controllers
 {
@@ -10,6 +11,7 @@ namespace StoreApi.Controllers
     public class CartController : ControllerBase
     {
         private static List<Cart> Carts = new List<Cart>();
+        private readonly CartHandler _cartHandler;
 
         public CartController()
         {

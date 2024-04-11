@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import Alert from 'react-bootstrap/Alert';
 
-const PaymentForm = ({ cart, setCart, clearProducts }:
-    { cart: any, setCart: (cart: any) => void, clearProducts: () => void }) => {
+const PaymentForm = ({ cart, setCart }:
+    { cart: any, setCart: (cart: any) => void }) => {
 
-    const [isMessageShowing, setIsMessageShowing] = useState(false);
+    const [MessageShowing, setMessageShowing] = useState(false);
     const [message, setMessage] = useState('');
     const [alertType, setAlertType] = useState(0);
     const [orderNumber, setOrderNumber] = useState('');
@@ -14,7 +14,7 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
     const [finishedSale, setFinishedSale] = useState(false);
 
     enum PaymentMethod {
-        EFECTIVO = 0,
+        CASH = 0,
         SINPE = 1
     }
 
@@ -23,10 +23,11 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
             ...cart,
             carrito: {
                 ...cart.carrito,
-                metodoDePago: cart.carrito.metodoDePago ? cart.carrito.metodoDePago : PaymentMethod.EFECTIVO
+                metodoDePago: cart.carrito.metodoPago ? cart.carrito.metodoDePago : PaymentMethod.CASH
+                
             }
         }));
-        setSelectedIndex((cart.carrito.metodoDePago === PaymentMethod.EFECTIVO) ? 0 : 1);
+        setSelectedIndex((cart.carrito.metodoDePago === PaymentMethod.CASH) ? 0 : 1);
     }, []);
 
     function handleSelectPayment(event: any) {
@@ -35,9 +36,9 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
             ...cart,
             carrito: {
                 ...cart.carrito,
-                metodoDePago: event.target.selectedIndex === 0 ? PaymentMethod.EFECTIVO : PaymentMethod.SINPE
+                metodoDePago: event.target.selectedIndex === 0 ? PaymentMethod.CASH : PaymentMethod.SINPE
             },
-            necesitaVerificacion: true
+            verificacion: true
         }));
     }
 
@@ -45,6 +46,13 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
         const timestamp = Date.now().toString();
         const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
         setOrderNumber(timestamp + randomNumber);
+    }
+
+
+    async function finishPurchase() {
+        generateReceiptNumber();
+        setFinishedSale(true);
+        await persistPurchase();
     }
 
     async function persistPurchase() {
@@ -56,31 +64,24 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
         }
 
         try {
-            const res = await fetch('https://localhost:7151/api/Cart', {
+            const res = await fetch('https://localhost:7075/api/Store', {
                 method: 'POST',
                 body: JSON.stringify(purchaseToPersist),
                 headers: {
                     'content-type': 'application/json'
                 }
             })
-            if (res.ok) { setMessage("Se realizó su compra"); setAlertType(0) }
-            else { setMessage("Error al realizar la compra"); setAlertType(1) }
+            if (res.ok) { setMessage("Compra Exitosa"); setAlertType(0) }
+            else { setMessage("Error en la compra"); setAlertType(1) }
         } catch (error) {
             setMessage(error);
             setAlertType(1)
         } finally {
-            setIsMessageShowing(true);
+            setMessageShowing(true);
         }
     }
 
-    async function finishPurchase() {
-        generateReceiptNumber();
-        setFinishedSale(true);
-        clearProducts();
-        await persistPurchase();
-    }
-
-    const Efectivo = () => {
+    const Cash = () => {
         return <div className="card effect-card w-75">
             <div className="card-body">
                 <div className="d-grid w-100 justify-content-center">
@@ -94,10 +95,10 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
 
     const Sinpe = () => {
 
-        const [comprobante, setComprobante] = useState('');
+        const [comprobante, setVoucher] = useState('');
     
-        const handleComprobanteChange = (event) => {
-            setComprobante(event.target.value);
+        const handleVoucherChange = (event) => {
+            setVoucher(event.target.value);
         };
 
         return  <div className="card sinpe-card w-75">
@@ -110,7 +111,7 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
                             className="form-control mt-3"
                             placeholder="Indique el comprobante"
                             value={comprobante}
-                            onChange={handleComprobanteChange}
+                            onChange={handleVoucherChange}
                             
                         />
                         <p className=""></p>
@@ -121,44 +122,40 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
     }
 
     return <div className="container">
-        <div className="d-grid justify-content-center gap-4">
-            <div className="container">
-                <h3>Métodos de pago</h3>
-                <div className="form-group">
-                    <select className="form-control" onChange={handleSelectPayment}
-                        value={cart.carrito.metodoDePago} disabled={finishedSale}>
-                        {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
-                    </select>
-                </div>
-                <div className="d-flex w-100 justify-content-center">
-                    <button className="btn btn-primary"
-                        disabled={finishedSale} onClick={finishPurchase}>
-                        Finalizar Compra</button>
-                </div>
+    <div className="d-grid justify-content-center gap-4">
+        <div className="container">
+            <h3>Métodos de pago</h3>
+            <div className="form-group">
+                <select className="form-control" onChange={handleSelectPayment}
+                    value={cart.carrito.metodoDePago} disabled={finishedSale}>
+                    {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
+                </select>
             </div>
-            {finishedSale ? (selectedIndex === 0 ? <Efectivo /> : <Sinpe />) : ''}
-            {finishedSale ? <div className="progress">
-                <div className="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" aria-valuenow={75} aria-valuemin={0}
-                    aria-valuemax={100} style={{ width: '100%' }}></div>
-            </div> : ''}
-            {isMessageShowing ?
-                <div
-                    style={{
-                        position: 'fixed',
-                        bottom: 20,
-                        right: 20,
-                        zIndex: 9999, // Ensure it's above other content
-                    }}
-                >
-                    <Alert variant={alertType === 0 ? "success" : "danger"}
-                        onClose={() => setIsMessageShowing(false)} dismissible>
-                        <Alert.Heading>{alertType === 0 ? 'Información' : 'Error'}</Alert.Heading>
-                        <p>{message.toString()}</p>
-                    </Alert> </div> : ''
-            }
+            <div className="d-flex w-100 justify-content-center">
+                <button className="btn btn-primary"
+                    disabled={finishedSale} onClick={finishPurchase}>
+                    Finalizar Compra</button>
+            </div>
         </div>
+        {finishedSale ? (selectedIndex === 0 ? <Cash /> : <Sinpe />) : ''}
+        {MessageShowing ?
+            <div
+                style={{
+                    position: 'fixed',
+                    bottom: 20,
+                    right: 20,
+                    zIndex: 9999, // Ensure it's above other content
+                }}
+            >
+                <Alert variant={alertType === 0 ? "success" : "danger"}
+                    onClose={() => setMessageShowing(false)} dismissible>
+                    <Alert.Heading>{alertType === 0 ? 'Información' : 'Error'}</Alert.Heading>
+                    <p>{message.toString()}</p>
+                </Alert> </div> : ''
+        }
     </div>
+</div>
+      
 }
 
 export default PaymentForm;

@@ -108,7 +108,7 @@ public sealed class Store
     {
         Name = "Gafas VR",
         Description = "Gafas VR PS4",
-        ImageUrl = "https://www.discoazul.com/uploads/media/images/gafas-playstation-vr-ps4-1.jpg",
+        ImageUrl = "https://img.pccomponentes.com/articles/15/157238/a2.jpg",
         Price = 500.0m,
         Quantity = 1
 
@@ -217,7 +217,7 @@ public sealed class Store
                 Price = Convert.ToDecimal(productData.Price) * i,
                 Description = $"{productData.Description} {i}",
                 Uuid = Guid.NewGuid(),
-                Quantity = productData.Quantity
+                Quantity = Convert.ToInt16(productData.Quantity)
             });
         }
 
