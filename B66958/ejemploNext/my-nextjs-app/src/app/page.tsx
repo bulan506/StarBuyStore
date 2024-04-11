@@ -22,7 +22,7 @@ export default function Home() {
     carrito: {
       productos: [],
       subtotal: 0,
-      porcentajeImpuesto: 13,
+      porcentajeImpuesto: 0,
       total: 0,
       direccionEntrega: '',
       metodoDePago: ''
@@ -36,6 +36,13 @@ export default function Home() {
       try {
         const result = await getData();
         setProducts(result.products)
+        setCart(cart => ({
+          ...cart,
+          carrito: {
+            ...cart.carrito,
+            porcentajeImpuesto: result.taxPercentage
+          }
+        }));
       } catch (error) {
         setErrorMessage(error)
         setIsErrorShowing(true)
@@ -67,12 +74,10 @@ export default function Home() {
       carrito: {
         productos: [],
         subtotal: 0,
-        porcentajeImpuesto: 13,
         total: 0,
         direccionEntrega: '',
         metodoDePago: ''
       },
-      metodosDePago: ['Efectivo', 'Sinpe'],
       necesitaVerificacion: false
     });
   }
