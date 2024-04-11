@@ -1,11 +1,6 @@
+namespace ApiLab7;
 public class CartHandler
 {
-    private readonly CartRepository _cartRepository;
-
-    public CartHandler()
-    {
-        _cartRepository = new CartRepository();
-    }
 
     public Sale Purchase(Cart cart)
     {
@@ -31,7 +26,8 @@ public class CartHandler
 
         ValidateSale(sale);
 
-        return _cartRepository.Purchase(cart);
+        //return _cartRepository.Purchase(cart);
+        return null;
     }
 
     private void ValidateCart(Cart cart)
