@@ -24,7 +24,7 @@ namespace Store_API.Models
             {
                 new Product
                 {
-                    Id= 1,
+                    Uuid = Guid.NewGuid(),
                     Name = $"Iphone",
                     ImageURL = $"/img/Iphone.jpg",
                     Price = 200
@@ -32,7 +32,7 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                   Id= 2,
+                   Uuid = Guid.NewGuid(),
                     Name = $"Audifono",
                     ImageURL = $"/img/audifonos.jpg",
                     Price = 100
@@ -40,7 +40,7 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                    Id= 3,
+                    Uuid = Guid.NewGuid(),
                     Name = $"Mouse",
                     ImageURL = $"/img/mouse.jpg",
                     Price = 35
@@ -48,7 +48,7 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                    Id= 4,
+                    Uuid = Guid.NewGuid(),
                     Name = $"Pantalla",
                     ImageURL = $"/img/Pantalla.jpg",
                     Price = 68
@@ -56,7 +56,7 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                    Id= 5,
+                    Uuid = Guid.NewGuid(),
                     Name = $"Headphone",
                     ImageURL = $"/img/Headphone.jpg",
                     Price = 35
@@ -65,7 +65,7 @@ namespace Store_API.Models
 
                 new Product
                 {
-                    Id= 6,
+                    Uuid = Guid.NewGuid(),
                     Name = $"Teclado",
                     ImageURL = $"/img/teclado.jpg",
                     Price = 95
@@ -73,7 +73,7 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                    Id= 7,
+                    Uuid = Guid.NewGuid(),
                     Name = $"Cable USB",
                     ImageURL = $"/img/Cable.jpg",
                     Price = 10
@@ -81,7 +81,7 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                    Id= 8,
+                   Uuid = Guid.NewGuid(),
                     Name = $"Chromecast",
                     ImageURL = $"/img/Chromecast.jpg",
                     Price = 150
@@ -98,7 +98,7 @@ namespace Store_API.Models
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
 
             // Find matching products based on the product Ids in the cart
-            IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();
+            IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Uuid.ToString())).ToList();
 
             // Create shadow copies of the matching products
             IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
@@ -111,8 +111,10 @@ namespace Store_API.Models
                 purchaseAmount += product.Price;
             }
 
-            // Create a sale object
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
+            PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
+            PaymentMethods.Type paymentMethodType = paymentMethod.PaymentType;
+
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
 
 
             return sale;

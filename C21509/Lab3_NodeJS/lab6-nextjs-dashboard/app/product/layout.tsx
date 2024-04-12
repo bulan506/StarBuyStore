@@ -1,4 +1,5 @@
 "use client"
+import addToCart from "./page"
 export default function RootLayout({
   children,
 }: {
@@ -88,7 +89,7 @@ export const products: ProductItem[] = [
 
 ];
 
-export const Product = ({ product, addToCart }: { product: ProductItem, addToCart: any }) => {
+export const Product = ({ product }: { product: ProductItem}) => {
 
   if (product.id === 9) {
     return (
@@ -123,7 +124,7 @@ export const Product = ({ product, addToCart }: { product: ProductItem, addToCar
         <div className="product col-sm-6"><img src={imageURL} alt={name} /></div>
         <p className="col-sm-6">{name}</p>
         <p className="col-sm-6">Precio: ${price}</p>
-        <button className="button" onClick={addToCart}>Comprar</button>
+        <button className="button" onClick={()=>{addToCart}}>Comprar</button>
       </div>
     );
   }

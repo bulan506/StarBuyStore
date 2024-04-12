@@ -16,11 +16,18 @@ namespace Store_API.Models
 
     }
 
-    public static PaymentMethods Find(PaymentMethods.Type type)
-    {
-
-        return null;
-    }
+     public static PaymentMethods Find(Type type)
+        {
+            switch (type)
+            {
+                case Type.CASH:
+                    return new CASH();
+                case Type.SINPE:
+                    return new SINPE();
+                default:
+                    throw new ArgumentException("Invalid payment method type.");
+            }
+        }
 }
 public sealed class Sinpe:PaymentMethods{
     public Sinpe(): base(PaymentMethods.Type.SINPE)

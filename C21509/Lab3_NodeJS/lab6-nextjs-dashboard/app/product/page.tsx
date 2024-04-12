@@ -1,27 +1,34 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { ProductItem, products, Product } from './layout';
+import { ProductItem, Product } from './layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../HTMLPageDemo.css';
 import Link from 'next/link';
 
+
 export default function Page() {
   const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
 
-  const loadProductApiData = async () => {
-    try {
-      const response = await fetch('https://api.example.com/products');
-      if (!response.ok) {
+
+  useEffect(() => {
+
+    const loadProductApiData = async () => {
+      try {
+        const response = await fetch('https://localhost:7165/api/Store');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        setCartProducts(json.cartProducts);
+        return json;
+        console.log(setCartProducts(json.cartProducts));
+      } catch (error) {
         throw new Error('Failed to fetch data');
       }
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      throw new Error('Failed to fetch data');
-    }
-  };
+    };
+    loadProductApiData();
+  }, []);
 
-  const productData= loadProductApiData();
 
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
@@ -35,11 +42,12 @@ export default function Page() {
 
     // Actualizar el estado del carrito con los nuevos productos
     setCartProducts(updatedProducts);
-
     // Guardar los productos actualizados en el localStorage
     localStorage.setItem('cartProducts', JSON.stringify(updatedProducts));
   }
 
+
+  debugger
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header className="header-container row">
@@ -47,7 +55,7 @@ export default function Page() {
           <input type="search" placeholder="Buscar" value="" />
           <button><img src="/img/Lupa.png" className="col-sm-4" /> </button>
           <Link href="/cart">
-            <button ><img src="./img/carrito.png" className="col-sm-4" />{cartProducts.length}</button>
+            <button ><img src="/img/carrito.png" className="col-sm-4" />{cartProducts.length}</button>
           </Link>
         </div>
       </header>
@@ -55,8 +63,8 @@ export default function Page() {
       <div>
         <h1>Lista de Productos</h1>
         <div className='row' style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {products.map(product =>
-            <Product key={product.id} product={product} addToCart={() => addToCart(product)} />
+          {cartProducts.map(product =>
+            <Product key={product.id} product={product} /*addToCart={() => addToCart(product)}*/ />
           )}
 
         </div>
@@ -68,3 +76,6 @@ export default function Page() {
     </main>
   );
 }
+
+
+
