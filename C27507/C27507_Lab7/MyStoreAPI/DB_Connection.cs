@@ -24,23 +24,23 @@ namespace MyStoreAPI
                     // creamos la tabla ventas (donde cada carrito seria una venta)
                     string createTableSales = @"
                         CREATE TABLE IF NOT EXISTS Sales (
-                            IdSale INT AUTO_INCREMENT PRIMARY KEY,
+                            IdSale INT AUTO_INCREMENT PRIMARY KEY,                            
+                            PurchaseNum VARCHAR(50) NOT NULL,                           
                             Total DECIMAL(10, 2) NOT NULL,
                             Subtotal DECIMAL(10, 2) NOT NULL,                                                
                             Direction VARCHAR(255) NOT NULL,
                             PaymentMethod INT NOT NULL,
-                            CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                            DateSale DATETIME NOT NULL
                         );";
 
                     using (MySqlCommand command = new MySqlCommand(createTableSales, connection)){
                         command.ExecuteNonQuery();
-                        Console.WriteLine("Tabla 'Compras' creada correctamente.");
+                        Console.WriteLine("Tabla 'Sales' creada correctamente.");
                     }
 
                     string createTableProducts = @"
                         CREATE TABLE IF NOT EXISTS Products (
                             IdProduct INT AUTO_INCREMENT PRIMARY KEY,
-                            Uuid VARCHAR(255) NOT NULL,
                             Name VARCHAR(255) NOT NULL,
                             ImageUrl VARCHAR(255),
                             Price DECIMAL(10, 2) NOT NULL,
@@ -63,7 +63,7 @@ namespace MyStoreAPI
 
                     using (MySqlCommand command = new MySqlCommand(createTableSalesLines, connection)){
                         command.ExecuteNonQuery();
-                        Console.WriteLine("Tabla 'Compras' creada correctamente.");
+                        Console.WriteLine("Tabla 'SalesLines' creada correctamente.");
                     }
                 }
             }catch (Exception ex){
@@ -78,12 +78,11 @@ namespace MyStoreAPI
                     connection.Open();
                     foreach (var actualProduct in allProducts){
                         string insertQuery = @"
-                            INSERT INTO Products (Uuid, Name, ImageUrl, Price, Quantity, Description)
-                            VALUES (@uuid, @name, @imageUrl, @price, @quantity, @description);
+                            INSERT INTO Products (Name, ImageUrl, Price, Quantity, Description)
+                            VALUES (@name, @imageUrl, @price, @quantity, @description);
                         ";
 
-                        using (MySqlCommand command = new MySqlCommand(insertQuery, connection)){
-                            command.Parameters.AddWithValue("@uuid", actualProduct.uuid.ToString());
+                        using (MySqlCommand command = new MySqlCommand(insertQuery, connection)){                            
                             command.Parameters.AddWithValue("@name", actualProduct.name);
                             command.Parameters.AddWithValue("@imageUrl", actualProduct.imageUrl);
                             command.Parameters.AddWithValue("@price", actualProduct.price);
@@ -110,7 +109,7 @@ namespace MyStoreAPI
                     
                     connection.Open();
                     string selectProducts = @"
-                        SELECT Uuid, Name, ImageUrl, Price, Quantity, Description
+                        SELECT IdProduct, Name, ImageUrl, Price, Quantity, Description
                         FROM Products;
                         ";                
 
@@ -122,7 +121,7 @@ namespace MyStoreAPI
                             //Mientras haya al menos una tupla que leer, guarde los datos de ese Select en la lista
                             while(readerTable.Read()){
                                 productListToStoreInstance.Add(new Product{
-                                    uuid = Guid.Parse(readerTable["Uuid"].ToString()),
+                                    id = Convert.ToInt32(readerTable["IdProduct"]),
                                     name = readerTable["Name"].ToString(),
                                     imageUrl = readerTable["ImageUrl"].ToString(),
                                     price = Convert.ToDecimal(readerTable["Price"]),
@@ -139,40 +138,67 @@ namespace MyStoreAPI
             return productListToStoreInstance;
         }
 
-        public static bool InsertSale(Cart purchasedCart){
-                        
+        public static string InsertSale(Cart purchasedCart){
+            Console.WriteLine("Dentro de SaleLines a insertarlo");
             try{                                        
                 //El bloque using(MySql....) es una buena practica ya que conecta y desconecta de la bd, liberando recursos
                 //y evitar dejando conexiones abiertas
                 using (MySqlConnection connection = new MySqlConnection(connectionString)){
 
-                    connection.Open();
+                    connection.Open();                    
 
                     //Hacemos el insert
-                    string query = @"
-                    INSERT INTO Sales (Total, Subtotal, Direction, PaymentMethod)
-                    VALUES (@total, @subtotal, @direction, @paymentMethod);
+                    string insertSale = @"
+                    INSERT INTO Sales (Total,PurchaseNum, Subtotal, Direction, PaymentMethod,DateSale)
+                    VALUES (@total, @purchaseNum, @subtotal, @direction, @paymentMethod,@dateSale);
                     ";
-                    MySqlCommand command = new MySqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@total", purchasedCart.Total);
-                    command.Parameters.AddWithValue("@subtotal", purchasedCart.Subtotal);
-                    command.Parameters.AddWithValue("@direction", purchasedCart.Direction);
-                    command.Parameters.AddWithValue("@paymentMethod", (int)purchasedCart.PaymentMethod.payment);
-                    command.ExecuteNonQuery();
 
+                    //id global unico para el comprobante                    
+                    string purchaseNum = Guid.NewGuid().ToString();                    
+                    MySqlCommand command = new MySqlCommand(insertSale, connection);
+                    command.Parameters.AddWithValue("@total", purchasedCart.Total);
+                    command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
+                    command.Parameters.AddWithValue("@subtotal", purchasedCart.Subtotal);
+                    command.Parameters.AddWithValue("@direction", purchasedCart.Direction);                  
+                    command.Parameters.AddWithValue("@paymentMethod", (int)purchasedCart.PaymentMethod.payment);
+                    command.Parameters.AddWithValue("@dateSale", DateTime.Now);
+                    command.ExecuteNonQuery();
+                   
+                    //InsertSalesLine(purchaseNum,purchasedCart);
                     //connection.Close();
-                    return true;
+                    Console.WriteLine("Exito al realizar la compra, guadado en Sales: ");
+                    return purchaseNum;
                 }            
             }catch (Exception ex){
                 Console.WriteLine("Error al insertar la venta: " + ex.Message);
-                return false;
+                return null;
             }
         }
 
         // //Insertar el SalesLines
-        // private static void InsertSalesLine(int saleId, int productId)
-        // {
-            
+        // private static void InsertSalesLine(string saleId, Cart purchasedCart){
+        //     try{
+        //         using (MySqlConnection connection = new MySqlConnection(connectionString))
+        //         {
+        //             connection.Open();
+
+        //             string insertSalesLine = @"
+        //                 INSERT INTO SalesLines (IdSale, IdProduct)
+        //                 VALUES (@saleId, @productId);";
+
+        //             using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection))
+        //             {
+        //                 command.Parameters.AddWithValue("@saleId", saleId);
+        //                 command.Parameters.AddWithValue("@productId", productId);
+
+        //                 command.ExecuteNonQuery();
+        //                 Console.WriteLine("SaleLine registrada");
+        //             }
+        //         }
+        //     }catch (Exception ex){
+        //         Console.WriteLine("Error al insertar la línea de venta: " + ex.Message);
+        //     }
+                    
         // }
         
     }

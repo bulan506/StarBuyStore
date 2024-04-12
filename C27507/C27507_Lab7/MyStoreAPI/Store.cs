@@ -25,8 +25,7 @@ namespace MyStoreAPI
 
             //Generar 30 productos
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "Tablet Samsung",
                 imageUrl = "./img/tablet_samsung.jpg",
                 price = 25,
@@ -35,8 +34,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "TV LG UHD",
                 imageUrl = "./img/tv.jfif",                
                 price = 50,
@@ -45,8 +43,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "Auriculares Genericos",
                 imageUrl = "./img/auri.jfif",
                 price = 100,
@@ -55,8 +52,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "Dualshock PS4",
                 imageUrl = "./img/dualshock4.jpg",
                 price = 35,
@@ -65,8 +61,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "Teclado LED",
                 imageUrl = "./img/teclado.jpg",
                 price = 75,
@@ -75,8 +70,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "Samsung A54",
                 imageUrl = "./img/a54_samsung.jpg",
                 price = 250,
@@ -85,8 +79,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {             
                 name = "Dualshock PS5",
                 imageUrl = "./img/dualshock5.jpg",
                 price = 250,
@@ -95,8 +88,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {                
-                uuid = Guid.NewGuid(),
+            {                             
                 name = "Samsung Galaxy A54",
                 imageUrl = "./img/a54_samsung.png",
                 price = 150,
@@ -105,8 +97,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {                
                 name = "Mouse Microsoft",
                 imageUrl = "./img/mouse.png",
                 price = 2500,
@@ -115,8 +106,7 @@ namespace MyStoreAPI
             });
 
             products.Add(new Product
-            {
-                uuid = Guid.NewGuid(),
+            {             
                 name = "Módem Router - Archer VR400",
                 imageUrl = "./img/router_archerVR400.jpg",
                 price = 75,

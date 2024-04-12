@@ -14,9 +14,8 @@ namespace MyStoreAPI.Controllers
          [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart)
         {            
-            //Descomponemos los datos de carrito (preguntar al profe si Sale.cs es necesario, ya que en el mockup ventas es un arreglo de carritos)            
-
-
+            //Descomponemos los datos de carrito (preguntar al profe si Sale.cs es necesario, ya que en el mockup ventas es un arreglo de carritos)                        
+           
             //Realizar validaciones de los datos
             // string errorMsg = "Al parecer ha ocurrido un error con la transaccion de tu compra. Intentalo mas tarde"
             // if (cart.allProduct == null || cart.allProduct.Count == 0)
@@ -34,10 +33,10 @@ namespace MyStoreAPI.Controllers
             //     return BadRequest(errorMsg);
             // }
 
-                        
-            //Hacemos las inserciones y devolvemos la respuesta con el post
-            // DB_Connection.InsertSale(cart);            
-            return Ok(cart);
+            //Hacemos las inserciones y devolvemos la respuesta con el post                        
+            string purchaseNum = DB_Connection.InsertSale(cart);                        
+
+            return Ok("Hola");
         }        
     }
 }
