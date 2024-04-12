@@ -108,11 +108,11 @@ export const getCartShopStorage = (key: string): CartShopAPI | null => {
 }
 
     //verficar si un producto ha sido agregado o no
-export const verifyProductInCart = (id:string, allProductsInCart: ProductAPI[]) => {
+export const verifyProductInCart = (id:number, allProductsInCart: ProductAPI[]) => {
 
     for (let i = 0; i < allProductsInCart.length; i++) {
-        let elementID = allProductsInCart[i].uuid;
-        let isSameID = elementID.localeCompare(id) === 0
+        let elementID = allProductsInCart[i].id;
+        let isSameID = elementID === id
         if( isSameID ){
             return i;
         }        
@@ -246,7 +246,7 @@ export default function Page() {
                       return(
                           <section className="container_carousel col-sm-4" key="carousel">
                               <StaticCarousel 
-                                    key={product.uuid} 
+                                    key={product.id} 
                                     products={products}
                                     myCartInStorage={myCartInStorage}                                    
                                     setMyCartInStorage={setMyCartInStorage}           
@@ -256,7 +256,7 @@ export default function Page() {
                   } else {
                       return (
                         <Product 
-                            key={product.uuid} 
+                            key={product.id} 
                             product={product}
                             myCartInStorage={myCartInStorage}                                    
                             setMyCartInStorage={setMyCartInStorage}           
