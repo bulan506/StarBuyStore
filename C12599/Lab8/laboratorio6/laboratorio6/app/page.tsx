@@ -31,10 +31,6 @@ const Page = () => {
 }, []);
 
 
-  fetchData().catch(error => console.error('Error fetching data:', error));
-}, []);
-
-
   useEffect(() => {
     // Cargar datos del carrito desde localStorage al montar el componente
     const cartData = localStorage.getItem('cartData');
