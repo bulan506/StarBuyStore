@@ -19,7 +19,7 @@ export function getInitialCartLocalStorage(): Cart {
         deliveryAddress: "",
         methodPayment: null
       },
-      taxPercentage: 0,
+      taxPercentage: 0,//borrar
     }
      return cart;
   }
