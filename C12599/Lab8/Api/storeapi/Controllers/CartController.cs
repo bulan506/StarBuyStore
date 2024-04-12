@@ -7,7 +7,6 @@ namespace storeapi.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private static List<Cart> Carts = new List<Cart>();
         private readonly CartSave _cartSave = new CartSave();
 
         [HttpPost]
