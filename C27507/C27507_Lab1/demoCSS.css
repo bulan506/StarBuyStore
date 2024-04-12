@@ -241,7 +241,9 @@ button{
 	/* agregar manta a los botones inferiores y los textos */
 
 	.carousel-caption{
-		position: relative;
+		position: static !important;
+		top: 50%;
+		left: 50%;
 	}
 	.cover_info{
 		width: 100%;

@@ -11,6 +11,7 @@
   font-size: 5%;
 }
 
+
 .barra h1 {
   cursor: pointer;
 }
@@ -201,4 +202,19 @@ footer {
   align-items: center;
   display: flex;
   padding: 50px;
+}
+.carrusel-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 2%;
+  
+}
+.productos{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
 }

@@ -1,120 +1,20 @@
 "use client";
-import "bootstrap/dist/css/bootstrap.min.css"; 
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from 'react';
 import "@/app/ui/styles.css";
 import Header from "@/app/navStarBuyStore/page";
 import Carrito from "@/app/Cart/page";
-
-const Productos = [
-
-  {
-    id: 1,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-  },
-  {
-    id: 2,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
+import Carousel from 'react-bootstrap/Carousel';
 
 
-  },
-  {
-    id: 3,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-
-
-  },
-  {
-    id: 4,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-
-
-  },
-
-  {
-    id: 5,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 2000000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-
-
-  },
-  {
-    id: 6,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 200000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-
-
-  },
-  {
-    id: 7,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-
-
-  },
-  {
-    id: 8,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-
-
-  },
-  {
-    id: 9,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-  },
-  {
-    id: 10,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-  },
-  {
-    id: 11,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-  },
-  {
-    id: 12,
-    name: 'Producto',
-    description: 'Esta computadora es muy rapida',
-    price: 20000,
-    imageURL: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg'
-  }
-];
 // cards
 const Product = ({ product, handleClick }) => {
   const { name, description, imageURL, price } = product;
   return (
     <div>
       <div className="row">
-        <div className="border p-4">
-          <div style={{justifyContent:"center", textAlign: "center"}}>
+        <div className="productos">
+          <div style={{ justifyContent: "center", textAlign: "center" }}>
             <h3>{name}</h3>
             <img src={imageURL} />
             <h5>{description}</h5>
@@ -127,18 +27,44 @@ const Product = ({ product, handleClick }) => {
   );
 };
 
+const CarruselProductos=({productos, handleClick}) =>{
+  return (
+    <Carousel data-bs-theme="dark">
+      {productos && productos.products && productos.products.map(product => (
+         <Carousel.Item interval={1000}>
+        <div className="carrusel-item">
+        <Product key={product.id} product={product} handleClick={handleClick} />
+        </div>
+        </Carousel.Item>
+      ))}
+    </Carousel>
+  );
+};
+
 const MostrarProductos = ({ handleClick }) => {
+  const [Productos, setProductos] = useState([]);
+  const loadData = async () => {
+      const response = await fetch('https://localhost:7223/api/Store');
+      if (!response.ok) {
+        // throw new Error('Failed to fetch data');
+      }
+      const json = await response.json();
+      setProductos(json);
+  };
+  loadData();
   return (
     <div>
+      <CarruselProductos productos={Productos} handleClick={handleClick}/>
       <h3> Lista de productos</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {Productos.map(product => (
+      <div className="productos">
+        {Productos && Productos.products && Productos.products.map(product => (
           <Product key={product.id} product={product} handleClick={handleClick} />
         ))}
       </div>
     </div>
   );
 };
+
 
 const ModalProductoYaAgregado = ({ closeModal }) => {
   return (
@@ -168,21 +94,21 @@ export default function Page() {
   const [show, setShow] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  const initialCart= {
+  const initialCart = {
     carrito: {
       subtotal: 0,
       porcentajeImpuesto: 13,
       total: 0,
       direccionEntrega: '',
-      metodoDePago: ''
+      metodoDePago: 0
     },
     necesitaVerificacion: false,
     productos: [],
-    idCompra:''
+    idCompra: ''
   };
-  const [store,setStore]= useState(()=> {
-    const storedStore=localStorage.getItem("tienda");
-    return storedStore?JSON.parse(storedStore):initialCart;
+  const [store, setStore] = useState(() => {
+    const storedStore = localStorage.getItem("tienda");
+    return storedStore ? JSON.parse(storedStore) : initialCart;
   });
 
   useEffect(() => {
@@ -190,21 +116,18 @@ export default function Page() {
   }, [store]);
 
   const handleClick = (item) => {
-  const isPresent = store.productos.some(producto => producto.id === item.id);
-
+    const isPresent = store.productos.some(producto => producto.id === item.id);
     if (isPresent) {
       setShowModal(true);
     } else {
       const newProd = [...(store.productos), item];
-      setStore( ({
+      setStore(({
         ...store,
         carrito: {
           ...store.carrito
-          
         },
         productos: newProd
       }));
-      
     }
   };
 
@@ -214,31 +137,31 @@ export default function Page() {
   const handlePrice = () => {
     let subtotalCalc = 0;
     store.productos.forEach((item) => {
-        subtotalCalc += item.price;
+      subtotalCalc += item.price;
     });
 
     let subtotalImpuestoCalc = subtotalCalc * (store.carrito.porcentajeImpuesto / 100);
     let totalCompraCalc = subtotalCalc + subtotalImpuestoCalc;
 
     const updatedCarrito = {
-        ...store.carrito,
-        subtotal: subtotalCalc,
-        total: totalCompraCalc,
+      ...store.carrito,
+      subtotal: subtotalCalc,
+      total: totalCompraCalc,
     };
 
     const updatedStore = {
-        ...store,
-        carrito: updatedCarrito,
+      ...store,
+      carrito: updatedCarrito,
     };
 
     localStorage.setItem("tienda", JSON.stringify(updatedStore));
-};
+  };
 
   return (
     <div>
       <Header size={store.productos.length} setShow={setShow} />
       {
-        show ? <MostrarProductos handleClick={handleClick} /> : <Carrito  />
+        show ? <MostrarProductos handleClick={handleClick} /> : <Carrito />
       }
       {showModal && <ModalProductoYaAgregado closeModal={closeModal} />}
 

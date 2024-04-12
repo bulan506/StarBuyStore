@@ -7,8 +7,8 @@ const Cart_Store = () => {
 
     const storedData = localStorage.getItem('tienda');
     const dataObject = JSON.parse(storedData);
-    const carritoVacio = dataObject.products.length === 0;
 
+    const carritoVacio = dataObject.products.length === 0;
     const [cartEmpty, setCartEmpty] = useState(true); 
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [cartUpdated, setCartUpdated] = useState(false);
@@ -37,6 +37,7 @@ const Cart_Store = () => {
         totalCompra = totalPriceWithoutTax + totalPriceWithTax;
         subtotal = totalPriceWithoutTax;
         subtotalImpuesto = totalPriceWithTax;
+        setCartEmpty(dataObject.products.length === 0);
         setCartEmpty(carritoVacio);
         updateStore(subtotal, subtotalImpuesto, totalCompra);
     }
@@ -65,6 +66,8 @@ const Cart_Store = () => {
     useEffect(() => {
         handlePrice();
     }, [cartUpdated]);
+
+    if (!(dataObject.products.length > 0)) {
 
     if (carritoVacio) {
         return (
@@ -120,4 +123,6 @@ const Cart_Store = () => {
     )
 }
 
+
 export default Cart_Store;
+

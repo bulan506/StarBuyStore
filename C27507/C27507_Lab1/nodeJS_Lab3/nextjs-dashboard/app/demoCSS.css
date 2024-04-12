@@ -174,6 +174,10 @@ button{
 	padding: 0.5rem;	
 }
 
+.product-menu-cart span, .total-price-container  span{
+	color: orange;
+}
+
 .modal-footer {
 	position: sticky;
 	bottom: 0;
@@ -267,25 +271,36 @@ button{
 	object-fit: contain;
 }
 
+.carousel-item{
+	position: relative	
+}
+
+.info_carousel{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+}
+
+
+
 
 	/* Cambiar el color forzosamente */
-	#carouselExampleCaptions p,span,h5{	
-		color:orange;
-		font-weight: bolder;
+	.info_carousel{
+		text-align: center;
 	}
-
-	#carouselExampleCaptions h5{	
-		color:orange;
+	.info_carousel > p,
+	.info_carousel > span,
+	.info_carousel > h5 {	
+    	color: white;
+    	font-weight: bolder;		
 	}
-
-	.carousel-control-prev span{
-		color: orange;
-	}
-
-.title_section_carousel{
-	margin: 100px 0 25px;
-	color: orange;
-}
+	.info_carousel button{	
+		background: orange;		
+		color: white;		
+		padding: 1.2rem;
+	}	
 
 
 	/* agregar manta a las imagenes del slider */
@@ -302,23 +317,6 @@ button{
 		left: 0;	
 		pointer-events: none;
 	}
-
-	/* agregar manta a los botones inferiores y los textos */
-
-	.carousel-caption{
-		position: relative;
-	}
-	.cover_info{
-		width: 100%;
-		height: 100%;	
-		position: absolute;	
-		background-color: rgba(0, 0, 0, 0.2);
-		top: 0;
-		left: 0;	
-		pointer-events: none;
-	}
-
-
 
 
 /* Footer */

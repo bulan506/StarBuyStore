@@ -3,7 +3,8 @@
 import {useState} from 'react';
 import { number } from 'zod';
 import { ModalCart } from './modal_cart';
-import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
+import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage,verifyProductInCart,addProductInCart } from './page'; //precios totales - manejor LocalStorage
+import { verify } from 'crypto';
 
 
 export default function RootLayout({
@@ -18,229 +19,108 @@ export default function RootLayout({
   );
 }
 
-export interface ProductItem {
-  id: number;
-  name: string;
-  imageUrl: string;
-  quantity: number;
-  price: number;
+
+//Interfaces para serializar las objetos JSON de la API
+export interface StoreAPI{
+ products: ProductAPI[],
+ taxPorcentage: number
 }
 
-export const product: ProductItem[] = [
-  // const product = [
-  {
-      id: 1,
-      name: "Tablet Samsung",                
-      imageUrl: './img/tablet_samsung.jpg',
-      quantity: 0,
-      price: 25
-  },
-  {
-      id: 2,
-      name: "TV LG UHD",                
-      imageUrl: "./img/tv.jfif",
-      quantity: 0,
-      price: 50
-  },
-  {
-      id: 3,
-      name: "Auriculares Genericos",                
-      imageUrl: "./img/auri.jfif",
-      quantity: 0,
-      price: 100
-  },
-  {
-      id: 4,
-      name: "Dualshock PS4",                
-      imageUrl: "./img/dualshock4.jpg",
-      quantity: 0,
-      price: 35
-  },
-  {
-      id: 5,
-      name: "Teclado LED",                
-      imageUrl: "./img/teclado.jpg",
-      quantity: 0,
-      price: 75
-  },
-  {
-      id: 6,
-      name: "Samsung Galaxy A54",                
-      imageUrl: "./img/a54_samsung.png",
-      quantity: 0,
-      price: 150
-  },
-  {
-      id: 7,
-      name: "Dualshock PS5",
-      imageUrl: "./img/dualshock5.jpg",
-      quantity: 0,
-      price: 250
-  },
-  {
-      id: 8,                
-      name: "Samsung A54",
-      imageUrl: "./img/a54_samsung.jpg",
-      quantity: 0,
-      price: 250
-  },
+export interface SaleAPI{ 
+  sale: CartShopAPI[]
+}
+export interface ProductAPI {
+  uuid: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+  quantity: number;  
+  description: string  
+}
 
-  {
-    id: 9,                
-    name: "Samsung A54",
-    imageUrl: "./img/a54_samsung.jpg",
-    quantity: 0,
-    price: 250
-},
-  {
-      id: 10,
-      name: "Mouse Microsoft",
-      imageUrl: "./img/mouse.png",
-      quantity: 0,
-      price: 2500
-  },
-  {
-    id:11,
-    name:"Módem Router - Archer VR400",
-    imageUrl: "./img/router_archerVR400.jpg",
-    quantity: 0,
-    price: 75,
-  }
-
-];
-
-export interface CartShopItem {
-  allProduct: ProductItem[];
+export interface CartShopAPI {  
+  allProduct: ProductAPI[];
   subtotal: number;
   tax: number;
   total: number;
-  direction: string;
-  payment: string;
-  verify: boolean
+  direction: string; 
+  paymentMethod: PaymentMethod
 }
+
+export enum PaymentMethodNumber {
+  CASH = 1,
+  CREDIT_CARD = 2,
+  DEBIT_CARD = 3,
+  SINPE = 4  
+}
+
+export interface PaymentMethod {
+  payment: PaymentMethodNumber; // Usamos el enum PaymentMethods para definir los tipos de pago
+  verify: boolean;
+}
+
+export const PaymentMethods: PaymentMethod[] = [
+  {
+    payment: PaymentMethodNumber.CASH,
+    verify: false
+  },
+  {
+    payment: PaymentMethodNumber.CREDIT_CARD,
+    verify: true
+  },
+  {
+    payment: PaymentMethodNumber.DEBIT_CARD,
+    verify: true
+  },
+  {
+    payment: PaymentMethodNumber.SINPE,
+    verify: true
+  }
+];
+
 
 interface ProductProps {
-  product: ProductItem;
-  numberOfItems: number;
-  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;
-  allProduct: ProductItem[];
-  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;
-  totalWithTax:number;
-  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
-  totalWithNoTax: number;
-  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;
-  payment: string;
-  setPayment: React.Dispatch<React.SetStateAction<string>>;
-  direction: string;
-  setDirection: React.Dispatch<React.SetStateAction<string>>;
-  verify: boolean;
-  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
-  myCartInStorage: CartShopItem | null;
+  product: ProductAPI;  
+  myCartInStorage: CartShopAPI | null;
+  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
 }
-
-
 //Galeria de Productos
-export const Product: React.FC<ProductProps> = ({
-  product,
-  numberOfItems,
-  setNumberOfItems,
-  allProduct,
-  setAllProduct,
-  totalWithTax,
-  setTotalWithTax,
-  totalWithNoTax,
-  setTotalWithNoTax,
-  payment,
-  setPayment,
-  direction,
-  setDirection,
-  verify,
-  setVerify,    
-  myCartInStorage
-  }) => {
-
-  const { id,name, imageUrl, price } = product;    
+export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCartInStorage}) => { 
+  let uuid = product.uuid;
 
   const buyItem = () => {    
+    
     //como el objeto del carrito puede ser nulo, creamos una condicion para evitar estar haciendo
     //condiciones    
     if (myCartInStorage) {
 
-      //Actualizacion de los useState            
-      setNumberOfItems(prevNumberOfItems => prevNumberOfItems + 1);
-      const newAllProduct = [...allProduct, product];
-      setAllProduct(newAllProduct);
-      const newTotalWithNoTax = totalPriceNoTax(newAllProduct);
-      const newTotalWithTax = totalPriceTax(newAllProduct);
-      setTotalWithNoTax(newTotalWithNoTax);
-      setTotalWithTax(newTotalWithTax);
-
-
-      //Actualizacion de los atributos del carrito
-        //lo clonamos para evitar malas asignaciones con el carrito original
-      const updatedCart = { ...myCartInStorage };      
-      updatedCart.allProduct = newAllProduct;      
-      updatedCart.subtotal = newTotalWithNoTax
-      updatedCart.total = newTotalWithTax;      
+      let indexInCart = verifyProductInCart(uuid,myCartInStorage.allProduct);            
+      addProductInCart(indexInCart,product,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
       
-      //sobbreescrimos el carrito clonado sobre el original
-      setCartShopStorage("A", updatedCart);
-                
     } else {
-        console.log("El carro no existe");
+      console.log("El carro no existe");
     }
-};
+  };  
     
   return (
       <div className="product col-sm-4 row">
-          <div hidden>{id}</div>
-          <div className="row-sm-3"><img src={imageUrl}/></div>
-          <p className="row-sm-3">{name}</p>
-          <p className="row-sm-3">${price}</p>
+          <div hidden>{product.uuid}</div>
+          <div className="row-sm-3"><img src={product.imageUrl}/></div>
+          <p className="row-sm-3">{product.name}</p>
+          <p className="row-sm-3">${product.price}</p>
+          <p className="row-sm-3">{product.description}</p>
           <button className="row-sm-3" onClick={ () => buyItem() }>Comprar</button>          
       </div>
   );
 }
 
-
-
-interface CartShopProps {
-  numberOfItems: number;
-  setNumberOfItems: React.Dispatch<React.SetStateAction<number>>;    
-  allProduct: ProductItem[];
-  setAllProduct: React.Dispatch<React.SetStateAction<ProductItem[]>>;  
-  
-  totalWithTax:number;
-  setTotalWithTax: React.Dispatch<React.SetStateAction<number>>;
-  totalWithNoTax: number;
-  setTotalWithNoTax: React.Dispatch<React.SetStateAction<number>>;  
-  payment: string;
-  setPayment: React.Dispatch<React.SetStateAction<string>>;
-  direction: string;
-  setDirection: React.Dispatch<React.SetStateAction<string>>;
-  verify: boolean;
-  setVerify: React.Dispatch<React.SetStateAction<boolean>>;
-  myCartInStorage: CartShopItem | null;
+interface CartShopProps {    
+  myCartInStorage: CartShopAPI| null;
+  setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
 }
 
 //Carrito
-export const CartShop: React.FC<CartShopProps> = ({
-    numberOfItems,
-    setNumberOfItems,
-    allProduct,
-    setAllProduct,
-    totalWithTax,
-    setTotalWithTax,
-    totalWithNoTax,
-    setTotalWithNoTax,
-    payment,
-    setPayment,
-    direction,
-    setDirection,
-    verify,
-    setVerify,    
-    myCartInStorage
-  }) => {
+export const CartShop: React.FC<CartShopProps> = ({myCartInStorage,setMyCartInStorage}) => {
 
   //States del ModalCart
   const [show, setShow] = useState(false);
@@ -252,7 +132,7 @@ export const CartShop: React.FC<CartShopProps> = ({
       <a onClick={handleShow}>
           <div className="cart-info">
               <i className="fas fa-shopping-cart"></i>                    
-              <div className="notify-cart">{numberOfItems}</div>
+              <div className="notify-cart">{myCartInStorage?.allProduct.length}</div>
           </div>                    
           <p className="col-sm-6">Mi carrito</p>                                                                   
           
@@ -262,75 +142,11 @@ export const CartShop: React.FC<CartShopProps> = ({
       Le pasamos los useState al modal principal para mantener la referencia de todos los datos, en caso de usarlos
       */}
       <ModalCart 
-        show={show} 
+        show={show}
         handleClose={handleClose}
-        setNumberOfItems={setNumberOfItems}
-        allProduct={allProduct}
-        setAllProduct={setAllProduct}
-        totalWithTax={totalWithTax}
-        setTotalWithTax={setTotalWithTax}
-        totalWithNoTax={totalWithNoTax}
-        setTotalWithNoTax={setTotalWithNoTax}
-        payment={payment}
-        setPayment={setPayment}
-        direction={direction}
-        setDirection={setDirection}
-        verify={verify}
-        setVerify={setVerify}
         myCartInStorage={myCartInStorage}
+        setMyCartInStorage={setMyCartInStorage}
       />                                                    
     </div>           
-  );
-}
-
-
-export const StaticCarousel = () => {
-  return (
-      
-      <div id="carouselExampleCaptions" className="carousel slide">
-          <div className="cover"></div>
-          <div className="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-          </div>
-          <div className="carousel-inner">
-          <div className="carousel-item active">
-              <div className="cover_img"></div>
-              <img src="img/mouse.png" className="d-block w-100" alt="Mouse" />
-              <div className="carousel-caption d-none d-md-block">
-              <h5>First slide label</h5>
-              <p>Some representative placeholder content for the first slide.</p>
-              <div className="cover_info"></div>
-              </div>
-          </div>
-          <div className="carousel-item">
-              <img src="img/teclado.jpg" className="d-block w-100" alt="Teclado" />
-              <div className="cover_img"></div>
-              <div className="carousel-caption d-none d-md-block">
-              <h5>Second slide label</h5>
-              <p>Some representative placeholder content for the second slide.</p>
-              <div className="cover_info"></div>
-              </div>
-          </div>
-          <div className="carousel-item">
-              <img src="img/tablet_samsung.jpg" className="d-block w-100" alt="Tablet Samsung" />
-              <div className="cover_img"></div>
-              <div className="carousel-caption d-none d-md-block">
-              <h5>Third slide label</h5>
-              <p>Some representative placeholder content for the third slide.</p>
-              <div className="cover_info"></div>
-              </div>
-          </div>
-          </div>
-          <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-          </button>
-          <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-          </button>
-      </div>                            
   );
 }
