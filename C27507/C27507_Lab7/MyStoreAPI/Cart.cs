@@ -2,7 +2,7 @@ namespace MyStoreAPI
 {
     public sealed class Cart
     {
-        public List<string> allProduct { get; set; }
+        public List<Product> allProduct { get; set; }
 
         public decimal Subtotal {get;set;}
         public decimal Tax {get;set;}

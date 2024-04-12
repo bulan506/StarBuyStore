@@ -15,6 +15,44 @@ import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
 import { mock } from 'node:test';
 
+//Tablas: Carrito y LineasCarrito
+
+
+//Peticiones API
+    //POST
+export async function sendDataAPI(directionAPI:string, data:any){
+
+    //Especificacion POST
+    let postConfig = {
+        method: "POST",
+        //pasamos un objeto como atributo de otro
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }
+
+    try {
+
+            //A las peticiones POST se les debe agregar parametro de configuracion para diferenciarlas de las
+        //GET    
+        //let responsePost = await fetch("https://localhost:7161/api/Cart",postConfig);
+        let responsePost = await fetch(directionAPI,postConfig);
+        //await solo se puede usar dentro de funciones asincronas
+
+        if(responsePost.ok){
+            console.log("Se han enviado el carrito");            
+            const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON
+            console.log("Respuesta del servidor:", responseData);            
+            //return 1;        
+        }
+        
+    } catch (error) {
+        console.log("Fallo al enviar datos", error);
+        //return -1;
+    }        
+}
 
 //Calcular el total y manejarlo con stateUse para tenerlo en todos los componentes
 export const totalPriceNoTax = (allProduct: { price: number; quantity: number; }[]) => {
@@ -108,7 +146,8 @@ export const addProductInCart = (index: number, product: ProductAPI, myCartInSto
 }
 
  //Vaciar lista de productos - Local y la del Carrito
-export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
+ //export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
+export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>) => {        
     if(myCartInStorage !== null){        
         
         //Setteamos un metodo de pago por defecto
@@ -139,26 +178,26 @@ export default function Page() {
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);    
     //cargamos los datos desde la API (StoreController por Metodo Get)    
-    const loadDataProductAPI = async ()=>{
-        try{
-            console.log('Iniciando carga de datos desde la API...');
-            const response = await fetch('https://localhost:7161/api/Store')
-            if (!response.ok){
-                throw new Error('Failed to fetch data');                
+
+    useEffect(() => {
+
+        const loadDataProductAPI = async ()=>{
+            try{            
+                const response = await fetch('https://localhost:7161/api/Store')
+                if (!response.ok){
+                    throw new Error('Failed to fetch data');                
+                }
+                const json = await response.json();            
+                setProducts(json.products);                        
+                return json;
+            } catch (error) {
+                console.error('Error al cargar datos desde la API:', error);
+
+                throw new Error('Failed to fetch data');
             }
-
-            const json = await response.json();
-            console.log('Datos recibidos desde la API:', json);
-
-            setProducts(json.products);                        
-            return json;
-        } catch (error) {
-            console.error('Error al cargar datos desde la API:', error);
-
-            throw new Error('Failed to fetch data');
-        }
-    }     
-    loadDataProductAPI();
+        }  
+        loadDataProductAPI();
+    }, []);
       
     // fetch('https://localhost:7161/api/Store')
     // .then(response => {

@@ -75,7 +75,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                             <></>
                         )
                     }
-                    <Button variant="secondary" onClick={() => deleteAllProduct(myCartInStorage,setMyCartInStorage, setCartShopStorage)}>
+                    <Button variant="secondary" onClick={() => deleteAllProduct(myCartInStorage,setMyCartInStorage)}>
                         Vaciar Carrito
                     </Button>          
                     <Button variant="secondary" onClick={handleClose}>

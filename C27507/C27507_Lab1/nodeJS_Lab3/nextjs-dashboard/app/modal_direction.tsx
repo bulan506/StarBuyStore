@@ -9,7 +9,7 @@ import {CartShopAPI,ProductAPI,PaymentMethods,PaymentMethodNumber} from './layou
 //Componentes
 import { AlertShop } from './generic_overlay';
 //Metodos exportados
-import {setCartShopStorage } from './page';
+import {setCartShopStorage,sendDataAPI, deleteAllProduct } from './page';
 
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
@@ -35,11 +35,11 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe    
 
     //Cada vez que alguno de los campos del formulario cambia, que se aguarde en el atributo correspondiente del carrito
-    useEffect(() => {
-        if (myCartInStorage) {
-            setTextAreaDataDirection(myCartInStorage.direction || "");            
-        }
-    }, [myCartInStorage]);
+    // useEffect(() => {
+    //     if (myCartInStorage) {
+    //         setTextAreaDataDirection(myCartInStorage.direction || "");            
+    //     }
+    // }, [myCartInStorage]);
 
     //Estados  para los alert de Boostrap
     const [showAlert, setShowAlert] = useState(false);
@@ -141,6 +141,10 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
             callAlertShop("danger","Código de SINPE vacío","Debe colocar el cÓdigo de la transaccion SINPE")
             return;            
         }            
+
+        sendDataAPI("https://localhost:7161/api/Cart",myCartInStorage);
+        resetModal();//setteamos el modal o mandamos el resumen a la pagina
+        deleteAllProduct(myCartInStorage,setMyCartStorage);
         callAlertShop("success","Compra finalizada","Compra realizada con éxito")        
     }    
 

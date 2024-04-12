@@ -7,7 +7,7 @@ namespace MyStoreAPI
     public sealed class Store
     {
         public List<Product> Products { get; private set; }
-        public int TaxPercentage { get; private set; }
+        public int TaxPercentage { get; private set; }        
 
         //Constructor de Store
         private Store( List<Product> Products, int TaxPercentage )
@@ -124,13 +124,17 @@ namespace MyStoreAPI
                 description = "lorem ipsum"
             });
 
-            Store.Instance = new Store(products,15);            
-        }        
+            //Conectamos con la DB
+            DB_Connection.ConnectDB();
+            //Insertamos los productos de antes
+            DB_Connection.InsertProductsStore(products);
+            
+            //Traemos los productos desde la tabla Products
+            List<Product> productsFromDB = DB_Connection.SelectProducts();
 
-         // Método para imprimir la cantidad de productos en la tienda
-        public static void PrintProductCount()
-        {
-            Console.WriteLine("Cantidad de productos en la tienda: " + Instance.Products.Count);
-        }
+            //unica instancia de Store (con los productos y la conexion a la DB)            
+            Store.Instance = new Store(productsFromDB,15);                        
+        }                
+        
     }
 }
