@@ -7,12 +7,6 @@ using TodoApi.Models;
 namespace TodoApi.Database;
 public sealed class StoreDB
 {
-    public StoreDB()
-    {
-
-
-    }
-
     internal static void CreateMysql()
     {
         var products = new List<Product>
@@ -148,7 +142,7 @@ public sealed class StoreDB
                 }
             };
 
-        string connectionString = "Server=localhost;Database=mysql;Uid=root;Pwd=123456;";
+        string connectionString = "Server=localhost;Port=3407;Database=mysql;Uid=root;Pwd=123456;";
         using (var connection = new MySqlConnection(connectionString))
         {
             connection.Open();
@@ -163,7 +157,22 @@ public sealed class StoreDB
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(100),
                     price DECIMAL(10, 2)
-                );";
+                );
+                
+                CREATE TABLE IF NOT EXISTS sales (
+                    Id INT AUTO_INCREMENT PRIMARY KEY,
+                    productIds VARCHAR(100) NOT NULL,
+                    purchase_date DATETIME NOT NULL,
+                    total DECIMAL(10, 2) NOT NULL,
+                    payment_method INT NOT NULL,
+                    purchase_number VARCHAR(50) NOT NULL
+                );
+                
+                INSERT INTO sales (productIds, purchase_date, total, payment_method, purchase_number)
+                VALUES 
+                    ('1,2,3', '2024-04-11 10:00:00', 50.00, 1, '12345'),
+                    ('3,2,9', '2024-04-11 11:30:00', 75.20, 2, '54321'),
+                    ('4,5,8','2024-04-11 13:45:00', 100.50, 1, '98765');";
 
 
             using (var command = new MySqlCommand(createTableQuery, connection))

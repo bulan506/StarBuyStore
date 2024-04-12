@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TodoApi.Models;
 using TodoApi.Database;
+using TodoApi.Business;
 
 namespace TodoApi.Controllers
 {
@@ -10,16 +11,16 @@ namespace TodoApi.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly SaleDB sale = new SaleDB();
+        private StoreLogic storeLogic = new StoreLogic();
+        private SaleDB saleDB = new SaleDB();
 
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            string purchaseNumber = Sale.GenerateNextPurchaseNumber();
-            int paymentMethod = (int)cart.PaymentMethod;
-            sale.save(DateTime.Now, cart.Total, paymentMethod, purchaseNumber);
-            // Add the cart to the list
-            return Ok(cart);
+            var sale = storeLogic.Purchase(cart);
+            saleDB.Save(sale);
+            var response = sale.PurchaseNumber;
+            return Ok(response);
         }
     }
 }

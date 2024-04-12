@@ -8,6 +8,7 @@ export default function Payment() {
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [cartProducts, setCartProducts] = useState([]);
   const [address, setAddress] = useState('');
+  const [total, setTotal] = useState('');
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
@@ -15,6 +16,8 @@ export default function Payment() {
     setCartProducts(productIds);
     const storedAddress = localStorage.getItem('address') || '';
     setAddress(storedAddress);
+    const storedTotal = localStorage.getItem('total') || '';
+    setTotal(storedTotal);
   }, []);
 
   useEffect(() => {
@@ -30,44 +33,35 @@ export default function Payment() {
     setPaymentConfirmed(true);
   };
 
-  const handleConfirmation = () => {
-    const send = async () => {
-
-      let paymentMethodValue = 0;
-      if (selectedMethod == 'Sinpe') {
-        paymentMethodValue = 1;
-      }
-
+  const handleConfirmation = async () => {
+    try {
+      const paymentMethodValue = selectedMethod === 'Sinpe' ? 1 : 0;
+      
       const dataSend = {
         ProductIds: cartProducts,
         Address: address,
-        PaymentMethod: paymentMethodValue
+        PaymentMethod: paymentMethodValue,
+        Total: total
       };
-
-      try {
-        const response = await fetch('https://localhost:7067/api/Cart', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(dataSend)
-        });
-
-        console.log(dataSend);
-
-        if (response.ok) {
-          console.log('Data sended');
-        } else {
-          const errorResponseData = await response.json();
-          throw new Error(errorResponseData.message);
-        }
-      } catch (error) {
-        console.error(error);
+  
+      const response = await fetch('https://localhost:7067/api/Cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataSend)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to confirm purchase.');
       }
-    }
-    send();
-  };
+  
+      console.log('Purchase confirmed successfully!');
 
+    } catch (error) {
+      console.error('Error confirming purchase:', error.message);
+    }
+  };
 
   return (
     <div>

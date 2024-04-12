@@ -2,16 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TodoApi.Models;
+using TodoApi.Business;
 
 namespace TodoApi.Business
 {
     public sealed class StoreLogic
     {
-        public StoreLogic()
-        {
-
-        }
-
         public Sale Purchase(Cart cart)
         {
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
@@ -34,18 +30,30 @@ namespace TodoApi.Business
                 purchaseAmount += product.Price;
             }
 
-            // Generar el número de compra
-            string purchaseNumber = Sale.GenerateNextPurchaseNumber();
+            string purchaseNumber = GenerateNextPurchaseNumber();
 
-            // Encontrar el método de pago
-            PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
-            PaymentMethods.Type paymentMethodType = paymentMethod.PaymentType;
+            PaymentMethods selectedPaymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
+          
+            PaymentMethods.Type paymentMethodType = selectedPaymentMethod.PaymentType;
 
-            // Crear un objeto de venta
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType, purchaseNumber);
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
 
             return sale;
+        }
 
+        public static string GenerateNextPurchaseNumber()
+        {
+            Random random = new Random();
+
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string randomLetters = new string(Enumerable.Repeat(chars, 3)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            int randomNumber = random.Next(100000, 999999);
+
+            string purchaseNumber = $"{randomLetters}-{randomNumber}";
+
+            return purchaseNumber;
         }
     }
 }
