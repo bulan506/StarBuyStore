@@ -12,21 +12,14 @@ namespace storeapi.Controllers
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            try
-            {
-                int numeroCompra = new randomNumber().GenerateUniquePurchaseNumber();
-                int paymentMethodValue = (int)cart.PaymentMethod;
+            int numeroCompra = new randomNumber().GenerateUniquePurchaseNumber();
+            int paymentMethodValue = (int)cart.PaymentMethod;
 
-                _cartSave.SaveToDatabase(cart.Total, DateTime.Now, numeroCompra, paymentMethodValue);
+            _cartSave.SaveToDatabase(cart.Total, DateTime.Now, numeroCompra, paymentMethodValue);
 
-                Carts.Add(cart);
+            Carts.Add(cart);
 
-                return Ok(new { NumeroCompra = numeroCompra });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al procesar la solicitud: {ex.Message}");
-            }
+            return Ok(new { NumeroCompra = numeroCompra });
         }
     }
 }
