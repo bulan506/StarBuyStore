@@ -1,5 +1,5 @@
 
-const product = [
+/*const product = [
     {
       id: 1,
       name: 'Cinder',
@@ -86,4 +86,7 @@ const product = [
     }
   ];
 
-  export default product
+  
+  const res = await fetch('https://api.example.com/...')
+
+  export default product */

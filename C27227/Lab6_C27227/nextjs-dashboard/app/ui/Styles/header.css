@@ -75,4 +75,10 @@
     left: 30px;
     cursor: pointer
 }
-  
+
+.AddFromCarousel {
+  display: flex; /* Usa flexbox */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  margin-top: 10px; /* Espacio superior para separar del carrusel */
+}
