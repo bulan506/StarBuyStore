@@ -13,6 +13,7 @@ namespace storeapi.Controllers
         public IActionResult CreateCart([FromBody] Cart cart)
         {
             int numeroCompra = new randomNumber().GenerateUniquePurchaseNumber();
+            
             int paymentMethodValue = (int)cart.PaymentMethod;
 
             _cartSave.SaveToDatabase(cart.Total, DateTime.Now, numeroCompra, paymentMethodValue);

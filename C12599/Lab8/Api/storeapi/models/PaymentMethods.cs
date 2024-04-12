@@ -23,9 +23,6 @@ namespace storeapi
             {
                 throw new ArgumentException("Invalid payment type");
             }
-
-            // Aquí podrías implementar la lógica para buscar el método de pago correspondiente
-            // En este ejemplo, simplemente devolvemos null
             return null;
         }
     }
