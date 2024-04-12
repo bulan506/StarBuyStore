@@ -43,7 +43,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                         {myCartInStorage && myCartInStorage.allProduct.map((productItem, index) => (
                             //Tecnica rapida para evitar colocar otro div
                             <>                    
-                                <div key={productItem.uuid}>
+                                <div key={productItem.id}>
                                     <img src={productItem.imageUrl} alt="" />
                                     <p>{productItem.name}</p>
                                     <p><span>Cantidad:</span> {productItem.quantity}</p>

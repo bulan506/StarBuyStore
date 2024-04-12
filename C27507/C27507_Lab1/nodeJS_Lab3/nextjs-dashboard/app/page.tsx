@@ -1,9 +1,11 @@
 'use client'
 import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+//import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
 //Componentes
 import {Product,CartShop} from './layout';
 import { StaticCarousel} from './carousel';
@@ -14,9 +16,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
 import { mock } from 'node:test';
-
-//Tablas: Carrito y LineasCarrito
-
 
 //Peticiones API
     //POST
@@ -41,16 +40,14 @@ export async function sendDataAPI(directionAPI:string, data:any){
         let responsePost = await fetch(directionAPI,postConfig);
         //await solo se puede usar dentro de funciones asincronas
 
-        if(responsePost.ok){
-            console.log("Se han enviado el carrito");            
-            const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON
-            console.log("Respuesta del servidor:", responseData);            
-            //return 1;        
+        if(responsePost.ok){            
+            const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON                        
+             //Enviamos al usuario a la pagina de resultado
+             window.location.href = responseData.redirectUrl;
         }
         
     } catch (error) {
         console.log("Fallo al enviar datos", error);
-        //return -1;
     }        
 }
 
@@ -171,10 +168,7 @@ export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartI
     }            
 }
 
-export default function Page() { 
-    //Como El localstorage puede estar vacio o haberse borrado la key por muchas razones, creamos uno null. Luego lamamos
-    //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
-    //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
+export default function Page() {     
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);    
     //cargamos los datos desde la API (StoreController por Metodo Get)    
@@ -198,23 +192,7 @@ export default function Page() {
         }  
         loadDataProductAPI();
     }, []);
-      
-    // fetch('https://localhost:7161/api/Store')
-    // .then(response => {
-    //     if (!response.ok) {
-    //         throw new Error('Failed to fetch data');
-    //     }
-    //     return response.json();
-    // })
-    // .then(data => {
-    //     setProducts(data.products);
-    //     //console.log("ora si, ",data.products);
-    // })
-    // .catch(error => {
-    //     console.error('Error fetching data:', error);
-    // });
-            
-
+   
   return (
     <main className="flex min-h-screen flex-col p-6">
 
@@ -226,7 +204,7 @@ export default function Page() {
                     <input type="search" name="name" placeholder="Busca cualquier cosa..."/>
                     <i className="fas fa-search"></i>                                  
                 </div>
-                
+                                
                 <CartShop                     
                     myCartInStorage={myCartInStorage}  
                     setMyCartInStorage={setMyCartInStorage}                             

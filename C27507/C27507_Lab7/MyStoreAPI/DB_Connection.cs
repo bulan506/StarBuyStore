@@ -175,20 +175,37 @@ namespace MyStoreAPI
             }
         }
         
-        private static void InsertSalesLine(string saleId, Cart purchasedCart){
+        private static void InsertSalesLine(string guid, Cart purchasedCart){
             try{
                 using (MySqlConnection connection = new MySqlConnection(connectionString)){
                     connection.Open();
+
+                    //Obtenemos el SaleId asociado al comprobante de pago unico 
+                    string selectIdSale = "SELECT IdSale FROM Sales WHERE PurchaseNum = @purchaseNum";
+                    decimal IdSaleFromSelect = 0;
+                    
+                    using (MySqlCommand command = new MySqlCommand(selectIdSale,connection)){
+
+                        command.Parameters.AddWithValue("@purchaseNum",guid);
+                        object existIdSale = command.ExecuteScalar();
+                        if(existIdSale == null){
+                             Console.WriteLine("No se encontró SaleId para el PurchaseNum: " + guid);
+                            return;
+                        }
+                        IdSaleFromSelect = Convert.ToInt32(existIdSale);
+                        
+                    }
 
                     string insertSalesLine = @"
                         INSERT INTO SalesLines (IdSale, IdProduct)
                         VALUES (@saleId, @productId);";
 
                     using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection)){                        
-                       
-                        foreach (var actualProductId in purchasedCart.allProducts){
-                            command.Parameters.AddWithValue("@saleId", saleId);
-                            command.Parameters.AddWithValue("@productId", actualProductId);
+                                               
+                        foreach (var actualProductId in purchasedCart.allProduct){
+                            command.Parameters.Clear();
+                            command.Parameters.AddWithValue("@saleId", IdSaleFromSelect);
+                            command.Parameters.AddWithValue("@productId", actualProductId.id);
                             command.ExecuteNonQuery();
                             Console.WriteLine("SaleLine registrada");                            
                         }                                                    
