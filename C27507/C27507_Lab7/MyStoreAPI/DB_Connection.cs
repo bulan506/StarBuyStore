@@ -164,7 +164,7 @@ namespace MyStoreAPI
                     command.Parameters.AddWithValue("@dateSale", DateTime.Now);
                     command.ExecuteNonQuery();
                    
-                    //InsertSalesLine(purchaseNum,purchasedCart);
+                    InsertSalesLine(purchaseNum,purchasedCart);
                     //connection.Close();
                     Console.WriteLine("Exito al realizar la compra, guadado en Sales: ");
                     return purchaseNum;
@@ -174,32 +174,31 @@ namespace MyStoreAPI
                 return null;
             }
         }
+        
+        private static void InsertSalesLine(string saleId, Cart purchasedCart){
+            try{
+                using (MySqlConnection connection = new MySqlConnection(connectionString)){
+                    connection.Open();
 
-        // //Insertar el SalesLines
-        // private static void InsertSalesLine(string saleId, Cart purchasedCart){
-        //     try{
-        //         using (MySqlConnection connection = new MySqlConnection(connectionString))
-        //         {
-        //             connection.Open();
+                    string insertSalesLine = @"
+                        INSERT INTO SalesLines (IdSale, IdProduct)
+                        VALUES (@saleId, @productId);";
 
-        //             string insertSalesLine = @"
-        //                 INSERT INTO SalesLines (IdSale, IdProduct)
-        //                 VALUES (@saleId, @productId);";
-
-        //             using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection))
-        //             {
-        //                 command.Parameters.AddWithValue("@saleId", saleId);
-        //                 command.Parameters.AddWithValue("@productId", productId);
-
-        //                 command.ExecuteNonQuery();
-        //                 Console.WriteLine("SaleLine registrada");
-        //             }
-        //         }
-        //     }catch (Exception ex){
-        //         Console.WriteLine("Error al insertar la línea de venta: " + ex.Message);
-        //     }
+                    using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection)){                        
+                       
+                        foreach (var actualProductId in purchasedCart.allProducts){
+                            command.Parameters.AddWithValue("@saleId", saleId);
+                            command.Parameters.AddWithValue("@productId", actualProductId);
+                            command.ExecuteNonQuery();
+                            Console.WriteLine("SaleLine registrada");                            
+                        }                                                    
+                    }   
+                }             
+            }catch (Exception ex){
+                Console.WriteLine("Error al insertar la línea de venta: " + ex.Message);
+            }
                     
-        // }
+        }
         
     }
 }
