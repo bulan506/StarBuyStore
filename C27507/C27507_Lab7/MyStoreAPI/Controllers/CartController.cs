@@ -13,9 +13,9 @@ namespace MyStoreAPI.Controllers
          [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart){                        
             //Hacemos las inserciones y devolvemos la respuesta con el post                        
-            string purchaseNum = DB_Connection.InsertSale(cart);                
-            string redirectUrl = "https://localhost:3000/purchase-info/" + purchaseNum;            
-            return Ok(new { redirectUrl });                    
+            string purchaseNumExit = DB_Connection.InsertSale(cart);    
+            //Se manda todo dato como un JSON para que sea leido de esa forma                        
+            return Ok(new { purchaseNumExit });                    
         }        
     }
 }

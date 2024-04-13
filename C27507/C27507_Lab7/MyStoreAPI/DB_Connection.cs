@@ -67,7 +67,7 @@ namespace MyStoreAPI
                     }
                 }
             }catch (Exception ex){
-                Console.WriteLine("Error al crear la tabla: " + ex.Message);
+                throw;
             }            
         }    
 
@@ -95,7 +95,7 @@ namespace MyStoreAPI
                     Console.WriteLine("Productos insertados correctamente en la tabla 'Products'.");
                 }
             }catch (Exception ex){
-                Console.WriteLine("Error al insertar productos en la tabla 'Products': " + ex.Message);
+                throw;
             }            
         }
 
@@ -133,7 +133,7 @@ namespace MyStoreAPI
                     }
                 }
             }catch (Exception ex){
-                Console.WriteLine("Error al insertar productos en la tabla 'Products': " + ex.Message);
+                throw;
             }            
             return productListToStoreInstance;
         }
@@ -165,13 +165,11 @@ namespace MyStoreAPI
                     command.ExecuteNonQuery();
                    
                     InsertSalesLine(purchaseNum,purchasedCart);
-                    //connection.Close();
                     Console.WriteLine("Exito al realizar la compra, guadado en Sales: ");
                     return purchaseNum;
                 }            
             }catch (Exception ex){
-                Console.WriteLine("Error al insertar la venta: " + ex.Message);
-                return null;
+                throw;                
             }
         }
         
@@ -212,10 +210,8 @@ namespace MyStoreAPI
                     }   
                 }             
             }catch (Exception ex){
-                Console.WriteLine("Error al insertar la línea de venta: " + ex.Message);
-            }
-                    
-        }
-        
+                throw;
+            }                    
+        }        
     }
 }

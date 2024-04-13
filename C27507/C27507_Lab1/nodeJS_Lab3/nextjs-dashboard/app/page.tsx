@@ -19,7 +19,7 @@ import { mock } from 'node:test';
 
 //Peticiones API
     //POST
-export async function sendDataAPI(directionAPI:string, data:any){
+export async function sendDataAPI(directionAPI:string, data:any): Promise<string | null> {
 
     //Especificacion POST
     let postConfig = {
@@ -43,11 +43,12 @@ export async function sendDataAPI(directionAPI:string, data:any){
         if(responsePost.ok){            
             const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON                        
              //Enviamos al usuario a la pagina de resultado
-             window.location.href = responseData.redirectUrl;
+             return responseData.purchaseNumExit;
         }
+        return null;
         
     } catch (error) {
-        console.log("Fallo al enviar datos", error);
+        throw new Error('Failed to POST data');
     }        
 }
 
@@ -169,10 +170,10 @@ export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartI
 }
 
 export default function Page() {     
-    const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
-    const [products, setProducts] = useState<ProductAPI[]>([]);    
     //cargamos los datos desde la API (StoreController por Metodo Get)    
-
+    const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
+    const [products, setProducts] = useState<ProductAPI[]>([]);               
+    
     useEffect(() => {
 
         const loadDataProductAPI = async ()=>{
@@ -185,8 +186,6 @@ export default function Page() {
                 setProducts(json.products);                        
                 return json;
             } catch (error) {
-                console.error('Error al cargar datos desde la API:', error);
-
                 throw new Error('Failed to fetch data');
             }
         }  
@@ -243,10 +242,8 @@ export default function Page() {
                   }
               })}
             </div>
-      </div>
-
-      {/*  */}
-      <footer>@ Derechos Reservados 2024</footer>      
+      </div>      
+      <footer>@ Derechos Reservados 2024</footer>         
     </main>
   );
 }
