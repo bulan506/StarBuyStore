@@ -1,49 +1,47 @@
-using System;
+namespace storeApi;
 
-namespace storeApi.Models
+public abstract class PaymentMethods
 {
-    public abstract class PaymentMethod
+    public enum Type
+    {CASH = 0,SINPE = 1}
+    public Type PaymentType { get; set; }
+    public PaymentMethods(PaymentMethods.Type paymentType)
     {
-        public enum Type
-        {
-            CASH = 0,
-            SINPE = 1
-        }
+        PaymentType = paymentType;
 
-        public Type PaymentType { get; set; }
+    }
+    private static Sinpe sinpe=new Sinpe();
+    private static Cash cash=new Cash();
 
-        public PaymentMethod(PaymentMethod.Type paymentType)
-        {
-            PaymentType = paymentType;
-        }
+    public static PaymentMethods Find(Type type)
+    {
 
-        public static PaymentMethod Create(PaymentMethod.Type type)
+        switch (type)
         {
-            switch (type)
-            {
-                case Type.CASH:
-                    return new Cash();
-                case Type.SINPE:
-                    return new Sinpe();
-                default:
-                    throw new ArgumentException("Invalid payment type");
-            }
+            case Type.CASH:
+                return cash;
+            case Type.SINPE:
+                return sinpe;
+            default:
+                throw new ArgumentException("Invalid payment method type.");
         }
     }
-
-    public sealed class Sinpe : PaymentMethod
+     public static PaymentMethods SetPaymentType(Type type)
     {
-        public Sinpe() : base(PaymentMethod.Type.SINPE)
-        {
-
-        }
+        return Find(type);
     }
-
-    public sealed class Cash : PaymentMethod
+}
+public sealed class Sinpe : PaymentMethods
+{
+    public Sinpe() : base(PaymentMethods.Type.SINPE)
     {
-        public Cash() : base(PaymentMethod.Type.CASH)
-        {
 
-        }
+    }
+}
+public sealed class Cash : PaymentMethods
+{
+    public Cash() : base(PaymentMethods.Type.CASH)
+    {
+
     }
 }

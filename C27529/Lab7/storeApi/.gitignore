@@ -1,4 +1,5 @@
 /Controllers/WeatherForecastController.cs
 /WeatherForecast.cs
-/bin
+/bin/*
 /obj/Debug
+bin
