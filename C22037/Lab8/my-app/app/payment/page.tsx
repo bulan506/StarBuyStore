@@ -3,8 +3,13 @@ import { useEffect, useState } from 'react';
 import "@/public/styles.css";
 import Link from 'next/link';
 
+const PaymentMethodsEnum = {
+  Cash: 0,
+  Sinpe: 1
+};
+
 export default function Payment() {
-  const [selectedMethod, setSelectedMethod] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState(PaymentMethodsEnum.Cash);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [cartProducts, setCartProducts] = useState([]);
   const [address, setAddress] = useState('');
@@ -34,13 +39,12 @@ export default function Payment() {
   };
 
   const handleConfirmation = async () => {
+    const paymentMethodValue = selectedMethod === PaymentMethodsEnum.Sinpe ? PaymentMethodsEnum.Sinpe : PaymentMethodsEnum.Cash;
     try {
-      const paymentMethodValue = selectedMethod === PaymentMethodsEnum.SINPE ? PaymentMethodsEnum.SINPE : PaymentMethodsEnum.CASH;
-      
       const dataSend = {
         ProductIds: cartProducts,
         Address: address,
-        PaymentMethod: paymentMethodValue,
+        PaymentMethod: selectedMethod,
         Total: total
       };
   
@@ -72,16 +76,16 @@ export default function Payment() {
       <div className="body">
         <h2>Payment Method</h2>
         <div>
-          <button className="Button" onClick={() => handleMethodSelect('Cash')}>Cash</button>
-          <button className="Button" onClick={() => handleMethodSelect('Sinpe')}>Sinpe</button>
+          <button className="Button" onClick={() => handleMethodSelect(PaymentMethodsEnum.Cash)}>Cash</button>
+          <button className="Button" onClick={() => handleMethodSelect(PaymentMethodsEnum.Sinpe)}>Sinpe</button>
         </div>
-        {selectedMethod === 'Cash' && (
+        {selectedMethod === PaymentMethodsEnum.Cash && (
           <div>
             <p>Purchase number: 00000.</p>
             <p>Awaiting confirmation from the administrator regarding the payment.</p>
           </div>
         )}
-        {selectedMethod === 'Sinpe' && (
+        {selectedMethod === PaymentMethodsEnum.Sinpe && (
           <div>
             <p>Purchase number: 00000.</p>
             <p>Make the payment through Sinpe to the number 8596-1362.</p>

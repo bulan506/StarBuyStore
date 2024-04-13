@@ -1,41 +1,49 @@
-namespace TodoApi
+using System;
+
+namespace TodoApi.Models
 {
-    public abstract class PaymentMethods
+    public abstract class PaymentMethod
     {
         public enum Type
         {
-            Cash = 0,
-            Sinpe = 1
+            CASH = 0,
+            SINPE = 1
         }
 
         public Type PaymentType { get; set; }
 
-        public static PaymentMethods Find(Type type)
+        public PaymentMethod(PaymentMethod.Type paymentType)
+        {
+            PaymentType = paymentType;
+        }
+
+        public static PaymentMethod Create(PaymentMethod.Type type)
         {
             switch (type)
             {
-                case Type.Cash:
+                case Type.CASH:
                     return new Cash();
-                case Type.Sinpe:
+                case Type.SINPE:
                     return new Sinpe();
                 default:
-                    throw new ArgumentException("Invalid payment method type.");
+                    throw new ArgumentException("Invalid payment type");
             }
         }
+    }
 
-        public static PaymentMethods SetPaymentType(Type type)
+    public sealed class Sinpe : PaymentMethod
+    {
+        public Sinpe() : base(PaymentMethod.Type.SINPE)
         {
-            return Find(type);
+
         }
     }
 
-    public sealed class Sinpe : PaymentMethods
+    public sealed class Cash : PaymentMethod
     {
-        
+        public Cash() : base(PaymentMethod.Type.CASH)
+        {
+
+        }
     }
-
-    public sealed class Cash : PaymentMethods
-    {
-
-    }       
 }

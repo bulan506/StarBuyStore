@@ -35,9 +35,7 @@ namespace TodoApi.Business
 
             string purchaseNumber = GenerateNextPurchaseNumber();
 
-            PaymentMethods selectedPaymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
-          
-            PaymentMethods.Type paymentMethodType = selectedPaymentMethod.PaymentType;
+            PaymentMethod.Type paymentMethodType = cart.PaymentMethod;
 
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
             

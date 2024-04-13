@@ -6,11 +6,11 @@ public sealed class Sale
     public IEnumerable<Product> Products { get; }
     public string Address { get; }
     public decimal Amount { get; }
-    public PaymentMethods.Type PaymentMethod { get; set; }
+    public PaymentMethod.Type PaymentMethod { get; set; }
     public string PurchaseNumber { get; }
 
 
-    public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod)
+    public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethod.Type paymentMethod)
     {
         Products = products;
         Address = address;
