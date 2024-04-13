@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using Store_API.Models;
+using Store_API.Database;
 
 namespace Store_API.Controllers
 {
@@ -9,17 +8,16 @@ namespace Store_API.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private static List<Cart> Carts = new List<Cart>();
-
         [HttpPost]
+        [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            // Add the cart to the list
-            Carts.Add(cart);
+           
+            string successPurchase = DB_API.InsertSale(cart);
 
-            // Return the newly created cart
-            return Ok(cart);
+            return Ok(new { successPurchase });
+            
+           
         }
     }
-
 }

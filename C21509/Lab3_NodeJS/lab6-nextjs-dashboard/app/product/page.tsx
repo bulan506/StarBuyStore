@@ -10,32 +10,32 @@ export default function Page() {
   const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
 
 
- // En el useEffect que carga los datos de la API
-useEffect(() => {
-  const loadProductApiData = async () => {
-    try {
-      const response = await fetch('https://localhost:7165/api/Store');
-      if (!response.ok) {
+  // En el useEffect que carga los datos de la API
+  useEffect(() => {
+    const loadProductApiData = async () => {
+      try {
+        const response = await fetch('https://localhost:7165/api/Store');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        if (json.products) {
+          setCartProducts(json.products);
+        } else {
+          throw new Error('Failed to fetch data: No products found');
+        }
+      } catch (error) {
         throw new Error('Failed to fetch data');
       }
-      const json = await response.json();
-      if (json.products) {
-        setCartProducts(json.products);
-      } else {
-        throw new Error('Failed to fetch data: No products found');
-      }
-    } catch (error) {
-      throw new Error('Failed to fetch data');
-    }
-  };
-  loadProductApiData();
-}, []);
+    };
+    loadProductApiData();
+  }, []);
 
-useEffect(() => {
+  useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
     console.log("Data from localStorage:", savedCartProducts);
     setCartProducts(savedCartProducts);
-}, []);
+  }, []);
 
   const addToCart = (product: ProductItem) => {
     setCartProducts(prevProducts => {
@@ -57,9 +57,9 @@ useEffect(() => {
       <header className="header-container row">
         <div className="search-container col-sm-4 ">
           <input type="search" placeholder="Buscar" value="" />
-          <button><img src="/img/Lupa.png" className="col-sm-4" /> </button>
-          <Link href="/cart">
-            <button ><img src="/img/carrito.png" className="col-sm-4" />{cartProducts && cartProducts.length}</button>
+          <button className="col-sm-2"><img src="/img/Lupa.png" className="col-sm-4" /> </button>
+          <Link href="/cart" className="col-sm-4 d-flex justify-content-end">
+            <button><img src="/img/carrito.png" className="col-sm-6" />{cartProducts && cartProducts.length}</button>
           </Link>
         </div>
       </header>
@@ -68,7 +68,7 @@ useEffect(() => {
         <h1>Lista de Productos</h1>
         <div className='row' style={{ display: 'flex', flexWrap: 'wrap' }}>
           {cartProducts && cartProducts.map(product =>
-            <Product key={product.uuid} product={product} addToCart={() => addToCart(product)} />
+            <Product key={product.id} product={product} addToCart={() => addToCart(product)} />
           )}
 
         </div>

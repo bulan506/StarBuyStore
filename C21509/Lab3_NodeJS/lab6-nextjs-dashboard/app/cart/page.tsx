@@ -34,9 +34,9 @@ const CartFunction = () => {
     }));
   }, []);
 
-  const removeFromCart = (productUuid: string) => {
+  const removeFromCart = (productId: number) => {
     // Filtrar el producto que se eliminará del carrito
-    const updatedCart = cartState.cart.products.filter((product: ProductItem) => product.uuid !== productUuid);
+    const updatedCart = cartState.cart.products.filter((product: ProductItem) => product.id !== productId);
 
     // Calcular el subtotal y el total con impuestos después de eliminar el producto
     const subtotal = updatedCart.reduce((acc: number, product: ProductItem) => acc + product.price, 0);
@@ -62,13 +62,13 @@ const CartFunction = () => {
       <h1>Carrito de compras</h1>
       {cartState.cart.products.length > 0 ? (
         <>
-          <ul>
+          <ul className="product col-sm-6">
             {cartState.cart.products.map((product: ProductItem) => (
-              <li key={product.uuid}>
+              <li key={product.id}>
                 <img src={product.imageURL} alt={product.name} />
                 <p>{product.name}</p>
                 <p>Precio: ${product.price}</p>
-                <button onClick={() => removeFromCart(product.uuid)} className="button">Eliminar de carrito</button>
+                <button onClick={() => removeFromCart(product.id)} className="button">Eliminar de carrito</button>
               </li>
             ))}
           </ul>

@@ -14,7 +14,7 @@ export default function RootLayout({
 }
 
 export interface ProductItem {
-  uuid: string; // Cambiar de id: number a uuid: string
+  id: number;
   name: string;
   imageURL: string;
   price: number;
@@ -22,28 +22,28 @@ export interface ProductItem {
 
 export const products: ProductItem[] = [
   {
-    uuid: "1", 
+    id: 1, 
     name: "Iphone",
     imageURL: "/img/Iphone.jpg",
     price: 200
   },
 
   {
-    uuid: "2",
+    id: 2,
     name: "Audifono",
     imageURL: "/img/audifonos.jpg",
     price: 100
   },
 
   {
-    uuid: "3",
+    id:3,
     name: "Mouse",
     imageURL: "/img/mouse.jpg",
     price: 35
   },
 
   {
-    uuid: "4",
+    id: 4,
     name: "Pantalla",
     imageURL: "/img/Pantalla.jpg",
     price: 68
@@ -51,7 +51,7 @@ export const products: ProductItem[] = [
   },
 
   {
-    uuid: "5",
+    id: 5,
     name: "Headphone",
     imageURL: "/img/Headphone.jpg",
     price: 35
@@ -59,7 +59,7 @@ export const products: ProductItem[] = [
   },
 
   {
-    uuid: "6",
+    id: 6,
     name: "Teclado",
     imageURL: "/img/teclado.jpg",
     price: 95
@@ -67,21 +67,21 @@ export const products: ProductItem[] = [
   },
 
   {
-    uuid: "7",
+    id: 7,
     name: "Cable USB",
     imageURL: "/img/Cable.jpg",
     price: 10
   },
 
   {
-    uuid: "8",
+    id: 8,
     name: "Chromecast",
     imageURL: "/img/Chromecast.jpg",
     price: 150
   },
 
   {
-    uuid: "9",
+    id: 9,
     name: "",
     imageURL: "",
     price: 0
@@ -91,7 +91,7 @@ export const products: ProductItem[] = [
 
 export const Product = ({ product, addToCart }: { product: ProductItem, addToCart: (product: ProductItem) => void }) => {
 
-  if (product.uuid === '9') { 
+  if (product.id === 9) { 
     return (
       <div className="products col-sm-6" style={{ margin: '0 auto' }}>
         <div id="productsCarouselControl" className="carousel" data-bs-ride="carousel">

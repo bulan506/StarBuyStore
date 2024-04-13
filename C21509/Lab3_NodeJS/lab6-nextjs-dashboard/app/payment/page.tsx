@@ -10,6 +10,7 @@ const PurchasedItems = () => {
     cart: {
       products: [],
       deliveryAddress: '',
+      paymentMethod: ''
     },
     paymentMethods: [
       {
@@ -66,6 +67,36 @@ const PurchasedItems = () => {
     }
   };
 
+  const sendDataToAPI = async () => {
+    const productIds = cartState.cart.products.map((product: any) => String(product.uuid));
+    const purchaseData = {
+      ProductIds: productIds,
+      Address: cartState.cart.deliveryAddress,
+      PaymentMethod: cartState.cart.paymentMethod
+    };
+
+    try {
+      const response = await fetch('https://localhost:7165/api/Cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(purchaseData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPurchaseNumber(data.purchaseNumber);
+        setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${data.purchaseNumber}. Espere la confirmación del administrador.`);
+      } else {
+        const errorResponseData = await response.json();
+        throw new Error(errorResponseData.message || 'Purchase cannot be proceced');
+      }
+    } catch (error) {
+      throw new Error('Failed to fetch data');
+    }
+  };
+
   return (
     <div>
       <h1>Procesar Compra</h1>
@@ -108,6 +139,7 @@ const PurchasedItems = () => {
               <p>Ingrese el número de comprobante:</p>
               <input type="text" value={paymentReceipt} onChange={(e) => setPaymentReceipt(e.target.value)} placeholder="Ingrese el comprobante" />
               <p>Una vez realizado el pago, espere la confirmación del administrador.</p>
+              <button onClick={sendDataToAPI} className="button">Confirmar Compra</button>
             </div>
           )}
         </div>
@@ -117,7 +149,7 @@ const PurchasedItems = () => {
         <h2>Productos en el Carrito</h2>
         <ul>
           {cartState.cart.products.map((product: ProductItem) => (
-            <li key={product.uuid}>
+            <li key={product.id}>
               <p>{product.name}</p>
               <p>Precio: ${product.price}</p>
             </li>
