@@ -4,7 +4,7 @@ window.onload = function() {
   var scrollPosition = 0;
 
   $(".carousel-control-next").on("click", function() {
-    if (scrollPosition < (carouselWidth - cardWidth * 4)) {
+    if (scrollPosition < (carouselWidth - cardWidth * 5)) {
       scrollPosition += cardWidth;
       $(".carousel-inner").animate({ scrollLeft: scrollPosition }, 600);
     }
