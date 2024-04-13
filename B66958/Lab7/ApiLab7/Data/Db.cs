@@ -11,7 +11,7 @@ public class Db
     public static string DbConnectionString = "Data Source=163.178.173.130;" +
             "User ID=basesdedatos;Password=BaSesrp.2024; Encrypt=False;";
 
-    public void CreateDB()
+    public static void CreateDB()
     {
         string[] creationQueries = {
             "IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'andromeda_store') DROP DATABASE andromeda_store;",
@@ -63,11 +63,8 @@ public class Db
         }
     }
 
-    public void FillProducts()
+    public static void FillProducts()
     {
-
-        if(productsExist()) return ;
-
         var productsData = new[]
         {
             new { name = "Producto", description = "Gaming Mouse", imageUrl = "https://cdn.mos.cms.futurecdn.net/rfphfWvEc3PL2wfPJvZGiP.jpg", price = 75.0 },

@@ -82,12 +82,8 @@ export default function Home() {
         direccionEntrega: '',
         metodoDePago: ''
       },
-<<<<<<< HEAD
       necesitaVerificacion: false
-    });
-=======
     }));
->>>>>>> 503b34b414db61e468c56748d3a388b2d3652da7
   }
 
   function productAlreadyAdded({ product }) {

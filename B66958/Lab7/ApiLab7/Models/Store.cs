@@ -19,9 +19,6 @@ public sealed class Store
     static Store()
     {
         db = new Db();
-        db.CreateDB();
-        db.FillProducts();
-
         List<Product> products = db.GetProducts();
         var paymentMethods = new List<PaymentMethods>();
         paymentMethods.Add(new Sinpe());
