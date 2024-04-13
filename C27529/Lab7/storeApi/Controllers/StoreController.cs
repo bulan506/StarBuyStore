@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
+using storeApi.Models;
+using storeApi.dataBase;
+using storeApi.Business;
 
 namespace storeApi.Controllers
 {
