@@ -13,8 +13,6 @@ export default function Pago() {
 
     const [address, setAddress] = useState('');
 
-    const [total, setTotal]= useState('');
-
     useEffect(() => {
         const storedCartString = localStorage.getItem('productosCarrito');
         if (storedCartString) {
@@ -27,9 +25,9 @@ export default function Pago() {
         }
         const storedAddress = localStorage.getItem('direccion') || '';
          
-        console.log('DIR :', storedAddress);
+        
         setAddress(storedAddress);
-        //setTotal....
+    
     }, []);
 
     useEffect(() => {
@@ -39,16 +37,8 @@ export default function Pago() {
     const seleccionMetodoPago = (metodo) => {
         setMetodoSeleccionado(metodo);
         setPagoConfirmado(false);
-        //console.log(metodoSeleccionado);
+     
     };
-
-    /*const manejarConfirmacionPagoSinpe = () => {
-        setPagoConfirmado(true);
-
-        
-        
-    };*/
-
 
 
     const manejarConfirmacionPago = async () => {
@@ -74,10 +64,8 @@ export default function Pago() {
             throw new Error('Failed to confirm purchase.');
           }
     
-          console.log(dataSend);
-    
         } catch (error) {
-          console.error('Error confirming purchase:', error.message);
+        throw new Error('Error confirming purchase:', error.message);
         }
       };
 

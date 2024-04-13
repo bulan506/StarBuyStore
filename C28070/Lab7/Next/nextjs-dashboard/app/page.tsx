@@ -156,9 +156,8 @@ export default function Pagina() {
         const storeJson = await response.json();
         setProductos(storeJson);
         setTasaImpuesto(storeJson.taxPercentage);
-        console.log(storeJson);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        throw new Error('Error fetching data:', error);
       }
     };
   
@@ -187,7 +186,6 @@ export default function Pagina() {
     if (productoAAgregar) {
       const productosCarritoActualizados = { ...productosCarritoAlmacenados, [idProducto]: productoAAgregar };
       localStorage.setItem('productosCarrito', JSON.stringify(productosCarritoActualizados));
-     // console.log(productosCarritoAlmacenados);
       if (!productosCarritoAlmacenados[idProducto]) {
         setContadorCarritoSesion(contadorCarritoSesion + 1);
       }
@@ -202,7 +200,6 @@ export default function Pagina() {
 
   const impuestos = subtotal * tasaImpuesto;
   const total = subtotal + impuestos;
-  //localStorage.setItem('productosCarrito', total);
 
   return (
 
