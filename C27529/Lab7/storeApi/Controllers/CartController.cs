@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using storeApi.Models;
-using storeApi.dataBase;
 using storeApi.Business;
 using storeApi.Database;
 
@@ -21,11 +20,8 @@ namespace storeApi.Controllers
         public IActionResult CreateCart([FromBody] Cart cart)
         {
             var sale = storeLogic.Purchase(cart);
-
-            //store.INSTANCE.PURCHASE(CART)
-
-            int numeroCOmpra = 1;
-            return Ok(numeroCOmpra);
+            var response = new { purchaseNumberResponse = sale.PurchaseNumber };
+            return Ok(response);
         }
     }
 

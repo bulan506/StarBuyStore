@@ -2,8 +2,9 @@ using System;
 using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
+using storeApi.Models;
 
-namespace storeApi.dataBase;
+namespace storeApi.db;
 public sealed class StoreDB
 {
     public StoreDB()
@@ -85,7 +86,7 @@ public sealed class StoreDB
 
 
 
-        string connectionString = "Server=localhost;Port=3306;Database=mysql;Uid=root;Pwd=123456;";
+        string connectionString = "Server=localhost;Database=mysql;Uid=root;Pwd=123456;";
         using (var connection = new MySqlConnection(connectionString))
         {
             connection.Open();
@@ -103,18 +104,17 @@ public sealed class StoreDB
 
                 CREATE TABLE IF NOT EXISTS sales (
                     Id INT AUTO_INCREMENT PRIMARY KEY,
-                    productIDs varchar(100),
                     purchase_date DATETIME NOT NULL,
                     total DECIMAL(10, 2) NOT NULL,
                     payment_method INT NOT NULL,
                     purchase_number VARCHAR(50) NOT NULL
                 );
                 
-                INSERT INTO sales (productIDs, purchase_date, total, payment_method, purchase_number)
+                INSERT INTO sales ( purchase_date, total, payment_method, purchase_number)
                 VALUES 
-                    ('1' ,'2024-04-11 10:00:00',  50.00, 1, '12345'),
-                    ('2','2024-04-11 11:30:00',  75.20, 2, '54321'),
-                    ('3' ,'2024-04-11 13:45:00',  100.50, 1, '98765');
+                    ('2024-04-11 10:00:00',  50.00, 1, '12345'),
+                    ('2024-04-11 11:30:00',  75.20, 2, '54321'),
+                    ('2024-04-11 13:45:00',  100.50, 1, '98765');
                 ";
 
 

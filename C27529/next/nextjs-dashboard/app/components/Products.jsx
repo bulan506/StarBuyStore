@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Carousel from 'react-bootstrap/Carousel';
 
@@ -7,21 +7,23 @@ export const Products = ({ }) => {
 
   const [productList, setProductList] = useState([]);
 
-  const loadData = async () => {
-    try {
-      const response = await fetch(`https://localhost:7280/api/Store`);
-      if (!response.ok) {
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch(`https://localhost:7280/api/Store`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        setProductList(json);
+      } catch (error) {
         throw new Error('Failed to fetch data');
       }
-      const json = await response.json();
-      //console.log('Data received:', json);
-      setProductList(json);
-    } catch (error) {
-      throw new Error('Failed to fetch data');
-    }
-  };
+    };
 
-  loadData();
+    loadData(); // Llamar a loadData() solo una vez al montar el componente
+
+  }, []); 
 
   const [storeData, setStoreData] = useState(() => {
     const storedStoreData = localStorage.getItem("tienda");
@@ -101,7 +103,8 @@ export const Products = ({ }) => {
   };
 
 return (
-  <div>
+  
+    <div>
     {showModal && <ModalError closeModal={closeModal} />}
     <div className="row">
       {productList && productList.products && productList.products.map(product => (

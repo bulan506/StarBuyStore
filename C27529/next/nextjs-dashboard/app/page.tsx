@@ -49,6 +49,7 @@ export default function Page() {
       <Header goToPage={goToPage} />
 
       {page === 0 ? (
+        
         <Products />
       ) : page === 1 ? (
         <Cart goToPage={goToPage} />

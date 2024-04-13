@@ -3,9 +3,6 @@ using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
 using storeApi.Models;
-using storeApi.Models;
-using storeApi.Database;
-using storeApi.Business;
 
 namespace storeApi.Database
 {
@@ -20,12 +17,11 @@ namespace storeApi.Database
                 string insertQuery = @"
                     use store;
 
-                    INSERT INTO sales (productIds, purchase_date, total, payment_method, purchase_number)
-                    VALUES (@productIds, @purchase_date, @total, @payment_method, @purchase_number);";
+                    INSERT INTO sales ( purchase_date, total, payment_method, purchase_number)
+                    VALUES ( @purchase_date, @total, @payment_method, @purchase_number);";
 
                 using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                 {
-                    command.Parameters.AddWithValue("@productIds", string.Join(",", sale.Products));
                     command.Parameters.AddWithValue("@purchase_date", DateTime.Now);
                     command.Parameters.AddWithValue("@total", sale.Amount);
                     command.Parameters.AddWithValue("@payment_method", sale.PaymentMethod);
