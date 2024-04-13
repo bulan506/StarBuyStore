@@ -81,7 +81,7 @@ export default function Page() {
   const handleAddToCart = ({ product }: { product: Product }) => {
     initialCart.cart.products.push(product);
     initialCart.cart.subtotal = initialCart.cart.subtotal + product.price;
-    initialCart.cart.total = initialCart.cart.subtotal + initialCart.cart.subtotal * initialCart.taxPercentage;
+    initialCart.cart.total = initialCart.cart.subtotal + initialCart.cart.subtotal * initialCart.cart.taxPercentage;
     setCount(count + 1);
     saveInitialCartLocalStorage(initialCart);
   }

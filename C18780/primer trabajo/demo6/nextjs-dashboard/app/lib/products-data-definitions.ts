@@ -24,7 +24,6 @@ export type Cart = {
         taxPercentage: number;
         total: number;
         deliveryAddress: string;
-        methodPayment: MethodPayment | null;
+        methodPayment: number | null;
     };
-    taxPercentage:number;
 }

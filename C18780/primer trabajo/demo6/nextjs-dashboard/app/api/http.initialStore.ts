@@ -8,7 +8,6 @@ export function useFetchInitialStore() {
   
   useEffect(() => {
     async function getProducts() {
-      try {
         const res = await fetch('https://localhost:7099/api/Store');
         if (!res.ok) {
           throw new Error('Failed to fetch products');
@@ -16,13 +15,10 @@ export function useFetchInitialStore() {
         const data = await res.json();
         console.log(data);
         setProducts(data.products);
-        cart.taxPercentage = data.taxPercentage/100;
+        cart.cart.taxPercentage = data.taxPercentage/100;
 
         saveInitialCartLocalStorage(cart);
         
-      } catch (error) {
-        console.error(error);
-      }
     }
     
     getProducts();

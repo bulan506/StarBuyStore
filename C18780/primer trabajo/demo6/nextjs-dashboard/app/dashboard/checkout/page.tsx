@@ -7,8 +7,9 @@ import ModalInput from '../modalInput';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import countries from '../../lib/countries-data';
-import { getInitialCartLocalStorage } from '@/app/lib/cart_data_localeStore';
+import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '@/app/lib/cart_data_localeStore';
 import { findProductsDuplicates, getProductQuantity } from '@/app/lib/utils';
+import useFetchCartPurchase from '@/app/api/http.cart';
 const ListProducts = ({ product, quantity }: { product: Product, quantity: number }) => {
     return (
         <tr>
@@ -64,7 +65,7 @@ const OrderSummary = ({ initialCart }: { initialCart: Cart }) => {
                                 <h5 className="font-size-14 m-0">Estimated Tax :</h5>
                             </td>
                             <td>
-                                ₡{initialCart.cart.subtotal * initialCart.taxPercentage}
+                                ₡{initialCart.cart.subtotal * initialCart.cart.taxPercentage}
                             </td>
                         </tr>
 
@@ -84,7 +85,12 @@ const OrderSummary = ({ initialCart }: { initialCart: Cart }) => {
     );
 };
 
-const BillingInfo = () => {
+const BillingInfo = ({ onAddress }: { onAddress: any }) => {
+    const [address, setAddress] = useState("");
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setAddress(e.target.value);
+        onAddress(address);
+    };
     return (
         <div className="feed-item-list">
             <div>
@@ -92,60 +98,9 @@ const BillingInfo = () => {
                 <p className="text-muted text-truncate mb-4">Delivery address</p>
                 <div className="mb-3">
                     <form>
-                        <div>
-                            <div className="row">
-                                <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label" htmlFor="billing-name">Name</label>
-                                        <input type="text" className="form-control" id="billing-name" placeholder="Enter name" />
-                                    </div>
-                                </div>
-                                <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label" htmlFor="billing-email-address">Email Address</label>
-                                        <input type="email" className="form-control" id="billing-email-address" placeholder="Enter email" />
-                                    </div>
-                                </div>
-                                <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label" htmlFor="billing-phone">Phone</label>
-                                        <input type="text" className="form-control" id="billing-phone" placeholder="Enter Phone no." />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="billing-address">Address</label>
-                                <textarea className="form-control" id="billing-address" rows={3} placeholder="Enter full address"></textarea>
-                            </div>
-
-                            <div className="row">
-                                <div className="col-lg-4">
-                                    <div className="mb-4 mb-lg-0">
-                                        <label className="form-label">Country</label>
-                                        <select className="form-control form-select" title="Country">
-                                            <option value="0">Select Country</option>
-                                            {countries.country.map((country) => (
-                                                <option value={country.value}>{country.name}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="col-lg-4">
-                                    <div className="mb-4 mb-lg-0">
-                                        <label className="form-label" htmlFor="billing-city">City</label>
-                                        <input type="text" className="form-control" id="billing-city" placeholder="Enter City" />
-                                    </div>
-                                </div>
-
-                                <div className="col-lg-4">
-                                    <div className="mb-0">
-                                        <label className="form-label" htmlFor="zip-code">Zip / Postal code</label>
-                                        <input type="text" className="form-control" id="zip-code" placeholder="Enter Postal code" />
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="mb-3">
+                            <label className="form-label" htmlFor="billing-address">Address</label>
+                            <textarea className="form-control" id="billing-address" rows={3} placeholder="Enter full address" onChange={handleChange}></textarea>
                         </div>
                     </form>
                 </div>
@@ -217,14 +172,31 @@ export default function Checkout() {
         cash: 0,
         sinpe: 1
     }
+
     const updatePayment = (paymentOption: number) => {
         setPayment(paymentOption);
         if (paymentOption === payMethod.cash) {
             setText('Dear customer, \nplease wait for our administrator to confirm your method of payment.\nThank you very much for choosing us');
+
         } else {
             setText('Dear customer, \nour Sinpe Movil number is the following: \n70790629\nThank you very much for choosing us');
+
         }
     };
+
+    const [inputAddress, setInputAddress] = useState('');
+    const onAddress = (address: string) => {
+        setInputAddress(address);
+        initialCart.cart.deliveryAddress = address;
+    };
+
+    const purchase = () => {
+        if (payment !== undefined)
+            initialCart.cart.methodPayment = payment;
+        saveInitialCartLocalStorage(initialCart);
+        useFetchCartPurchase();
+    }
+
     return (
         <div className="container">
 
@@ -241,7 +213,7 @@ export default function Checkout() {
                                         </div>
                                     </div>
 
-                                    <BillingInfo />
+                                    <BillingInfo onAddress={onAddress} />
 
                                 </li>
 
@@ -267,7 +239,7 @@ export default function Checkout() {
                         <div className="col">
                             <div className="text-end mt-2 mt-sm-0">
                                 <i className="mdi mdi-cart-outline me-1"></i>
-                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled={payment !== undefined ? false : true}>
+                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled={payment !== undefined && inputAddress !== "" ? false : true} onClick={purchase}>
                                     PROCCED
                                 </button>
                                 {payment === payMethod.cash
