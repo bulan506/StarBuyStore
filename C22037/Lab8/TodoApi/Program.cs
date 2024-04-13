@@ -1,5 +1,3 @@
-TodoApi.Database.StoreDB.CreateMysql();
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

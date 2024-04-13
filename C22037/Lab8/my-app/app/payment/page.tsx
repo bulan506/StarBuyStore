@@ -35,7 +35,7 @@ export default function Payment() {
 
   const handleConfirmation = async () => {
     try {
-      const paymentMethodValue = selectedMethod === 'Sinpe' ? 1 : 0;
+      const paymentMethodValue = selectedMethod === PaymentMethodsEnum.SINPE ? PaymentMethodsEnum.SINPE : PaymentMethodsEnum.CASH;
       
       const dataSend = {
         ProductIds: cartProducts,
@@ -55,11 +55,9 @@ export default function Payment() {
       if (!response.ok) {
         throw new Error('Failed to confirm purchase.');
       }
-  
-      console.log('Purchase confirmed successfully!');
 
     } catch (error) {
-      console.error('Error confirming purchase:', error.message);
+      throw new Error('Error confirming purchase:', error.message);
     }
   };
 

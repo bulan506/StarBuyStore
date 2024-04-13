@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TodoApi.Models;
-using TodoApi.Business;
+using TodoApi.Database;
 
 namespace TodoApi.Business
 {
     public sealed class StoreLogic
     {
+
+         private SaleDB saleDB = new SaleDB();
+
         public Sale Purchase(Cart cart)
         {
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
@@ -37,6 +40,8 @@ namespace TodoApi.Business
             PaymentMethods.Type paymentMethodType = selectedPaymentMethod.PaymentType;
 
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
+            
+            saleDB.Save(sale);
 
             return sale;
         }

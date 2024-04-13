@@ -12,14 +12,12 @@ namespace TodoApi.Controllers
     public class CartController : ControllerBase
     {
         private StoreLogic storeLogic = new StoreLogic();
-        private SaleDB saleDB = new SaleDB();
 
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
             var sale = storeLogic.Purchase(cart);
-            saleDB.Save(sale);
-            var response = sale.PurchaseNumber;
+            var response = new { purchaseNumber = sale.PurchaseNumber };
             return Ok(response);
         }
     }
