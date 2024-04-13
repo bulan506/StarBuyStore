@@ -117,7 +117,7 @@ const PurchasedItems = () => {
         <h2>Productos en el Carrito</h2>
         <ul>
           {cartState.cart.products.map((product: ProductItem) => (
-            <li key={product.id}>
+            <li key={product.uuid}>
               <p>{product.name}</p>
               <p>Precio: ${product.price}</p>
             </li>

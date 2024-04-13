@@ -1,5 +1,5 @@
 "use client"
-import addToCart from "./page"
+
 export default function RootLayout({
   children,
 }: {
@@ -14,7 +14,7 @@ export default function RootLayout({
 }
 
 export interface ProductItem {
-  id: number;
+  uuid: string; // Cambiar de id: number a uuid: string
   name: string;
   imageURL: string;
   price: number;
@@ -22,28 +22,28 @@ export interface ProductItem {
 
 export const products: ProductItem[] = [
   {
-    id: 1,
+    uuid: "1", 
     name: "Iphone",
     imageURL: "/img/Iphone.jpg",
     price: 200
   },
 
   {
-    id: 2,
+    uuid: "2",
     name: "Audifono",
     imageURL: "/img/audifonos.jpg",
     price: 100
   },
 
   {
-    id: 3,
+    uuid: "3",
     name: "Mouse",
     imageURL: "/img/mouse.jpg",
     price: 35
   },
 
   {
-    id: 4,
+    uuid: "4",
     name: "Pantalla",
     imageURL: "/img/Pantalla.jpg",
     price: 68
@@ -51,7 +51,7 @@ export const products: ProductItem[] = [
   },
 
   {
-    id: 5,
+    uuid: "5",
     name: "Headphone",
     imageURL: "/img/Headphone.jpg",
     price: 35
@@ -59,7 +59,7 @@ export const products: ProductItem[] = [
   },
 
   {
-    id: 6,
+    uuid: "6",
     name: "Teclado",
     imageURL: "/img/teclado.jpg",
     price: 95
@@ -67,21 +67,21 @@ export const products: ProductItem[] = [
   },
 
   {
-    id: 7,
+    uuid: "7",
     name: "Cable USB",
     imageURL: "/img/Cable.jpg",
     price: 10
   },
 
   {
-    id: 8,
+    uuid: "8",
     name: "Chromecast",
     imageURL: "/img/Chromecast.jpg",
     price: 150
   },
 
   {
-    id: 9,
+    uuid: "9",
     name: "",
     imageURL: "",
     price: 0
@@ -89,9 +89,9 @@ export const products: ProductItem[] = [
 
 ];
 
-export const Product = ({ product }: { product: ProductItem}) => {
+export const Product = ({ product, addToCart }: { product: ProductItem, addToCart: (product: ProductItem) => void }) => {
 
-  if (product.id === 9) {
+  if (product.uuid === '9') { 
     return (
       <div className="products col-sm-6" style={{ margin: '0 auto' }}>
         <div id="productsCarouselControl" className="carousel" data-bs-ride="carousel">
@@ -124,7 +124,7 @@ export const Product = ({ product }: { product: ProductItem}) => {
         <div className="product col-sm-6"><img src={imageURL} alt={name} /></div>
         <p className="col-sm-6">{name}</p>
         <p className="col-sm-6">Precio: ${price}</p>
-        <button className="button" onClick={()=>{addToCart}}>Comprar</button>
+        <button className="button" onClick={() => addToCart(product)}>Comprar</button>
       </div>
     );
   }

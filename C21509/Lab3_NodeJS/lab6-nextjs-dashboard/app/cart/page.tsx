@@ -6,7 +6,6 @@ import '../HTMLPageDemo.css';
 
 const CartFunction = () => {
   const [cartState, setCartState] = useState({
-    products: [],
     cart: {
       products: [],
       subtotal: 0,
@@ -35,14 +34,14 @@ const CartFunction = () => {
     }));
   }, []);
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productUuid: string) => {
     // Filtrar el producto que se eliminará del carrito
-    const updatedCart = cartState.cart.products.filter((product: ProductItem) => product.id !== productId);
-    
+    const updatedCart = cartState.cart.products.filter((product: ProductItem) => product.uuid !== productUuid);
+
     // Calcular el subtotal y el total con impuestos después de eliminar el producto
     const subtotal = updatedCart.reduce((acc: number, product: ProductItem) => acc + product.price, 0);
     const total = subtotal * (1 + cartState.cart.taxPercentage);
-    
+
     // Actualizar el estado del carrito con los nuevos productos, subtotal y total
     setCartState(prevState => ({
       ...prevState,
@@ -53,7 +52,7 @@ const CartFunction = () => {
         total: total
       }
     }));
-  
+
     // Guardar los productos actualizados en el localStorage
     localStorage.setItem('cartProducts', JSON.stringify(updatedCart));
   };
@@ -65,11 +64,11 @@ const CartFunction = () => {
         <>
           <ul>
             {cartState.cart.products.map((product: ProductItem) => (
-              <li key={product.id}>
+              <li key={product.uuid}>
                 <img src={product.imageURL} alt={product.name} />
                 <p>{product.name}</p>
                 <p>Precio: ${product.price}</p>
-                <button onClick={() => removeFromCart(product.id)} className="button">Eliminar de carrito</button>
+                <button onClick={() => removeFromCart(product.uuid)} className="button">Eliminar de carrito</button>
               </li>
             ))}
           </ul>
