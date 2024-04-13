@@ -15,15 +15,13 @@ namespace storeapi
         {
             Products = products;
             TaxPercentage = taxPercentage;
-
-            var initializer = new DatabaseInitializer();
-            initializer.CreateDatabase();
         }
 
         public static readonly Store Instance;
         static Store()
         {
             var products = new List<Product>();
+
 
             for (int i = 1; i <= 12; i++)
             {
@@ -37,19 +35,21 @@ namespace storeapi
                 });
             }
 
-            Instance = new Store(products, 13);
-        }
 
+            Instance = new Store(products, 13);
+
+        }
         public Sale Purchase(Cart cart)
         {
-            if (cart.ProductIds.Count == 0)
-                throw new ArgumentException("Cart must contain at least one product.");
-            if (string.IsNullOrWhiteSpace(cart.Address))
-                throw new ArgumentException("Address must be provided.");
+            if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
+            if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
+
 
             IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.id.ToString())).ToList();
 
+
             IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
+
 
             decimal purchaseAmount = 0;
             foreach (var product in shadowCopyProducts)
@@ -60,9 +60,13 @@ namespace storeapi
 
             PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
 
+
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
 
+
+
             return sale;
+
         }
     }
 }
