@@ -49,7 +49,7 @@ export default function Pago() {
             ProductIds: cartProducts,
             Address: address,
             PaymentMethod: paymentMethodValue
-            //Total: total 
+
           };
     
           const response = await fetch('http://localhost:5133/api/Cart', {
@@ -58,12 +58,18 @@ export default function Pago() {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(dataSend)
+
+
           });
-    
+          
           if (!response.ok) {
             throw new Error('Failed to confirm purchase.');
           }
-    
+          else if (response.ok) {
+            const data = await response.json();
+            const purchase_Number = data.purchaseNumber;
+            localStorage.setItem('purchase_number', JSON.stringify(purchase_Number));
+        }
         } catch (error) {
         throw new Error('Error confirming purchase:', error.message);
         }
@@ -83,14 +89,14 @@ export default function Pago() {
                     </div>
                     {metodoSeleccionado === 'Efectivo' && (
                         <div>
-                            <p>Número de compra: 00000.</p>
+                            <p>Número de compra: {localStorage.getItem('purchase_number')}.</p>
                             <p>Por favor espere, hasta que el administrador confirme su pago...</p>
                             <button className="btn btn-primary me-3 btn-lg" onClick={manejarConfirmacionPago}>Confirmar compra</button>
                         </div>
                     )}
                     {metodoSeleccionado === 'Sinpe' && (
                         <div>
-                            <p>Número de compra: 00000.</p>
+                            <p>Número de compra: {localStorage.getItem('purchase_number')}.</p>
                             <p>Realice el pago por medio de SinpeMovil al número 8655-8255.</p>
                             <input type="text" className="form-control mb-3" placeholder="Ingrese el código de recibo aquí" />
                             <button className="btn btn-primary me-3 btn-lg" onClick={manejarConfirmacionPago}>Confirmar compra</button>

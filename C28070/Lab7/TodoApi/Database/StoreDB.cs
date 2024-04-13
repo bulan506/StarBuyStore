@@ -12,7 +12,6 @@ public sealed class StoreDB
     internal static void CreateMysql()
     {
         
-
         var products = Store.Instance.Products;
 
         string connectionString = "Server=localhost;Database=mysql;Port=3306;Uid=root;Pwd=123456;";
@@ -54,7 +53,6 @@ public sealed class StoreDB
                     throw new Exception("Error creating the bd");
             }
 
-            // Begin a transaction
             using (var transaction = connection.BeginTransaction())
             {
                 try
@@ -74,14 +72,16 @@ public sealed class StoreDB
                             insertCommand.Parameters.AddWithValue("@price", product.price);
                             insertCommand.ExecuteNonQuery();
                         }
+
+                        
                     }
 
-                    // Commit the transaction if all inserts are successful
+                    
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    // Rollback the transaction if an error occurs
+                   
                     transaction.Rollback();
                     throw;
                 }

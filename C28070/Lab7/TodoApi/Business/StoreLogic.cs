@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TodoApi.Database;
 using TodoApi.Models;
 
 
@@ -9,6 +10,8 @@ namespace TodoApi.Business{
 
 public sealed class StoreLogic
 {
+
+    private SaleDB saleDB = new SaleDB();
     public Sale Purchase (Cart cart)
     {
         if (cart.ProductIds.Count == 0)  throw new ArgumentException("Cart must contain at least one product.");
@@ -17,13 +20,13 @@ public sealed class StoreLogic
         var products = Store.Instance.Products;
         var taxPercentage = Store.Instance.TaxPercentage;
 
-         // Find matching products based on the product IDs in the cart
+       
         IEnumerable<Product> matchingProducts = products.Where(p => cart.ProductIds.Contains(p.id.ToString())).ToList();
 
-        // Create shadow copies of the matching products
+       
         IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
 
-        // Calculate purchase amount by multiplying each product's price with the store's tax percentage
+      
         decimal purchaseAmount = 0;
         foreach (var product in shadowCopyProducts)
         {
@@ -33,10 +36,10 @@ public sealed class StoreLogic
 
         PaymentMethods paymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
 
-        // Create a sale object
+    
         var sale = new Sale( shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod.PaymentType);
 
-        //storeBS.save(sale)
+        saleDB.save(sale);
 
         return sale;
 

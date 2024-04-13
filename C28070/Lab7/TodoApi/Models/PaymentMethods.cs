@@ -5,7 +5,7 @@ public abstract class PaymentMethods {
 
 
     public enum Type
-    {Efectivo = 0,Sinpe = 1}
+    {Efectivo = 0, Sinpe = 1}
     public Type PaymentType { get; set; }
     public PaymentMethods(PaymentMethods.Type paymentType)
 

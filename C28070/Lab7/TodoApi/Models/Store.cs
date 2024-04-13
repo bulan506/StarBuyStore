@@ -95,13 +95,10 @@ public sealed class Store
         throw new ArgumentException("Address must be provided.");
     }
 
-    // Find matching products based on the product IDs in the cart
     IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.id.ToString())).ToList();
 
-    // Create shadow copies of the matching products
     IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
 
-    // Calculate purchase amount by multiplying each product's price with the store's tax percentage
     decimal purchaseAmount = 0;
     foreach (var product in shadowCopyProducts)
     {
@@ -113,5 +110,6 @@ public sealed class Store
     var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount,cart.PaymentMethod);
 
     return sale;
+   
 
 }}
