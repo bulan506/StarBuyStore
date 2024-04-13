@@ -92,69 +92,6 @@ const Mock = {
   paymentMethods: ['Efectivo', 'Sinpe']
 };
 
-const ProductComponent = () => {
-
-  const loadData = async () => {
-    try {
-      const response = await fetch('https://localhost:7194/api/Store');
-      if (!response.ok) {
-        throw new Error('response not ok');
-      }
-      const json = await response.json();
-      debugger
-      return json;
-    } catch (error) {
-      throw new Error('Failed to fetch data');
-    }
-  };
-
-  const products = loadData()();
-  debugger
-  console.log(products.products)
-
-  return (
-    <></>
-    // <Row className="justify-content-md-center">
-    //   {products.map(product =>
-    //     <Product key={product.id} product={product} addToCart={handleClick} />)}
-    // </Row>
-  );
-};
-
-const ProductC = ({handleClick}) => {
-  const [shop, setShop] = useState({products: []});
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch('https://localhost:7194/api/Store'); // Replace with your API endpoint
-      if (!response.ok) {
-        throw new Error('Network response was not ok.');
-      }
-      const data = await response.json();
-      console.log(data)
-      setShop(data);
-      // debugger
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  console.log(shop.products)
-
-  return (
-    // <></>
-    <Row className="justify-content-md-center">
-      {shop.products.map(product =>
-        <Product key={product.id} product={product} addToCart={handleClick} />)}
-    </Row>
-  );
-}
-
 const Cart = ({ count, total }) => {
 
   return (
@@ -176,12 +113,6 @@ const Product = ({ product, addToCart }) => {
 
   return (
     <Col sm='3' className="mt-5">
-      {/* <img src={product.imgSource} width="400px" className="img-fluid" />
-      <h4>{product.name}</h4>
-      <p>Precio: {product.price}$</p>
-      <Button variant="primary" size="sm" onClick={() => addToCart(id)}>
-        Comprar
-      </Button> */}
 
       <Card style={{ width: '20rem' }}>
         <Card.Img variant="top" src={product.imgSource} />
@@ -229,13 +160,35 @@ const Item = React.forwardRef(({ carrouselItem }, ref) => {
 
 export default function Home() {
 
-  var mockStoraged = JSON.parse(localStorage.getItem('Mock')) || {};
-  if (mockStoraged) {
+  var mockStoraged = JSON.parse(localStorage.getItem('Mock'));
+  if (!mockStoraged) {
     localStorage.setItem('Mock', JSON.stringify(Mock));
     mockStoraged = JSON.parse(localStorage.getItem('Mock'));
   }
   const [count, setCount] = useState(mockStoraged.cart.products.length);
   const [mock, setMock] = useState(mockStoraged)
+  const [shop, setShop] = useState({products: []});
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://localhost:7194/api/Store'); // Replace with your API endpoint
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      const data = await response.json();
+      setShop(data);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  console.log(shop.products)
+
 
   const handleClick = (id) => {
     let copyOfMock = { ...mock };
@@ -264,11 +217,11 @@ export default function Home() {
         <h1>Lista de productos</h1>
       </div>
       <Row className="justify-content-md-center">
-        {Mock.products.map(product =>
+        {shop.products.map(product =>
           <Product key={product.id} product={product} addToCart={handleClick} />
         )}
       </Row>
-      <ProductC key={'productsGrid'} handleClick={handleClick}/>
+      {/* <ProductC key={'productsGrid'} handleClick={handleClick}/> */}
     </Container>
   );
 }

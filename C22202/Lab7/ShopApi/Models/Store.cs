@@ -22,10 +22,10 @@ public sealed class Store
         {
             products.Add(new Product
             {
-                Name = $"Product {i}",
+                name = $"Product {i}",
                 imgSource = "producto.jpg",
-                Price = 10.99m * i,
-                Description = $"Description of Product {i}",
+                price = 10.99m * i,
+                description = $"Description of Product {i}",
                 id = i
             });
         }

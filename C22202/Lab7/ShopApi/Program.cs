@@ -1,4 +1,8 @@
+using ShopApi.db;
+
 var builder = WebApplication.CreateBuilder(args);
+
+StoreDB.CreateMysql();
 
 // Add services to the container.
 
