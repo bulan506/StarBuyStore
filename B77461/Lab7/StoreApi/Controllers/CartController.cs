@@ -21,9 +21,13 @@ namespace StoreApi.Controllers
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            Carts.Add(cart);
+         //   Carts.Add(cart);
 
-            return Ok(cart);
+           // return Ok(cart);
+
+            Sale sale = _cartHandler.Purchase(cart);
+
+            return Ok(sale);
         }
     }
 

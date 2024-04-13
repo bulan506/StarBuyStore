@@ -154,7 +154,7 @@ export default function Home() {
   }
 
   const Product = ({ product, handleAddToCart }) => {
-    const { uuid, name, description, imageUrl, price } = product;
+    const { uuid, name, description, imageUrl, price, quantity } = product;
     return (
       <div className="card" style={{ width: '20rem' }}>
         <div className="col">
@@ -165,6 +165,7 @@ export default function Home() {
             <h5>{name}</h5>
             <p>Precio: ${price}</p>
             <p>Descripción: {description}</p>
+            <p>Cantidad en existencia: {quantity}</p>
             <button type="button" className="btn btn-buy"  onClick={() => handleAddToCart({ product })}>Agregar</button>
           </div>
         </div>
@@ -196,6 +197,7 @@ export default function Home() {
               <h3>{product.name}</h3>
               <p>${product.price}</p>
               <p>{product.description}</p>
+              <p>{product.quantity}</p>
               <button type="button" className="btn btn-buy"  onClick={() => handleAddCart({ product })}>Agregar</button>
             </Carousel.Caption>
           </Carousel.Item>)}

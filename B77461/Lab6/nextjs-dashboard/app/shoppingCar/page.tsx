@@ -21,7 +21,6 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }: { cart: any, setCart
                     <tr>
                         <th scope="col">Producto</th>
                         <th scope="col">Descripción</th>
-                        <th scope="col">Cantidad</th>
                         <th scope="col">Precio Unidad</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -34,7 +33,6 @@ const Cart = ({ cart, setCart, toggleCart, removeProduct }: { cart: any, setCart
                                 <h5>{producto.name}</h5>
                                 <p>{producto.description}</p>
                             </td>
-                            <td>{producto.cantidad}</td>
                             <td>${producto.price}</td>
                             <td>
                                 <button className="btn btn-outline-danger btn-sm" onClick={() => {

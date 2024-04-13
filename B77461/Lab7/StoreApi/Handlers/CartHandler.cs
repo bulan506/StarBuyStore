@@ -43,7 +43,9 @@ public class CartHandler
 
         ValidateSale(sale);
 
-        return _cartRepository.Purchase(cart);
+        return sale;
+
+       // return _cartRepository.Purchase(cart);
     }
 
     private void ValidateCart(Cart cart)
