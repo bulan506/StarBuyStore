@@ -39,12 +39,6 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
         }));
     }
 
-    function generateReceiptNumber() {
-        const timestamp = Date.now().toString();
-        const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-        setOrderNumber(timestamp + randomNumber);
-    }
-
     async function persistPurchase() {
 
         let purchaseToPersist = {
@@ -61,7 +55,12 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
                     'content-type': 'application/json'
                 }
             })
-            if (res.ok) { setMessage("Se realizó su compra"); setAlertType(0) }
+            if (res.ok) {
+                var order = await res.json();
+                setOrderNumber(order.purchaseNumber);
+                setMessage("Se realizó la compra");
+                setAlertType(0);
+            }
             else { setMessage("Error al realizar la compra"); setAlertType(1) }
         } catch (error) {
             setMessage(error);
@@ -72,7 +71,6 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
     }
 
     async function finishPurchase() {
-        generateReceiptNumber();
         setFinishedSale(true);
         clearProducts();
         await persistPurchase();

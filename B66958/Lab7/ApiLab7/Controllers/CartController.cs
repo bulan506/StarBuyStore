@@ -14,8 +14,9 @@ namespace ApiLab7.Controllers
         {
             CartBusiness cartBusiness = new CartBusiness();
             Sale sale = cartBusiness.Purchase(cart);
-
-            return Ok(sale);
+            return Ok(new {
+                purchaseNumber = sale.PurchaseNumber
+            });
         }
     }
 
