@@ -14,6 +14,7 @@ export default function Payment() {
   const [cartProducts, setCartProducts] = useState([]);
   const [address, setAddress] = useState('');
   const [total, setTotal] = useState('');
+  const [purchaseNumber, setpurchaseNumber] = useState('');
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
@@ -58,6 +59,9 @@ export default function Payment() {
   
       if (!response.ok) {
         throw new Error('Failed to confirm purchase.');
+      }else{
+        const purchaseNumberApp = await response.json();
+        setpurchaseNumber(purchaseNumberApp.purchaseNumberResponse);
       }
 
     } catch (error) {
@@ -81,13 +85,13 @@ export default function Payment() {
         </div>
         {selectedMethod === PaymentMethodsEnum.Cash && (
           <div>
-            <p>Purchase number: 00000.</p>
+            <p>Purchase number: {purchaseNumber}.</p>
             <p>Awaiting confirmation from the administrator regarding the payment.</p>
           </div>
         )}
         {selectedMethod === PaymentMethodsEnum.Sinpe && (
           <div>
-            <p>Purchase number: 00000.</p>
+            <p>Purchase number: {purchaseNumber}.</p>
             <p>Make the payment through Sinpe to the number 8596-1362.</p>
             <input type="text" placeholder="Enter the receipt code here" />
             <button className="Button" onClick={handleSinpePaymentConfirmation}>Confirm</button>
