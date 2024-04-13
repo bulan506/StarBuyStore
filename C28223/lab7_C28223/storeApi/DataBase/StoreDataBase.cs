@@ -20,7 +20,7 @@ namespace storeApi.DataBase
                     {
                         // Create the products table if it does not exist
                         string createTableQuery = @"
-                            CREATE DATABASE store;
+                            CREATE DATABASE IF NOT EXISTS store;
                             USE store;
                             CREATE TABLE IF NOT EXISTS products (
                                 id INT AUTO_INCREMENT PRIMARY KEY,

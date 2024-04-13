@@ -9,7 +9,7 @@ namespace storeApi.DataBase
     {
         public void Save(Sale sale)
         {
-            using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=mysql;Uid=root;Pwd=123456;"))
+            using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=store;Uid=root;Pwd=123456;"))
             {
                 connection.Open();
 
@@ -22,7 +22,6 @@ namespace storeApi.DataBase
                             command.Transaction = transaction;
 
                             command.CommandText = @"
-                                    USE store;
                                     INSERT INTO sales (purchase_date, total, payment_method, purchase_number)
                                     VALUES (@purchase_date, @total, @payment_method, @purchase_number);";
 
