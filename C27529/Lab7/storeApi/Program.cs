@@ -1,3 +1,8 @@
+#if DEBUG
+storeApi.db.StoreDB.CreateMysql();
+#endif
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

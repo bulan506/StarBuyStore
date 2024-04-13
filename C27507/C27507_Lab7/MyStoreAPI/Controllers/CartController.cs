@@ -1,22 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic; // Asegúrate de incluir este namespace si aún no lo has hecho
+using System.Collections.Generic;
 namespace MyStoreAPI.Controllers
 
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
-    {
-         private static List<Cart> Carts = new List<Cart>();
+    {        
+        private Sale actualSale = new Sale();
 
         [HttpPost]
-        public IActionResult CreateCart([FromBody] Cart cart)
-        {
-            // Add the cart to the list
-            Carts.Add(cart);
-
-            // Return the newly created cart
-            return Ok(cart);
+         [Consumes("application/json")]
+        public IActionResult CreateCart([FromBody] Cart cart){                        
+            //Hacemos las inserciones y devolvemos la respuesta con el post                        
+            string purchaseNumExit = DB_Connection.InsertSale(cart);    
+            //Se manda todo dato como un JSON para que sea leido de esa forma                        
+            return Ok(new { purchaseNumExit });                    
         }        
     }
 }

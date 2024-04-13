@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 namespace MyStoreAPI
 {
-    public sealed class Sale
+    public sealed class Sale    
     {
+        
         public IEnumerable<Product> Products {get;}
         public string Address {get;}
         public decimal Amount {get;}
@@ -15,6 +16,7 @@ namespace MyStoreAPI
             Amount = Amount;
             PaymentMethod = paymentMethod;
         }
+        public Sale(){}
 
     }
 }

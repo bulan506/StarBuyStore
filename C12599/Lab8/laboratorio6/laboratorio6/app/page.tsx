@@ -15,21 +15,25 @@ const Page = () => {
   });
 
   useEffect(() => {
-  const fetchData = async () => {
-    const response = await fetch('https://localhost:7043/api/Store');
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
-    const json = await response.json();
-    setState((prevState) => ({
-      ...prevState,
-      productList: json.products || [],
-    }));
-  };
+    // Función para cargar datos iniciales de productos desde la API
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://localhost:7043/api/Store');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        setState((prevState) => ({
+          ...prevState,
+          productList: json.products || [],
+        }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   useEffect(() => {
     // Cargar datos del carrito desde localStorage al montar el componente
