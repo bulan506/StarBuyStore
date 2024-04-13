@@ -24,16 +24,17 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
                 metodoDePago: cart.carrito.metodoDePago ? cart.carrito.metodoDePago : PaymentMethod.EFECTIVO
             }
         }));
-        setSelectedIndex((cart.carrito.metodoDePago === PaymentMethod.EFECTIVO) ? 0 : 1);
+        setSelectedIndex((cart.carrito.metodoDePago === PaymentMethod.SINPE) ? 1 : 0);
     }, []);
 
     function handleSelectPayment(event: any) {
+        const selectedPaymentMethod = parseInt(event.target.value, 10); // Parse the value to an integer
         setSelectedIndex(event.target.selectedIndex);
         setCart(cart => ({
             ...cart,
             carrito: {
                 ...cart.carrito,
-                metodoDePago: event.target.selectedIndex === 0 ? PaymentMethod.EFECTIVO : PaymentMethod.SINPE
+                metodoDePago: selectedPaymentMethod // Set the selected payment method directly
             },
             necesitaVerificacion: true
         }));
@@ -106,7 +107,11 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
                 <div className="form-group">
                     <select className="form-control" onChange={handleSelectPayment}
                         value={cart.carrito.metodoDePago} disabled={finishedSale}>
-                        {cart.metodosDePago.map((method: any, index: number) => <option key={index}>{method}</option>)}
+                        {cart.metodosDePago.map((method: number, index: number) => (
+                            <option key={index} value={method}>
+                                {PaymentMethod[method]}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="d-flex w-100 justify-content-center">
@@ -115,7 +120,7 @@ const PaymentForm = ({ cart, setCart, clearProducts }:
                         Finalizar Compra</button>
                 </div>
             </div>
-            {finishedSale ? (selectedIndex === 0 ? <Efectivo /> : <Sinpe />) : ''}
+            {finishedSale ? (selectedIndex === 0 ? <Sinpe /> : <Efectivo />) : ''}
             {finishedSale ? <div className="progress">
                 <div className="progress-bar progress-bar-striped progress-bar-animated"
                     role="progressbar" aria-valuenow={75} aria-valuemin={0}
