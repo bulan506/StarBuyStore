@@ -43,7 +43,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                         {myCartInStorage && myCartInStorage.allProduct.map((productItem, index) => (
                             //Tecnica rapida para evitar colocar otro div
                             <>                    
-                                <div key={productItem.uuid}>
+                                <div key={productItem.id}>
                                     <img src={productItem.imageUrl} alt="" />
                                     <p>{productItem.name}</p>
                                     <p><span>Cantidad:</span> {productItem.quantity}</p>
@@ -75,7 +75,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                             <></>
                         )
                     }
-                    <Button variant="secondary" onClick={() => deleteAllProduct(myCartInStorage,setMyCartInStorage, setCartShopStorage)}>
+                    <Button variant="secondary" onClick={() => deleteAllProduct(myCartInStorage,setMyCartInStorage)}>
                         Vaciar Carrito
                     </Button>          
                     <Button variant="secondary" onClick={handleClose}>

@@ -9,7 +9,7 @@ import {CartShopAPI,ProductAPI,PaymentMethods,PaymentMethodNumber} from './layou
 //Componentes
 import { AlertShop } from './generic_overlay';
 //Metodos exportados
-import {setCartShopStorage } from './page';
+import {setCartShopStorage,sendDataAPI, deleteAllProduct } from './page';
 
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
@@ -33,14 +33,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     const [payment, setPayment] = useState<PaymentMethodNumber>(myCartInStorage?.paymentMethod.payment ?? PaymentMethodNumber.CASH);
     // const [verify, setVerify] = useState<boolean>(false); //    
     const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe    
-
-    //Cada vez que alguno de los campos del formulario cambia, que se aguarde en el atributo correspondiente del carrito
-    useEffect(() => {
-        if (myCartInStorage) {
-            setTextAreaDataDirection(myCartInStorage.direction || "");            
-        }
-    }, [myCartInStorage]);
-
+  
     //Estados  para los alert de Boostrap
     const [showAlert, setShowAlert] = useState(false);
     const [alertInfo,setAlertInfo] = useState("");
@@ -91,19 +84,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     const getTextAreaSinpe = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
         const actualValue = event.target.value;        
         setTextAreaSinpe(actualValue);                  
-    }
-
-
-    //Todo lo relacionado a verify dejarlo quedito por mientras (preguntarle al profe)
-    // const getCheckBoxVerify = (event: React.ChangeEvent<HTMLInputElement>)=>{
-
-    //     const isChecked = event.target.checked        
-    //     setVerify(isChecked);        
-    //     if (myCartInStorage) {
-    //         myCartInStorage.paymentMethod.verify = isChecked;
-    //         setCartShopStorage("A", myCartInStorage);            
-    //     }            
-    // }
+    }    
 
     //Cambiar el estado del modal, segun haya contenido o no en el campo de Direccion
     const verifyTextArea = () =>{
@@ -121,7 +102,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
     }
 
     //Validcacion de inputs
-    const purchaseProcess = () =>{
+    const purchaseProcess = async () =>{
         //Verificar direccion
         if(textAreaDataDirection.trim() === ""){
             callAlertShop("danger","Campo de entrega vacío","Por favor, verifique el campo de direccón no esté vacío...")
@@ -141,7 +122,11 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
             callAlertShop("danger","Código de SINPE vacío","Debe colocar el cÓdigo de la transaccion SINPE")
             return;            
         }            
-        callAlertShop("success","Compra finalizada","Compra realizada con éxito")        
+
+        const purchaseNum = await sendDataAPI("https://localhost:7161/api/Cart", myCartInStorage);
+        resetModal();//setteamos el modal o mandamos el resumen a la pagina
+        deleteAllProduct(myCartInStorage,setMyCartStorage);
+        callAlertShop("success","Compra finalizada","El codigo de su compra es: " + purchaseNum);      
     }    
 
     return (
@@ -195,19 +180,8 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
 
                             <Form.Group className="mb-3">                                                                                
                                 <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>
-                            </Form.Group>
-
-                            {/* No borrar aun */}
-                            {/* <Form.Group>                                
-                                <Form.Label htmlFor="disabledSelect">Indique si el pago requiere Verificación:</Form.Label>
-                                <Form.Check 
-                                    type="checkbox" label="Marque la casilla si requiere Verificación"
-                                    checked={verify}
-                                    onChange={getCheckBoxVerify}
-                                />
-                            </Form.Group> */}
+                            </Form.Group>     
                         </>
-
                     ):null}                    
                                                             
                 </fieldset>
