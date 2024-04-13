@@ -1,10 +1,12 @@
-namespace StoreApi;
-public sealed class Cart
+using StoreApi.utils;
+
+namespace StoreApi.Models
 {
-    public List<string> ProductIds { get; set; }
-    public string Address { get; set; }
-    public PaymentMethods.Type PaymentMethod { get; set; }
+    public sealed class Cart
+    {
+        public List<string> ProductIds { get; set; }
+        public string Address { get; set; }
+        public int PaymentMethod { get; set; }
 
-
-
+    }
 }

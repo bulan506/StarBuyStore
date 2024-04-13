@@ -1,35 +1,48 @@
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StoreApi;
+namespace StoreApi.utils
+{
 
-
-public abstract class PaymentMethods{
-    public enum Type 
+    [NotMapped]
+    public abstract class PaymentMethods
     {
-    CASH=0,
-    SINPE=1
+        public enum Type
+        {
+            CASH = 0,
+            SINPE = 1
+        }
+        public Type PaymentType { get; set; }
+        public PaymentMethods(PaymentMethods.Type paymentType)
+        {
+            PaymentType = paymentType;
+
+        }
+
+        public static string Find(PaymentMethods.Type type)
+        {
+            switch (type)
+            {
+                case Type.CASH:
+                    return "CASH";
+                case Type.SINPE:
+                    return "SINPE";
+                default:
+                    return null;
+            }
+        }
     }
-    public Type PaymentType { get; set; }
-    public PaymentMethods(PaymentMethods.Type paymentType)
+    public sealed class SinpeMovil : PaymentMethods
     {
-        PaymentType= paymentType;
+        public SinpeMovil() : base(PaymentMethods.Type.SINPE)
+        {
 
+        }
     }
-
-    public static PaymentMethods Find(PaymentMethods.Type type)
+    public sealed class Cash : PaymentMethods
     {
-        //TODO
-        return null;
-    }
-}
-public sealed class Sinpe:PaymentMethods{
-    public Sinpe(): base(PaymentMethods.Type.SINPE)
-    {
+        public Cash() : base(PaymentMethods.Type.CASH)
+        {
 
-    }
-}
-public sealed class Cash:PaymentMethods{
-    public Cash(): base(PaymentMethods.Type.CASH)
-    {
-
+        }
     }
 }
