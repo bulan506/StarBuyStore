@@ -3,6 +3,7 @@ using System;
 using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
+using TodoApi.Models;
 
 
 namespace TodoApi.Database {
@@ -17,8 +18,8 @@ public sealed class SaleDB
             string insertQuery = @"
             use store;
 
-                   INSERT INTO sales (productIds, purchase_date, total, payment_method, purchase_number)
-                    VALUES (@productIds, @purchase_date, @total, @payment_method, @purchase_number);";
+                   INSERT INTO sales ( purchase_date, total, payment_method, purchase_number)
+                    VALUES ( @purchase_date, @total, @payment_method, @purchase_number);";
 
         
                 using (MySqlCommand command = new MySqlCommand(insertQuery, connection))

@@ -1,4 +1,6 @@
-namespace TodoApi;
+using TodoApi.Models;
+
+namespace TodoApi.Models;
 public sealed class Store
 {
 
@@ -9,6 +11,10 @@ public sealed class Store
     {
         this.Products = products;
         this.TaxPercentage = TaxPercentage;
+    }
+
+    public Store (){ //constructor vacio
+
     }
 
     public readonly static Store Instance;
@@ -104,7 +110,7 @@ public sealed class Store
     }
 
     // Create a sale object
-    var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
+    var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount,cart.PaymentMethod);
 
     return sale;
 

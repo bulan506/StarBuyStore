@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+vucYMHoVKSpTT9MJr3kKOZuktnyJ8pBGGZhniqlj9VFbUQ3egfAaToPtbNl0QAFZ/6gboMvznsY7Xs4LJIbqg==",
+  "dgSpecHash": "R03fleUo3cSYVhy+sESN86fQbEIcNq/TcW0dt69ucy0D5kGoytHwuZKhG27FNg0rj5DeosiK1ZtV4rzs4OYt1Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\daniv\\Documents\\DANIELA\\Lab7\\TodoApi\\TodoApi.csproj",
+  "projectFilePath": "C:\\Users\\daniv\\Documents\\DANIELA\\lenguajes24\\C28070\\Lab7\\TodoApi\\TodoApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\daniv\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.3\\microsoft.entityframeworkcore.8.0.3.nupkg.sha512",
     "C:\\Users\\daniv\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.3\\microsoft.entityframeworkcore.abstractions.8.0.3.nupkg.sha512",

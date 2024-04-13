@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TodoApi.Models;
 
 
 namespace TodoApi.Business{
@@ -26,18 +27,20 @@ public sealed class StoreLogic
         decimal purchaseAmount = 0;
         foreach (var product in shadowCopyProducts)
         {
-            product.Price *= (1 + (decimal)taxPercentage / 100);
-            purchaseAmount += product.Price;
+            product.price *= (1 + (decimal)taxPercentage / 100);
+            purchaseAmount += product.price;
         }
 
-        PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
+        PaymentMethods paymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
 
         // Create a sale object
-        var sale = new Sale(Sale.GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
+        var sale = new Sale( shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod.PaymentType);
 
-
+        //storeBS.save(sale)
 
         return sale;
 
     }
+
+
 }}

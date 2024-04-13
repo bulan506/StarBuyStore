@@ -58,7 +58,7 @@ export default function Pago() {
           const dataSend = {
             ProductIds: cartProducts,
             Address: address,
-            PaymentMethod: paymentMethodValue,
+            PaymentMethod: paymentMethodValue
             //Total: total 
           };
     
