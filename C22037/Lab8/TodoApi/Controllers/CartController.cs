@@ -17,7 +17,7 @@ namespace TodoApi.Controllers
         public IActionResult CreateCart([FromBody] Cart cart)
         {
             var sale = storeLogic.Purchase(cart);
-            var response = new { purchaseNumber = sale.PurchaseNumber };
+            var response = new { purchaseNumberResponse = sale.PurchaseNumber };
             return Ok(response);
         }
     }
