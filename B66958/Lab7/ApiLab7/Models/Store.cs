@@ -21,8 +21,8 @@ public sealed class Store
         db = new Db();
         List<Product> products = db.GetProducts();
         var paymentMethods = new List<PaymentMethods>();
-        paymentMethods.Add(new Sinpe());
-        paymentMethods.Add(new Cash());
+        paymentMethods.Add(Sinpe.Instance);
+        paymentMethods.Add(Cash.Instance);
 
         Store.Instance = new Store(products, 13, paymentMethods);
     }
