@@ -18,8 +18,12 @@ export async function useFetchCartPurchase() {
                 'content-type': 'application/json'
             }
         })
+        if (res.ok) {
+            const data = await res.json();
+            return data.uuid;
+        }
     } catch (error) {
-
+        throw new Error('Failed to fetch purchase');
     }
 
 }

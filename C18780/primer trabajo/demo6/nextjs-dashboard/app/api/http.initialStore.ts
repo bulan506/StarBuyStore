@@ -13,7 +13,6 @@ export function useFetchInitialStore() {
           throw new Error('Failed to fetch products');
         }
         const data = await res.json();
-        console.log(data);
         setProducts(data.products);
         cart.cart.taxPercentage = data.taxPercentage/100;
 

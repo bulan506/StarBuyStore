@@ -18,14 +18,14 @@ namespace StoreApi.utils
 
         }
 
-        public static string Find(PaymentMethods.Type type)
+        public static Object? Find(PaymentMethods.Type type)
         {
             switch (type)
             {
                 case Type.CASH:
-                    return "CASH";
+                    return Type.CASH;
                 case Type.SINPE:
-                    return "SINPE";
+                    return Type.SINPE;
                 default:
                     return null;
             }
@@ -33,14 +33,14 @@ namespace StoreApi.utils
     }
     public sealed class SinpeMovil : PaymentMethods
     {
-        public SinpeMovil() : base(PaymentMethods.Type.SINPE)
+        public SinpeMovil() : base(Type.SINPE)
         {
 
         }
     }
     public sealed class Cash : PaymentMethods
     {
-        public Cash() : base(PaymentMethods.Type.CASH)
+        public Cash() : base(Type.CASH)
         {
 
         }

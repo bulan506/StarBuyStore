@@ -18,10 +18,9 @@ namespace StoreApi
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCartAsync([FromBody] Cart cart)
+        public async Task<Sales> AddCartAsync([FromBody] Cart cart)
         {
-            string paymentMethodName = PaymentMethods.Find((PaymentMethods.Type)cart.PaymentMethod)?.ToString();
-
+            string? paymentMethodName = PaymentMethods.Find((PaymentMethods.Type)cart.PaymentMethod)?.ToString();
             decimal total = 0;
 
             var createSalesCommand = new CreateSalesCommand(
@@ -66,7 +65,7 @@ namespace StoreApi
 
             await _mediator.Send(updateSalesCommand);
 
-            return Ok(sales);
+            return sales;
         }
 
 

@@ -86,10 +86,10 @@ const OrderSummary = ({ initialCart }: { initialCart: Cart }) => {
 };
 
 const BillingInfo = ({ onAddress }: { onAddress: any }) => {
-    const [address, setAddress] = useState("");
+
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setAddress(e.target.value);
-        onAddress(address);
+        const newAddress = e.target.value;
+        onAddress(newAddress);
     };
     return (
         <div className="feed-item-list">
@@ -168,6 +168,9 @@ export default function Checkout() {
     const initialCart = getInitialCartLocalStorage();
     const [payment, setPayment] = useState<number>();
     const [text, setText] = useState<string>("");
+    const [inputAddress, setInputAddress] = useState('');
+    const [invoiceNumber, setInvoiceNumber] = useState("");
+
     const payMethod = {
         cash: 0,
         sinpe: 1
@@ -184,17 +187,18 @@ export default function Checkout() {
         }
     };
 
-    const [inputAddress, setInputAddress] = useState('');
     const onAddress = (address: string) => {
         setInputAddress(address);
         initialCart.cart.deliveryAddress = address;
+        saveInitialCartLocalStorage(initialCart);
     };
 
-    const purchase = () => {
+    const purchase = async () => {
         if (payment !== undefined)
             initialCart.cart.methodPayment = payment;
         saveInitialCartLocalStorage(initialCart);
-        useFetchCartPurchase();
+        setInvoiceNumber(await useFetchCartPurchase());
+        console.log(invoiceNumber);
     }
 
     return (
@@ -243,8 +247,8 @@ export default function Checkout() {
                                     PROCCED
                                 </button>
                                 {payment === payMethod.cash
-                                    ? <Modal title={'#' + generateRandomString()} text={text} />
-                                    : <ModalInput title={'#' + generateRandomString()} text={text} />}
+                                    ? <Modal title={'#' + invoiceNumber} text={text} />
+                                    : <ModalInput title={'#' + invoiceNumber} text={text} />}
                             </div>
                         </div>
                     </div>
