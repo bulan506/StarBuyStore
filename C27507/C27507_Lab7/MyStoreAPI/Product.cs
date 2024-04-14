@@ -1,4 +1,5 @@
 namespace MyStoreAPI
+//using MySqlCoonect
 {
     public class Product: ICloneable
     {
@@ -7,12 +8,12 @@ namespace MyStoreAPI
         public decimal price { get; set; }
         public decimal quantity { get; set; }        
         public string description { get; set; }        
-        public Guid uuid { get; set; }
+        public decimal id { get; set; }
 
         public object Clone()
         {
             return new Product{
-                uuid = this.uuid,
+                id = this.id,
                 name = this.name,
                 imageUrl = this.imageUrl,
                 price = this.price,

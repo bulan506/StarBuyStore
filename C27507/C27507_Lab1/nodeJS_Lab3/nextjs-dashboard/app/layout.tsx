@@ -30,7 +30,7 @@ export interface SaleAPI{
   sale: CartShopAPI[]
 }
 export interface ProductAPI {
-  uuid: string;
+  id: number,  
   name: string;
   imageUrl: string;
   price: number;
@@ -86,7 +86,7 @@ interface ProductProps {
 }
 //Galeria de Productos
 export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCartInStorage}) => { 
-  let uuid = product.uuid;
+  let idActualProduct = product.id;
 
   const buyItem = () => {    
     
@@ -94,7 +94,7 @@ export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCa
     //condiciones    
     if (myCartInStorage) {
 
-      let indexInCart = verifyProductInCart(uuid,myCartInStorage.allProduct);            
+      let indexInCart = verifyProductInCart(idActualProduct,myCartInStorage.allProduct);            
       addProductInCart(indexInCart,product,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
       
     } else {
@@ -104,7 +104,7 @@ export const Product: React.FC<ProductProps> = ({product,myCartInStorage,setMyCa
     
   return (
       <div className="product col-sm-4 row">
-          <div hidden>{product.uuid}</div>
+          <div hidden>{product.id}</div>
           <div className="row-sm-3"><img src={product.imageUrl}/></div>
           <p className="row-sm-3">{product.name}</p>
           <p className="row-sm-3">${product.price}</p>

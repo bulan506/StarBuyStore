@@ -1,18 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using TodoApi.Models;
-using TodoApi.Database;
-using TodoApi.Business;
+using storeApi.Models;
+using storeApi.Business;
+using storeApi.Database;
 
-namespace TodoApi.Controllers
+
+namespace storeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
     {
-        private StoreLogic storeLogic = new StoreLogic();
+      
 
+        private StoreLogic storeLogic = new StoreLogic();
+        private SaleDB saleDB = new SaleDB();
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
@@ -21,4 +24,5 @@ namespace TodoApi.Controllers
             return Ok(response);
         }
     }
+
 }

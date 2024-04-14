@@ -1,3 +1,7 @@
+
+using MySqlConnector;
+using System;
+using storeApi.Models;
 namespace storeApi
 {
     public sealed class Store
@@ -16,7 +20,7 @@ namespace storeApi
         // Static constructor
         static Store()
         {
-        
+
 
             var products = new List<Product>
             {
@@ -87,8 +91,10 @@ namespace storeApi
             };
 
             Store.Instance = new Store(products, 13);
-        }
+           
 
+
+        }
         public Sale Purchase(Cart cart)
         {
             if (cart.ProductIds.Count == 0)
@@ -96,13 +102,10 @@ namespace storeApi
             if (string.IsNullOrWhiteSpace(cart.Address))
                 throw new ArgumentException("Address must be provided.");
 
-            // Find matching products based on the product IDs in the cart
             IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();
 
-            // Create shadow copies of the matching products
             IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
 
-            // Calculate purchase amount by multiplying each product's price with the store's tax percentage
             decimal purchaseAmount = 0;
             foreach (var product in shadowCopyProducts)
             {
@@ -111,7 +114,7 @@ namespace storeApi
             }
 
             // Create a sale object
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount);
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, cart.PaymentMethod);
 
             return sale;
         }

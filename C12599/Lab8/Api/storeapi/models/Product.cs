@@ -7,7 +7,7 @@ public class Product : ICloneable
     public decimal Price { get; set; }
     public string?   Description { get; set; }
 
-     
+        // Implementation of the ICloneable interface
     public object Clone()
     {
         return new Product
