@@ -1,20 +1,19 @@
 namespace MyStoreAPI
 {
-    public class PaymentMethod
-    {
+    public class PaymentMethod{
+
+        //Instancia del Enum
         public PaymentMethodNumber payment { get; set; }
         public bool verify { get; set; }
 
-        public PaymentMethod(PaymentMethodNumber payment, bool verify)
-        {
+        public PaymentMethod(PaymentMethodNumber payment, bool verify){
             this.payment = payment;
             this.verify = verify;
-        }
+        }        
     }
 
-    //Valores predefinidos
-    public enum PaymentMethodNumber
-    {
+    //Tipos de pago por default
+    public enum PaymentMethodNumber{
         CASH = 1,
         CREDIT_CARD = 2,
         DEBIT_CARD = 3,

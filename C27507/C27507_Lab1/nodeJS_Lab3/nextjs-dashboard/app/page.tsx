@@ -185,7 +185,7 @@ export default function Page() {
                 const json = await response.json();            
                 setProducts(json.products);                        
                 return json;
-            } catch (error) {
+            } catch (error) {                
                 throw new Error('Failed to fetch data');
             }
         }  
@@ -221,9 +221,8 @@ export default function Page() {
               {products && products.length >= 0 && products.map(product => {
                   if (product.description === "carousel") {
                       return(
-                          <section className="container_carousel col-sm-4" key="carousel">
-                              <StaticCarousel 
-                                    key={product.id} 
+                          <section className="container_carousel col-sm-4" key={product.id}>
+                              <StaticCarousel                                     
                                     products={products}
                                     myCartInStorage={myCartInStorage}                                    
                                     setMyCartInStorage={setMyCartInStorage}           

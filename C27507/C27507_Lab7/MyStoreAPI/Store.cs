@@ -114,10 +114,10 @@ namespace MyStoreAPI
                 description = "lorem ipsum"
             });
 
-            //Conectamos con la DB
+            //Conectamos con la DB (crea las tablas dependiendo si ya existen)
             DB_Connection.ConnectDB();
-            //Insertamos los productos de antes
-            DB_Connection.InsertProductsStore(products);
+            //DB_Connection.InsertProductsStore(products);
+            //DB_Connection.InsertPaymentMethod();
             
             //Traemos los productos desde la tabla Products
             List<Product> productsFromDB = DB_Connection.SelectProducts();
