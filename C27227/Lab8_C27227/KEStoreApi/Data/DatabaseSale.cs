@@ -4,12 +4,11 @@ public sealed class DatabaseSale{
  public void save(Sale sale)
     {
 
-        using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=mysql;Uid=root;Pwd=123456;"))
+        using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=store;Uid=root;Pwd=123456;"))
         {
             connection.Open();
 
             string insertQuery = @"
-                use store;
                 INSERT INTO Sales (purchase_date, total, payment_method, purchaseNumber)
                 VALUES (@purchase_date, @total, @payment_method, @purchase_number);";
 

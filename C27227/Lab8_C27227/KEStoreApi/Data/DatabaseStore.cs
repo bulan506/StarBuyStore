@@ -27,7 +27,8 @@ public sealed class DatabaseStore{
                         CREATE TABLE IF NOT EXISTS products (
                             id INT AUTO_INCREMENT PRIMARY KEY,
                             name VARCHAR(100),
-                            price DECIMAL(10, 2)
+                            price DECIMAL(10, 2),
+                            ImageUrl VARCHAR(250)
                         );
 
                         CREATE TABLE IF NOT EXISTS Sales (
@@ -36,6 +37,15 @@ public sealed class DatabaseStore{
                             purchase_date DATETIME NOT NULL,
                             purchaseNumber VARCHAR(50) NOT NULL,
                             payment_method INT NOT NULL
+                        );
+
+                        CREATE TABLE IF NOT EXISTS Lines_Sales (
+                            id_line INT AUTO_INCREMENT PRIMARY KEY,
+                            id_Sale INT NOT NULL,
+                            id_Product INT NOT NULL,
+                            price DECIMAL(10,2) NOT NULL,
+                            FOREIGN KEY (id_Sale) REFERENCES Sales(id),
+                            FOREIGN KEY (id_Product) REFERENCES products(id)
                         );
                     ";
 
