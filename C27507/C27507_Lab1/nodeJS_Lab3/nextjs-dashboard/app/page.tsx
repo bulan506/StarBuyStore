@@ -1,9 +1,11 @@
 'use client'
 import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+//import Link from 'next/link';
 import {useState} from 'react';
 import {useEffect} from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
 //Componentes
 import {Product,CartShop} from './layout';
 import { StaticCarousel} from './carousel';
@@ -15,6 +17,40 @@ import './demoCSS.css'
 import './fonts_awesome/css/all.min.css'
 import { mock } from 'node:test';
 
+//Peticiones API
+    //POST
+export async function sendDataAPI(directionAPI:string, data:any): Promise<string | null> {
+
+    //Especificacion POST
+    let postConfig = {
+        method: "POST",
+        //pasamos un objeto como atributo de otro
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }
+
+    try {
+
+            //A las peticiones POST se les debe agregar parametro de configuracion para diferenciarlas de las
+        //GET    
+        //let responsePost = await fetch("https://localhost:7161/api/Cart",postConfig);
+        let responsePost = await fetch(directionAPI,postConfig);
+        //await solo se puede usar dentro de funciones asincronas
+
+        if(responsePost.ok){            
+            const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON                        
+             //Enviamos al usuario a la pagina de resultado
+             return responseData.purchaseNumExit;
+        }
+        return null;
+        
+    } catch (error) {
+        throw new Error('Failed to POST data');
+    }        
+}
 
 //Calcular el total y manejarlo con stateUse para tenerlo en todos los componentes
 export const totalPriceNoTax = (allProduct: { price: number; quantity: number; }[]) => {
@@ -70,11 +106,11 @@ export const getCartShopStorage = (key: string): CartShopAPI | null => {
 }
 
     //verficar si un producto ha sido agregado o no
-export const verifyProductInCart = (id:string, allProductsInCart: ProductAPI[]) => {
+export const verifyProductInCart = (id:number, allProductsInCart: ProductAPI[]) => {
 
     for (let i = 0; i < allProductsInCart.length; i++) {
-        let elementID = allProductsInCart[i].uuid;
-        let isSameID = elementID.localeCompare(id) === 0
+        let elementID = allProductsInCart[i].id;
+        let isSameID = elementID === id
         if( isSameID ){
             return i;
         }        
@@ -108,7 +144,8 @@ export const addProductInCart = (index: number, product: ProductAPI, myCartInSto
 }
 
  //Vaciar lista de productos - Local y la del Carrito
-export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
+ //export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
+export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>) => {        
     if(myCartInStorage !== null){        
         
         //Setteamos un metodo de pago por defecto
@@ -132,50 +169,29 @@ export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartI
     }            
 }
 
-export default function Page() { 
-    //Como El localstorage puede estar vacio o haberse borrado la key por muchas razones, creamos uno null. Luego lamamos
-    //al localStorage para ver si existe alguna key que corresponda. Si esta existe, se sobreescribe el myCartInStorage, si no existe, seguimos
-    //usando de manera normal el myCartIntorage. Ahi ya luego usamos la key que queramos con setCartShopStorage
-    const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
-    const [products, setProducts] = useState<ProductAPI[]>([]);    
+export default function Page() {     
     //cargamos los datos desde la API (StoreController por Metodo Get)    
-    const loadDataProductAPI = async ()=>{
-        try{
-            console.log('Iniciando carga de datos desde la API...');
-            const response = await fetch('https://localhost:7161/api/Store')
-            if (!response.ok){
-                throw new Error('Failed to fetch data');                
+    const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
+    const [products, setProducts] = useState<ProductAPI[]>([]);               
+    
+    useEffect(() => {
+
+        const loadDataProductAPI = async ()=>{
+            try{            
+                const response = await fetch('https://localhost:7161/api/Store')
+                if (!response.ok){
+                    throw new Error('Failed to fetch data');                
+                }
+                const json = await response.json();            
+                setProducts(json.products);                        
+                return json;
+            } catch (error) {
+                throw new Error('Failed to fetch data');
             }
-
-            const json = await response.json();
-            console.log('Datos recibidos desde la API:', json);
-
-            setProducts(json.products);                        
-            return json;
-        } catch (error) {
-            console.error('Error al cargar datos desde la API:', error);
-
-            throw new Error('Failed to fetch data');
-        }
-    }     
-    loadDataProductAPI();
-      
-    // fetch('https://localhost:7161/api/Store')
-    // .then(response => {
-    //     if (!response.ok) {
-    //         throw new Error('Failed to fetch data');
-    //     }
-    //     return response.json();
-    // })
-    // .then(data => {
-    //     setProducts(data.products);
-    //     //console.log("ora si, ",data.products);
-    // })
-    // .catch(error => {
-    //     console.error('Error fetching data:', error);
-    // });
-            
-
+        }  
+        loadDataProductAPI();
+    }, []);
+   
   return (
     <main className="flex min-h-screen flex-col p-6">
 
@@ -187,7 +203,7 @@ export default function Page() {
                     <input type="search" name="name" placeholder="Busca cualquier cosa..."/>
                     <i className="fas fa-search"></i>                                  
                 </div>
-                
+                                
                 <CartShop                     
                     myCartInStorage={myCartInStorage}  
                     setMyCartInStorage={setMyCartInStorage}                             
@@ -207,7 +223,7 @@ export default function Page() {
                       return(
                           <section className="container_carousel col-sm-4" key="carousel">
                               <StaticCarousel 
-                                    key={product.uuid} 
+                                    key={product.id} 
                                     products={products}
                                     myCartInStorage={myCartInStorage}                                    
                                     setMyCartInStorage={setMyCartInStorage}           
@@ -217,7 +233,7 @@ export default function Page() {
                   } else {
                       return (
                         <Product 
-                            key={product.uuid} 
+                            key={product.id} 
                             product={product}
                             myCartInStorage={myCartInStorage}                                    
                             setMyCartInStorage={setMyCartInStorage}           
@@ -226,10 +242,8 @@ export default function Page() {
                   }
               })}
             </div>
-      </div>
-
-      {/*  */}
-      <footer>@ Derechos Reservados 2024</footer>      
+      </div>      
+      <footer>@ Derechos Reservados 2024</footer>         
     </main>
   );
 }
