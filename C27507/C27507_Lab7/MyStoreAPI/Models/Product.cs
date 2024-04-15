@@ -1,5 +1,4 @@
-namespace MyStoreAPI
-//using MySqlCoonect
+namespace MyStoreAPI.Models
 {
     public class Product: ICloneable
     {

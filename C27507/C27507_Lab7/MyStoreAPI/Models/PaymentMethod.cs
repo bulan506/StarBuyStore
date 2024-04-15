@@ -1,4 +1,4 @@
-namespace MyStoreAPI
+namespace MyStoreAPI.Models
 {
     public class PaymentMethod{
 

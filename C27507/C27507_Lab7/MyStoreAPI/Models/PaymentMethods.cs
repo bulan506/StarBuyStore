@@ -1,4 +1,4 @@
-namespace MyStoreAPI
+namespace MyStoreAPI.Models
 {
     //Estatica para poderla manejar desde cualquier lugar del proyecto
     public static class PaymentMethods{

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-namespace MyStoreAPI
+
+namespace MyStoreAPI.Models
 {
     public sealed class Sale    
     {

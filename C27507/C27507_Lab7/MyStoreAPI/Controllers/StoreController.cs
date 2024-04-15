@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using MyStoreAPI; // Importa el espacio de nombres donde se define Store
+using MyStoreAPI.Models;
+//API
+using MyStoreAPI.DB;
+using MyStoreAPI.Models;
 namespace MyStoreAPI.Controllers
 {
 

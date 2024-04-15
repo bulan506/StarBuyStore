@@ -1,4 +1,4 @@
-namespace MyStoreAPI
+namespace MyStoreAPI.Models
 {
     public sealed class Cart
     {

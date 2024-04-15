@@ -1,8 +1,8 @@
 using System;
-//using MySqlConnector;
+using MyStoreAPI.DB;
 using System.Collections.Generic;//para usar list
 
-namespace MyStoreAPI
+namespace MyStoreAPI.Models
 {
     public sealed class Store
     {
@@ -116,11 +116,11 @@ namespace MyStoreAPI
 
             //Conectamos con la DB (crea las tablas dependiendo si ya existen)
             DB_Connection.ConnectDB();
-            //DB_Connection.InsertProductsStore(products);
-            //DB_Connection.InsertPaymentMethod();
+            //DB_Product.InsertProductsStore(products);
+            //DB_PaymentMethod.InsertPaymentMethod();
             
             //Traemos los productos desde la tabla Products
-            List<Product> productsFromDB = DB_Connection.SelectProducts();
+            List<Product> productsFromDB = DB_Product.SelectProducts();
 
             //unica instancia de Store (con los productos y la conexion a la DB)            
             Store.Instance = new Store(productsFromDB,15);                        
