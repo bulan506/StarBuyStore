@@ -121,40 +121,7 @@ export default function PaymentPage() {
         localStorage.removeItem('cartItem');
     };
 
-    /* const handleConfirmation = () => {
-         const send = async () => {
  
-             let paymentMethodValue = 0;
-             if (selectMethod == 'Sinpe') {
-                 paymentMethodValue = 1;
-             }
- 
-             const dataSend = {
-                 ProductsIds: cartProducts,
-                 Addres: address,
-                 PaymentMethod: paymentMethodValue
-             };
- 
-             try {
-                 const response = await fetch('http://localhost:5207/api/Cart', {
-                     method: 'POST',
-                     headers: {
-                         'Content-Type': 'application/json'
-                     },
-                     body: JSON.stringify(dataSend)
-                 });
-                 if (!response.ok) {
-                     const errorResponseData = await response.json();
-                     throw new Error(errorResponseData.message);
-                 }
-                 console.log(dataSend);
-             } catch (error) {
-                 //   console.error(error);
-             }
-         }
- 
-         send();
-     }; */
 
     return (
         <div>
