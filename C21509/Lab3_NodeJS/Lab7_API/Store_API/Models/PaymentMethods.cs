@@ -16,14 +16,17 @@ namespace Store_API.Models
 
     }
 
+    private static Sinpe sinpe= new Sinpe();
+    private static Cash cash= new Cash();
+
      public static PaymentMethods Find(Type type)
         {
             switch (type)
             {
                 case Type.CASH:
-                    return new Cash();
+                    return cash;
                 case Type.SINPE:
-                    return new Sinpe();
+                    return new sinpe;
                 default:
                     throw new ArgumentException("Invalid payment method type.");
             }

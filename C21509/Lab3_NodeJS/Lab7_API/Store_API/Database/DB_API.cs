@@ -149,7 +149,7 @@ namespace Store_API.Database
                         VALUES (@total, @purchaseNumber, @subtotal, @direction, @paymentMethod,@dateSale);
                     ";
 
-                    string purchaseNum = Guid.NewGuid().ToString();
+                    string purchaseNumber = Guid.NewGuid().ToString();
                     MySqlCommand command = new MySqlCommand(insertSale, connection);
                     command.Parameters.AddWithValue("@total", purchasedCart.Total);
                     command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);

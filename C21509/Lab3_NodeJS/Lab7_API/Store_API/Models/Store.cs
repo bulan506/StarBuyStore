@@ -123,7 +123,10 @@ namespace Store_API.Models
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
 
 
+            DB_API.insertSale(sale);
+
             return sale;
+
 
         }
 
