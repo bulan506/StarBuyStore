@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Store_API.Database;
 
 namespace Store_API.Models
 {
@@ -19,6 +20,7 @@ namespace Store_API.Models
         // Static constructor
         static Store()
         {
+            DB_API dbApi = new DB_API(); 
 
             var products = new List<Product>
             {
@@ -81,19 +83,18 @@ namespace Store_API.Models
                 },
                 new Product
                 {
-                   Id= 8,
+                    Id= 8,
                     Name = $"Chromecast",
                     ImageURL = $"/img/Chromecast.jpg",
                     Price = 150
 
-                }
+                },
             };
 
-            DB_API.ConnectDB();
+            dbApi.ConnectDB();
+            dbApi.InsertProductsStore(products);
 
-            DB_API.InsertProductsStore(products);
-
-            List <Product> dbProducts= DB_API.SelectProducts();
+            List<Product> dbProducts = dbApi.SelectProducts();
 
             Store.Instance = new Store(dbProducts, 13);
         }
@@ -117,19 +118,11 @@ namespace Store_API.Models
                 purchaseAmount += product.Price;
             }
 
-            PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
-            PaymentMethods.Type paymentMethodType = paymentMethod.PaymentType;
+            PaymentMethods.Type paymentMethodType = cart.PaymentMethod.PaymentType;
 
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
-
-
-            DB_API.insertSale(sale);
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, cart.PaymentMethod);
 
             return sale;
-
-
         }
-
-
     }
 }

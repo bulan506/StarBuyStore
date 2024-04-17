@@ -68,7 +68,7 @@ export default function Page() {
         <h1>Lista de Productos</h1>
         <div className='row' style={{ display: 'flex', flexWrap: 'wrap' }}>
           {cartProducts && cartProducts.map(product =>
-            <Product key={product.id} product={product} addToCart={() => addToCart(product)} />
+            <Product key={product.id} product={product} addToCart={addToCart} />
           )}
 
         </div>

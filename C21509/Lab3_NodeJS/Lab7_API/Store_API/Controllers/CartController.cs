@@ -12,8 +12,10 @@ namespace Store_API.Controllers
         [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-           
-            string successPurchase = DB_API.InsertSale(cart);
+    
+            DB_API dbApi = new DB_API();
+            
+            string successPurchase = dbApi.InsertSale(cart);
 
             return Ok(new { successPurchase });
             

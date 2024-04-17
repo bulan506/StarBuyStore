@@ -26,7 +26,7 @@ namespace Store_API.Models
                 case Type.CASH:
                     return cash;
                 case Type.SINPE:
-                    return new sinpe;
+                    return sinpe;
                 default:
                     throw new ArgumentException("Invalid payment method type.");
             }

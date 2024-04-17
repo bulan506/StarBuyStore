@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Store_API.Models;
 
 namespace Store_API.Database
 {
     public class DB_API
     {
-        private readonly string connectionString = "server=localhost;user=root;password=123456;database=MyStoreAPI";
+        private readonly string connectionString = "server=localhost;user=root;password=123456;database=Store_API";
 
         public void ConnectDB()
         {
@@ -23,7 +24,7 @@ namespace Store_API.Database
                             PurchaseNumber VARCHAR(50) NOT NULL,                           
                             Total DECIMAL(10, 2) NOT NULL,
                             Subtotal DECIMAL(10, 2) NOT NULL,                                                
-                            Direction VARCHAR(255) NOT NULL,
+                            Address VARCHAR(255) NOT NULL,
                             PaymentMethod INT NOT NULL,
                             DateSale DATETIME NOT NULL
                         );";
@@ -37,7 +38,7 @@ namespace Store_API.Database
                         CREATE TABLE IF NOT EXISTS Products (
                             IdProduct INT AUTO_INCREMENT PRIMARY KEY,
                             Name VARCHAR(255) NOT NULL,
-                            ImageUrl VARCHAR(255),
+                            ImageURL VARCHAR(255),
                             Price DECIMAL(10, 2) NOT NULL,
                         );";
 
@@ -76,14 +77,14 @@ namespace Store_API.Database
                     foreach (var actualProduct in allProducts)
                     {
                         string insertQuery = @"
-                            INSERT INTO Products (Name, ImageUrl, Price)
-                            VALUES (@name, @imageUrl, @price);
+                            INSERT INTO Products (Name, ImageURL, Price)
+                            VALUES (@name, @imageURL, @price);
                         ";
 
                         using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                         {
                             command.Parameters.AddWithValue("@name", actualProduct.Name);
-                            command.Parameters.AddWithValue("@imageUrl", actualProduct.ImageUrl);
+                            command.Parameters.AddWithValue("@imageURL", actualProduct.ImageURL);
                             command.Parameters.AddWithValue("@price", actualProduct.Price);
 
                             command.ExecuteNonQuery();
@@ -107,7 +108,7 @@ namespace Store_API.Database
                 {
                     connection.Open();
                     string selectProducts = @"
-                        SELECT IdProduct, Name, ImageUrl, Price
+                        SELECT IdProduct, Name, ImageURL, Price
                         FROM Products;
                         ";
 
@@ -121,7 +122,7 @@ namespace Store_API.Database
                                 {
                                     Id = Convert.ToInt32(readerTable["IdProduct"]),
                                     Name = readerTable["Name"].ToString(),
-                                    ImageUrl = readerTable["ImageUrl"].ToString(),
+                                    ImageURL = readerTable["ImageURL"].ToString(),
                                     Price = Convert.ToDecimal(readerTable["Price"])
                                 });
                             }
@@ -145,8 +146,8 @@ namespace Store_API.Database
                     connection.Open();
 
                     string insertSale = @"
-                        INSERT INTO Sales (Total,PurchaseNum, Subtotal, Direction, PaymentMethod,DateSale)
-                        VALUES (@total, @purchaseNumber, @subtotal, @direction, @paymentMethod,@dateSale);
+                        INSERT INTO Sales (Total,PurchaseNumber, Subtotal, Address, PaymentMethod,DateSale)
+                        VALUES (@total, @purchaseNumber, @subtotal, @address, @paymentMethod,@dateSale);
                     ";
 
                     string purchaseNumber = Guid.NewGuid().ToString();
@@ -154,8 +155,8 @@ namespace Store_API.Database
                     command.Parameters.AddWithValue("@total", purchasedCart.Total);
                     command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
                     command.Parameters.AddWithValue("@subtotal", purchasedCart.Subtotal);
-                    command.Parameters.AddWithValue("@direction", purchasedCart.Direction);
-                    command.Parameters.AddWithValue("@paymentMethod", (int)purchasedCart.PaymentMethod.payment);
+                    command.Parameters.AddWithValue("@address", purchasedCart.Address);
+                    command.Parameters.AddWithValue("@paymentMethod", (int)purchasedCart.PaymentMethod.PaymentType);
                     command.Parameters.AddWithValue("@dateSale", DateTime.Now);
                     command.ExecuteNonQuery();
 
@@ -198,11 +199,11 @@ namespace Store_API.Database
 
                     using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection))
                     {
-                        foreach (var actualProductId in purchasedCart.allProduct)
+                        foreach (var actualProductId in purchasedCart.ProductIds)
                         {
                             command.Parameters.Clear();
                             command.Parameters.AddWithValue("@saleId", IdSaleFromSelect);
-                            command.Parameters.AddWithValue("@productId", actualProductId.Id);
+                            command.Parameters.AddWithValue("@productId", actualProductId);
                             command.ExecuteNonQuery();
                         }
                     }
