@@ -7,13 +7,15 @@ namespace MyStoreAPI.Models
     public sealed class Store
     {
         public List<Product> Products { get; private set; }
-        public int TaxPercentage { get; private set; }        
+        public int TaxPercentage { get; private set; }            
+        public bool StoreConnectedWithDB {get; private set;}
 
-        //Constructor de Store
         private Store( List<Product> Products, int TaxPercentage )
         {
             this.Products = Products;
             this.TaxPercentage = TaxPercentage;
+            //Conectamos con la DB (crea las tablas dependiendo si ya existen)
+            this.StoreConnectedWithDB = DB_Connection.ConnectDB();
         }
 
         //Le decimos que solo acepte clases estaticas, con readonly le indicamos que solo 1
@@ -114,14 +116,12 @@ namespace MyStoreAPI.Models
                 description = "lorem ipsum"
             });
 
-            //Conectamos con la DB (crea las tablas dependiendo si ya existen)
-            DB_Connection.ConnectDB();
+            
             //DB_Product.InsertProductsStore(products);
             //DB_PaymentMethod.InsertPaymentMethod();
             
             //Traemos los productos desde la tabla Products
             List<Product> productsFromDB = DB_Product.SelectProducts();
-
             //unica instancia de Store (con los productos y la conexion a la DB)            
             Store.Instance = new Store(productsFromDB,15);                        
         }                

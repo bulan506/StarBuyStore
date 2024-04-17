@@ -183,7 +183,15 @@ export default function Page() {
                     throw new Error('Failed to fetch data');                
                 }
                 const json = await response.json();            
-                setProducts(json.products);                        
+
+                //Como ahora Store desde la API se devuelve dentro de un objeto Action
+                //hacemos una validacion para saber si trae datos dentro de su metodo
+                if(json.hasOwnProperty('value')){
+                    setProducts(json.valeu.products);                            
+                }else{
+                    //si el dato no viene dentro de un ActionResult se guarda normal
+                    setProducts(json.products);                        
+                }                
                 return json;
             } catch (error) {                
                 throw new Error('Failed to fetch data');

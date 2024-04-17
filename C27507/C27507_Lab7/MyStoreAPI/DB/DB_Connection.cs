@@ -16,8 +16,9 @@ namespace MyStoreAPI{
         }
         
         //iniciamos la conexion con la BD
-        public static void ConnectDB(){
+        public static bool ConnectDB(){
 
+            bool connectionStatus = false;
             try{
                 using (TransactionScope scopeTransaction = new TransactionScope()){
                     //creamos una instancia de mysql
@@ -87,11 +88,17 @@ namespace MyStoreAPI{
                             command.ExecuteNonQuery();
                             Console.WriteLine("Tabla 'SalesLines' creada correctamente.");
                         }
+
+                        //Conexion y creacion de tablas con existo
+                        connectionStatus = true;
                     }
                     scopeTransaction.Complete();
-                }
+                }                
+                return connectionStatus;
             }catch (Exception ex){
-                throw;
+                //throw;
+                Console.WriteLine($"Error al conectar con la base de datos: {ex.Message}");
+                return connectionStatus = false;
             }            
         }    
     }
