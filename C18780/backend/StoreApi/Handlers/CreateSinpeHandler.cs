@@ -16,6 +16,7 @@ namespace StoreApi.Handler
 
         public async Task<Sinpe> Handle(CreateSinpeCommand command, CancellationToken cancellationToken)
         {
+            ValidateCommand(command);
             var sinpe = new Sinpe()
             {
                 UuidSales = command.UuidSales,
@@ -23,6 +24,18 @@ namespace StoreApi.Handler
             };
 
             return await _sinpeRepository.AddSinpeAsync(sinpe);
+        }
+
+        private void ValidateCommand(CreateSinpeCommand command)
+        {
+            if (command.UuidSales != Guid.Empty)
+            {
+                throw new ArgumentException("The uuid cannot be empty.");
+            }
+            if (string.IsNullOrWhiteSpace(command.ConfirmationNumber))
+            {
+                throw new ArgumentException("The confirmation number cannot be empty.");
+            }
         }
     }
 }

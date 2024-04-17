@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class CreateProductHandler: IRequestHandler<CreateProductCommand, Product>
+    public class CreateProductHandler : IRequestHandler<CreateProductCommand, Product>
     {
         private readonly IProductRepository _productRepository;
 
@@ -13,8 +13,11 @@ namespace StoreApi.Handler
         {
             _productRepository = productRepository;
         }
+
         public async Task<Product> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
+            ValidateCommand(command);
+
             var product = new Product()
             {
                 Name = command.Name,
@@ -24,6 +27,26 @@ namespace StoreApi.Handler
             };
 
             return await _productRepository.AddProductAsync(product);
+        }
+
+        private void ValidateCommand(CreateProductCommand command)
+        {
+            if (string.IsNullOrWhiteSpace(command.Name))
+            {
+                throw new ArgumentException("The name cannot be empty.");
+            }
+            if (string.IsNullOrWhiteSpace(command.Description))
+            {
+                throw new ArgumentException("The description cannot be empty.");
+            }
+            if (string.IsNullOrWhiteSpace(command.ImageUrl))
+            {
+                throw new ArgumentException("The picture cannot be empty.");
+            }
+            if (command.Price <= 0)
+            {
+                throw new ArgumentException("The price must be greater than zero.");
+            }
         }
     }
 }
