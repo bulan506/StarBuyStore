@@ -4,20 +4,14 @@ namespace MyStoreAPI.Models
 {
     public sealed class Sale    
     {
-        
-        public IEnumerable<Product> Products {get;}
-        public string Address {get;}
-        public decimal Amount {get;}
-        public PaymentMethodNumber PaymentMethod {get;}
-
-        public Sale(IEnumerable<Product> products, string address, decimal Amount, PaymentMethodNumber paymentMethod)
-        {
-            Products = products;
-            Address = address;
-            Amount = Amount;
-            PaymentMethod = paymentMethod;
-        }
-        public Sale(){}
-
+        public int idSale {get;}
+        public string purchaseNum {get;}
+        public Cart cart {get;}
+        //public IEnumerable<Product> products {get;}    
+        public Sale(int idSale, string purchaseNum,Cart cart){
+            this.idSale = idSale;
+            this.purchaseNum = purchaseNum;
+            this.cart = cart;
+        }        
     }
 }

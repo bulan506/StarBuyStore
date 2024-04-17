@@ -8,12 +8,13 @@ namespace MyStoreAPI.DB
 {
     public class DB_Sale{
 
-        public static string InsertSale(Cart purchasedCart){
+        public static (string, int) InsertSale(Cart purchasedCart){
             try{                                        
 
                 using (TransactionScope scopeTransaction = new TransactionScope()){
                     
                     string purchaseNum = "";
+                    int thisIdSale = 0;
 
                     //El bloque using(MySql....) es una buena practica ya que conecta y desconecta de la bd, liberando recursos
                     //y evitar dejando conexiones abiertas
@@ -37,15 +38,24 @@ namespace MyStoreAPI.DB
                         command.Parameters.AddWithValue("@idPayment", purchasedCart.PaymentMethod.payment);
                         command.Parameters.AddWithValue("@dateSale", DateTime.Now);
                         command.ExecuteNonQuery();
+
+                         //Devolver el id de la venta generada (porque es IDENTITY(1,1))
+                        string selectThisId = "SELECT IdSale FROM Sales WHERE PurchaseNum = @purchaseNum";
+                        command = new MySqlCommand(selectThisId, connectionWithDB);
+                        command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
+                        thisIdSale = Convert.ToInt32(command.ExecuteScalar());
                                             
                         DB_SaleLine.InsertSalesLine(connectionWithDB,purchaseNum,purchasedCart);
                     }     
                     //encapsula los metodos rollback y commit de Transaction
                     scopeTransaction.Complete();
-                    Console.WriteLine("Exito al realizar la compra, guadado en Sales: ");       
-                    return purchaseNum;
+                    Console.WriteLine("Exito al realizar la compra, guadado en Sales: ");    
+
+                    //Si la transaccion se cumple con exito, devolvemos el codigo y el id para la instancia de Sale   
+                    return (purchaseNum, thisIdSale);
                 }
             }catch (Exception ex){
+                Console.WriteLine("Error al generar InsertSale: " + ex);    
                 throw;                
             }            
         }
