@@ -20,7 +20,7 @@ namespace StoreApi
         [HttpPost]
         public async Task<Sales> AddCartAsync([FromBody] Cart cart)
         {
-            string? paymentMethodName = PaymentMethods.Find((PaymentMethods.Type)cart.PaymentMethod)?.ToString();
+            object? paymentMethodName = PaymentMethods.Find((PaymentMethods.Type)cart.PaymentMethod)?;
             decimal total = 0;
 
             var createSalesCommand = new CreateSalesCommand(
