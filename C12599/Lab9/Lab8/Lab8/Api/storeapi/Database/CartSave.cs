@@ -1,6 +1,5 @@
 using MySqlConnector;
 using System;
-using System.Collections.Generic;
 
 namespace storeapi
 {
@@ -14,18 +13,17 @@ namespace storeapi
             {
                 connection.Open();
 
+                EnsureItemsTableExists(connection); // Asegurar que la tabla 'Items' exista
+                EnsureComprasTableExists(connection); // Asegurar que la tabla 'Compras' exista
+
                 using (var transaction = connection.BeginTransaction())
                 {
                     try
                     {
-                        EnsureItemsTableExists(connection, transaction);
-
                         foreach (var product in sale.Products)
                         {
                             InsertItem(connection, transaction, product, sale.PurchaseNumber, sale.Address);
                         }
-
-                        EnsureComprasTableExists(connection, transaction);
 
                         InsertSale(connection, transaction, sale);
 
@@ -40,48 +38,51 @@ namespace storeapi
             }
         }
 
-        private void EnsureItemsTableExists(MySqlConnection connection, MySqlTransaction transaction)
+        private void EnsureItemsTableExists(MySqlConnection connection)
         {
             string createItemsTableQuery = @"
                 CREATE TABLE IF NOT EXISTS Items (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     ProductId INT,
-                    PurchaseNumber INT,
+                    PurchaseNumber VARCHAR(255),
                     Address VARCHAR(255),
+                    Price DECIMAL(10, 2),
                     FOREIGN KEY (PurchaseNumber) REFERENCES Compras(purchaseNumber),
-                    FOREIGN KEY (id) REFERENCES products(id)
-                );
-            ";
+                    FOREIGN KEY (ProductId) REFERENCES products(id)
+                )";
 
-            using (var command = new MySqlCommand(createItemsTableQuery, connection, transaction))
+            using (var command = new MySqlCommand(createItemsTableQuery, connection))
             {
                 command.ExecuteNonQuery();
             }
         }
 
-     private void EnsureComprasTableExists(MySqlConnection connection, MySqlTransaction transaction)
-{
-    string createComprasTableQuery = @"
-        CREATE TABLE IF NOT EXISTS Compras (
-            total DECIMAL(10, 2) NOT NULL,
-            date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            purchaseNumber INT NOT NULL,
-            Paymethod INT,
-            PRIMARY KEY (purchaseNumber)
-        );
-    ";
+        private void EnsureComprasTableExists(MySqlConnection connection)
+        {
+            
+            string createComprasTableQuery = @"
+                CREATE TABLE IF NOT EXISTS Compras (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    total DECIMAL(10, 2) NOT NULL,
+                    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    purchaseNumber VARCHAR(255) NOT NULL,
+                    Paymethod INT,
+                    UNIQUE KEY (purchaseNumber)
+                )";
 
-    using (var command = new MySqlCommand(createComprasTableQuery, connection, transaction))
-    {
-        command.ExecuteNonQuery();
-    }
-}
+            using (var command = new MySqlCommand(createComprasTableQuery, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
 
         private void InsertItem(MySqlConnection connection, MySqlTransaction transaction, Product product, string purchaseNumber, string address)
         {
             string insertItemQuery = @"
-                INSERT INTO Items (ProductId, PurchaseNumber, Address)
-                VALUES (@ProductId, @PurchaseNumber, @Address);
+                INSERT INTO Items (ProductId, PurchaseNumber, Address, Price)
+                SELECT @ProductId, @PurchaseNumber, @Address, p.price
+                FROM products p
+                WHERE p.id = @ProductId;
             ";
 
             using (var command = new MySqlCommand(insertItemQuery, connection, transaction))
@@ -98,8 +99,7 @@ namespace storeapi
         {
             string insertSaleQuery = @"
                 INSERT INTO Compras (total, date, purchaseNumber, Paymethod)
-                VALUES (@total, @date, @purchaseNumber, @Paymethod);
-            ";
+                VALUES (@total, @date, @purchaseNumber, @Paymethod)";
 
             using (var command = new MySqlCommand(insertSaleQuery, connection, transaction))
             {

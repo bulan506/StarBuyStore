@@ -17,7 +17,6 @@ const Page = () => {
   useEffect(() => {
     // Función para cargar datos iniciales de productos desde la API
     const fetchData = async () => {
-      try {
         const response = await fetch('https://localhost:7043/api/Store');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
@@ -27,9 +26,7 @@ const Page = () => {
           ...prevState,
           productList: json.products || [],
         }));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+    
     };
 
     fetchData();

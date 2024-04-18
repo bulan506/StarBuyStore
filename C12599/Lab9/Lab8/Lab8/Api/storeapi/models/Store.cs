@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using MySqlConnector;
 
 namespace storeapi
 {
@@ -20,10 +18,7 @@ namespace storeapi
         static Store()
         {
             List<Product> products = LoadProductsFromDatabase();
-            Instance = new Store(products, 13); // Ejemplo: establece el impuesto en 13%
-
-            // Ejemplo: Imprimir información de los productos cargados
-            Console.WriteLine($"Se cargaron {products.Count} productos desde la base de datos.");
+            Instance = new Store(products, 13); 
         }
 
         private static List<Product> LoadProductsFromDatabase()
@@ -33,7 +28,7 @@ namespace storeapi
 
             foreach (string[] row in productData)
             {
-                if (row.Length >= 5) // Asegurar que hay suficientes elementos en la fila
+                if (row.Length >= 5) 
                 {
                     if (int.TryParse(row[0], out int id) &&
                         decimal.TryParse(row[2], out decimal price))
@@ -53,17 +48,9 @@ namespace storeapi
 
                         products.Add(product);
                     }
-                    else
-                    {
-                        // Manejar el caso donde la conversión falla
-                        Console.WriteLine($"Error: Datos inválidos en la fila: {string.Join(", ", row)}");
-                    }
+                   
                 }
-                else
-                {
-                    // Manejar el caso donde la fila no tiene suficientes elementos
-                    Console.WriteLine($"Error: Fila incompleta en la base de datos: {string.Join(", ", row)}");
-                }
+               
             }
 
             return products;

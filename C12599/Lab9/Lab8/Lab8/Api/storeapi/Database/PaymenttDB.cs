@@ -1,17 +1,18 @@
 using System;
+using System.Collections.Generic;
 using MySqlConnector;
 
 namespace storeapi
 {
     public sealed class PaymentDB
     {
-        private readonly string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
+        private static readonly string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
 
         public PaymentDB()
         {
         }
 
-        public void InitializePaymentMethods()
+        public static void CreateMysql()
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -29,31 +30,64 @@ namespace storeapi
                 }
             }
 
-            // Insertar métodos de pago definidos en PaymentMethods
+            // Insertar métodos de pago iniciales (CASH y SINPE)
+            InsertInitialPaymentMethods();
+        }
+
+       private static void InsertInitialPaymentMethods()
+{
+    using (var connection = new MySqlConnection(_connectionString))
+    {
+        connection.Open();
+
+        // Insertar método de pago CASH si no existe
+        string insertCashQuery = @"
+            INSERT IGNORE INTO paymentMethods (id, name)
+            VALUES (0, 'CASH')";
+
+        using (var insertCashCommand = new MySqlCommand(insertCashQuery, connection))
+        {
+            insertCashCommand.ExecuteNonQuery();
+        }
+
+        // Insertar método de pago SINPE si no existe
+        string insertSinpeQuery = @"
+            INSERT IGNORE INTO paymentMethods (id, name)
+            VALUES (1, 'SINPE')";
+
+        using (var insertSinpeCommand = new MySqlCommand(insertSinpeQuery, connection))
+        {
+            insertSinpeCommand.ExecuteNonQuery();
+        }
+    }
+}
+
+        public static List<string[]> RetrievePaymentMethods()
+        {
+            List<string[]> paymentMethods = new List<string[]>();
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
 
-                // Iterar sobre los tipos de métodos de pago definidos en PaymentMethods.Type
-                foreach (PaymentMethods.Type paymentType in Enum.GetValues(typeof(PaymentMethods.Type)))
+                string sql = "SELECT id, name FROM paymentMethods";
+
+                using (var command = new MySqlCommand(sql, connection))
                 {
-                    PaymentMethods paymentMethod = PaymentMethods.Find(paymentType);
-
-                    if (paymentMethod != null)
+                    using (var reader = command.ExecuteReader())
                     {
-                        string insertQuery = @"
-                            INSERT INTO paymentMethods (id, name)
-                            VALUES (@id, @name)";
-
-                        using (var insertCommand = new MySqlCommand(insertQuery, connection))
+                        while (reader.Read())
                         {
-                            insertCommand.Parameters.AddWithValue("@id", (int)paymentType);
-                            insertCommand.Parameters.AddWithValue("@name", paymentType.ToString());
-                            insertCommand.ExecuteNonQuery();
+                            string[] methodInfo = new string[2];
+                            methodInfo[0] = reader["id"].ToString();
+                            methodInfo[1] = reader["name"].ToString();
+                            paymentMethods.Add(methodInfo);
                         }
                     }
                 }
             }
+
+            return paymentMethods;
         }
     }
 }

@@ -9,7 +9,10 @@ const PayPage: React.FC = () => {
         productos: [],
         direccionEntrega: '',
         metodoPago: '',
-        isCartEmpty: true
+        isCartEmpty: true,
+        numeroCompra: '',
+        sinpeAvailable: false,
+        cashAvailable: false
     });
 
     useEffect(() => {
@@ -28,6 +31,27 @@ const PayPage: React.FC = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const fetchPaymentMethods = async () => {
+                const response = await fetch('https://localhost:7043/api/Payment');
+                if (response.ok) {
+                    const paymentMethodsData = await response.json();
+                    const { cash, sinpe } = paymentMethodsData;
+
+                    // Actualizamos el estado del carrito con los métodos de pago disponibles
+                    setCart(prevCart => ({
+                        ...prevCart,
+                        isCartEmpty: false,
+                        cashAvailable: cash.paymentType === 1,
+                        sinpeAvailable: sinpe.paymentType === 1
+                    }));
+                } else {
+                    throw new Error('Error al obtener métodos de pago');
+                }
+           
+        };   fetchPaymentMethods();
+    }, []); 
+
     const handleDireccionEntregaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setCart(prevCart => ({ ...prevCart, direccionEntrega: value }));
@@ -45,69 +69,69 @@ const PayPage: React.FC = () => {
     };
 
     const handleSubmit = async () => {
-        const { direccionEntrega, metodoPago, productos, total } = cart;
+        const { direccionEntrega, metodoPago, productos } = cart; 
         const esPedidoValido = direccionEntrega && metodoPago && (metodoPago === 'efectivo' || metodoPago === 'sinpe');
-      
-        if (esPedidoValido) {
-          const productIds = productos.map((producto) => String(producto.id));
-      
-          let paymentMethodValue = 0;
-          if (metodoPago === 'sinpe') {
+    
+        if (!esPedidoValido) {
+            setCart(prevCart => ({
+                ...prevCart,
+                confirmacion: 'Por favor, complete todos los campos requeridos o agregue ítems al carrito.'
+            }));
+            return;
+        }
+    
+        const productIds = productos.map((producto: any) => String(producto.id));
+    
+        let paymentMethodValue = 0;
+        if (metodoPago === 'sinpe' && cart.sinpeAvailable) {
             paymentMethodValue = 1;
-          }
-      
-          const dataToSend = {
+        } else if (metodoPago === 'efectivo' && cart.cashAvailable) {
+            paymentMethodValue = 1;
+        }
+    
+        const dataToSend = {
             productIds: productIds,
             address: direccionEntrega,
-            paymentMethod: paymentMethodValue,
-            total: total
-          };
-      
-          try {
-            const response = await fetch('https://localhost:7043/api/Cart', {
-              method: 'POST',
-              headers: {
+            paymentMethod: paymentMethodValue
+        };
+    
+        const response = await fetch('https://localhost:7043/api/Cart', {
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(dataToSend)
+            },
+            body: JSON.stringify(dataToSend)
+        });
+    
+        if (response.ok) {
+            const responseData = await response.json();
+            const { purchaseNumberResponse } = responseData; // Obtener el número de compra desde la respuesta
+    
+            // Actualizar el carrito en el estado y guardar en localStorage
+            setCart(prevCart => ({
+                ...prevCart,
+                productos: [],
+                direccionEntrega: '',
+                metodoPago: '',
+                isCartEmpty: true,
+                numeroCompra: purchaseNumberResponse.toString() // Almacenar el número de compra como cadena
+            }));
+    
+            // Actualizar localStorage
+            updateLocalStorage({
+                productos: [],
+                direccionEntrega: '',
+                metodoPago: '',
+                isCartEmpty: true,
+                numeroCompra: purchaseNumberResponse.toString()
             });
-      
-            if (response.ok) {
-              const responseData = await response.json();
-              const { purchaseNumberResponse } = responseData; // Obtener el número de compra de la respuesta
-      
-              // Actualizar el carrito en el estado y guardar en localStorage
-              setCart({
-                productos: [],
-                direccionEntrega: '',
-                metodoPago: '',
-                isCartEmpty: true,
-                numeroCompra: purchaseNumberResponse // Agregar el número de compra al estado del carrito
-              });
-      
-              updateLocalStorage({
-                productos: [],
-                direccionEntrega: '',
-                metodoPago: '',
-                isCartEmpty: true,
-                numeroCompra: purchaseNumberResponse // Agregar el número de compra a cartData en localStorage
-              });
-            } else {
-              const errorResponseData = await response.json();
-              throw new Error('Error al enviar datos de pago: ' + JSON.stringify(errorResponseData));
-            }
-          } catch (error) {
-            console.error('Error al procesar el pago:', error);
-          }
         } else {
-          setCart((prevCart) => ({
-            ...prevCart,
-            confirmacion: 'Por favor, complete todos los campos requeridos o agregue ítems al carrito.'
-          }));
+            // Manejar el error si la respuesta no es exitosa
+            const errorResponseData = await response.json();
+            throw new Error('Error al enviar datos de pago: ' + JSON.stringify(errorResponseData));
         }
-      
-      
-    };   return (
+    };
+ return (
         <div>
             <h1>Pay Page</h1>
             {cart.isCartEmpty ? (

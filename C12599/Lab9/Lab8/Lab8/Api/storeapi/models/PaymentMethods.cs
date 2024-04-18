@@ -12,18 +12,22 @@ namespace storeapi
 
         public Type PaymentType { get; set; }
 
-        public PaymentMethods(PaymentMethods.Type paymentType)
+        protected PaymentMethods(PaymentMethods.Type paymentType)
         {
             PaymentType = paymentType;
         }
 
         public static PaymentMethods Find(PaymentMethods.Type type)
         {
-            if (!Enum.IsDefined(typeof(Type), type))
+            switch (type)
             {
-                throw new ArgumentException("Invalid payment type");
+                case Type.CASH:
+                    return new Cash();
+                case Type.SINPE:
+                    return new Sinpe();
+                default:
+                    throw new ArgumentException("Invalid payment type");
             }
-            return null;
         }
     }
 
