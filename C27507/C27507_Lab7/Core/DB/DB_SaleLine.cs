@@ -1,9 +1,10 @@
-using MySql.Data.MySqlClient;
+
 using System;
 using System.Transactions;
 using System.Collections.Generic;//para usar list
 //API
 using MyStoreAPI.Models;
+using MySqlConnector;
 namespace MyStoreAPI.DB
 {
     public class DB_SaleLine{

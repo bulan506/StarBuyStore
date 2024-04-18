@@ -1,9 +1,10 @@
-using MySql.Data.MySqlClient;
+
 using System;
 using System.Transactions;
 using System.Collections.Generic;//para usar list
 //API
 using MyStoreAPI.Models;
+using MySqlConnector;
 namespace MyStoreAPI.DB
 {
     public class DB_Sale{
@@ -19,7 +20,6 @@ namespace MyStoreAPI.DB
                     //El bloque using(MySql....) es una buena practica ya que conecta y desconecta de la bd, liberando recursos
                     //y evitar dejando conexiones abiertas
                     using (MySqlConnection connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB())){
-
                         connectionWithDB.Open();                    
 
                         //Hacemos el insert

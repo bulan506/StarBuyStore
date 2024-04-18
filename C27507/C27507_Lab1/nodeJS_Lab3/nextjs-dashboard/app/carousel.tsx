@@ -41,7 +41,7 @@ export const StaticCarousel: React.FC<CarouselStaticProps> = ({products,myCartIn
         }
       };  
 
-    return (
+    return (        
         <div id="carouselExampleCaptions" className="carousel slide">
             <div className="cover"></div>
             <div className="carousel-indicators">  

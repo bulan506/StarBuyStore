@@ -1,9 +1,10 @@
-using MySql.Data.MySqlClient;
+
 using System;
 using System.Transactions;
 using System.Collections.Generic;//para usar list
 //API
 using MyStoreAPI.Models;
+using MySqlConnector;
 namespace MyStoreAPI.DB
 {
     public class DB_Product{
@@ -78,6 +79,22 @@ namespace MyStoreAPI.DB
             }            
             return productListToStoreInstance;
         }
-        
+
+        public static bool ProductsInTableExist(){
+            try{
+                using (MySqlConnection connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB()))
+                {
+                    connectionWithDB.Open();
+                    string numberOfProduct = "SELECT COUNT(*) FROM Products";
+                    using (MySqlCommand command = new MySqlCommand(numberOfProduct, connectionWithDB)){
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex){                
+                throw;
+            }
+        }        
     }
 }

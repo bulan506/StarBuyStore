@@ -1,9 +1,10 @@
-using MySql.Data.MySqlClient;
+
 using System;
 using System.Transactions;
 using System.Collections.Generic;//para usar list
 //API
 using MyStoreAPI.Models;
+using MySqlConnector;
 namespace MyStoreAPI.DB
 {
     public class DB_PaymentMethod{
@@ -38,6 +39,23 @@ namespace MyStoreAPI.DB
             }catch (Exception ex){
                 throw;
             }                    
-        }        
+        }   
+
+        public static bool PaymentMethodsInTableExist(){
+            try{
+                using (MySqlConnection connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB()))
+                {
+                    connectionWithDB.Open();
+                    string numberOfPaymentMethods = "SELECT COUNT(*) FROM PaymentMethod";
+                    using (MySqlCommand command = new MySqlCommand(numberOfPaymentMethods, connectionWithDB)){
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex){                
+                throw;
+            }
+        }             
     }
 }

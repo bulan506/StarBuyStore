@@ -191,7 +191,7 @@ export default function Page() {
                 }else{
                     //si el dato no viene dentro de un ActionResult se guarda normal
                     setProducts(json.products);                        
-                }                
+                }                                
                 return json;
             } catch (error) {                
                 throw new Error('Failed to fetch data');

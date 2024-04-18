@@ -18,7 +18,7 @@ namespace MyStoreAPI.Controllers
         [HttpGet]
         public IActionResult getStore(){            
 
-            //Si hay error al conectar con la BD o no hay productos en la tienda
+            //Verificamos que hayan tablas en la BD
             if( !storeLogic.validateStatusStore() ){
                 return StatusCode(500, "Error: No hay conexion con la BD");
             }
