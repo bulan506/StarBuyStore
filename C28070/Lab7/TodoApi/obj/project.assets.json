@@ -1049,8 +1049,8 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "MYSqlConnector >= 2.3.6",
       "Microsoft.EntityFrameworkCore.InMemory >= 8.0.3",
-      "MySqlConnector >= 2.3.6",
       "Swashbuckle.AspNetCore >= 6.4.0"
     ]
   },
@@ -1096,13 +1096,13 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "MYSqlConnector": {
+            "target": "Package",
+            "version": "[2.3.6, )"
+          },
           "Microsoft.EntityFrameworkCore.InMemory": {
             "target": "Package",
             "version": "[8.0.3, )"
-          },
-          "MySqlConnector": {
-            "target": "Package",
-            "version": "[2.3.6, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

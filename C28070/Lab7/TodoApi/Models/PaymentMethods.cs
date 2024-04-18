@@ -2,8 +2,6 @@ namespace TodoApi;
 
 public abstract class PaymentMethods {
 
-
-
     public enum Type
     {Efectivo = 0, Sinpe = 1}
     public Type PaymentType { get; set; }
@@ -13,15 +11,19 @@ public abstract class PaymentMethods {
         PaymentType = paymentType;
 
     }
+    
+    private static Sinpe sinpe=new Sinpe();
+    private static Efectivo efectivo=new Efectivo();
+
     public static PaymentMethods Find(Type type)
     {
 
         switch (type)
         {
             case Type.Efectivo:
-                return new Efectivo();
+                return efectivo;
             case Type.Sinpe:
-                return new Sinpe();
+                return sinpe;
             default:
                 throw new ArgumentException("Invalid payment method type.");
         }

@@ -9,7 +9,7 @@ namespace TodoApi.Database {
 public sealed class StoreDB
 {
 
-    internal static void CreateMysql()
+    public static void CreateMysql()
     {
         
         var products = Store.Instance.Products;

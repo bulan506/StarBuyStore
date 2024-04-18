@@ -13,10 +13,6 @@ public sealed class Store
         this.TaxPercentage = TaxPercentage;
     }
 
-    public Store (){ //constructor vacio
-
-    }
-
     public readonly static Store Instance;
     // Static constructor
     static Store()
@@ -84,32 +80,4 @@ public sealed class Store
     }
 
 
- public Sale Purchase(Cart cart)
-{
-    if (cart.ProductIds.Count == 0)
-    {
-        throw new ArgumentException("Cart must contain at least one product.");
-    }
-    if (string.IsNullOrWhiteSpace(cart.Address))
-    {
-        throw new ArgumentException("Address must be provided.");
-    }
-
-    IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.id.ToString())).ToList();
-
-    IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
-
-    decimal purchaseAmount = 0;
-    foreach (var product in shadowCopyProducts)
-    {
-        product.price *= (1 + (decimal)TaxPercentage / 100);
-        purchaseAmount += product.price;
-    }
-
-    // Create a sale object
-    var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount,cart.PaymentMethod);
-
-    return sale;
-   
-
-}}
+}

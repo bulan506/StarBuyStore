@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using TodoApi.Database;
 using TodoApi.Models;
 
@@ -12,7 +13,7 @@ public sealed class StoreLogic
 {
 
     private SaleDB saleDB = new SaleDB();
-    public Sale Purchase (Cart cart)
+    public string Purchase (Cart cart)
     {
         if (cart.ProductIds.Count == 0)  throw new ArgumentException("Cart must contain at least one product.");
         if (string.IsNullOrWhiteSpace(cart.Address))throw new ArgumentException("Address must be provided.");
@@ -41,7 +42,7 @@ public sealed class StoreLogic
 
         saleDB.save(sale);
 
-        return sale;
+        return sale.PurchaseNumber;
 
     }
 

@@ -6,7 +6,7 @@ public sealed class Sale
     public string Address { get; }
     public decimal Amount { get; }
     public PaymentMethods.Type PaymentMethod{get; set;}
-    public string PurchaseNumber{get; }
+    public string PurchaseNumber{get;}
 
 
     public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type payment_method)
