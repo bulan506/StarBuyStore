@@ -4,6 +4,11 @@ import { ProductItem } from '../product/layout';
 import '../HTMLPageDemo.css';
 import Link from 'next/link';
 
+enum PaymentMethod {
+  EFECTIVO = 0,
+  SINPE = 1
+}
+
 const PurchasedItems = () => {
   const [cartState, setCartState] = useState({
     products: [],
@@ -20,7 +25,7 @@ const PurchasedItems = () => {
   });
 
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>(PaymentMethod.EFECTIVO);
   const [paymentConfirmation, setPaymentConfirmation] = useState('');
   const [paymentReceipt, setPaymentReceipt] = useState('');
   const [purchaseNumber, setPurchaseNumber] = useState('');
@@ -46,14 +51,9 @@ const PurchasedItems = () => {
     return Math.floor(10000000 + Math.random() * 90000000);
   };
 
-  const managePaymentMethodSelection = (method: string) => {
+  const managePaymentMethodSelection = (method: PaymentMethod) => {
     setSelectedPaymentMethod(method);
   };
-
-  enum PaymentMethod {
-    EFECTIVO = 'Efectivo',
-    SINPE = 'Sinpe'
-  }
 
   const managePaymentConfirmation = () => {
     if (selectedPaymentMethod === PaymentMethod.EFECTIVO) {
@@ -68,11 +68,11 @@ const PurchasedItems = () => {
   };
 
   const sendDataToAPI = async () => {
-    const productIds = cartState.cart.products.map((product: any) => String(product.uuid));
+    const productIds = cartState.cart.products.map((product: any) => Number(product.id));
     const purchaseData = {
       ProductIds: productIds,
       Address: cartState.cart.deliveryAddress,
-      PaymentMethod: cartState.cart.paymentMethod
+      PaymentMethod: selectedPaymentMethod 
     };
 
     try {
@@ -90,7 +90,7 @@ const PurchasedItems = () => {
         setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${data.purchaseNumber}. Espere la confirmación del administrador.`);
       } else {
         const errorResponseData = await response.json();
-        throw new Error(errorResponseData.message || 'Purchase cannot be proceced');
+        throw new Error(errorResponseData.message || 'Purchase cannot be processed');
       }
     } catch (error) {
       throw new Error('Failed to fetch data');
@@ -124,10 +124,10 @@ const PurchasedItems = () => {
         </div>
       )}
 
-      {selectedPaymentMethod && (
+      {selectedPaymentMethod !== undefined && (
         <div>
           <h2>Confirmación de Pago</h2>
-          <p>Método de Pago: {selectedPaymentMethod}</p>
+          <p>Método de Pago: {selectedPaymentMethod === PaymentMethod.EFECTIVO ? 'Efectivo' : 'Sinpe'}</p>
           <button onClick={managePaymentConfirmation} className="button">Confirmar Pago</button>
           {paymentConfirmation && <p>{paymentConfirmation}</p>}
           {paymentReceipt && <p>Adjunte el comprobante: {paymentReceipt}</p>}

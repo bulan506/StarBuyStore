@@ -15,14 +15,10 @@ const CartFunction = () => {
   });
 
   useEffect(() => {
-    // Obtener productos del carrito del localStorage
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
-
-    // Calcular el subtotal y el total con impuestos
     const subtotal = savedCartProducts.reduce((acc: number, product: ProductItem) => acc + product.price, 0);
     const total = subtotal * (1 + cartState.cart.taxPercentage);
 
-    // Actualizar el estado del carrito con los nuevos productos, subtotal y total
     setCartState(prevState => ({
       ...prevState,
       cart: {
@@ -35,14 +31,10 @@ const CartFunction = () => {
   }, []);
 
   const removeFromCart = (productId: number) => {
-    // Filtrar el producto que se eliminará del carrito
     const updatedCart = cartState.cart.products.filter((product: ProductItem) => product.id !== productId);
-
-    // Calcular el subtotal y el total con impuestos después de eliminar el producto
     const subtotal = updatedCart.reduce((acc: number, product: ProductItem) => acc + product.price, 0);
     const total = subtotal * (1 + cartState.cart.taxPercentage);
 
-    // Actualizar el estado del carrito con los nuevos productos, subtotal y total
     setCartState(prevState => ({
       ...prevState,
       cart: {
@@ -53,7 +45,6 @@ const CartFunction = () => {
       }
     }));
 
-    // Guardar los productos actualizados en el localStorage
     localStorage.setItem('cartProducts', JSON.stringify(updatedCart));
   };
 

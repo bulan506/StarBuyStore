@@ -1,25 +1,29 @@
 namespace Store_API.Models
 {
-   public abstract class PaymentMethods{
-
-    public enum Type 
+    public abstract class PaymentMethods
     {
-        CASH=0,
-        SINPE=1
-    }
+        public enum Type
+        {
+            CASH = 0,
+            SINPE = 1
+        }
 
-    public Type PaymentType { get; set; }
+        public Type PaymentType { get; set; }
 
-    public PaymentMethods(PaymentMethods.Type paymentType)
-    {
-        PaymentType= paymentType;
+        // Constructor sin parámetros necesario para la deserialización
+        protected PaymentMethods()
+        {
+        }
 
-    }
+        public PaymentMethods(PaymentMethods.Type paymentType)
+        {
+            PaymentType = paymentType;
+        }
 
-    private static Sinpe sinpe= new Sinpe();
-    private static Cash cash= new Cash();
+        private static Sinpe sinpe = new Sinpe();
+        private static Cash cash = new Cash();
 
-     public static PaymentMethods Find(Type type)
+        public static PaymentMethods Find(Type type)
         {
             switch (type)
             {
@@ -31,17 +35,21 @@ namespace Store_API.Models
                     throw new ArgumentException("Invalid payment method type.");
             }
         }
-}
-public sealed class Sinpe:PaymentMethods{
-    public Sinpe(): base(PaymentMethods.Type.SINPE)
-    {
-
     }
-}
-public sealed class Cash:PaymentMethods{
-    public Cash(): base(PaymentMethods.Type.CASH)
-    {
 
+    public sealed class Sinpe : PaymentMethods
+    {
+        public Sinpe() : base(PaymentMethods.Type.SINPE)
+        {
+
+        }
     }
-}
+
+    public sealed class Cash : PaymentMethods
+    {
+        public Cash() : base(PaymentMethods.Type.CASH)
+        {
+
+        }
+    }
 }

@@ -120,7 +120,7 @@ namespace Store_API.Models
 
             PaymentMethods.Type paymentMethodType = cart.PaymentMethod.PaymentType;
 
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, cart.PaymentMethod);
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
 
             return sale;
         }

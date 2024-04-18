@@ -5,12 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../HTMLPageDemo.css';
 import Link from 'next/link';
 
-
 export default function Page() {
+  const [availableProducts, setAvailableProducts] = useState<ProductItem[]>([]);
   const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
 
-
-  // En el useEffect que carga los datos de la API
   useEffect(() => {
     const loadProductApiData = async () => {
       try {
@@ -20,7 +18,7 @@ export default function Page() {
         }
         const json = await response.json();
         if (json.products) {
-          setCartProducts(json.products);
+          setAvailableProducts(json.products);
         } else {
           throw new Error('Failed to fetch data: No products found');
         }
@@ -33,25 +31,17 @@ export default function Page() {
 
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
-    console.log("Data from localStorage:", savedCartProducts);
     setCartProducts(savedCartProducts);
   }, []);
 
   const addToCart = (product: ProductItem) => {
     setCartProducts(prevProducts => {
-      // Obtener los productos del carrito del estado actual
       const updatedProducts = [...prevProducts, product];
-
-      // Guardar los productos actualizados en el localStorage
       localStorage.setItem('cartProducts', JSON.stringify(updatedProducts));
-
-      // Devolver los productos actualizados
       return updatedProducts;
     });
-  }
+  };
 
-
-  //debugger
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header className="header-container row">
@@ -59,7 +49,7 @@ export default function Page() {
           <input type="search" placeholder="Buscar" value="" />
           <button className="col-sm-2"><img src="/img/Lupa.png" className="col-sm-4" /> </button>
           <Link href="/cart" className="col-sm-4 d-flex justify-content-end">
-            <button><img src="/img/carrito.png" className="col-sm-6" />{cartProducts && cartProducts.length}</button>
+            <button><img src="/img/carrito.png" className="col-sm-6" />{cartProducts.length}</button>
           </Link>
         </div>
       </header>
@@ -67,10 +57,33 @@ export default function Page() {
       <div>
         <h1>Lista de Productos</h1>
         <div className='row' style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {cartProducts && cartProducts.map(product =>
+          {availableProducts && availableProducts.map(product =>
             <Product key={product.id} product={product} addToCart={addToCart} />
           )}
+        </div>
+      </div>
 
+      <div className="products col-sm-6" style={{ margin: '0 auto' }}>
+        <div id="productsCarouselControl" className="carousel" data-bs-ride="carousel">
+          <div className="carousel-inner">
+            <div className="carousel-item active">
+              <img src="/img/Chromecast.jpg" className="d-block w-100" />
+            </div>
+            <div className="carousel-item">
+              <img src="/img/teclado.jpg" className="d-block w-100" />
+            </div>
+            <div className="carousel-item">
+              <img src="/img/Pantalla.jpg" className="d-block w-100" />
+            </div>
+          </div>
+          <button className="carousel-control-prev" type="button" data-bs-target="#productsCarouselControl" data-bs-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button className="carousel-control-next" type="button" data-bs-target="#productsCarouselControl" data-bs-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
+          </button>
         </div>
       </div>
 
