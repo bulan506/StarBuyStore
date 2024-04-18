@@ -3,7 +3,7 @@ using ShopApi.Models;
 using System;
 using System.Collections.Generic;
 
-namespace TodoApi.Controllers
+namespace ShopApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
