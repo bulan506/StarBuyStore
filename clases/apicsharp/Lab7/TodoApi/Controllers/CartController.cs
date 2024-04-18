@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using TodoApi.business;
+using TodoApi.models;
 
 namespace TodoApi.Controllers
 {
@@ -8,16 +11,16 @@ namespace TodoApi.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private static List<Cart> Carts = new List<Cart>();
+        private StoreLogic storeLogic = new StoreLogic();
 
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            // Add the cart to the list
-            Carts.Add(cart);
+            var sale = storeLogic.Purchase(cart);
+            var purchaseNumber = sale.PurchaseNumber;
 
-            // Return the newly created cart
-            return Ok(cart);
+            var response = new {purchaseNumber=purchaseNumber};
+            return Ok(response);
         }
     }
 
