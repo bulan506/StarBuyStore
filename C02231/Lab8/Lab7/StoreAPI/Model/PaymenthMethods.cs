@@ -14,14 +14,18 @@ public abstract class PaymentMethods
 
     }
 
+
+    private static Sinpe paySinpe=new Sinpe();
+    private static Cash paySCash=new Cash();
+
     public static PaymentMethods Find(PaymentMethods.Type type)
     {
         switch (type)
         {
             case Type.CASH:
-                return new Cash();
+                return paySCash;
             case Type.SINPE:
-                return new Sinpe();
+                return paySinpe;
             default:
                 throw new ArgumentException("Invalid payment type");
         }
