@@ -16,14 +16,14 @@ public abstract class PaymentMethods
 
 
     private static Sinpe paySinpe=new Sinpe();
-    private static Cash paySCash=new Cash();
+    private static Cash payCash=new Cash();
 
     public static PaymentMethods Find(PaymentMethods.Type type)
     {
         switch (type)
         {
             case Type.CASH:
-                return paySCash;
+                return payCash;
             case Type.SINPE:
                 return paySinpe;
             default:
