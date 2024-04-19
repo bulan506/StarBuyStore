@@ -17,6 +17,7 @@ namespace storeapi
                 {
                     try
                     {
+
                         foreach (var product in sale.Products)
                         {
                             InsertItem(connection, transaction, product, sale.PurchaseNumber, sale.Address);
@@ -35,42 +36,54 @@ namespace storeapi
             }
         }
 
-        public static void EnsureItemsTableExists(MySqlConnection connection)
-            private readonly string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
+        public static void EnsureItemsTableExists()
         {
-            string createItemsTableQuery = @"
-                CREATE TABLE IF NOT EXISTS Items (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    ProductId INT,
-                    PurchaseNumber VARCHAR(255),
-                    Address VARCHAR(255),
-                    Price DECIMAL(10, 2),
-                    FOREIGN KEY (PurchaseNumber) REFERENCES Compras(purchaseNumber),
-                    FOREIGN KEY (ProductId) REFERENCES products(id)
-                )";
+            string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
 
-            using (var command = new MySqlCommand(createItemsTableQuery, connection))
+            using (var connection = new MySqlConnection(_connectionString))
             {
-                command.ExecuteNonQuery();
+                connection.Open();
+
+                string createItemsTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS Items (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        ProductId INT,
+                        PurchaseNumber VARCHAR(255),
+                        Address VARCHAR(255),
+                        Price DECIMAL(10, 2),
+                        FOREIGN KEY (PurchaseNumber) REFERENCES Compras(purchaseNumber),
+                        FOREIGN KEY (ProductId) REFERENCES products(id)
+                    )";
+
+                using (var command = new MySqlCommand(createItemsTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
-        public static void EnsureComprasTableExists(MySqlConnection connection)
+        public static void EnsureComprasTableExists()
         {
-            
-            string createComprasTableQuery = @"
-                CREATE TABLE IF NOT EXISTS Compras (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    total DECIMAL(10, 2) NOT NULL,
-                    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    purchaseNumber VARCHAR(255) NOT NULL,
-                    Paymethod INT,
-                    UNIQUE KEY (purchaseNumber)
-                )";
+            string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
 
-            using (var command = new MySqlCommand(createComprasTableQuery, connection))
+            using (var connection = new MySqlConnection(_connectionString))
             {
-                command.ExecuteNonQuery();
+                connection.Open();
+
+                string createComprasTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS Compras (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        total DECIMAL(10, 2) NOT NULL,
+                        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        purchaseNumber VARCHAR(255) NOT NULL,
+                        Paymethod INT,
+                        UNIQUE KEY (purchaseNumber)
+                    )";
+
+                using (var command = new MySqlCommand(createComprasTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
@@ -111,3 +124,5 @@ namespace storeapi
         }
     }
 }
+
+
