@@ -36,6 +36,7 @@ namespace storeapi
         }
 
         public static void EnsureItemsTableExists(MySqlConnection connection)
+            private readonly string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
         {
             string createItemsTableQuery = @"
                 CREATE TABLE IF NOT EXISTS Items (
