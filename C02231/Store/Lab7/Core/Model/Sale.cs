@@ -8,6 +8,7 @@ public sealed class Sale
     public decimal Amount { get; }
     public PaymentMethods.Type PaymentMethod { get; }
     public string NumberOrder { get; }
+     public int Id {get; set;}
  
 
     public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod, string numberOrder)

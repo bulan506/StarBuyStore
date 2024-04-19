@@ -4,11 +4,10 @@ using StoreAPI;
 using StoreAPI.models;
 
 namespace StoreAPI.Database;
-//transaccionar
 public sealed class SaleLinesBD
 {
 
-    public void InsertSaleLines( int saleId, List<int> productIds, List<decimal> finalPrice)
+    public void InsertSaleLines(SaleLine saleLine)
     {
 
         using (var connection = new MySqlConnection("Server=localhost;Database=store;Port=3306;Uid=root;Pwd=123456;"))
@@ -19,8 +18,8 @@ public sealed class SaleLinesBD
             {
                 try
                 {
-                    // Insert sale lines for each product
-                    for (int i = 0; i < productIds.Count; i++)
+
+                    foreach (var product in saleLine.Products)
                     {
                         string insertSaleLineQuery = @"
                         INSERT INTO sale_lines (sale_id, product_id, final_price)
@@ -28,9 +27,9 @@ public sealed class SaleLinesBD
 
                         using (var insertCommand = new MySqlCommand(insertSaleLineQuery, connection, transaction))
                         {
-                            insertCommand.Parameters.AddWithValue("@saleId", saleId);
-                            insertCommand.Parameters.AddWithValue("@productId", productIds[i]);
-                            insertCommand.Parameters.AddWithValue("@finalPrice", finalPrice[i]);
+                            insertCommand.Parameters.AddWithValue("@saleId", saleLine.Sale.Id);
+                            insertCommand.Parameters.AddWithValue("@productId", product.Id);
+                            insertCommand.Parameters.AddWithValue("@finalPrice", saleLine.FinalPrice);
                             insertCommand.ExecuteNonQuery();
                         }
                     }

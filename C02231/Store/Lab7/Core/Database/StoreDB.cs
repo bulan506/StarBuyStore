@@ -280,11 +280,11 @@ public sealed class StoreDB
             }
 
             //Eliminar la tabla products si existe
-            string dropProductsTableQuery = "DROP TABLE IF EXISTS products";
+            /*string dropProductsTableQuery = "DROP TABLE IF EXISTS products";
             using (var dropTableCommand = new MySqlCommand(dropProductsTableQuery, connection))
             {
                 dropTableCommand.ExecuteNonQuery();
-            }
+            }*/
 
 
             // Create the products table if it does not exist
@@ -366,7 +366,7 @@ public sealed class StoreDB
     public static List<Dictionary<string, string>> RetrieveDatabaseInfo()
     {
         List<Dictionary<string, string>> databaseInfo = new List<Dictionary<string, string>>();
-        string connectionString = "Server=localhost;Database=mysql;Port=3306;Uid=root;Pwd=123456;";
+        string connectionString = "Server=localhost;Database=store;Port=3306;Uid=root;Pwd=123456;";
 
         using (var connection = new MySqlConnection(connectionString))
         {

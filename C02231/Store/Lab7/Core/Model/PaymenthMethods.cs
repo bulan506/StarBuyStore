@@ -27,7 +27,7 @@ public abstract class PaymentMethods
             case Type.SINPE:
                 return paySinpe;
             default:
-                throw new ArgumentException("Invalid payment type");
+                throw new NotImplementedException("Payment type not implemented");
         }
     }
 

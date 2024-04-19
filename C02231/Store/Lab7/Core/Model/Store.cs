@@ -60,36 +60,37 @@ public sealed class Store
     }
 
     private static List<Product> LoadProducts()
+{
+    List<Dictionary<string, string>> productData = StoreDB.RetrieveDatabaseInfo();
+    List<Product> products = new List<Product>();
+
+    foreach (var row in productData)
     {
-        List<string[]> productData = StoreDB.RetrieveDatabaseInfo();
-        List<Product> products = new List<Product>();
-
-        foreach (var row in productData)
+        if (row.ContainsKey("id") && row.ContainsKey("price"))
         {
-            if (row.Length >= 5)
+            if (int.TryParse(row["id"], out int id) &&
+                decimal.TryParse(row["price"], out decimal price))
             {
-                if (int.TryParse(row["id"], out int id) &&
-                    decimal.TryParse(row["price"], out decimal price))
+                string name = row["name"];
+                string author = row["author"];
+                string imageUrl = row["imgUrl"];
+
+                Product product = new Product 
                 {
-                    string name = row["name"];
-                    string author = row["author"];
-                    string imageUrl = row["imgUrl"];
+                    Id = id,
+                    Name = name,
+                    Author = author,
+                    Price = price,
+                    ImgUrl = imageUrl
+                };
 
-                    Product product = new Product
-                    {
-                        Id = id,
-                        Name = name,
-                        Author = author,
-                        Price = price,
-                        ImgUrl = imageUrl
-                    };
-
-                    products.Add(product);
-                }
+                products.Add(product);
             }
         }
-
-        return products;
     }
+
+    return products;
+}
+
 
 }

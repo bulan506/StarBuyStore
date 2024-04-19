@@ -3,10 +3,8 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../ui/global.css';
 import Link from 'next/link';
-import { useRouter } from 'next/router'
 
 export default function PaymentPage() {
-    const router = useRouter(); 
     const [selectMethod, setSelectMethod] = useState('');
     const cartDataString = localStorage.getItem('cartItem');
     const cartData = cartDataString ? JSON.parse(cartDataString) : {};
@@ -104,9 +102,7 @@ export default function PaymentPage() {
                         isCartEmpty: true,
                         numeroCompra: orderNumber 
                     });
-                    //window.location.href = '/confirm';
-                   // router.push('/confirm')
-
+                    
                 } else {
                     const errorResponseData = await response.json();
                     throw new Error('Error to send data: ' + JSON.stringify(errorResponseData));

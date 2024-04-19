@@ -29,25 +29,17 @@ namespace StoreAPI.Database
                             command.Parameters.AddWithValue("@orderNumber", sale.NumberOrder);
 
                             command.ExecuteNonQuery();
+                            long saleId = command.LastInsertedId;
                         }
 
-                        int saleId;
-                        using (var getIdCommand = new MySqlCommand("SELECT LAST_INSERT_ID();", connection, transaction))
-                        {
-                            saleId = Convert.ToInt32(getIdCommand.ExecuteScalar());
-                        }
-                        List<int> productIds = new List<int>();
-                        List<decimal> finalPrices = new List<decimal>();
-                        foreach (var product in sale.Products)
-                        {
-                            productIds.Add(product.Id);
-                            finalPrices.Add(product.Price);
-                        }
 
+
+                        
+                        
+                        SaleLine saleLine = new SaleLine(sale, sale.Products, sale.Amount);              
                         SaleLinesBD saleLinesDB = new SaleLinesBD();
-                        saleLinesDB.InsertSaleLines(saleId, productIds, finalPrices);
+                        saleLinesDB.InsertSaleLines(saleLine);
 
-                        // Si todo ha ido bien, confirma la transacción
                         transaction.Commit();
                     }
                     catch (Exception)

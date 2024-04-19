@@ -33,8 +33,7 @@ namespace StoreAPI.Business
             }
 
             string purchaseNumber = GenerateNextPurchaseNumber();
-            List<int> productIds = shadowCopyProducts.Select(p => p.Id).ToList();
-            List<decimal> finalPrices = shadowCopyProducts.Select(p => p.Price).ToList();
+           
             PaymentMethods.Type paymentMethodType = cart.PaymentMethod;
 
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType, purchaseNumber);
