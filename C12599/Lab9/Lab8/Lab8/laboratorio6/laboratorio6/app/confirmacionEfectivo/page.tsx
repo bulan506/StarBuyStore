@@ -1,8 +1,8 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router'; // Importa el hook useRouter
 import 'bootstrap/dist/css/bootstrap.css';
 import '../ui/globals.css';
-
 
 const ConfirmacionEfectivoPage = () => {
     
@@ -18,7 +18,9 @@ const ConfirmacionEfectivoPage = () => {
         const cartData = cartDataString ? JSON.parse(cartDataString) : {};
         const numeroCompra = cartData.numeroCompra || 'No disponible';
         setNumeroCompra(numeroCompra);
-    }, []); // Actualizar el número de compra solo cuando se monta el componente
+    }, []); 
+
+    const router = useRouter(); 
 
     const handleConfirmar = () => {
         localStorage.removeItem('cartData');
@@ -29,7 +31,7 @@ const ConfirmacionEfectivoPage = () => {
     };
 
     const handleVolver = () => {
-        window.location.href = '/';
+        router.push('/'); 
     };
  
     return (
@@ -58,6 +60,5 @@ const ConfirmacionEfectivoPage = () => {
         </div>
     );
 };
-
 
 export default ConfirmacionEfectivoPage;
