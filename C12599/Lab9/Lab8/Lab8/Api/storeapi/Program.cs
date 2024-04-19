@@ -28,13 +28,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Llamar al método para crear la base de datos y productos desde StoreDB
-StoreDB.CreateMysql();
-
-PaymentDB.CreateMysql();
-CartSave.EnsureComprasTableExists(); 
-CartSave.EnsureItemsTableExists(); 
-
 // Configurar pipeline de solicitud HTTP
 if (app.Environment.IsDevelopment())
 {
