@@ -16,5 +16,3 @@ public sealed class SaleLine
         FinalPrice = finalPrice;
     }
 }
-
-
