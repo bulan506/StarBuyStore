@@ -4,14 +4,14 @@
     "C:\\Users\\daniv\\Documents\\DANIELA\\lenguajes24\\C28070\\Lab7\\TodoApi\\TodoApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\daniv\\Documents\\DANIELA\\lenguajes24\\C28070\\Lab7\\TodoApi\\TodoApi.csproj": {
+    "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/Core/Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\daniv\\Documents\\DANIELA\\lenguajes24\\C28070\\Lab7\\TodoApi\\TodoApi.csproj",
-        "projectName": "TodoApi",
-        "projectPath": "C:\\Users\\daniv\\Documents\\DANIELA\\lenguajes24\\C28070\\Lab7\\TodoApi\\TodoApi.csproj",
-        "packagesPath": "C:\\Users\\daniv\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\daniv\\Documents\\DANIELA\\lenguajes24\\C28070\\Lab7\\TodoApi\\obj\\",
+        "projectUniqueName": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/Core/Core.csproj",
+        "projectName": "Core",
+        "projectPath": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/Core/Core.csproj",
+        "packagesPath": "/Users/cristianguillenmendez/.nuget/packages/",
+        "outputPath": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\daniv\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,10 +43,69 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "MYSqlConnector": {
+            "MySqlConnector": {
               "target": "Package",
               "version": "[2.3.6, )"
-            },
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/TodoApi/TodoApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/TodoApi/TodoApi.csproj",
+        "projectName": "TodoApi",
+        "projectPath": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/TodoApi/TodoApi.csproj",
+        "packagesPath": "/Users/cristianguillenmendez/.nuget/packages/",
+        "outputPath": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/TodoApi/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/cristianguillenmendez/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/Core/Core.csproj": {
+                "projectPath": "/Users/cristianguillenmendez/Documents/ucr/clases/apicsharp/Lab7/Core/Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[8.0.3, )"
