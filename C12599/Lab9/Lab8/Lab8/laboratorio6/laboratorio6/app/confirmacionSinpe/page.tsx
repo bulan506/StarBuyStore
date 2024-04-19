@@ -1,12 +1,13 @@
 'use client'
 import React, { useState } from 'react';
+import { useRouter } from 'next/router'; // Importa el hook useRouter
 import 'bootstrap/dist/css/bootstrap.css';
 import '../ui/globals.css';
 
 const ConfirmacionSinpePage = () => {
     const [formState, setFormState] = useState({
         comprobante: '',
-        confirmado: false, // Estado para controlar si se ha confirmado el pago
+        confirmado: false, 
     });
 
     const handleComprobanteChange = (e) => {
@@ -24,11 +25,12 @@ const ConfirmacionSinpePage = () => {
         }));
     };
 
+    const router = useRouter(); 
+
     const handleVolver = () => {
-        window.location.href = '/'; 
+        router.push('/'); 
     };
 
- 
     const cartDataString = localStorage.getItem('cartData');
     const cartData = cartDataString ? JSON.parse(cartDataString) : {};
     const numeroCompra = cartData.numeroCompra || 'No disponible';
