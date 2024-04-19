@@ -13,9 +13,6 @@ namespace storeapi
             {
                 connection.Open();
 
-                EnsureItemsTableExists(connection); // Asegurar que la tabla 'Items' exista
-                EnsureComprasTableExists(connection); // Asegurar que la tabla 'Compras' exista
-
                 using (var transaction = connection.BeginTransaction())
                 {
                     try
@@ -38,7 +35,7 @@ namespace storeapi
             }
         }
 
-        private void EnsureItemsTableExists(MySqlConnection connection)
+        public static void EnsureItemsTableExists(MySqlConnection connection)
         {
             string createItemsTableQuery = @"
                 CREATE TABLE IF NOT EXISTS Items (
@@ -57,7 +54,7 @@ namespace storeapi
             }
         }
 
-        private void EnsureComprasTableExists(MySqlConnection connection)
+        public static void EnsureComprasTableExists(MySqlConnection connection)
         {
             
             string createComprasTableQuery = @"
