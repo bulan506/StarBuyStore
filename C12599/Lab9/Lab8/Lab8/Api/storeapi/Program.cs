@@ -32,9 +32,10 @@ var app = builder.Build();
 StoreDB.CreateMysql();
 
 PaymentDB.CreateMysql();
+private readonly string _connectionString = "Server=localhost;Database=lab;Uid=root;Pwd=123456;";
 
-CartSave.EnsureComprasTableExists(); 
-CartSave.EnsureItemsTableExists(); 
+CartSave.EnsureComprasTableExists(_connectionString); 
+CartSave.EnsureItemsTableExists(_connectionString); 
 
 // Configurar pipeline de solicitud HTTP
 if (app.Environment.IsDevelopment())
