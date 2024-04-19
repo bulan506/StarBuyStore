@@ -33,6 +33,9 @@ StoreDB.CreateMysql();
 
 PaymentDB.CreateMysql();
 
+CartSave.EnsureComprasTableExists(); 
+CartSave.EnsureItemsTableExists(); 
+
 // Configurar pipeline de solicitud HTTP
 if (app.Environment.IsDevelopment())
 {
