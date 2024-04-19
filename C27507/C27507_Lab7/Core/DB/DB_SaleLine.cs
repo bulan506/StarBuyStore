@@ -33,8 +33,8 @@ namespace MyStoreAPI.DB
 
                 //Al existir la venta con ese codigo unico guid(), usamos su ID int para insertarlo en SalesLins
                 string insertSalesLine = @"
-                    INSERT INTO SalesLines (IdSale, IdProduct, OriginalProductName, OriginalProductPrice, Quantity)
-                    VALUES (@saleId, @productId, @originalProductName, @originalProductPrice, @productQuantity);";
+                    INSERT INTO SalesLines (IdSale, IdProduct,Quantity,PricePaid,OriginalProductName, OriginalProductPrice)
+                    VALUES (@saleId, @productId,@productQuantity,@pricePaid @originalProductName, @originalProductPrice);";
 
                 using (MySqlCommand command = new MySqlCommand(insertSalesLine, connectionWithDB)){                        
                                             
@@ -42,9 +42,10 @@ namespace MyStoreAPI.DB
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@saleId", IdSaleFromSelect);
                         command.Parameters.AddWithValue("@productId", actualProductId.id);
-                        command.Parameters.AddWithValue("@originalProductName", actualProductId.name);
-                        command.Parameters.AddWithValue("@originalProductPrice", actualProductId.price);
                         command.Parameters.AddWithValue("@productQuantity", actualProductId.quantity);
+                        command.Parameters.AddWithValue("@pricePaid", actualProductId.price);
+                        command.Parameters.AddWithValue("@originalProductName", actualProductId.name);
+                        command.Parameters.AddWithValue("@originalProductPrice", actualProductId.price);                        
                         command.ExecuteNonQuery();
                         Console.WriteLine("SaleLine registrada");                            
                     }                                                                    

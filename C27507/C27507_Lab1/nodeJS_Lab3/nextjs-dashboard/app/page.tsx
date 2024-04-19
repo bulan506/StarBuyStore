@@ -35,17 +35,18 @@ export async function sendDataAPI(directionAPI:string, data:any): Promise<string
     try {
 
             //A las peticiones POST se les debe agregar parametro de configuracion para diferenciarlas de las
-        //GET    
-        //let responsePost = await fetch("https://localhost:7161/api/Cart",postConfig);
+        //GET            
         let responsePost = await fetch(directionAPI,postConfig);
         //await solo se puede usar dentro de funciones asincronas
 
-        if(responsePost.ok){            
-            const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON                        
-             //Enviamos al usuario a la pagina de resultado
-             return responseData.purchaseNumExit;
+        if(!responsePost.ok){
+            //Obtenemos el mensaje de error de CartController
+            const errorMessage = await responsePost.text();
+            return errorMessage;
         }
-        return null;
+        // Obtener los datos de la respuesta en formato JSON                        
+        const responseData = await responsePost.json();        
+        return responseData.purchaseNumExit;        
         
     } catch (error) {
         throw new Error('Failed to POST data');

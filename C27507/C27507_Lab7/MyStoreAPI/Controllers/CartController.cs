@@ -22,7 +22,7 @@ namespace MyStoreAPI.Controllers
             if (saleConfirmed != null){
                 return Ok(new { saleConfirmed.purchaseNum });
             }else{
-                return Ok(new { message = "Ha ocurrido un error al generar tu transacion. Por favor intentalo mas tarde" });
+                return StatusCode(500, "Ha ocurrido un error al generar tu transacción. Por favor inténtalo más tarde.");                
             }
         }        
     }
