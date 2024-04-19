@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using TodoApi.Models;
 using TodoApi.Database;
-using storeApi;
+using TodoApi;
 
 namespace TodoApi.Business
 {
     public sealed class StoreLogic
     {
         private SaleDB saleDB = new SaleDB();
-        private LineDB lineDB = new LineDB();
 
         public Sale Purchase(Cart cart)
         {
@@ -41,11 +40,6 @@ namespace TodoApi.Business
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
             
             saleDB.Save(sale);
-
-            foreach (var product in shadowCopyProducts)
-            {
-                lineDB.Save(product.Id, sale.PurchaseNumber, product.Price);
-            }
                 
             return sale;
         }

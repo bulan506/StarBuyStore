@@ -1,4 +1,4 @@
-namespace storeApi;
+namespace TodoApi;
 
 public abstract class PaymentMethod
 {

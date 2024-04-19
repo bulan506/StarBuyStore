@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
@@ -20,7 +21,6 @@ namespace TodoApi.Database
                     {
                         string insertQuery = @"
                         use store;
-
                         INSERT INTO sales (purchase_date, total, payment_method, purchase_number)
                         VALUES (@purchase_date, @total, @payment_method, @purchase_number);";
 
@@ -31,6 +31,22 @@ namespace TodoApi.Database
                             insertCommand.Parameters.AddWithValue("@payment_method", sale.PaymentMethod);
                             insertCommand.Parameters.AddWithValue("@purchase_number", sale.PurchaseNumber);
                             insertCommand.ExecuteNonQuery();
+                        }
+
+                        string insertQueryLines = @"
+                        use store;
+                        INSERT INTO saleLines (productId, purchaseNumber, price)
+                        VALUES (@product_Id, @purchase_Number, @product_Price);";
+
+                        foreach (var product in sale.Products)
+                        {
+                            using (var insertCommandLines = new MySqlCommand(insertQueryLines, connection, transaction))
+                            {
+                                insertCommandLines.Parameters.AddWithValue("@product_Id", product.Id);
+                                insertCommandLines.Parameters.AddWithValue("@purchase_Number", sale.PurchaseNumber);
+                                insertCommandLines.Parameters.AddWithValue("@product_Price", product.Price);
+                                insertCommandLines.ExecuteNonQuery();
+                            }
                         }
 
                         // Commit the transaction if all inserts are successful
