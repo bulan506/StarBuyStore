@@ -216,18 +216,18 @@ public sealed class StoreDB
                             INSERT INTO paymentMethods (paymentId, paymentName)
                             VALUES (@id, @name);";
 
-                    using (var insertPaymentCommand = new MySqlCommand(insertPaymentQuery, connection, transaction))
+                    using (var insertCashCommand = new MySqlCommand(insertPaymentQuery, connection, transaction))
                     {
-                        insertPaymentCommand.Parameters.AddWithValue("@id", "0");
-                        insertPaymentCommand.Parameters.AddWithValue("@name", "Cash");
-                        insertPaymentCommand.ExecuteNonQuery();
+                        insertCashCommand.Parameters.AddWithValue("@id", "0");
+                        insertCashCommand.Parameters.AddWithValue("@name", "Cash");
+                        insertCashCommand.ExecuteNonQuery();
+                    }
 
-                        using (var insertSinpeCommand = new MySqlCommand(insertPaymentQuery, connection, transaction))
-                        {
-                            insertSinpeCommand.Parameters.AddWithValue("@id", "1");
-                            insertSinpeCommand.Parameters.AddWithValue("@name", "Sinpe");
-                            insertSinpeCommand.ExecuteNonQuery();
-                        }
+                    using (var insertSinpeCommand = new MySqlCommand(insertPaymentQuery, connection, transaction))
+                    {
+                        insertSinpeCommand.Parameters.AddWithValue("@id", "1");
+                        insertSinpeCommand.Parameters.AddWithValue("@name", "Sinpe");
+                        insertSinpeCommand.ExecuteNonQuery();
                     }
 
                     // Commit the transaction if all inserts are successful
