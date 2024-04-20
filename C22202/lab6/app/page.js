@@ -11,88 +11,16 @@ import { Card, Container } from "react-bootstrap";
 
 // const products = await fetch('https://localhost:7194/api/Store').JSON()
 
-const Mock = {
-
-  products: [
-    {
-      id: 1,
-      imgSource: "producto.jpg",
-      name: "Producto 1",
-      price: 150
-    },
-    {
-      id: 2,
-      imgSource: "producto.jpg",
-      name: "Producto 2",
-      price: 100
-    },
-    {
-      id: 3,
-      imgSource: "producto.jpg",
-      name: "Producto 3",
-      price: 160
-    },
-    {
-      id: 4,
-      imgSource: "producto.jpg",
-      name: "Producto 4",
-      price: 90
-    },
-    {
-      id: 5,
-      imgSource: "producto.jpg",
-      name: "Producto 5",
-      price: 155
-    },
-    {
-      id: 6,
-      imgSource: "producto.jpg",
-      name: "Producto 6",
-      price: 70
-    },
-    {
-      id: 7,
-      imgSource: "producto.jpg",
-      name: "Producto 7",
-      price: 70
-    },
-    {
-      id: 8,
-      imgSource: "producto.jpg",
-      name: "Producto 8",
-      price: 150
-    },
-    {
-      id: 9,
-      imgSource: "producto.jpg",
-      name: "Producto 9",
-      price: 200
-    },
-    {
-      id: 10,
-      imgSource: "producto.jpg",
-      name: "Producto 10",
-      price: 150
-    },
-    {
-      id: 11,
-      imgSource: "producto.jpg",
-      name: "Producto 11",
-      price: 200
-    }
-  ],
-  cart: {
+const Cart = {
     products: [],
     subtotal: 0,
     taxFare: 0.13,
     address: '',
-    paymentMethod: '',
+    paymentMethod: 0,
     orderId: 0
-  },
-  paymentMethods: ['Efectivo', 'Sinpe']
 };
 
-const Cart = ({ count, total }) => {
+const CartComponent = ({ count, total }) => {
 
   return (
     <div className='container'>
@@ -160,13 +88,14 @@ const Item = React.forwardRef(({ carrouselItem }, ref) => {
 
 export default function Home() {
 
-  var mockStoraged = JSON.parse(localStorage.getItem('Mock'));
-  if (!mockStoraged) {
-    localStorage.setItem('Mock', JSON.stringify(Mock));
-    mockStoraged = JSON.parse(localStorage.getItem('Mock'));
+  // debugger
+  var cartStoraged = JSON.parse(localStorage.getItem('Cart'));
+  if (!cartStoraged) {
+    localStorage.setItem('Cart', JSON.stringify(Cart));
+    cartStoraged = JSON.parse(localStorage.getItem('Cart'));
   }
-  const [count, setCount] = useState(mockStoraged.cart.products.length);
-  const [mock, setMock] = useState(mockStoraged)
+
+  const [cartState, setCartState] = useState(cartStoraged)
   const [shop, setShop] = useState({products: []});
 
   useEffect(() => {
@@ -187,24 +116,23 @@ export default function Home() {
     }
   };
 
-  console.log(shop.products)
-
+  // console.log(shop)
 
   const handleClick = (id) => {
-    let copyOfMock = { ...mock };
-    // const localStorageMock = JSON.parse(localStorage.getItem('Mock'));
-    const productToAdd = copyOfMock.products.find(product => product.id === id);
+    // debugger
+    let copyOfCart = { ...cartState };
+    const productToAdd = shop.products.find(product => product.id === id);
     if (productToAdd) {
-      copyOfMock.cart.products = [...copyOfMock.cart.products, productToAdd];
-      copyOfMock.cart.subtotal += productToAdd.price
-      setMock(copyOfMock)
-      localStorage.setItem('Mock', JSON.stringify(mock));
+      copyOfCart.products = [...copyOfCart.products, productToAdd];
+      copyOfCart.subtotal += productToAdd.price
+      setCartState(copyOfCart)
+      localStorage.setItem('Cart', JSON.stringify(copyOfCart));
     }
   }
 
   return (
     <Container>
-      <Cart count={mock.cart.products.length} total={mock.cart.subtotal} />
+      <CartComponent count={cartState.products.length} total={cartState.subtotal} />
       {/* <Carousel>
         {carrouselItems.map(carouselItem =>
           <Item key={carouselItem.id} carrouselItem={carouselItem} />
@@ -221,7 +149,6 @@ export default function Home() {
           <Product key={product.id} product={product} addToCart={handleClick} />
         )}
       </Row>
-      {/* <ProductC key={'productsGrid'} handleClick={handleClick}/> */}
     </Container>
   );
 }

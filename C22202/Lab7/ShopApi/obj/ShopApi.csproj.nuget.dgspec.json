@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\UT\\UT.csproj": {}
+    "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\ShopApi\\ShopApi.csproj": {}
   },
   "projects": {
     "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\Core\\Core.csproj": {
@@ -68,14 +68,14 @@
         }
       }
     },
-    "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\UT\\UT.csproj": {
+    "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\ShopApi\\ShopApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\UT\\UT.csproj",
-        "projectName": "UT",
-        "projectPath": "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\UT\\UT.csproj",
+        "projectUniqueName": "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\ShopApi\\ShopApi.csproj",
+        "projectName": "ShopApi",
+        "projectPath": "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\ShopApi\\ShopApi.csproj",
         "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\UT\\obj\\",
+        "outputPath": "C:\\Users\\gabri\\Desktop\\Universidad\\Lenguajes\\lenguajes24\\C22202\\Lab7\\ShopApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -111,25 +111,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.NET.Test.Sdk": {
+            "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
-              "version": "[17.8.0, )"
+              "version": "[8.0.3, )"
             },
-            "NUnit": {
+            "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[3.14.0, )"
-            },
-            "NUnit.Analyzers": {
-              "target": "Package",
-              "version": "[3.9.0, )"
-            },
-            "NUnit3TestAdapter": {
-              "target": "Package",
-              "version": "[4.5.0, )"
-            },
-            "coverlet.collector": {
-              "target": "Package",
-              "version": "[6.0.0, )"
+              "version": "[6.4.0, )"
             }
           },
           "imports": [
@@ -144,6 +132,9 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

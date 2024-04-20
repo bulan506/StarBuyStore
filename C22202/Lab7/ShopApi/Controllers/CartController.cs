@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using ShopApi.Models;
 using ShopApi.db;
+using ShopAPI.Business;
 
 
 namespace ShopApi.Controllers
@@ -18,12 +19,14 @@ namespace ShopApi.Controllers
         [HttpPost]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-            // var sale = storeLogic.Purchase(cart);
-            // var purchaseNumber = sale.PurchaseNumber;
+            StoreLogic storeLogic = new StoreLogic();
+
+            var sale = storeLogic.Purchase(cart);
+            var purchaseNumber = sale.purchase_number;
             carts.Add(cart);
 
-            // var response = new {purchaseNumber=purchaseNumber};
-            return Ok("Si funciona");
+            var response = new {purchaseNumber=purchaseNumber};
+            return Ok(response);
         }
     }
 

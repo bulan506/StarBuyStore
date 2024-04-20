@@ -46,7 +46,7 @@ public sealed class ProductDB
         }
     }
 
-    public List<Product> getProducts(){
+    /*public List<Product> getProducts(){
         string connectionString = "Server=localhost;Database=mysql;Uid=root;Pwd=123456;";
         using (var connection = new MySqlConnection(connectionString))
         {
@@ -79,6 +79,6 @@ public sealed class ProductDB
                 }
             }
         }
-    }
+    }*/
 
 }
