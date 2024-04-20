@@ -2,6 +2,13 @@ using System;
 
 namespace storeapi
 {
+    public class InvalidPaymentTypeException : Exception
+    {
+        public InvalidPaymentTypeException(string message) : base(message)
+        {
+        }
+    }
+
     public abstract class PaymentMethods
     {
         public enum Type
@@ -26,7 +33,7 @@ namespace storeapi
                 case Type.SINPE:
                     return new Sinpe();
                 default:
-                    throw new ArgumentException("Invalid payment type");
+                    throw new InvalidPaymentTypeException("Invalid payment type");
             }
         }
     }
@@ -35,7 +42,6 @@ namespace storeapi
     {
         public Sinpe() : base(PaymentMethods.Type.SINPE)
         {
-
         }
     }
 
@@ -43,7 +49,8 @@ namespace storeapi
     {
         public Cash() : base(PaymentMethods.Type.CASH)
         {
-
         }
     }
 }
+
+
