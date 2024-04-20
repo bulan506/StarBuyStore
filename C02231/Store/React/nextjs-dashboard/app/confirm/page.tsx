@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../ui/global.css';
 import Link from 'next/link';
-import { tree } from 'next/dist/build/templates/app-page';
 
 export default function ConfirmPage() {
 
@@ -27,10 +26,6 @@ export default function ConfirmPage() {
         // Eliminar los datos del carrito del localStorage
         localStorage.removeItem('cartItem');
         // Mostrar mensaje de confirmación
-    /*    setShowConfirmation(prevState => ({
-            ...prevState,
-            confirmado: true,
-        }));*/
         setShowConfirmation(true);
         setIsButtonDisabled(true);
     };

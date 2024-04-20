@@ -273,7 +273,7 @@ public sealed class StoreDB
             connection.Open();
 
             // Eliminar la tabla 'sales' si existe
-            string dropSalesTableQuery = "DROP TABLE IF EXISTS sales;";
+          /*  string dropSalesTableQuery = "DROP TABLE IF EXISTS sales;";
             using (var dropTableCommand = new MySqlCommand(dropSalesTableQuery, connection))
             {
                 dropTableCommand.ExecuteNonQuery();
@@ -284,7 +284,7 @@ public sealed class StoreDB
             using (var dropTableCommand = new MySqlCommand(dropProductsTableQuery, connection))
             {
                 dropTableCommand.ExecuteNonQuery();
-            }
+            }*/
 
 
             // Create the products table if it does not exist

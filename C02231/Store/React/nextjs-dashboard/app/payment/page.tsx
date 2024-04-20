@@ -94,7 +94,6 @@ export default function PaymentPage() {
                     const { purchaseNumber } = responseData;
                     const orderNumber = purchaseNumber;
 
-                    console.log(orderNumber);
                     updateLocalStorage({
                         productos: [],
                         direccionEntrega: '',
@@ -107,7 +106,6 @@ export default function PaymentPage() {
                     const errorResponseData = await response.json();
                     throw new Error('Error to send data: ' + JSON.stringify(errorResponseData));
                 }
-                console.log(dataToSend);
             } catch (error) {
                 throw error;
             }

@@ -7,3 +7,5 @@ obj
 /Lab7/UT/bin
 /Lab7/UT/obj
 node_modules
+Class1.cs
+WeatherForecast.cs
