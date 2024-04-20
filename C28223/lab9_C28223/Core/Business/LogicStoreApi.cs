@@ -2,11 +2,14 @@ using System;
 using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
+using storeApi.DataBase;
 
 namespace storeApi.Business;
 public sealed class LogicStoreApi
 {
     public LogicStoreApi(){} // Se utiliza en la creacion del purcharse
+    private SaleDataBase saleDataBase = new SaleDataBase(); 
+
     public Sale Purchase(Cart cart)
     {
         var productsIsEmpty = cart.ProductIds.Count == 0;
@@ -31,6 +34,7 @@ public sealed class LogicStoreApi
          PaymentMethods selectedPaymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
         // Create a sale object
         var sale = new Sale(Sale.GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType);
+        saleDataBase.Save(sale);
         return sale;
     }
 }
