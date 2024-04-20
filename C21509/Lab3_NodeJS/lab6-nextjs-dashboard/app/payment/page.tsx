@@ -4,12 +4,20 @@ import { ProductItem } from '../product/layout';
 import '../HTMLPageDemo.css';
 import Link from 'next/link';
 
+enum PaymentMethod {
+  EFECTIVO = 0,
+  SINPE = 1
+}
+
 const PurchasedItems = () => {
   const [cartState, setCartState] = useState({
     products: [],
     cart: {
       products: [],
       deliveryAddress: '',
+      paymentMethod: '',
+      subtotal: 0, 
+      total: 0 
     },
     paymentMethods: [
       {
@@ -19,18 +27,23 @@ const PurchasedItems = () => {
   });
 
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>(PaymentMethod.EFECTIVO);
   const [paymentConfirmation, setPaymentConfirmation] = useState('');
   const [paymentReceipt, setPaymentReceipt] = useState('');
   const [purchaseNumber, setPurchaseNumber] = useState('');
 
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
+    const subtotal = savedCartProducts.reduce((acc: number, product: ProductItem) => acc + product.price, 0);
+    const total = subtotal; 
+
     setCartState(prevState => ({
       ...prevState,
       cart: {
         ...prevState.cart,
-        products: savedCartProducts
+        products: savedCartProducts,
+        subtotal: subtotal,
+        total: total
       }
     }));
   }, []);
@@ -45,14 +58,9 @@ const PurchasedItems = () => {
     return Math.floor(10000000 + Math.random() * 90000000);
   };
 
-  const managePaymentMethodSelection = (method: string) => {
+  const managePaymentMethodSelection = (method: PaymentMethod) => {
     setSelectedPaymentMethod(method);
   };
-
-  enum PaymentMethod {
-    EFECTIVO = 'Efectivo',
-    SINPE = 'Sinpe'
-  }
 
   const managePaymentConfirmation = () => {
     if (selectedPaymentMethod === PaymentMethod.EFECTIVO) {
@@ -63,6 +71,42 @@ const PurchasedItems = () => {
       const purchaseNum = generatePurchaseNumber();
       setPaymentConfirmation(`Por favor realice el pago a la cuenta indicada. El número de teléfono al cual depositar es: ${purchaseNum}. Una vez realizado, ingrese el comprobante y espere la confirmación del administrador.`);
       setPurchaseNumber(purchaseNum.toString());
+    }
+  };
+
+  const sendDataToAPI = async () => {
+    const productIds = cartState.cart.products.map((product: any) => Number(product.id));
+    const paymentMethodValue = selectedPaymentMethod === PaymentMethod.EFECTIVO ? 0 : 1; 
+    const purchaseData = {
+      ProductIds: productIds,
+      Address: cartState.cart.deliveryAddress,
+      PaymentMethod: paymentMethodValue, 
+      Total: cartState.cart.total, 
+      Subtotal: cartState.cart.subtotal 
+    };
+  
+    console.log("Datos de compra:", purchaseData);
+  
+    try {
+      const response = await fetch('https://localhost:7165/api/Cart', {
+        method: 'POST',
+        headers: {
+          "Accept": "application/json",
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(purchaseData)
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setPurchaseNumber(data.purchaseNumber);
+        setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${data.purchaseNumber}. Espere la confirmación del administrador.`);
+      } else {
+        const errorResponseData = await response.json();
+        throw new Error(errorResponseData.message || 'Purchase cannot be processed');
+      }
+    } catch (error) {
+      throw new Error('Failed to fetch data');
     }
   };
 
@@ -93,10 +137,10 @@ const PurchasedItems = () => {
         </div>
       )}
 
-      {selectedPaymentMethod && (
+      {selectedPaymentMethod !== undefined && (
         <div>
           <h2>Confirmación de Pago</h2>
-          <p>Método de Pago: {selectedPaymentMethod}</p>
+          <p>Método de Pago: {selectedPaymentMethod === PaymentMethod.EFECTIVO ? 'Efectivo' : 'Sinpe'}</p>
           <button onClick={managePaymentConfirmation} className="button">Confirmar Pago</button>
           {paymentConfirmation && <p>{paymentConfirmation}</p>}
           {paymentReceipt && <p>Adjunte el comprobante: {paymentReceipt}</p>}
@@ -108,6 +152,7 @@ const PurchasedItems = () => {
               <p>Ingrese el número de comprobante:</p>
               <input type="text" value={paymentReceipt} onChange={(e) => setPaymentReceipt(e.target.value)} placeholder="Ingrese el comprobante" />
               <p>Una vez realizado el pago, espere la confirmación del administrador.</p>
+              <button onClick={sendDataToAPI} className="button">Confirmar Compra</button>
             </div>
           )}
         </div>

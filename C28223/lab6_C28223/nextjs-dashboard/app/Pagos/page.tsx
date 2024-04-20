@@ -5,30 +5,18 @@ const MetodoPago = () => {
     const [formaDePago, setFormaDePago] = useState(0); // 0 para efectivo, 1 para SinpeMóvil
     const [accepted, setAccepted] = useState(false);
     const memoryStore = JSON.parse(localStorage.getItem('tienda'));
-    let numOrden = '';
-
-    const generarIDCompra = () => {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let autoId = '';
-        for (let i = 0; i < 10; i++) {
-            autoId += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        numOrden = autoId;
-        return autoId;
-    };
+    const [numeroCompra, setNumeroCompra] = useState('');
 
     const handleAceptar = () => {
         if (formaDePago === '') {
             setShowModal(true);
         } else {
-            const newID = generarIDCompra();
             const updatedCart = {
                 ...memoryStore,
                 carrito: {
                     ...memoryStore.carrito,
                     metodoDePago: formaDePago
                 },
-                idCompra: newID,
                 necesitaVerificacion: true
             };
             localStorage.setItem("tienda", JSON.stringify(updatedCart));
@@ -36,13 +24,38 @@ const MetodoPago = () => {
         }
     };
 
+    const productIds = memoryStore.productos.map((producto: any) => String(producto.id));
+    const dataToSend = {
+        ProductIds: productIds,
+        Address: memoryStore.carrito.direccionEntrega,
+        PaymentMethod: memoryStore.carrito.metodoDePago
+    };
+
+    const enviarDatosaAPI = async () => {
+            const response = await fetch('https://localhost:7223/api/Cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setNumeroCompra(data.numeroCompra); 
+            } else {
+                const errorResponseData = await response.json();
+                throw new Error(errorResponseData.message || 'Error al procesar el pago');
+            }
+    }
+
     const pagoE = () => {
         return (
             <div className="Compra">
                 <div className="smsFinal">
                     <div className="text-center">
-                        <h5>Número de compra: {numOrden}</h5>
+                        <h5>Número de compra: {numeroCompra}</h5>
                         <h4>Esperando la confirmación del Administrador</h4>
+                        <button className="btn btn-primary" onClick={enviarDatosaAPI}>Confirmar Pago</button>
                     </div>
                 </div>
             </div>
@@ -54,11 +67,12 @@ const MetodoPago = () => {
             <div className="Compra">
                 <div className="smsFinal">
                     <div className="text-center">
-                        <h5>Número de compra: {numOrden}</h5>
+                        <h5>Número de compra: {numeroCompra}</h5>
                         <h4>Número de SinpeMóvil: +506 3875 8524</h4>
                         <input type="text" placeholder="Número de comprobante"></input>
                         <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
                         <h3>Esperando la confirmación del Administrador</h3>
+                        <button className="btn btn-primary" onClick={enviarDatosaAPI}>Confirmar Pago</button>
                     </div>
                 </div>
             </div>
@@ -68,7 +82,7 @@ const MetodoPago = () => {
     const closeModal = () => {
         setShowModal(false);
     };
-    
+
     const handleMetodoChange = (metodoDePagoSelec) => {
         setFormaDePago(metodoDePagoSelec.target.value === 'pagoEfectivo' ? 0 : 1);
     };
@@ -123,5 +137,6 @@ const ModalSinMetodoPago = ({ closeModal }) => {
         </div>
     );
 };
+
 
 export default MetodoPago;
