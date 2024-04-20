@@ -24,8 +24,15 @@ namespace Store_API.Controllers
                 // Print the property name and value
                 System.Console.WriteLine($"{propName}: {propValue}");
             }
-            var successPurchase = storeLogic.Purchase(cart);
+             Cart actualCart = new Cart(
+                cart.ProductIds,
+                cart.Address,
+                cart.PaymentMethod,
+                cart.Total,
+                cart.Subtotal
+             );
 
+            var successPurchase = storeLogic.Purchase(actualCart);
             var response = new { successPurchase };
             return Ok(response);
         }

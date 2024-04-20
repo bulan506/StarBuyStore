@@ -146,14 +146,15 @@ namespace Store_API.Database
                 connection.Open();
 
                 string insertSale = @"
-                    INSERT INTO Sales (Total, PurchaseNumber, Address, PaymentMethod, DateSale)
-                    VALUES (@total, @purchaseNumber, @address, @paymentMethod, @dateSale);
+                    INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethod, DateSale)
+                    VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
                 ";
 
                 Random random = new Random();
                 string purchaseNumber = DateTime.Now.ToString("yyyyMMddHHmmssfff") + random.Next(100, 999).ToString();
                 MySqlCommand command = new MySqlCommand(insertSale, connection);
-                command.Parameters.AddWithValue("@total", sale.Amount); // Usar la propiedad Amount de Sale
+                command.Parameters.AddWithValue("@total", sale.Amount); 
+                command.Parameters.AddWithValue("@subtotal", sale.Amount);
                 command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
                 command.Parameters.AddWithValue("@address", sale.Address);
                 command.Parameters.AddWithValue("@paymentMethod", (int)sale.PaymentMethod);
