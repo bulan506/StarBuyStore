@@ -137,12 +137,20 @@ namespace KEStoreApi.Data
                                 price DECIMAL(10, 2),
                                 ImageUrl VARCHAR(255)
                             );
+                            CREATE TABLE IF NOT EXISTS paymentMethod (
+                                id INT PRIMARY KEY,
+                                description VARCHAR(50)
+                            );
+                            
+                            INSERT INTO paymentMethod (id, description) VALUES (0, 'Cash');
+                            INSERT INTO paymentMethod (id, description) VALUES (1, 'Sinpe');
 
                             CREATE TABLE IF NOT EXISTS Sales (
                                 purchaseNumber VARCHAR(50) NOT NULL Primary Key,
                                 total DECIMAL(10, 2) NOT NULL,
                                 purchase_date DATETIME NOT NULL,
-                                payment_method INT NOT NULL
+                                payment_method INT NOT NULL,
+                                FOREIGN KEY (payment_method) REFERENCES paymentMethod(id)
                             );
 
                             CREATE TABLE IF NOT EXISTS Lines_Sales (
@@ -154,10 +162,6 @@ namespace KEStoreApi.Data
                                 FOREIGN KEY (id_Product) REFERENCES products(id)
                             );
 
-                            CREATE TABLE IF NOT EXISTS paymentMethod (
-                                id INT PRIMARY KEY,
-                                description VARCHAR(50)
-                            );
                         ";
 
                         using (var command = new MySqlCommand(createTableQuery, connection, transaction))
@@ -182,24 +186,6 @@ namespace KEStoreApi.Data
                                 insertCommand.Parameters.AddWithValue("@imageUrl", product.ImageUrl);
                                 insertCommand.ExecuteNonQuery();
                             }
-                        }
-
-                        string insertPaymentQuery = @"
-                            INSERT INTO paymentMethod (id, description)
-                            VALUES (@id, @description);";
-
-                        using (var insertPaymentCommand = new MySqlCommand(insertPaymentQuery, connection, transaction))
-                        {
-                            insertPaymentCommand.Parameters.AddWithValue("@id", 0);
-                            insertPaymentCommand.Parameters.AddWithValue("@description", "Cash");
-                            insertPaymentCommand.ExecuteNonQuery();
-                        }
-
-                        using (var insertSinpeCommand = new MySqlCommand(insertPaymentQuery, connection, transaction))
-                        {
-                            insertSinpeCommand.Parameters.AddWithValue("@id", 1);
-                            insertSinpeCommand.Parameters.AddWithValue("@description", "Sinpe");
-                            insertSinpeCommand.ExecuteNonQuery();
                         }
 
                         transaction.Commit();

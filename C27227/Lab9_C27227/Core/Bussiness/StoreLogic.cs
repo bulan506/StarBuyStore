@@ -39,7 +39,6 @@ public Sale Purchase(Cart cart)
         PaymentMethods paymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
         var purchase_number_Sale = GeneratePurchaseNumber();
         var sale = new Sale(purchase_number_Sale, deepCopyProducts, cart.address, purchaseAmount, paymentMethod.PaymentType);
-        //dbLine.AddLine(cart.ProductID, purchase_number_Sale);
         
         return sale;
     }

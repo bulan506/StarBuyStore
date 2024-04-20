@@ -26,7 +26,7 @@ public abstract class PaymentMethods{
                 case Type.SINPE:
                     return sinpe;
                 default:
-                    throw new NotImplementedException();
+                     throw new NotImplementedException("El tipo de método de pago especificado no está implementado.");
             }
         }
         
