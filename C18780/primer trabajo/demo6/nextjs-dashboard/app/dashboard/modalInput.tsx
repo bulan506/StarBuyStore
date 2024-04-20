@@ -1,8 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function ModalInput({ title, text }: { title: string, text: string }) {
-    const [message,setMessage] = useState('');
-    
+export default function ModalInput({ title, text, onInput }: { title: string, text: string, onInput: any }) {
+    const [message, setMessage] = useState('');
+    const [input, setInput] = useState('');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(e.target.value);
+    };
+
+    const handleSetInput = () => {
+        onInput(input);
+        setMessage('Please wait for our administrator to confirm your method of payment.');
+    };
+
     return (
         <>
             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -18,15 +28,15 @@ export default function ModalInput({ title, text }: { title: string, text: strin
                                     <label htmlFor="recipient-name" className="col-form-label">{text}</label>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="recipient-name" className="col-form-label">please enter the voucher:</label>
-                                    <input type="text" className="form-control" id="recipient-name" />
+                                    <label htmlFor="recipient-name" className="col-form-label">Please enter the voucher:</label>
+                                    <input type="text" className="form-control" id="recipient-name" onChange={handleChange} />
                                 </div>
                             </form>
-                            {message}
+                            {message && <div>{message}</div>}
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary" onClick={() => {setMessage('please wait for our administrator to confirm your method of payment.')}}>Send</button>
+                            <button type="button" className="btn btn-primary" onClick={handleSetInput}>Send</button>
                         </div>
                     </div>
                 </div>
@@ -34,4 +44,3 @@ export default function ModalInput({ title, text }: { title: string, text: strin
         </>
     );
 }
-

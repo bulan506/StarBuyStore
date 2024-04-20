@@ -18,17 +18,18 @@ namespace StoreApi
         }
 
         [HttpPost]
-        public async Task<Sales> AddCartAsync([FromBody] Cart cart)
+        public async Task<PurchaseNumber> AddCartAsync([FromBody] Cart cart)
         {
-            object? paymentMethodName = PaymentMethods.Find((PaymentMethods.Type)cart.PaymentMethod)?;
+            object paymentMethodName = PaymentMethods.Find((PaymentMethods.Type)cart.PaymentMethod);
             decimal total = 0;
 
             var createSalesCommand = new CreateSalesCommand(
                 date: DateTime.Now,
-                confirmation: 1,
+                confirmation: 0,
                 paymentMethods: paymentMethodName,
                 total: total,
-                address: cart.Address
+                address: cart.Address,
+                purchaseNumber: Utils.GetPurchaseNumber()
             );
 
             var sales = await _mediator.Send(createSalesCommand);
@@ -60,14 +61,13 @@ namespace StoreApi
                 sales.Confirmation,
                 sales.PaymentMethod,
                 sales.Total,
-                sales.Address
+                sales.Address,
+                sales.PurchaseNumber
             );
 
             await _mediator.Send(updateSalesCommand);
-
-            return sales;
+            return new PurchaseNumber(sales.PurchaseNumber);
         }
-
 
         private async Task<Product> GetProductById(Guid productId)
         {

@@ -5,6 +5,10 @@ export function saveInitialCartLocalStorage(cart: Cart): void {
   localStorage.setItem('initialCart', dataAsString);
 }
 
+export function deleteCartLocalStorage(): void {
+  localStorage.removeItem('initialCart');
+}
+
 export function getInitialCartLocalStorage(): Cart {
   const dataAsString = localStorage.getItem('initialCart');
   if (dataAsString) {

@@ -1,15 +1,15 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Cart, Product } from '../../lib/products-data-definitions';
 import Link from 'next/link';
 import Modal from '../modal';
 import ModalInput from '../modalInput';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import countries from '../../lib/countries-data';
-import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '@/app/lib/cart_data_localeStore';
+import { deleteCartLocalStorage, getInitialCartLocalStorage, saveInitialCartLocalStorage } from '@/app/lib/cart_data_localeStore';
 import { findProductsDuplicates, getProductQuantity } from '@/app/lib/utils';
 import useFetchCartPurchase from '@/app/api/http.cart';
+import { useFetchSinpePurchase } from '@/app/api/http.sinpe';
 const ListProducts = ({ product, quantity }: { product: Product, quantity: number }) => {
     return (
         <tr>
@@ -113,6 +113,7 @@ const Payment = ({ onSelectPayment }: { onSelectPayment: any }) => {
     const handlePaymentSelection = (paymentOption: number) => {
         onSelectPayment(paymentOption);
     };
+
     return (
         <div className="feed-item-list">
             <div>
@@ -149,28 +150,14 @@ const Payment = ({ onSelectPayment }: { onSelectPayment: any }) => {
         </div>
     );
 };
-function generateRandomString() {
-    const currentDate = new Date();
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = currentDate.getFullYear().toString();
-
-    const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-
-    const randomNumber = Math.floor(100 + Math.random() * 900);
-
-    const randomString = `${year}${month}${day}_${randomLetter}${randomNumber}`;
-
-    return randomString;
-}
 
 export default function Checkout() {
     const initialCart = getInitialCartLocalStorage();
     const [payment, setPayment] = useState<number>();
     const [text, setText] = useState<string>("");
     const [inputAddress, setInputAddress] = useState('');
-    const [invoiceNumber, setInvoiceNumber] = useState("");
-
+    const [uuidSales, setUuidSales] = useState("");
+    const [confirmationNumber, setconfirmationNumber] = useState("");
     const payMethod = {
         cash: 0,
         sinpe: 1
@@ -197,9 +184,26 @@ export default function Checkout() {
         if (payment !== undefined)
             initialCart.cart.methodPayment = payment;
         saveInitialCartLocalStorage(initialCart);
-        setInvoiceNumber(await useFetchCartPurchase());
-        console.log(invoiceNumber);
+        setUuidSales(await useFetchCartPurchase());
+        if (payment === 0) {
+            deleteCart();
+        }
     }
+
+    const sinpePurchase = async (confirmationNumber: string) => {
+        setconfirmationNumber(confirmationNumber);
+        await useFetchSinpePurchase(uuidSales, confirmationNumber);
+        if (payment === 1) {
+            deleteCart();
+        }
+    }
+
+    const deleteCart = () => {
+        if (!uuidSales) {
+            deleteCartLocalStorage();
+        }
+    }
+
 
     return (
         <div className="container">
@@ -227,7 +231,7 @@ export default function Checkout() {
                                             <i className="bx bxs-wallet-alt text-white font-size-20"></i>
                                         </div>
                                     </div>
-                                    <Payment onSelectPayment={updatePayment} />
+                                    <Payment onSelectPayment={updatePayment}/>
                                 </li>
                             </ol>
                         </div>
@@ -243,12 +247,12 @@ export default function Checkout() {
                         <div className="col">
                             <div className="text-end mt-2 mt-sm-0">
                                 <i className="mdi mdi-cart-outline me-1"></i>
-                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled={payment !== undefined && inputAddress !== "" ? false : true} onClick={purchase}>
+                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled={payment !== undefined && inputAddress !== "" && initialCart.cart.total !== 0 ? false : true} onClick={purchase}>
                                     PROCCED
                                 </button>
                                 {payment === payMethod.cash
-                                    ? <Modal title={'#' + invoiceNumber} text={text} />
-                                    : <ModalInput title={'#' + invoiceNumber} text={text} />}
+                                    ? <Modal title={'#' + uuidSales} text={text} />
+                                    : <ModalInput title={'#' + uuidSales} text={text} onInput={sinpePurchase} />}
                             </div>
                         </div>
                     </div>
