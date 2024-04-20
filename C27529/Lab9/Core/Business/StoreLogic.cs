@@ -34,7 +34,6 @@ namespace storeApi.Business
             var sale = new Sale(shadowCopyProducts, cart.Address, cart.Total, paymentMethodType);
             
             saleDB.Save(sale);
-            //for each de lo productos en el shadowCopy, sacar ID, el purchase de Sale y el product 
             return sale;
         }
 

@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
@@ -44,4 +44,4 @@ namespace storeApi.Database
     }
 }
 
-
+*/

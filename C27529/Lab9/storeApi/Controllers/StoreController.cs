@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using storeApi.Models;
-using storeApi.dataBase;
+using storeApi.Database;
 using storeApi.Business;
 
 namespace storeApi.Controllers

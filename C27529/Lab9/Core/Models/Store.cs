@@ -95,28 +95,5 @@ namespace storeApi
 
 
         }
-        public Sale Purchase(Cart cart)
-        {
-            if (cart.ProductIds.Count == 0)
-                throw new ArgumentException("Cart must contain at least one product.");
-            if (string.IsNullOrWhiteSpace(cart.Address))
-                throw new ArgumentException("Address must be provided.");
-
-            IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();
-
-            IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
-
-            decimal purchaseAmount = 0;
-            foreach (var product in shadowCopyProducts)
-            {
-                product.Price *= (1 + (decimal)TaxPercentage / 100);
-                purchaseAmount += product.Price;
-            }
-
-            // Create a sale object
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, cart.PaymentMethod);
-
-            return sale;
-        }
     }
 }

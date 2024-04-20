@@ -1,4 +1,7 @@
-storeApi.dataBase.StoreDB.CreateMysql();
+#if DEBUG
+storeApi.db.StoreDB.CreateMysql();
+#endif
+
 
 var builder = WebApplication.CreateBuilder(args);
 
