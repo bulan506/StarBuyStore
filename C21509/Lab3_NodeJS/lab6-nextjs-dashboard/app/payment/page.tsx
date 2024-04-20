@@ -15,7 +15,9 @@ const PurchasedItems = () => {
     cart: {
       products: [],
       deliveryAddress: '',
-      paymentMethod: ''
+      paymentMethod: '',
+      subtotal: 0, 
+      total: 0 
     },
     paymentMethods: [
       {
@@ -32,11 +34,16 @@ const PurchasedItems = () => {
 
   useEffect(() => {
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
+    const subtotal = savedCartProducts.reduce((acc: number, product: ProductItem) => acc + product.price, 0);
+    const total = subtotal; 
+
     setCartState(prevState => ({
       ...prevState,
       cart: {
         ...prevState.cart,
-        products: savedCartProducts
+        products: savedCartProducts,
+        subtotal: subtotal,
+        total: total
       }
     }));
   }, []);
@@ -69,12 +76,17 @@ const PurchasedItems = () => {
 
   const sendDataToAPI = async () => {
     const productIds = cartState.cart.products.map((product: any) => Number(product.id));
+    const paymentMethodValue = selectedPaymentMethod === PaymentMethod.EFECTIVO ? 0 : 1; 
     const purchaseData = {
       ProductIds: productIds,
       Address: cartState.cart.deliveryAddress,
-      PaymentMethod: selectedPaymentMethod 
+      PaymentMethod: paymentMethodValue, 
+      Total: cartState.cart.total, 
+      Subtotal: cartState.cart.subtotal 
     };
-
+  
+    console.log("Datos de compra:", purchaseData);
+  
     try {
       const response = await fetch('https://localhost:7165/api/Cart', {
         method: 'POST',
@@ -83,7 +95,7 @@ const PurchasedItems = () => {
         },
         body: JSON.stringify(purchaseData)
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setPurchaseNumber(data.purchaseNumber);

@@ -8,19 +8,18 @@ namespace Store_API.Models
     public sealed class Store
     {
         public List<Product> Products { get; private set; }
-        public int TaxPercentage { get; private set; }
+        public int TaxPercentage { get; } = 13; 
 
-        private Store(List<Product> products, int TaxPercentage)
+        private Store(List<Product> products)
         {
             this.Products = products;
-            this.TaxPercentage = TaxPercentage;
         }
 
         public readonly static Store Instance;
         // Static constructor
         static Store()
         {
-            DB_API dbApi = new DB_API(); 
+            DB_API dbApi = new DB_API();
 
             var products = new List<Product>
             {
@@ -29,7 +28,7 @@ namespace Store_API.Models
                     Id= 1,
                     Name = $"Iphone",
                     ImageURL = $"/img/Iphone.jpg",
-                    Price = 200
+                    Price = 200M
 
                 },
                 new Product
@@ -37,7 +36,7 @@ namespace Store_API.Models
                    Id= 2,
                     Name = $"Audifono",
                     ImageURL = $"/img/audifonos.jpg",
-                    Price = 100
+                    Price = 100M
 
                 },
                 new Product
@@ -45,7 +44,7 @@ namespace Store_API.Models
                     Id= 3,
                     Name = $"Mouse",
                     ImageURL = $"/img/mouse.jpg",
-                    Price = 35
+                    Price = 35M
 
                 },
                 new Product
@@ -53,7 +52,7 @@ namespace Store_API.Models
                     Id= 4,
                     Name = $"Pantalla",
                     ImageURL = $"/img/Pantalla.jpg",
-                    Price = 68
+                    Price = 68M
 
                 },
                 new Product
@@ -61,7 +60,7 @@ namespace Store_API.Models
                     Id= 5,
                     Name = $"Headphone",
                     ImageURL = $"/img/Headphone.jpg",
-                    Price = 35
+                    Price = 35M
 
                 },
 
@@ -70,7 +69,7 @@ namespace Store_API.Models
                     Id= 6,
                     Name = $"Teclado",
                     ImageURL = $"/img/teclado.jpg",
-                    Price = 95
+                    Price = 95M
 
                 },
                 new Product
@@ -78,7 +77,7 @@ namespace Store_API.Models
                     Id= 7,
                     Name = $"Cable USB",
                     ImageURL = $"/img/Cable.jpg",
-                    Price = 10
+                    Price = 10M
 
                 },
                 new Product
@@ -86,9 +85,9 @@ namespace Store_API.Models
                     Id= 8,
                     Name = $"Chromecast",
                     ImageURL = $"/img/Chromecast.jpg",
-                    Price = 150
+                    Price = 150M
 
-                },
+                }
             };
 
             dbApi.ConnectDB();
@@ -96,33 +95,7 @@ namespace Store_API.Models
 
             List<Product> dbProducts = dbApi.SelectProducts();
 
-            Store.Instance = new Store(dbProducts, 13);
-        }
-
-        public Sale Purchase(Cart cart)
-        {
-            if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
-            if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
-
-            // Find matching products based on the product Ids in the cart
-            IEnumerable<Product> matchingProducts = Products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();
-
-            // Create shadow copies of the matching products
-            IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
-
-            // Calculate purchase amount by multiplying each product's Price with the store's tax percentage
-            decimal purchaseAmount = 0;
-            foreach (var product in shadowCopyProducts)
-            {
-                product.Price *= (1 + (decimal)TaxPercentage / 100);
-                purchaseAmount += product.Price;
-            }
-
-            PaymentMethods.Type paymentMethodType = cart.PaymentMethod.PaymentType;
-
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
-
-            return sale;
+            Store.Instance = new Store(dbProducts);
         }
     }
 }

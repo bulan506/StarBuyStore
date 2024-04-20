@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Store_API.Models;
 using Store_API.Database;
+using Store_API.Business;
 
 namespace Store_API.Controllers
 {
@@ -8,18 +9,25 @@ namespace Store_API.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
+        private StoreLogic storeLogic = new StoreLogic();
+
         [HttpPost]
         [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-    
-            DB_API dbApi = new DB_API();
-            
-            string successPurchase = dbApi.InsertSale(cart);
+             // Iterate over the properties of the Cart object
+            foreach (var prop in typeof(Cart).GetProperties())
+            {
+                var propName = prop.Name;
+                var propValue = prop.GetValue(cart);
 
-            return Ok(new { successPurchase });
-            
-           
+                // Print the property name and value
+                System.Console.WriteLine($"{propName}: {propValue}");
+            }
+            var successPurchase = storeLogic.Purchase(cart);
+
+            var response = new { successPurchase };
+            return Ok(response);
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Store_API.Models
 {
     public abstract class PaymentMethods
@@ -9,11 +11,6 @@ namespace Store_API.Models
         }
 
         public Type PaymentType { get; set; }
-
-        // Constructor sin parámetros necesario para la deserialización
-        protected PaymentMethods()
-        {
-        }
 
         public PaymentMethods(PaymentMethods.Type paymentType)
         {
@@ -32,8 +29,13 @@ namespace Store_API.Models
                 case Type.SINPE:
                     return sinpe;
                 default:
-                    throw new ArgumentException("Invalid payment method type.");
+                    throw new NotImplementedException("Invalid payment method type.");
             }
+        }
+
+        public static PaymentMethods SetPaymentType(Type type)
+        {
+            return Find(type);
         }
     }
 

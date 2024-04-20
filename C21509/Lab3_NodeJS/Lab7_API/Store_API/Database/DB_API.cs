@@ -137,82 +137,81 @@ namespace Store_API.Database
             return productListToStoreInstance;
         }
 
-        public string InsertSale(Cart purchasedCart)
+    public string InsertSale(Sale sale)
+    {
+        try
         {
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                connection.Open();
+
+                string insertSale = @"
+                    INSERT INTO Sales (Total, PurchaseNumber, Address, PaymentMethod, DateSale)
+                    VALUES (@total, @purchaseNumber, @address, @paymentMethod, @dateSale);
+                ";
+
+                Random random = new Random();
+                string purchaseNumber = DateTime.Now.ToString("yyyyMMddHHmmssfff") + random.Next(100, 999).ToString();
+                MySqlCommand command = new MySqlCommand(insertSale, connection);
+                command.Parameters.AddWithValue("@total", sale.Amount); // Usar la propiedad Amount de Sale
+                command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
+                command.Parameters.AddWithValue("@address", sale.Address);
+                command.Parameters.AddWithValue("@paymentMethod", (int)sale.PaymentMethod);
+                command.Parameters.AddWithValue("@dateSale", DateTime.Now);
+                command.ExecuteNonQuery();
+
+                InsertSalesLine(purchaseNumber, sale); // Llamar a InsertSalesLine con el objeto Sale
+
+                return purchaseNumber;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    private void InsertSalesLine(string guid, Sale sale)
+    {
+    try
+    {
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectIdSale = "SELECT IdSale FROM Sales WHERE PurchaseNumber = @purchaseNumber";
+            decimal IdSaleFromSelect = 0;
+
+            using (MySqlCommand command = new MySqlCommand(selectIdSale, connection))
+            {
+                command.Parameters.AddWithValue("@purchaseNumber", guid);
+                object existIdSale = command.ExecuteScalar();
+                if (existIdSale == null)
                 {
-                    connection.Open();
+                    return;
+                }
+                IdSaleFromSelect = Convert.ToInt32(existIdSale);
+            }
 
-                    string insertSale = @"
-                        INSERT INTO Sales (Total,PurchaseNumber, Subtotal, Address, PaymentMethod,DateSale)
-                        VALUES (@total, @purchaseNumber, @subtotal, @address, @paymentMethod,@dateSale);
-                    ";
+            string insertSalesLine = @"
+                INSERT INTO SalesLines (IdSale, IdProduct)
+                VALUES (@saleId, @productId);";
 
-                    string purchaseNumber = Guid.NewGuid().ToString();
-                    MySqlCommand command = new MySqlCommand(insertSale, connection);
-                    command.Parameters.AddWithValue("@total", purchasedCart.Total);
-                    command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
-                    command.Parameters.AddWithValue("@subtotal", purchasedCart.Subtotal);
-                    command.Parameters.AddWithValue("@address", purchasedCart.Address);
-                    command.Parameters.AddWithValue("@paymentMethod", (int)purchasedCart.PaymentMethod.PaymentType);
-                    command.Parameters.AddWithValue("@dateSale", DateTime.Now);
+            using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection))
+            {
+                foreach (var product in sale.Products)
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@saleId", IdSaleFromSelect);
+                    command.Parameters.AddWithValue("@productId", product.Id);
                     command.ExecuteNonQuery();
-
-                    InsertSalesLine(purchaseNumber, purchasedCart);
-
-                    return purchaseNumber;
                 }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
         }
-
-        private void InsertSalesLine(string guid, Cart purchasedCart)
-        {
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    string selectIdSale = "SELECT IdSale FROM Sales WHERE PurchaseNumber = @purchaseNumber";
-                    decimal IdSaleFromSelect = 0;
-
-                    using (MySqlCommand command = new MySqlCommand(selectIdSale, connection))
-                    {
-                        command.Parameters.AddWithValue("@purchaseNumber", guid);
-                        object existIdSale = command.ExecuteScalar();
-                        if (existIdSale == null)
-                        {
-                            return;
-                        }
-                        IdSaleFromSelect = Convert.ToInt32(existIdSale);
-                    }
-
-                    string insertSalesLine = @"
-                        INSERT INTO SalesLines (IdSale, IdProduct)
-                        VALUES (@saleId, @productId);";
-
-                    using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection))
-                    {
-                        foreach (var actualProductId in purchasedCart.ProductIds)
-                        {
-                            command.Parameters.Clear();
-                            command.Parameters.AddWithValue("@saleId", IdSaleFromSelect);
-                            command.Parameters.AddWithValue("@productId", actualProductId);
-                            command.ExecuteNonQuery();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+    }
+    catch (Exception ex)
+    {
+        throw;
+    }
+}
     }
 }
