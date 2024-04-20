@@ -18,6 +18,17 @@ namespace Store_API.Database
                 {
                     connection.Open();
 
+                    string createTablePaymentMethod = @"
+                        CREATE TABLE IF NOT EXISTS PaymentMethod (
+                           PaymentMethodId INT AUTO_INCREMENT PRIMARY KEY,
+                           PaymentMethodName VARCHAR(10) NOT NULL
+                        );";
+
+                    using (MySqlCommand command = new MySqlCommand(createTablePaymentMethod, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
                     string createTableSales = @"
                         CREATE TABLE IF NOT EXISTS Sales (
                             IdSale INT AUTO_INCREMENT PRIMARY KEY,                            
@@ -25,8 +36,9 @@ namespace Store_API.Database
                             Total DECIMAL(10, 2) NOT NULL,
                             Subtotal DECIMAL(10, 2) NOT NULL,                                                
                             Address VARCHAR(255) NOT NULL,
-                            PaymentMethod INT NOT NULL,
-                            DateSale DATETIME NOT NULL
+                            PaymentMethodId INT NOT NULL,
+                            DateSale DATETIME NOT NULL,
+                            FOREIGN KEY (PaymentMethodId) REFERENCES PaymentMethod(PaymentMethodId)
                         );";
 
                     using (MySqlCommand command = new MySqlCommand(createTableSales, connection))
@@ -49,8 +61,10 @@ namespace Store_API.Database
 
                     string createTableSalesLines = @"
                         CREATE TABLE IF NOT EXISTS SalesLines (
+                            IdSaleLine INT AUTO_INCREMENT PRIMARY KEY,
                             IdSale INT NOT NULL,
                             IdProduct INT NOT NULL,
+                            Price DECIMAL(10, 2) NOT NULL,
                             FOREIGN KEY (IdSale) REFERENCES Sales(IdSale),
                             FOREIGN KEY (IdProduct) REFERENCES Products(IdProduct)
                         );";
@@ -137,82 +151,81 @@ namespace Store_API.Database
             return productListToStoreInstance;
         }
 
-    public string InsertSale(Sale sale)
-    {
-        try
+        public string InsertSale(Sale sale)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
-                string insertSale = @"
-                    INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethod, DateSale)
-                    VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
-                ";
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string insertSale = @"
+                            INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethodId, DateSale)
+                            VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
+                        ";
 
-                Random random = new Random();
-                string purchaseNumber = DateTime.Now.ToString("yyyyMMddHHmmssfff") + random.Next(100, 999).ToString();
-                MySqlCommand command = new MySqlCommand(insertSale, connection);
-                command.Parameters.AddWithValue("@total", sale.Amount); 
-                command.Parameters.AddWithValue("@subtotal", sale.Amount);
-                command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
-                command.Parameters.AddWithValue("@address", sale.Address);
-                command.Parameters.AddWithValue("@paymentMethod", (int)sale.PaymentMethod);
-                command.Parameters.AddWithValue("@dateSale", DateTime.Now);
-                command.ExecuteNonQuery();
+                        string purchaseNumber = GeneratePurchaseNumber();
 
-                InsertSalesLine(purchaseNumber, sale); // Llamar a InsertSalesLine con el objeto Sale
+                        using (MySqlCommand command = new MySqlCommand(insertSale, connection))
+                        {
+                            command.Parameters.AddWithValue("@total", sale.Amount);
+                            command.Parameters.AddWithValue("@subtotal", sale.Amount);
+                            command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
+                            command.Parameters.AddWithValue("@address", sale.Address);
+                            command.Parameters.AddWithValue("@paymentMethod", (int)sale.PaymentMethod);
+                            command.Parameters.AddWithValue("@dateSale", DateTime.Now);
+                            command.ExecuteNonQuery();
+                        }
 
-                return purchaseNumber;
+                        InsertSalesLines(connection, transaction, purchaseNumber, sale.Products);
+
+                        transaction.Commit();
+
+                        return purchaseNumber;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    private void InsertSalesLine(string guid, Sale sale)
-    {
-    try
-    {
-        using (MySqlConnection connection = new MySqlConnection(connectionString))
-        {
-            connection.Open();
 
+        private void InsertSalesLines(MySqlConnection connection, MySqlTransaction transaction, string purchaseNumber, List<Product> products)
+        {
             string selectIdSale = "SELECT IdSale FROM Sales WHERE PurchaseNumber = @purchaseNumber";
-            decimal IdSaleFromSelect = 0;
+            decimal idSaleFromSelect;
 
-            using (MySqlCommand command = new MySqlCommand(selectIdSale, connection))
+            using (MySqlCommand command = new MySqlCommand(selectIdSale, connection, transaction))
             {
-                command.Parameters.AddWithValue("@purchaseNumber", guid);
-                object existIdSale = command.ExecuteScalar();
-                if (existIdSale == null)
-                {
-                    return;
-                }
-                IdSaleFromSelect = Convert.ToInt32(existIdSale);
+                command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
+                idSaleFromSelect = Convert.ToDecimal(command.ExecuteScalar());
             }
 
             string insertSalesLine = @"
-                INSERT INTO SalesLines (IdSale, IdProduct)
-                VALUES (@saleId, @productId);";
+                INSERT INTO SalesLines (IdSale, IdProduct, Price)
+                VALUES (@idSale, @idProduct, @price);
+            ";
 
-            using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection))
+            foreach (var product in products)
             {
-                foreach (var product in sale.Products)
+                using (MySqlCommand command = new MySqlCommand(insertSalesLine, connection, transaction))
                 {
-                    command.Parameters.Clear();
-                    command.Parameters.AddWithValue("@saleId", IdSaleFromSelect);
-                    command.Parameters.AddWithValue("@productId", product.Id);
+                    command.Parameters.AddWithValue("@idSale", idSaleFromSelect);
+                    command.Parameters.AddWithValue("@idProduct", product.Id);
+                    command.Parameters.AddWithValue("@price", product.Price);
                     command.ExecuteNonQuery();
                 }
             }
         }
-    }
-    catch (Exception ex)
-    {
-        throw;
-    }
-}
+
+        private string GeneratePurchaseNumber()
+        {
+            Random random = new Random();
+            return random.Next(100, 999).ToString();
+        }
     }
 }
