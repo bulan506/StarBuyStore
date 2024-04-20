@@ -91,6 +91,7 @@ const PurchasedItems = () => {
       const response = await fetch('https://localhost:7165/api/Cart', {
         method: 'POST',
         headers: {
+          "Accept": "application/json",
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(purchaseData)
