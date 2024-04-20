@@ -18,12 +18,15 @@ namespace storeapi
                     try
                     {
 
+                         InsertSale(connection, transaction, sale);
+
                         foreach (var product in sale.Products)
                         {
                             InsertItem(connection, transaction, product, sale.PurchaseNumber, sale.Address);
                         }
 
-                        InsertSale(connection, transaction, sale);
+                       
+                       
 
                         transaction.Commit();
                     }
@@ -72,12 +75,11 @@ namespace storeapi
 
                 string createComprasTableQuery = @"
                     CREATE TABLE IF NOT EXISTS Compras (
-                        id INT AUTO_INCREMENT PRIMARY KEY,
                         total DECIMAL(10, 2) NOT NULL,
                         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         purchaseNumber VARCHAR(255) NOT NULL,
                         Paymethod INT,
-                        UNIQUE KEY (purchaseNumber)
+                        PRIMARY KEY (purchaseNumber)
                     )";
 
                 using (var command = new MySqlCommand(createComprasTableQuery, connection))
@@ -87,24 +89,22 @@ namespace storeapi
             }
         }
 
-        private void InsertItem(MySqlConnection connection, MySqlTransaction transaction, Product product, string purchaseNumber, string address)
-        {
-            string insertItemQuery = @"
-                INSERT INTO Items (ProductId, PurchaseNumber, Address, Price)
-                SELECT @ProductId, @PurchaseNumber, @Address, p.price
-                FROM products p
-                WHERE p.id = @ProductId;
-            ";
+      private void InsertItem(MySqlConnection connection, MySqlTransaction transaction, Product product, string purchaseNumber, string address)
+{
+    string insertItemQuery = @"
+        INSERT INTO Items (ProductId, PurchaseNumber, Address, Price)
+        VALUES (@ProductId, @PurchaseNumber, @Address, (SELECT price FROM products WHERE id = @ProductId));
+    ";
 
-            using (var command = new MySqlCommand(insertItemQuery, connection, transaction))
-            {
-                command.Parameters.AddWithValue("@ProductId", product.id);
-                command.Parameters.AddWithValue("@PurchaseNumber", purchaseNumber);
-                command.Parameters.AddWithValue("@Address", address);
+    using (var command = new MySqlCommand(insertItemQuery, connection, transaction))
+    {
+        command.Parameters.AddWithValue("@ProductId", product.id);
+        command.Parameters.AddWithValue("@PurchaseNumber", purchaseNumber);
+        command.Parameters.AddWithValue("@Address", address);
 
-                command.ExecuteNonQuery();
-            }
-        }
+        command.ExecuteNonQuery();
+    }
+}
 
         private void InsertSale(MySqlConnection connection, MySqlTransaction transaction, Sale sale)
         {
