@@ -44,7 +44,7 @@ public sealed class StoreDB
                 );
                 
                 CREATE TABLE IF NOT EXISTS sales (
-                    id_sales INT AUTO_INCREMENT PRIMARY KEY,
+                    sale_id INT AUTO_INCREMENT PRIMARY KEY,
                     purchase_date DATETIME NOT NULL,
                     total DECIMAL(10, 2) NOT NULL,
                     payment_method ENUM('0', '1'),
@@ -52,11 +52,11 @@ public sealed class StoreDB
                 );
 
                 CREATE TABLE IF NOT EXISTS sale_product (
-                    id_sales INT,
+                    sale_id INT,
                     product_id INT,
                     price DECIMAL(10, 2),
-                    PRIMARY KEY (id_sales, product_id),
-                    FOREIGN KEY (id_sales) REFERENCES sales(id_sales),
+                    PRIMARY KEY (sale_id, product_id),
+                    FOREIGN KEY (sale_id) REFERENCES sales(sale_id),
                     FOREIGN KEY (product_id) REFERENCES products(id)
                 );";
 

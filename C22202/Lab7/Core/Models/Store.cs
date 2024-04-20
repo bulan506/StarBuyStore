@@ -3,9 +3,9 @@ namespace ShopApi.Models;
 public sealed class Store
 {
     public List<Product> Products { get; private set; }
-    public float TaxPercentage { get; private set; }
+    public decimal TaxPercentage { get; private set; }
     
-    private Store( List<Product> products, float TaxPercentage)
+    private Store( List<Product> products, decimal TaxPercentage)
     {
         this.Products = products;
         this.TaxPercentage = TaxPercentage;
@@ -31,7 +31,7 @@ public sealed class Store
         }
 
 
-        Store.Instance = new Store(products, 0.13f);
+        Store.Instance = new Store(products, 13);
     }
 
     // public Sale Purchase (Cart cart)

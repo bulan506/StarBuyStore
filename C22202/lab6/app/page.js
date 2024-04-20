@@ -12,12 +12,10 @@ import { Card, Container } from "react-bootstrap";
 // const products = await fetch('https://localhost:7194/api/Store').JSON()
 
 const Cart = {
-    products: [],
-    subtotal: 0,
-    taxFare: 0.13,
-    address: '',
-    paymentMethod: 0,
-    orderId: 0
+  products: [],
+  subtotal: 0,
+  address: '',
+  paymentMethod: 0,
 };
 
 const CartComponent = ({ count, total }) => {
@@ -96,7 +94,7 @@ export default function Home() {
   }
 
   const [cartState, setCartState] = useState(cartStoraged)
-  const [shop, setShop] = useState({products: []});
+  const [shop, setShop] = useState({ products: [] });
 
   useEffect(() => {
     fetchData();
@@ -109,6 +107,7 @@ export default function Home() {
         throw new Error('Network response was not ok.');
       }
       const data = await response.json();
+      localStorage.setItem('Shop', JSON.stringify(data));
       setShop(data);
     } catch (error) {
       setError(error.message);
@@ -124,7 +123,10 @@ export default function Home() {
     const productToAdd = shop.products.find(product => product.id === id);
     if (productToAdd) {
       copyOfCart.products = [...copyOfCart.products, productToAdd];
-      copyOfCart.subtotal += productToAdd.price
+
+      const subtotal = copyOfCart.subtotal + productToAdd.price;
+      const formattedSubtotal = Number(subtotal.toFixed(2));
+      copyOfCart.subtotal = formattedSubtotal;
       setCartState(copyOfCart)
       localStorage.setItem('Cart', JSON.stringify(copyOfCart));
     }

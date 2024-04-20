@@ -37,7 +37,7 @@ namespace ShopAPI.Business
 
             var sale = new Sale(shadowCopyProducts, cart.address, purchaseAmount, paymentMethodType, purchaseNumber);
 
-            // saleDB.insertSale(sale);
+            saleDB.insertSale(sale);
 
             return sale;
         }

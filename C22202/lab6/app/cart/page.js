@@ -26,6 +26,7 @@ const Tupla = ({ item, deleteAction, index }) => {
 
 export default function Page() {
     const [cartState, setCartState] = useState(JSON.parse(localStorage.getItem('Cart')));
+    const [shopState, setShopState] = useState(JSON.parse(localStorage.getItem('Shop')));
     const [hasProducts, toggleHasProducts] = useState(cartState.products.length > 0)
 
     const handleClick = (index) => {
@@ -60,13 +61,17 @@ export default function Page() {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td rowSpan={2} colSpan={2}></td>
+                        <td rowSpan={3} colSpan={2}></td>
                         <td>Subtotal</td>
                         <td>${cartState.subtotal}</td>
                     </tr>
                     <tr>
+                        <td>+ IVA {shopState.taxPercentage}%</td>
+                        <td>${(cartState.subtotal * shopState.taxPercentage / 100).toFixed(2)}</td>
+                    </tr>
+                    <tr>
                         <td>Total</td>
-                        <td>${Number((cartState.subtotal * cartState.taxFare + cartState.subtotal).toFixed(2))}</td>
+                        <td>${((cartState.subtotal * shopState.taxPercentage / 100) + cartState.subtotal).toFixed(2)}</td>
                     </tr>
                 </tfoot>
             </Table>

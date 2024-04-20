@@ -8,7 +8,7 @@ public sealed class Sale
     public PaymentMethods.Type paymentMethod { get; }
     public string purchase_number {get;}
 
-    public Sale(IEnumerable<Product> products, string address, decimal total, PaymentMethods.Type paymentMethodl, string purchase_number)
+    public Sale(IEnumerable<Product> products, string address, decimal total, PaymentMethods.Type paymentMethod, string purchase_number)
     {
         this.products = products;
         this.address = address;

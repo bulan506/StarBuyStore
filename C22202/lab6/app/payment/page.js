@@ -32,11 +32,7 @@ export default function Page() {
 
     const handleSubmit = async (event) => {
         let hideComponentsCopy = { ...hideComponents };
-        hideComponentsCopy.hideConfirmation = false;
-        hideComponentsCopy.disablePurchase = true;
-
         setValidated(true);
-        setEmpty(true)
 
         const productIds = cart.products.map((producto) => String(producto.id));
         // debugger
@@ -54,13 +50,25 @@ export default function Page() {
                 },
                 body: JSON.stringify(cartSent)
             });
-            const responsePurchaseNum = await response.json();
-            setPurchaseNumber(responsePurchaseNum.purchaseNumber)
-            console.log(responsePurchaseNum.purchaseNumber)
+            if (response.ok) {
+                const responsePurchaseNum = await response.json();
+                setPurchaseNumber(responsePurchaseNum.purchaseNumber)
+                const emptyCart = {
+                    products: [],
+                    subtotal: 0,
+                    address: '',
+                    paymentMethod: 0,
+                }
+                setCartState(emptyCart)
+                localStorage.setItem('Cart', JSON.stringify(emptyCart));
+
+                hideComponentsCopy.hideConfirmation = false;
+                hideComponentsCopy.disablePurchase = true;
+                setEmpty(true)
+                // console.log(responsePurchaseNum.purchaseNumber)
+            }
         } catch (error) {
             console.error('Error al enviar datos:', error);
-            setEmpty(false)
-            hideComponentsCopy.disablePurchase = false;
         }
 
         setHideComponents(hideComponentsCopy);
