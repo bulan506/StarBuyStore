@@ -7,8 +7,8 @@ namespace MyStoreAPI
 
         public PaymentMethod(PaymentMethodNumber payment, bool verify)
         {
-            payment = payment;
-            verify = verify;
+            this.payment = payment;
+            this.verify = verify;
         }
     }
 
