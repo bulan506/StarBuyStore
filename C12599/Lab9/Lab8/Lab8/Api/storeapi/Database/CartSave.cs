@@ -80,6 +80,8 @@ namespace storeapi
                         purchaseNumber VARCHAR(255) NOT NULL,
                         Paymethod INT,
                         PRIMARY KEY (purchaseNumber)
+                        FOREIGN KEY (Paymethod) REFERENCES paymentMethods(id)
+                        
                     )";
 
                 using (var command = new MySqlCommand(createComprasTableQuery, connection))
