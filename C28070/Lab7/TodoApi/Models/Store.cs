@@ -14,7 +14,7 @@ public sealed class Store
     }
 
     public readonly static Store Instance;
-    // Static constructor
+    
     static Store()
     {
        var products = new List<Product>
