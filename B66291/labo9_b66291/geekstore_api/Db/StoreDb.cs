@@ -36,7 +36,7 @@ public static void CrearDatos()
                          purchase_date DATETIME NOT NULL,
                          total DECIMAL(10, 2) NOT NULL,
                          payment_type INT,
-                         FOREIGN KEY (payment_type) REFERENCES paymentMethod(id),
+                         FOREIGN KEY (payment_type) REFERENCES paymentMethod(id)
                      );
 
                      CREATE TABLE IF NOT EXISTS salesLine(
