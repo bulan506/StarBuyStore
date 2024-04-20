@@ -31,6 +31,11 @@ var app = builder.Build();
 // Configurar pipeline de solicitud HTTP
 if (app.Environment.IsDevelopment())
 {
+    PaymentDB.CreateMysql();
+    StoreDB.CreateMysql();
+    CartSave.EnsureComprasTableExists();
+    CartSave.EnsureItemsTableExists();
+    
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -46,3 +51,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
