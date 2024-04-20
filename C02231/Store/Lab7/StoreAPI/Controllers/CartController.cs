@@ -17,15 +17,7 @@ namespace StoreAPI.Controllers
         public IActionResult CreateCart([FromBody] Cart cart)
         {
 
-            List<int> productIds = new List<int>();
-            List<decimal> finalPrices = new List<decimal>();
             var sale = storeLogic.Purchase(cart);
-
-            foreach (var product in sale.Products)
-            {
-                productIds.Add(product.Id);
-                finalPrices.Add(product.Price);
-            }
 
             var response = new { purchaseNumber = sale.NumberOrder };
             return Ok(response);

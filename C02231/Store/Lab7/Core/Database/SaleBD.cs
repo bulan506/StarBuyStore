@@ -41,7 +41,7 @@ namespace StoreAPI.Database
                     catch (Exception)
                     {
                         transaction.Rollback();
-                        throw; // Propaga la excepción para que sea manejada en niveles superiores
+                        throw new Exception("Error al guardar la venta en la base de datos.");
                     }
                 }
             }

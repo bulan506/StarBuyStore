@@ -280,11 +280,11 @@ public sealed class StoreDB
             }
 
             //Eliminar la tabla products si existe
-            /*string dropProductsTableQuery = "DROP TABLE IF EXISTS products";
+            string dropProductsTableQuery = "DROP TABLE IF EXISTS products";
             using (var dropTableCommand = new MySqlCommand(dropProductsTableQuery, connection))
             {
                 dropTableCommand.ExecuteNonQuery();
-            }*/
+            }
 
 
             // Create the products table if it does not exist
@@ -316,9 +316,7 @@ public sealed class StoreDB
                     PRIMARY KEY (sale_id, product_id),
                     FOREIGN KEY (sale_id) REFERENCES sales(Id),
                     FOREIGN KEY (product_id) REFERENCES products(id)
-                );
-
-                
+                );               
              ";
 
 
