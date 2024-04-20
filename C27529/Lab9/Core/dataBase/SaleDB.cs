@@ -10,19 +10,17 @@ namespace storeApi.Database
         {
             using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;Database=mysql;Uid=root;Pwd=123456;"))
             {
-
+                connection.Open();
                 using (MySqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
                     {
-                        connection.Open();
+                        
                         string insertQuery = @"
                             use store;
 
                             INSERT INTO sales (purchase_date, total, payment_method, purchase_number)
                             VALUES (@purchase_date, @total, @payment_method, @purchase_number);"
-
-
                             ;
 
                         using (MySqlCommand command = new MySqlCommand(insertQuery, connection, transaction))
