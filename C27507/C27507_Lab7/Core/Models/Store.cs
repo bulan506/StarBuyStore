@@ -10,17 +10,11 @@ namespace MyStoreAPI.Models
         public int TaxPercentage { get; private set; }            
         public bool StoreConnectedWithDB {get; private set;}
 
-        private Store()
-        {            
+        private Store(){            
             this.TaxPercentage = 13;
-            this.Products = new List<Product>();
+            this.Products = new List<Product>();            
 
-
-            //Conectamos con la DB (crea las tablas dependiendo si ya existen)
-            this.StoreConnectedWithDB = DB_Connection.ConnectDB();
-            
-            //Traemos los productos desde la tabla Products
-            //pero si no hay, entonces llenamos la tabla con createProducts            
+            //Hacemos de cuenta que se crea con exito las tablas o las reconoce en Program.cs          
             if(!DB_Product.ProductsInTableExist()){
 
                 foreach (var productToStoreTable in createStoreProducts())
@@ -29,8 +23,10 @@ namespace MyStoreAPI.Models
                 }                                
                 DB_Product.InsertProductsStore(this.Products);
             }    
+            if(DB_PaymentMethod.PaymentMethodsInTableExist() == false ) DB_PaymentMethod.InsertPaymentMethod();
             //sobreescribimos la lista para que los productos tengan el ID correcto dado por la tabla
             this.Products = DB_Product.SelectProducts();            
+            this.StoreConnectedWithDB = true;
             //Ahora la tienda tendra productos para el StoreController (GET) 
         }
 

@@ -16,18 +16,8 @@ namespace MyStoreAPI.Controllers
         
         //Enviar la tienda
         [HttpGet]
-        public IActionResult getStore(){            
-
-            //Verificamos que hayan tablas en la BD
-            if( !storeLogic.validateStatusStore() ){
-                return StatusCode(500, "Error: No hay conexion con la BD");
-            }
-
-            //Al solicitar "api/Store" por cualquier fetch, el método getStore() se ejecuta
-            //y devuelve la instancia única de la tienda (Store.Instance)
-            return Ok(Store.Instance);
-
-            //https://code-maze.com/aspnetcore-web-api-return-types/
+        public IActionResult getStore(){                        
+            return Ok(Store.Instance);            
         }
                 
     }

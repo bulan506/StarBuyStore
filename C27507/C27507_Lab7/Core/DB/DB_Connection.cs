@@ -16,7 +16,7 @@ namespace MyStoreAPI{
         }
         
         //iniciamos la conexion con la BD
-        public static bool ConnectDB(){
+        public static void ConnectDB(){
             bool connectionStatus = false;
             MySqlConnection connectionWithDB = null;
             MySqlTransaction transaction = null;
@@ -95,22 +95,19 @@ namespace MyStoreAPI{
 
                 //se guardan los cambios realizados en la BD
                 transaction.Commit();
-                connectionStatus = true;
+                //connectionStatus = true;
             }
             catch (Exception ex)
             {   
-                Console.WriteLine("Error desde DB_Connection:" + ex);
-                connectionStatus = false;             
-                //deshacemos los cambios realizados en la BD
+                Console.WriteLine("Error desde DB_Connection:" + ex);                
                 transaction.Rollback();                
-                throw;
+                throw ex;             
             }
             finally
             {
                 //Al final cerrar la conexion
                 connectionWithDB.Close();
-            }
-            return connectionStatus;
+            }            
         }            
     }    
 }
