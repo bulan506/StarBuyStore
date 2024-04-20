@@ -21,6 +21,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    StoreAPI.Database.StoreDB.CreateMysql();
     app.UseSwagger();
     app.UseSwaggerUI();
     
