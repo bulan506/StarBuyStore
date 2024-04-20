@@ -4,7 +4,6 @@ export async function useFetchSinpePurchase(uuidSales: string, confirmationNumbe
         "purchaseNumber": uuidSales,
         "confirmationNumber": confirmationNumber
     }
-    console.log(sinpe);
     try {
         const res = await fetch('https://localhost:7099/api/Sinpe', {
             method: 'POST',

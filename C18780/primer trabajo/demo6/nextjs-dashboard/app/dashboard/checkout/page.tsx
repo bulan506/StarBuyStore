@@ -186,24 +186,20 @@ export default function Checkout() {
         saveInitialCartLocalStorage(initialCart);
         setUuidSales(await useFetchCartPurchase());
         if (payment === 0) {
-            deleteCart();
+            deleteCartLocalStorage();
         }
     }
 
     const sinpePurchase = async (confirmationNumber: string) => {
         setconfirmationNumber(confirmationNumber);
-        await useFetchSinpePurchase(uuidSales, confirmationNumber);
-        if (payment === 1) {
-            deleteCart();
-        }
-    }
+        try {
+            await useFetchSinpePurchase(uuidSales, confirmationNumber);
+        } catch (exeption) {
 
-    const deleteCart = () => {
-        if (!uuidSales) {
+        } finally {
             deleteCartLocalStorage();
         }
     }
-
 
     return (
         <div className="container">
@@ -231,7 +227,7 @@ export default function Checkout() {
                                             <i className="bx bxs-wallet-alt text-white font-size-20"></i>
                                         </div>
                                     </div>
-                                    <Payment onSelectPayment={updatePayment}/>
+                                    <Payment onSelectPayment={updatePayment} />
                                 </li>
                             </ol>
                         </div>

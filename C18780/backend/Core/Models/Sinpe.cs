@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoreApi.Models
 {
@@ -6,6 +7,7 @@ namespace StoreApi.Models
     {
         [Key]
         public Guid Uuid { get; set; }
+        [ForeignKey("UuidSales")]
         public Guid UuidSales { get; set; }
         public string ConfirmationNumber { get; set; }
     }

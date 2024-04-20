@@ -27,7 +27,7 @@ namespace StoreApi.utils
                 case Type.SINPE:
                     return Type.SINPE;
                 default:
-                    return null;
+                    throw new ArgumentException("The value is incorrect.");
             }
         }
     }
