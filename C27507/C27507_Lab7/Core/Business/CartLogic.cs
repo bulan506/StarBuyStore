@@ -14,22 +14,23 @@ namespace MyStoreAPI.Business
 
         public bool validateCart(){
 
-            //Validaciones del carrito
-            if (newCart == null){                
-                return false;
+            //Validaciones manejadas a partir de ahora con try catch
+             if (newCart == null){
+                throw new NotImplementedException("Not valid");
             }
-            if(!validatePaymentMethodFromCart(newCart.PaymentMethod)){
-                return false;
+
+            if (!validatePaymentMethodFromCart(newCart.PaymentMethod)){
+                throw new NotImplementedException("Not valid");
             }
-            if(!validateProductsFromCart(newCart.allProduct)){
-                return false;
+            if (!validateProductsFromCart(newCart.allProduct)){
+                throw new NotImplementedException("Not valid");
             }
-            if(!validateDirectionFromCart(newCart.Direction)){
-                return false;
+            if (!validateDirectionFromCart(newCart.Direction)){
+                throw new NotImplementedException("Not valid");
             }
-            if(!validateTotalFromCart(newCart.Total)){
-                return false;
-            }
+            if (!validateTotalFromCart(newCart.Total)){
+                throw new NotImplementedException("Not valid");
+            }            
             //El carrito podra ser procesado con la BD
             return true;
         }

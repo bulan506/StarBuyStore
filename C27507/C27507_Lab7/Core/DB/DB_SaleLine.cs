@@ -34,7 +34,7 @@ namespace MyStoreAPI.DB
                 //Al existir la venta con ese codigo unico guid(), usamos su ID int para insertarlo en SalesLins
                 string insertSalesLine = @"
                     INSERT INTO SalesLines (IdSale, IdProduct,Quantity,PricePaid,OriginalProductName, OriginalProductPrice)
-                    VALUES (@saleId, @productId,@productQuantity,@pricePaid @originalProductName, @originalProductPrice);";
+                    VALUES (@saleId, @productId,@productQuantity,@pricePaid, @originalProductName, @originalProductPrice);";
 
                 using (MySqlCommand command = new MySqlCommand(insertSalesLine, connectionWithDB)){                        
                                             

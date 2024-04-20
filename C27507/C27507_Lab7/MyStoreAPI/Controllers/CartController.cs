@@ -12,17 +12,23 @@ namespace MyStoreAPI.Controllers
     public class CartController : ControllerBase{                
 
         [HttpPost]
-         [Consumes("application/json")]
+        [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart){                        
             
-            SaleLogic saleLogic = new SaleLogic(cart);
+            try{
+                SaleLogic saleLogic = new SaleLogic(cart);
+                Sale saleConfirmed = saleLogic.processDataSale();
+                var purchaseNum = saleConfirmed.purchaseNum;
 
-            Sale saleConfirmed = saleLogic.processDataSale();
-            Console.WriteLine("Antes de mandar la respuesta post - Valor de saleConfirmed.purchaseNum: " + saleConfirmed.purchaseNum);    
-            if (saleConfirmed != null){
-                return Ok(new { saleConfirmed.purchaseNum });
-            }else{
-                return StatusCode(500, "Ha ocurrido un error al generar tu transacción. Por favor inténtalo más tarde.");                
+                Console.WriteLine("Antes de mandar la respuesta post - Valor de saleConfirmed.purchaseNum: " + saleConfirmed.purchaseNum);
+                return Ok(new { purchaseNum });
+            }
+            catch (NotImplementedException nie){                
+                return StatusCode(501, "Ha ocurrido un error al generar la transaccion. Por favor inténtalo más tarde.");
+            }
+            catch (Exception ex){                
+                //Otros posibles errores
+                return StatusCode(500, "Ha ocurrido un error al generar la transaccion. Por favor inténtalo más tarde.");
             }
         }        
     }

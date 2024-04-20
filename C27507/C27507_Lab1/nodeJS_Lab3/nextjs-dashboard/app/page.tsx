@@ -46,10 +46,11 @@ export async function sendDataAPI(directionAPI:string, data:any): Promise<string
         }
         // Obtener los datos de la respuesta en formato JSON                        
         const responseData = await responsePost.json();        
-        return responseData.purchaseNumExit;        
+        const purchaseNum = responseData.purchaseNum;        
+        return purchaseNum;
         
     } catch (error) {
-        throw new Error('Failed to POST data');
+        throw new Error('Failed to POST data: '+ error);
     }        
 }
 

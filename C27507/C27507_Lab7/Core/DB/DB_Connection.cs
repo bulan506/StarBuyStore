@@ -9,7 +9,7 @@ namespace MyStoreAPI{
     //Todo estatico para no estar creando instancias por todo lado    
     public static class DB_Connection
     {        
-        private static string connectionDB = "server=localhost;user=root;password=123456;database=MyStoreAPI";
+        private static string connectionDB = "server=localhost;user=root;password=123456;database=MyStoreApi";
 
         public static string INIT_CONNECTION_DB(){
             return connectionDB;
@@ -99,6 +99,7 @@ namespace MyStoreAPI{
             }
             catch (Exception ex)
             {   
+                Console.WriteLine("Error desde DB_Connection:" + ex);
                 connectionStatus = false;             
                 //deshacemos los cambios realizados en la BD
                 transaction.Rollback();                

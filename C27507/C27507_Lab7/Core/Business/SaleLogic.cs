@@ -13,16 +13,23 @@ namespace MyStoreAPI.Business
 
         public Sale processDataSale(){
 
-            //Utilizamos la logica del carrito y sus validaciones
-            CartLogic cartLogic = new CartLogic(cart);
+            try
+            {
+                // Utilizamos la lógica del carrito y sus validaciones
+                CartLogic cartLogic = new CartLogic(cart);
+                cartLogic.validateCart(); // Esta llamada puede lanzar excepciones
 
-            if(!cartLogic.validateCart()){
-                return null;
+                // Si la información del carrito es válida, empezamos a generar la venta
+                return createSale(cart);
             }
-
-            //Si la informacion del carrito es valida, empezamos a generar la venta
-            //Y retornamos la venta como tal
-            return createSale(cart);
+            catch (NotImplementedException nie){
+                Console.WriteLine($"Error desde SaleLogic: {nie}");
+                throw;
+            }
+            catch (Exception ex){                
+                Console.WriteLine($"Error desde SaleLogic: {ex.Message}");
+                throw;
+            }
         }
                                                  
         private Sale createSale(Cart cart){
@@ -30,7 +37,6 @@ namespace MyStoreAPI.Business
             //Retornamos el id en la tabla y el codigo de compra unico
            (string purchaseNum, int saleId) = DB_Sale.InsertSale(cart);
             sale = new Sale(saleId, purchaseNum, cart);
-
             return sale;
         }
     }
