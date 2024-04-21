@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import React from 'react';
 import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '../lib/cart_data_localeStore';
+
 
 export async function useFetchCartPurchase() {
     const cart = getInitialCartLocalStorage();
@@ -20,12 +19,12 @@ export async function useFetchCartPurchase() {
         })
         if (res.ok) {
             const data = await res.json();
-            return data.uuid;
+            return data.purchaseNumber;
         }
     } catch (error) {
         throw new Error('Failed to fetch purchase');
     }
-
 }
+
 
 export default useFetchCartPurchase;

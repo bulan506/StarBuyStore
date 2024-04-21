@@ -17,9 +17,6 @@ interface LinkItem {
 
 const links: LinkItem[] = [
   {
-    name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon
-  },
-  {
     name: 'Cart', href: '/dashboard/cart', icon: ShoppingCartIcon,
   },
 ];
