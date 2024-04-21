@@ -7,6 +7,7 @@ namespace KEStoreApi.Bussiness;
 public sealed class StoreLogic
 {
     private static Random randomNumber = new Random();
+    private DatabaseSale saleDataBase = new DatabaseSale(); 
     public StoreLogic()
     {
 
@@ -39,7 +40,7 @@ public Sale Purchase(Cart cart)
         PaymentMethods paymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
         var purchase_number_Sale = GeneratePurchaseNumber();
         var sale = new Sale(purchase_number_Sale, deepCopyProducts, cart.address, purchaseAmount, paymentMethod.PaymentType);
-        
+        saleDataBase.Save(sale);
         return sale;
     }
 
