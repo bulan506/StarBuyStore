@@ -1,3 +1,4 @@
+//Raiz de la aplicacion
 export default function RootLayout({
   children,
 }: {

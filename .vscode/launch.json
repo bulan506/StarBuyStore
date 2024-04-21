@@ -431,7 +431,5 @@
                 "/Views": "${workspaceFolder}/Views"
             }
         }
-
-
     ]
 }

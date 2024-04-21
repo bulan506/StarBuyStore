@@ -1,11 +1,13 @@
 'use client'
-import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import "bootstrap/dist/css/bootstrap.min.css";
 import './ui/styles/Ecomerce.css';
 import './ui/styles/products.css';
+import './ui/styles/nav.css';
 import { useState } from 'react';
+import Image from 'next/image';
+
 
 const carousels = [
   {
@@ -31,93 +33,9 @@ const products = [
     id: 1,
     name: "ASUS",
     description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
+    imageUrl: "/products/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
     price: 489000
-  },
-  {
-    id: 2,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 3,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 4,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 5,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 6,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 7,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 8,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 9,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 10,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 11,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 12,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
-  {
-    id: 13,
-    name: "ASUS",
-    description: "Modelo: ASUS TUF GAMING F15 \nPantalla: 15.6 pulgadas _ 1920 x 1080 resolución - IPS - 144 Hz \nProcesador: Intel Core i5 12500H \nMemoria: 8 GB DDR4 3200 \nGráficos: NVIDIA GeForce RTX 3050 4 GB \nSSD: 512 GB M.2 NVME \nConectividad: WIFI 6 _ Bluetooth 5.1 \nSistema Operativo: Windows 11 \nThunderbolt 4 \nAudio: Dolby Atmos \nTeclado: Iluminado RGB",
-    imageUrl: "https://extremetechcr.com/tienda/34006-large_default/asus-tuf-gaming-f15-i5-12500h-8gb-ssd-rtx-3050-4-gb.jpg",
-    price: 489000
-  },
+  }
 ];
 
 const Carousel = ({ }) => {
@@ -160,13 +78,15 @@ const Carousel = ({ }) => {
   )
 }
 
-const Product = ({ product }) => {
+const Product = ({ product, onAdd }) => {
   const { name, description, imageUrl, price } = product;
   return (
     <div className="col-sm-3">
       <div className="card">
-        <img src={product.imageUrl}
-          className="card-img-top" alt={product.name} />
+        <Image src={product.imageUrl}
+          width={1000}
+          height={760}
+          className="card-img-top hidden md:block" alt={product.name} />
         <div className="card-body">
           <div className="mb-3">
             <span className="float-start badge rounded-pill bg-primary">{product.name}</span>
@@ -178,7 +98,7 @@ const Product = ({ product }) => {
             </div>
           </div>
           <div className="text-center my-4">
-            <a href="#" className="btn btn-warning">Buy</a>
+            <a onClick={onAdd} href="#" className="btn btn-warning">Buy</a>
           </div>
         </div>
       </div>
@@ -187,11 +107,11 @@ const Product = ({ product }) => {
 };
 
 //Componente principal
-const ProductsRow = () => {
+const ProductsRow = ({ onAdd }) => {
   return (
     <div className="row">
       {products.map(product =>
-        <Product key={product.id} product={product} />
+        <Product key={product.id} product={product} onAdd={onAdd} />
       )},
       <Carousel />
     </div>
@@ -199,92 +119,82 @@ const ProductsRow = () => {
 };
 
 export default function Page() {
-  function MyButton() {
-    const [count, setCount] = useState(0);
 
-    function handleClick() {
-      setCount(count + 1);
-    }
+  //Hooks
+  const [countCart, setCountCart] = useState(0);
 
-    return (
-      <button onClick={handleClick}>
-        Hiciste clic {count} veces
-      </button>
-    );
-  }
+  const handleAddToCart = () => {
+    setCountCart(countCart + 1);
+  };
+  //Hooks end
 
   return (
     <>
-        <header>
+      <header>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a className="navbar-brand" href="#">Tico Barato</a>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
+          <a className="navbar-brand" href="#">Tico Barato</a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
 
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav mr-auto">
-                    <li className="nav-item active">
-                        <a className="nav-link" href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                className="bi bi-cart" viewBox="0 0 16 16">
-                                <path
-                                    d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                            </svg>
-                            Cart
-                            <span className="sr-only"></span></a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                className="bi bi-person" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-                            </svg>
-                            User
-                        </a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">
-                            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-                        </a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">
-                            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    className="bi bi-search" viewBox="0 0 16 16">
-                                    <path
-                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                </svg>
-                            </button>
-                        </a>
-                    </li>
-                </ul>
-
-
-
-            </div>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      className="bi bi-search" viewBox="0 0 16 16">
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                    </svg>
+                  </button>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    className="bi bi-person" viewBox="0 0 16 16">
+                    <path
+                      d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                  </svg>
+                  User
+                </a>
+              </li>
+              <li className="nav-item active">
+                <a className="nav-link" href="#">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    className="bi bi-cart" viewBox="0 0 16 16">
+                    <path
+                      d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                  </svg>
+                  <span className="cart-count">{countCart}</span>
+                  <span className="sr-only"></span></a>
+              </li>
+            </ul>
+          </div>
         </nav>
 
+        {/*Grid container productos
+        <div className="container-fluid bg-trasparent my-4 p-3" style={{ position: 'relative' }}>
+          <div id="root"></div>
+        </div>*/}
 
-
-        {/*Grid container productos*/}
-        <div className="container-fluid bg-trasparent my-4 p-3" style={{position: 'relative'}}>
-            <div id="root"></div>
-        </div>
-
-    </header>
-      <ProductsRow />
+      </header>
+      <ProductsRow onAdd={handleAddToCart} />
 
       <footer className="bg-body-tertiary text-center">
         <div className="container p-4 pb-0">
           <section className="mb-4 socialMedia">
 
             {/*Facebook*/}
-            <a data-mdb-ripple-init className="btn text-white btn-floating m-1"  style={{ backgroundColor: '#3b5998' }}
+            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{ backgroundColor: '#3b5998' }}
               href="#!" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 className="bi bi-facebook" viewBox="0 0 16 16">
@@ -294,7 +204,7 @@ export default function Page() {
             </a>
 
             {/*Twitter*/}
-            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{backgroundColor: '#55acee'}}
+            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{ backgroundColor: '#55acee' }}
               href="#!" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 className="bi bi-twitter-x" viewBox="0 0 16 16">
@@ -304,7 +214,7 @@ export default function Page() {
             </a>
 
             {/*Youtube*/}
-            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{backgroundColor: '#dd4b39'}}
+            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{ backgroundColor: '#dd4b39' }}
               href="#!" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 className="bi bi-youtube" viewBox="0 0 16 16">
@@ -314,7 +224,7 @@ export default function Page() {
             </a>
 
             {/*Instagram*/}
-            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{backgroundColor: '#ac2bac'}}
+            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{ backgroundColor: '#ac2bac' }}
               href="#!" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 className="bi bi-instagram" viewBox="0 0 16 16">
@@ -324,7 +234,7 @@ export default function Page() {
             </a>
 
             {/*Linkedin*/}
-            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{backgroundColor: '#0082ca'}}
+            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{ backgroundColor: '#0082ca' }}
               href="#!" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 className="bi bi-linkedin" viewBox="0 0 16 16">
@@ -334,7 +244,7 @@ export default function Page() {
             </a>
 
             {/*Github*/}
-            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{backgroundColor: '#333333'}}
+            <a data-mdb-ripple-init className="btn text-white btn-floating m-1" style={{ backgroundColor: '#333333' }}
               href="#!" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 className="bi bi-github" viewBox="0 0 16 16">
@@ -346,7 +256,7 @@ export default function Page() {
         </div>
 
         {/*Copyright*/}
-        <div className="text-center p-3" style={{backgroundColor: 'rgba(0, 0, 0, 0.05)'}}>
+        <div className="text-center p-3" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
           © 2020 Copyright:
           <a className="text-body" href="https://mdbootstrap.com/">MDBootstrap.com</a>
         </div>
