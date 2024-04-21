@@ -15,15 +15,6 @@ namespace Store_API.Controllers
         [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-             // Iterate over the properties of the Cart object
-            foreach (var prop in typeof(Cart).GetProperties())
-            {
-                var propName = prop.Name;
-                var propValue = prop.GetValue(cart);
-
-                // Print the property name and value
-                System.Console.WriteLine($"{propName}: {propValue}");
-            }
              Cart actualCart = new Cart(
                 cart.ProductIds,
                 cart.Address,

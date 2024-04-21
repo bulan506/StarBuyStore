@@ -179,7 +179,7 @@ namespace Store_API.Database
                             command.ExecuteNonQuery();
                         }
 
-                        InsertSalesLines(connection, transaction, purchaseNumber, sale.Products);
+                        InsertSalesLines(connection, transaction, purchaseNumber, sale.Products.ToList());
 
                         transaction.Commit();
 

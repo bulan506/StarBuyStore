@@ -25,24 +25,10 @@ namespace Store_API.Business
             // Encontrar productos basados en los IDs en el carrito
             IEnumerable<Product> matchingProducts = products.Where(p => cart.ProductIds.Contains(p.Id)).ToList();
 
-            // Verificar productos encontrados
-            Console.WriteLine("Matching products:");
-            foreach (var product in matchingProducts)
-            {
-                Console.WriteLine($"Product ID: {product.Id}, Name: {product.Name}, Price: {product.Price}");
-            }
-
-            // Verificar si se encontraron productos
-            if (matchingProducts.Count() == 0)
-            {
-                throw new ArgumentException("No matching products found for the given IDs in the cart.");
-            }
-
             decimal purchaseAmount = 0;
             foreach (var product in matchingProducts)
             {
                 purchaseAmount += product.Price;
-                Console.WriteLine($"Matching Product ID: {product.Id}, Name: {product.Name}");
             }
 
             PaymentMethods.Type paymentMethodType = cart.PaymentMethod;

@@ -65,7 +65,7 @@ const PurchasedItems = () => {
   const managePaymentConfirmation = () => {
     if (selectedPaymentMethod === PaymentMethod.EFECTIVO) {
       const purchaseNum = generatePurchaseNumber();
-      setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${purchaseNum}. Espere la confirmación del administrador.`);
+      setPaymentConfirmation(`Su compra ha sido confirmada.`);
       setPurchaseNumber(purchaseNum.toString());
     } else if (selectedPaymentMethod === PaymentMethod.SINPE) {
       const purchaseNum = generatePurchaseNumber();
@@ -84,8 +84,6 @@ const PurchasedItems = () => {
       Total: cartState.cart.total, 
       Subtotal: cartState.cart.subtotal 
     };
-  
-    console.log("Datos de compra:", purchaseData);
   
     try {
       const response = await fetch('https://localhost:7165/api/Cart', {
