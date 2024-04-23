@@ -35,20 +35,22 @@ export async function sendDataAPI(directionAPI:string, data:any): Promise<string
     try {
 
             //A las peticiones POST se les debe agregar parametro de configuracion para diferenciarlas de las
-        //GET    
-        //let responsePost = await fetch("https://localhost:7161/api/Cart",postConfig);
+        //GET            
         let responsePost = await fetch(directionAPI,postConfig);
         //await solo se puede usar dentro de funciones asincronas
 
-        if(responsePost.ok){            
-            const responseData = await responsePost.json(); // Obtener los datos de la respuesta en formato JSON                        
-             //Enviamos al usuario a la pagina de resultado
-             return responseData.purchaseNumExit;
+        if(!responsePost.ok){
+            //Obtenemos el mensaje de error de CartController
+            const errorMessage = await responsePost.text();
+            return errorMessage;
         }
-        return null;
+        // Obtener los datos de la respuesta en formato JSON                        
+        const responseData = await responsePost.json();        
+        const purchaseNum = responseData.purchaseNum;        
+        return purchaseNum;
         
     } catch (error) {
-        throw new Error('Failed to POST data');
+        throw new Error('Failed to POST data: '+ error);
     }        
 }
 
@@ -183,9 +185,17 @@ export default function Page() {
                     throw new Error('Failed to fetch data');                
                 }
                 const json = await response.json();            
-                setProducts(json.products);                        
+
+                //Como ahora Store desde la API se devuelve dentro de un objeto Action
+                //hacemos una validacion para saber si trae datos dentro de su metodo
+                if(json.hasOwnProperty('value')){
+                    setProducts(json.valeu.products);                            
+                }else{
+                    //si el dato no viene dentro de un ActionResult se guarda normal
+                    setProducts(json.products);                        
+                }                                
                 return json;
-            } catch (error) {
+            } catch (error) {                
                 throw new Error('Failed to fetch data');
             }
         }  
@@ -221,9 +231,8 @@ export default function Page() {
               {products && products.length >= 0 && products.map(product => {
                   if (product.description === "carousel") {
                       return(
-                          <section className="container_carousel col-sm-4" key="carousel">
-                              <StaticCarousel 
-                                    key={product.id} 
+                          <section className="container_carousel col-sm-4" key={product.id}>
+                              <StaticCarousel                                     
                                     products={products}
                                     myCartInStorage={myCartInStorage}                                    
                                     setMyCartInStorage={setMyCartInStorage}           

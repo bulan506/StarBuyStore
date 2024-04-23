@@ -33,7 +33,7 @@ export const StaticCarousel: React.FC<CarouselStaticProps> = ({products,myCartIn
         //condiciones    
         if (myCartInStorage) {
     
-          let indexInCart = verifyProductInCart(productInCarrusel.uuid,myCartInStorage.allProduct);            
+          let indexInCart = verifyProductInCart(productInCarrusel.id,myCartInStorage.allProduct);            
           addProductInCart(indexInCart,productInCarrusel,myCartInStorage,setMyCartInStorage,setCartShopStorage);      
           
         } else {
@@ -41,7 +41,7 @@ export const StaticCarousel: React.FC<CarouselStaticProps> = ({products,myCartIn
         }
       };  
 
-    return (
+    return (        
         <div id="carouselExampleCaptions" className="carousel slide">
             <div className="cover"></div>
             <div className="carousel-indicators">  
@@ -60,7 +60,7 @@ export const StaticCarousel: React.FC<CarouselStaticProps> = ({products,myCartIn
             <div className="carousel-inner">
                 {products.map((product,index) => {
                     return(
-                        <div key={index} className={`carousel-item ${activeIndex === index ? "active" : ""}`}>
+                        <div key={product.id} className={`carousel-item ${activeIndex === index ? "active" : ""}`}>
                             <div className="cover_img"></div>
                             <div className='info_carousel'>
                                 <h5>{product.name}</h5>

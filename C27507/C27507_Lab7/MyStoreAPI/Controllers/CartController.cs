@@ -1,21 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+//API
+using MyStoreAPI.Business;
+using MyStoreAPI.DB;
+using MyStoreAPI.Models;
 namespace MyStoreAPI.Controllers
 
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController : ControllerBase
-    {        
-        private Sale actualSale = new Sale();
+    public class CartController : ControllerBase{                
 
         [HttpPost]
-         [Consumes("application/json")]
+        [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart){                        
-            //Hacemos las inserciones y devolvemos la respuesta con el post                        
-            string purchaseNumExit = DB_Connection.InsertSale(cart);    
-            //Se manda todo dato como un JSON para que sea leido de esa forma                        
-            return Ok(new { purchaseNumExit });                    
+            
+            try{
+                SaleLogic saleLogic = new SaleLogic(cart);
+                Sale saleConfirmed = saleLogic.processDataSale();
+                var purchaseNum = saleConfirmed.purchaseNum;
+
+                Console.WriteLine("Antes de mandar la respuesta post - Valor de saleConfirmed.purchaseNum: " + saleConfirmed.purchaseNum);
+                return Ok(new { purchaseNum });
+            }
+            catch (NotImplementedException nie){                
+                return StatusCode(501, "Ha ocurrido un error al generar la transaccion. Por favor inténtalo más tarde.");
+            }
+            catch (Exception ex){                
+                //Otros posibles errores
+                return StatusCode(500, "Ha ocurrido un error al generar la transaccion. Por favor inténtalo más tarde.");
+            }
         }        
     }
 }

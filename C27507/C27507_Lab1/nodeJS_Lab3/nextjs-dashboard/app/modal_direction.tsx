@@ -123,7 +123,7 @@ export const ModalDirection: React.FC<ModalDirectionProps> = ({
             return;            
         }            
 
-        const purchaseNum = await sendDataAPI("https://localhost:7161/api/Cart", myCartInStorage);
+        const purchaseNum = await sendDataAPI("https://localhost:7161/api/Cart", myCartInStorage);        
         resetModal();//setteamos el modal o mandamos el resumen a la pagina
         deleteAllProduct(myCartInStorage,setMyCartStorage);
         callAlertShop("success","Compra finalizada","El codigo de su compra es: " + purchaseNum);      
