@@ -1,13 +1,15 @@
 'use client';
 import {useState} from 'react';
 import {useEffect} from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 //Componentes
 import {Carousel} from './global-components/carousel';
 import {AlertShop} from './global-components/generic_overlay';
 import { CartShop } from './global-components/cart-shop';
 import { ProductGallery } from './global-components/product-gallery';
+import Link from 'next/link';
+import Button from 'react-bootstrap/Button';
+
 //Interfaces
 import { PaymentMethod, PaymentMethodNumber } from './src/models-data/PaymentMethodAPI';
 import { ProductAPI } from './src/models-data/ProductAPI';
@@ -30,7 +32,7 @@ function Page() {
 
         const loadDataProductAPI = async ()=>{
             try{            
-                const response = await fetch('https://localhost:7161/api/Store')
+                const response = await fetch('https://localhost:7580/api/Store')
                 if (!response.ok){
                     throw new Error('Failed to fetch data');                
                 }
@@ -46,7 +48,7 @@ function Page() {
                 }                                
                 return json;
             } catch (error) {                
-                throw new Error('Failed to fetch data');
+                throw new Error('Failed to fetch data:' + error);
             }
         }  
         loadDataProductAPI();
@@ -54,8 +56,7 @@ function Page() {
    
   return (
     <main className="flex min-h-screen flex-col p-6">
-
-      {/* Menu con el carrito */}
+      
       <div className="main_banner">    
             
             <div className="row">

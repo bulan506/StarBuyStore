@@ -5,7 +5,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 //Componentes
-// import { ModalDirection } from './modal_direction';
+//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Link from 'next/link';
+
 
 //Interfaces
 import { CartShopAPI } from '../src/models-data/CartShopAPI';
@@ -40,7 +42,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
     const [modalShow, setModalShow] = React.useState(false);
 
     return (
-        <>     
+        <>                 
             <Modal show={show} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>
@@ -80,11 +82,12 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                 <Modal.Footer>
                     {
                         myCartInStorage && myCartInStorage.allProduct.length ? (
-                            <>
-                                <Button variant="secondary" onClick={() => setModalShow(true)}>
-                                    Iniciar compra
-                                </Button>                              
+                            <>                                                        
+                                <Link href="/cart-validation/address-validation">
+                                    <Button variant="secondary">Iniciar compra</Button>
+                                </Link>
                             </>
+                            
                         ) : (
                             <></>
                         )
@@ -97,8 +100,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                     </Button>                    
                     
                 </Modal.Footer>
-            </Modal>
-
+            </Modal>            
             {/* Modal para la direccion del usuario */}
             
             {/* <ModalDirection 

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Page from './page';
 //componente de las rutas
 //import {AddressValidation} from './cart-validation/address-validation'
-import {PaymentMethodValidation} from './cart-validation/payment-method-validation';
+import {PaymentMethodValidation} from './cart-validation/payment-validation/page';
 
 function App(){
     return(
