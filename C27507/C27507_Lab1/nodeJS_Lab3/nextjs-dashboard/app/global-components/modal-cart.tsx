@@ -37,10 +37,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
     myCartInStorage,
     setMyCartInStorage
 }) => {
-
-    //States del ModalDirection (activarlo despues de presionar el boton "iniciar Compra")
-    const [modalShow, setModalShow] = React.useState(false);
-
+    
     return (
         <>                 
             <Modal show={show} onHide={handleClose} animation={false}>
@@ -82,8 +79,8 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                 <Modal.Footer>
                     {
                         myCartInStorage && myCartInStorage.allProduct.length ? (
-                            <>                                                        
-                                <Link href="/cart-validation/address-validation">
+                            <>                                                                                      
+                                <Link href='/cart-validation/address-validation'>
                                     <Button variant="secondary">Iniciar compra</Button>
                                 </Link>
                             </>
@@ -100,15 +97,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                     </Button>                    
                     
                 </Modal.Footer>
-            </Modal>            
-            {/* Modal para la direccion del usuario */}
-            
-            {/* <ModalDirection 
-                show={modalShow}
-                onHide={() => setModalShow(false)}                     
-                myCartInStorage={myCartInStorage}
-                setMyCartStorage={setMyCartInStorage}
-            /> */}
+            </Modal>                                                
         </>
     );
 }
