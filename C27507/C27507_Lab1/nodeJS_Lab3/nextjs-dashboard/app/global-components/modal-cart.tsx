@@ -1,10 +1,24 @@
 import React from 'react';
 import {useState} from 'react';
+import {useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { ModalDirection } from './modal_direction';
-import { CartShopAPI,ProductAPI } from './layout';
-import { totalPriceNoTax, totalPriceTax,deleteAllProduct,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
+
+//Componentes
+// import { ModalDirection } from './modal_direction';
+
+//Interfaces
+import { CartShopAPI } from '../src/models-data/CartShopAPI';
+//Funciones
+import { deleteAllProduct } from '../src/storage/cart-storage';
+
+//Recursos
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../src/css/demoCSS.css'
+import '../src/css/fonts_awesome/css/all.min.css'
+import { mock } from 'node:test';
+
+
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalCartProps {
@@ -87,12 +101,12 @@ export const ModalCart: React.FC<ModalCartProps> = ({
 
             {/* Modal para la direccion del usuario */}
             
-            <ModalDirection 
+            {/* <ModalDirection 
                 show={modalShow}
                 onHide={() => setModalShow(false)}                     
                 myCartInStorage={myCartInStorage}
                 setMyCartStorage={setMyCartInStorage}
-            />
+            /> */}
         </>
     );
 }

@@ -5,11 +5,13 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 //Interfaces
-import {CartShopAPI,ProductAPI,PaymentMethods,PaymentMethodNumber} from './layout';
+import { CartShopAPI } from './src/models-data/CartShopAPI';
 //Componentes
-import { AlertShop } from './generic_overlay';
-//Metodos exportados
-import {setCartShopStorage,sendDataAPI, deleteAllProduct } from './page';
+import { AlertShop } from './global-components/generic_overlay';
+import { PaymentMethodNumber, PaymentMethods } from './src/models-data/PaymentMethodAPI';
+//Funciones
+import { deleteAllProduct, setCartShopStorage } from './src/storage/cart-storage';
+import { sendDataAPI } from './src/api/get-post-api';
 
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
