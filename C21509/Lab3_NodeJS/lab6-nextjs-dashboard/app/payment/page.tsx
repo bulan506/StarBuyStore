@@ -65,7 +65,7 @@ const PurchasedItems = () => {
   const managePaymentConfirmation = () => {
     if (selectedPaymentMethod === PaymentMethod.EFECTIVO) {
       const purchaseNum = generatePurchaseNumber();
-      setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${purchaseNum}. Espere la confirmación del administrador.`);
+      setPaymentConfirmation(`Su compra ha sido confirmada.`);
       setPurchaseNumber(purchaseNum.toString());
     } else if (selectedPaymentMethod === PaymentMethod.SINPE) {
       const purchaseNum = generatePurchaseNumber();
@@ -85,8 +85,6 @@ const PurchasedItems = () => {
       Subtotal: cartState.cart.subtotal 
     };
   
-    console.log("Datos de compra:", purchaseData);
-  
     try {
       const response = await fetch('https://localhost:7165/api/Cart', {
         method: 'POST',
@@ -100,7 +98,7 @@ const PurchasedItems = () => {
       if (response.ok) {
         const data = await response.json();
         setPurchaseNumber(data.purchaseNumber);
-        setPaymentConfirmation(`Su compra ha sido confirmada. El número de compra es: ${data.purchaseNumber}. Espere la confirmación del administrador.`);
+        setPaymentConfirmation(`Su compra ha sido confirmada.`);
       } else {
         const errorResponseData = await response.json();
         throw new Error(errorResponseData.message || 'Purchase cannot be processed');
@@ -152,7 +150,6 @@ const PurchasedItems = () => {
               <p>Ingrese el número de comprobante:</p>
               <input type="text" value={paymentReceipt} onChange={(e) => setPaymentReceipt(e.target.value)} placeholder="Ingrese el comprobante" />
               <p>Una vez realizado el pago, espere la confirmación del administrador.</p>
-              <button onClick={sendDataToAPI} className="button">Confirmar Compra</button>
             </div>
           )}
         </div>
@@ -172,6 +169,7 @@ const PurchasedItems = () => {
       <Link href="/product">
         <button className="button">Página principal</button>
       </Link>
+      <button onClick={sendDataToAPI} className="button">Confirmar Compra</button>
 
     </div>
   );

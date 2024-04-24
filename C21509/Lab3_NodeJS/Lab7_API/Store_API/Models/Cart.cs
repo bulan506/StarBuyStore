@@ -10,4 +10,13 @@ public sealed class Cart
     public PaymentMethods.Type PaymentMethod { get; set; }
     public decimal Total { get; set; } 
     public decimal Subtotal { get; set; } 
+
+     public Cart(List<int> productIds, string address, PaymentMethods.Type paymentMethod, decimal total, decimal subtotal)
+        {
+            ProductIds = productIds;
+            Address = address;
+            PaymentMethod = paymentMethod;
+            Total = total;
+            Subtotal = subtotal;
+        }
 }
