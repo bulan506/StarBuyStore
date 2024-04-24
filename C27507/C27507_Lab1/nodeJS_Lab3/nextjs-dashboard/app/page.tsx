@@ -1,177 +1,29 @@
-'use client'
-import AcmeLogo from '@/app/ui/acme-logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-//import Link from 'next/link';
+'use client';
 import {useState} from 'react';
 import {useEffect} from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 //Componentes
-import {Product,CartShop} from './layout';
-import { StaticCarousel} from './carousel';
-import {AlertShop} from './generic_overlay';
+import {Carousel} from './global-components/carousel';
+import {AlertShop} from './global-components/generic_overlay';
+import { CartShop } from './global-components/cart-shop';
+import { ProductGallery } from './global-components/product-gallery';
+import Link from 'next/link';
+import Button from 'react-bootstrap/Button';
+
 //Interfaces
-import {CartShopAPI,ProductAPI,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
+import { PaymentMethod, PaymentMethodNumber } from './src/models-data/PaymentMethodAPI';
+import { ProductAPI } from './src/models-data/ProductAPI';
+import { CartShopAPI } from './src/models-data/CartShopAPI';
+//Recursos
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './demoCSS.css'
-import './fonts_awesome/css/all.min.css'
+import './src/css/demoCSS.css'
+import './src/css/fonts_awesome/css/all.min.css'
 import { mock } from 'node:test';
+//Funciones
+import { getCartShopStorage } from './src/storage/cart-storage';
 
-//Peticiones API
-    //POST
-export async function sendDataAPI(directionAPI:string, data:any): Promise<string | null> {
 
-    //Especificacion POST
-    let postConfig = {
-        method: "POST",
-        //pasamos un objeto como atributo de otro
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    }
-
-    try {
-
-            //A las peticiones POST se les debe agregar parametro de configuracion para diferenciarlas de las
-        //GET            
-        let responsePost = await fetch(directionAPI,postConfig);
-        //await solo se puede usar dentro de funciones asincronas
-
-        if(!responsePost.ok){
-            //Obtenemos el mensaje de error de CartController
-            const errorMessage = await responsePost.text();
-            return errorMessage;
-        }
-        // Obtener los datos de la respuesta en formato JSON                        
-        const responseData = await responsePost.json();        
-        const purchaseNum = responseData.purchaseNum;        
-        return purchaseNum;
-        
-    } catch (error) {
-        throw new Error('Failed to POST data: '+ error);
-    }        
-}
-
-//Calcular el total y manejarlo con stateUse para tenerlo en todos los componentes
-export const totalPriceNoTax = (allProduct: { price: number; quantity: number; }[]) => {
-    let total = 0;
-    allProduct.map((item) => {                    
-        total += ( item.price * item.quantity );
-    });
-    return total;
-}
-export const totalPriceTax = (allProduct: { price: number; quantity: number; }[]) => {
-    let total = 0;
-    allProduct.map((item) => {                                
-        total += ((item.price * 0.13 + item.price) * item.quantity);
-    });
-    return total;
-}
-
-//Metodos del LocalStorage
-    //Crear un nuevo carrito
-export const setCartShopStorage = (key: string, mockup: CartShopAPI | null) => {
-    if(mockup !== null){
-        //como no es nulo, se guarda en el localStorage
-        const cartShopData = JSON.stringify(mockup);
-        localStorage.setItem(key,cartShopData);
-    }
-}
-
-    //Leemos lo que esta dentro del carrito o sea cartShopItem    
-export const getCartShopStorage = (key: string): CartShopAPI | null => {
-        
-    const cartShopData = localStorage.getItem(key);
-    if(cartShopData !== null){
-        return JSON.parse(cartShopData) as CartShopAPI;        
-    }
-
-    const defaultPaymentMethod: PaymentMethod = {
-        payment: PaymentMethodNumber.CASH,
-        verify: false
-    };
-
-    let cart: CartShopAPI = {  
-        allProduct: [],
-        subtotal: 0,
-        tax: 0.13,
-        total: 0,
-        direction: "",            
-        paymentMethod: defaultPaymentMethod 
-
-    };
-    //guardamos el carrito en el storage y luego se lo retornamos al state myCartInStorage
-    setCartShopStorage("A",cart);
-    return cart;    
-}
-
-    //verficar si un producto ha sido agregado o no
-export const verifyProductInCart = (id:number, allProductsInCart: ProductAPI[]) => {
-
-    for (let i = 0; i < allProductsInCart.length; i++) {
-        let elementID = allProductsInCart[i].id;
-        let isSameID = elementID === id
-        if( isSameID ){
-            return i;
-        }        
-    }
-    //si no lo encuentra
-    return -1;
-}
-
-    //agregar un producto al carrito (dependiendo si ya ha sido agregado antes)
-export const addProductInCart = (index: number, product: ProductAPI, myCartInStorage: CartShopAPI, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {
-    
-    //Una clonacion del carrito para sobreescribir de golpe en el antiguo y evitar
-    //malas actualziaciones por la asincronia                    
-    const cloneCart = { ...myCartInStorage };
-    if(index === -1){        
-        //Spread operator, aqui creamos una copia del producto y el resto del parametro son modificaciones a ese mismo producto
-        cloneCart.allProduct.push({...product,quantity:1});                
-
-    }else{
-        //se aumenta en 1 la cantidad de ese producto
-        cloneCart.allProduct[index].quantity += 1;        
-    }
-    //Se calculan los totales
-    cloneCart.subtotal = totalPriceNoTax(cloneCart.allProduct);
-    cloneCart.total = totalPriceTax(cloneCart.allProduct);        
-
-    // actualizamos el estado del carrito
-    setMyCartInStorage(cloneCart);
-    //sobbreescrimos el carrito clonado sobre el original
-    setCartShopStorage("A", cloneCart);          
-}
-
- //Vaciar lista de productos - Local y la del Carrito
- //export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>, setCartShopStorage: (key: string, value: any) => void) => {        
-export const deleteAllProduct = (myCartInStorage: CartShopAPI | null, setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>) => {        
-    if(myCartInStorage !== null){        
-        
-        //Setteamos un metodo de pago por defecto
-        const defaultPaymentMethod: PaymentMethod = {
-            payment: PaymentMethodNumber.CASH, // Establecer el método de pago predeterminado
-            verify: false // Establecer la verificación a falso o verdadero según corresponda
-        };
-
-        //setteamos todo el carrito
-        const newMockup: CartShopAPI = {
-            allProduct: [],
-            subtotal: 0,
-            tax: 0.13,
-            total: 0,
-            direction: '',           
-            paymentMethod: defaultPaymentMethod 
-        };   
-        //Limpiamos el storage y el estado actual
-        setCartShopStorage("A",newMockup)         
-        setMyCartInStorage(newMockup);
-    }            
-}
-
-export default function Page() {     
+function Page() {     
     //cargamos los datos desde la API (StoreController por Metodo Get)    
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);               
@@ -180,7 +32,7 @@ export default function Page() {
 
         const loadDataProductAPI = async ()=>{
             try{            
-                const response = await fetch('https://localhost:7161/api/Store')
+                const response = await fetch('https://localhost:7580/api/Store')
                 if (!response.ok){
                     throw new Error('Failed to fetch data');                
                 }
@@ -196,7 +48,7 @@ export default function Page() {
                 }                                
                 return json;
             } catch (error) {                
-                throw new Error('Failed to fetch data');
+                throw new Error('Failed to fetch data:' + error);
             }
         }  
         loadDataProductAPI();
@@ -204,8 +56,7 @@ export default function Page() {
    
   return (
     <main className="flex min-h-screen flex-col p-6">
-
-      {/* Menu con el carrito */}
+      
       <div className="main_banner">    
             
             <div className="row">
@@ -232,7 +83,7 @@ export default function Page() {
                   if (product.description === "carousel") {
                       return(
                           <section className="container_carousel col-sm-4" key={product.id}>
-                              <StaticCarousel                                     
+                              <Carousel                                     
                                     products={products}
                                     myCartInStorage={myCartInStorage}                                    
                                     setMyCartInStorage={setMyCartInStorage}           
@@ -241,7 +92,7 @@ export default function Page() {
                       ) 
                   } else {
                       return (
-                        <Product 
+                        <ProductGallery 
                             key={product.id} 
                             product={product}
                             myCartInStorage={myCartInStorage}                                    
@@ -256,3 +107,4 @@ export default function Page() {
     </main>
   );
 }
+export default Page;

@@ -1,20 +1,22 @@
 import {useState} from 'react';
 import { number } from 'zod';
-//Componentes
-import {Product,CartShop} from './layout';
-import {AlertShop} from './generic_overlay';
-//Interfaces
-import {CartShopAPI,ProductAPI,PaymentMethod,PaymentMethods,PaymentMethodNumber  } from './layout';
-//Funciones Generales
-import { totalPriceNoTax, totalPriceTax,getCartShopStorage,setCartShopStorage,verifyProductInCart,addProductInCart } from './page'; //precios totales - manejor LocalStorage
 
-interface CarouselStaticProps {
+//Componentes
+// import {Product,CartShop} from './layout';
+// import {AlertShop} from './generic_overlay';
+//Interfaces
+import { ProductAPI } from '../src/models-data/ProductAPI';
+import { CartShopAPI } from '../src/models-data/CartShopAPI';
+//Funciones
+import { verifyProductInCart, addProductInCart, setCartShopStorage } from '../src/storage/cart-storage';
+
+interface CarouselProps {
     products: ProductAPI[];  
     myCartInStorage: CartShopAPI | null;
     setMyCartInStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
   }
   
-export const StaticCarousel: React.FC<CarouselStaticProps> = ({products,myCartInStorage,setMyCartInStorage}) => { 
+export const Carousel: React.FC<CarouselProps> = ({products,myCartInStorage,setMyCartInStorage}) => { 
     const [activeIndex, setActiveIndex] = useState(0);
 
     const handlePrevSlide = () => {

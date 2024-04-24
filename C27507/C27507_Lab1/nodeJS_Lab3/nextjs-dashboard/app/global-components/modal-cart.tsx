@@ -1,10 +1,26 @@
 import React from 'react';
 import {useState} from 'react';
+import {useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { ModalDirection } from './modal_direction';
-import { CartShopAPI,ProductAPI } from './layout';
-import { totalPriceNoTax, totalPriceTax,deleteAllProduct,getCartShopStorage,setCartShopStorage } from './page'; //precios totales - manejor LocalStorage
+
+//Componentes
+//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Link from 'next/link';
+
+
+//Interfaces
+import { CartShopAPI } from '../src/models-data/CartShopAPI';
+//Funciones
+import { deleteAllProduct } from '../src/storage/cart-storage';
+
+//Recursos
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../src/css/demoCSS.css'
+import '../src/css/fonts_awesome/css/all.min.css'
+import { mock } from 'node:test';
+
+
 
 //Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
 interface ModalCartProps {
@@ -21,12 +37,9 @@ export const ModalCart: React.FC<ModalCartProps> = ({
     myCartInStorage,
     setMyCartInStorage
 }) => {
-
-    //States del ModalDirection (activarlo despues de presionar el boton "iniciar Compra")
-    const [modalShow, setModalShow] = React.useState(false);
-
+    
     return (
-        <>     
+        <>                 
             <Modal show={show} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>
@@ -40,18 +53,16 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                     <div className="product-menu-cart">
 
                         {/* asegurarnos de que no venga nulo el carrito */}
-                        {myCartInStorage && myCartInStorage.allProduct.map((productItem, index) => (
-                            //Tecnica rapida para evitar colocar otro div
-                            <>                    
-                                <div key={productItem.id}>
-                                    <img src={productItem.imageUrl} alt="" />
-                                    <p>{productItem.name}</p>
-                                    <p><span>Cantidad:</span> {productItem.quantity}</p>
-                                    <p><span>Precio:</span> ₡{productItem.price}</p>
-                                    <button>Eliminar</button>
-                                </div>
+                        {myCartInStorage && myCartInStorage.allProduct.map((productItem) => (
+                            
+                            <div key={productItem.id}>
+                                <img src={productItem.imageUrl} alt="" />
+                                <p>{productItem.name}</p>
+                                <p><span>Cantidad:</span> {productItem.quantity}</p>
+                                <p><span>Precio:</span> ₡{productItem.price}</p>
+                                <button>Eliminar</button>
                                 <hr></hr>
-                            </>
+                            </div>                                             
                         ))}                
                     </div>                    
                 
@@ -66,11 +77,12 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                 <Modal.Footer>
                     {
                         myCartInStorage && myCartInStorage.allProduct.length ? (
-                            <>
-                                <Button variant="secondary" onClick={() => setModalShow(true)}>
-                                    Iniciar compra
-                                </Button>                              
+                            <>                                                                                      
+                                <Link href='/cart-validation/address-validation'>
+                                    <Button variant="secondary">Iniciar compra</Button>
+                                </Link>
                             </>
+                            
                         ) : (
                             <></>
                         )
@@ -83,16 +95,7 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                     </Button>                    
                     
                 </Modal.Footer>
-            </Modal>
-
-            {/* Modal para la direccion del usuario */}
-            
-            <ModalDirection 
-                show={modalShow}
-                onHide={() => setModalShow(false)}                     
-                myCartInStorage={myCartInStorage}
-                setMyCartStorage={setMyCartInStorage}
-            />
+            </Modal>                                                
         </>
     );
 }
