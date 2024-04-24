@@ -53,18 +53,16 @@ export const ModalCart: React.FC<ModalCartProps> = ({
                     <div className="product-menu-cart">
 
                         {/* asegurarnos de que no venga nulo el carrito */}
-                        {myCartInStorage && myCartInStorage.allProduct.map((productItem, index) => (
-                            //Tecnica rapida para evitar colocar otro div
-                            <>                    
-                                <div key={productItem.id}>
-                                    <img src={productItem.imageUrl} alt="" />
-                                    <p>{productItem.name}</p>
-                                    <p><span>Cantidad:</span> {productItem.quantity}</p>
-                                    <p><span>Precio:</span> ₡{productItem.price}</p>
-                                    <button>Eliminar</button>
-                                </div>
+                        {myCartInStorage && myCartInStorage.allProduct.map((productItem) => (
+                            
+                            <div key={productItem.id}>
+                                <img src={productItem.imageUrl} alt="" />
+                                <p>{productItem.name}</p>
+                                <p><span>Cantidad:</span> {productItem.quantity}</p>
+                                <p><span>Precio:</span> ₡{productItem.price}</p>
+                                <button>Eliminar</button>
                                 <hr></hr>
-                            </>
+                            </div>                                             
                         ))}                
                     </div>                    
                 

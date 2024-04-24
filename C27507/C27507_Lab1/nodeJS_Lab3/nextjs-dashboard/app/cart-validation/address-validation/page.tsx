@@ -14,40 +14,43 @@ import { sendDataAPI } from '@/app/src/api/get-post-api';
 
 //Funciones
 import {getCartShopStorage, setCartShopStorage, deleteAllProduct } from '@/app/src/storage/cart-storage';
-
-
-//Creamos la interfaz que deben seguir los props (o parametros) para el componente Modal
-// interface ModalDirectionProps {    
-//     show: boolean;
-//     onHide: () => void;            
-//     myCartInStorage: CartShopAPI | null;
-//     setMyCartStorage: React.Dispatch<React.SetStateAction<CartShopAPI | null>>;
-//   }
-
-// export const ModalDirection: React.FC<ModalDirectionProps> = ({
-//   show,onHide,myCartInStorage,setMyCartStorage
-// }) => {  
+import { useRouter } from 'next/router';
 
 export default function ModalDirection() {  
 
     //manejar carrito
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));        
 
-    //Estados de los campos del formulario    
-        //para activar o desactivar el boton "Finalizar Compra"    
-    const [finish, setFinish] = useState(false);
-        //para activar o desactivar el boton "Finalizar Compra"            
-    const [textAreaDataDirection, setTextAreaDataDirection] = useState("");
-        //asi evitamos que el myCartInStorage o el valor guardado de PaymentMethodNumber pueda ser nulo 
-    const [payment, setPayment] = useState<PaymentMethodNumber>(myCartInStorage?.paymentMethod.payment ?? PaymentMethodNumber.CASH);
-    // const [verify, setVerify] = useState<boolean>(false); //    
-    const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe    
-  
     //Estados  para los alert de Boostrap
     const [showAlert, setShowAlert] = useState(false);
     const [alertInfo,setAlertInfo] = useState("");
     const [alertTitle,setAlertTitle] = useState("");
     const [alertType,setAlertType] = useState("");
+
+    //Estados de los campos del formulario        
+    const [textAreaDataDirection, setTextAreaDataDirection] = useState("");
+    const [selectPayment, setPayment] = useState<PaymentMethodNumber>(myCartInStorage?.paymentMethod.payment ?? PaymentMethodNumber.CASH);
+    const [textAreaSinpe, setTextAreaSinpe] = useState("");//campo del codigo del sinpe    
+
+    //Estados del formulario:
+        //objeto que guarda los valores de los campos como propiedades sin definir
+    const [form,setForm] = useState<{[key:string]: string | null}>({});    
+        //objeto que guarda los errores de los campos como propiedades sin definir
+    const [errors, setErrors] = useState<{[key:string]: string | null}>({});
+    const [submitAttempted, setSubmitAttempted] = useState(false);
+
+
+    //Cada vez que se produzca un cambio en los campos de los formularios, guardamos su estado
+    const setField = (field: string,valueFromForm: any)=>{
+        setForm({...form,[field]:valueFromForm});
+        
+        //Si no existe un atributo con ese nombre de campo, entonces lo creamos
+        //pero con error nulo, ya que no sabemos si el dato es correcto o erroneo
+        if(!!errors[field]){
+            setErrors({...errors,[field]:null})
+        }        
+    }
+    
 
     //funciones para gestionar los alert
     function closeAlertShop(): void {
@@ -61,7 +64,6 @@ export default function ModalDirection() {
     }
     
     const getSelectPayment = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        //Obtenemos el valor 1,2,3 o 4  del Select
         const actualValue = parseInt(event.target.value);        
 
         if (myCartInStorage) {
@@ -81,132 +83,132 @@ export default function ModalDirection() {
     };
 
 
-    //Para habilitar o deshabilitar las opciones despues de la direccion de entrega
-    const getTextAreaDirection = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
-        const actualValue = event.target.value;        
+    //Para guardar la informacion en el carrito local storage
+    const getTextAreaDirection = (event: React.ChangeEvent<any>) =>{        
+        const actualValue = event.target.value;          
         setTextAreaDataDirection(actualValue);           
         if (myCartInStorage) {
             myCartInStorage.direction = textAreaDataDirection;
             setCartShopStorage("A", myCartInStorage);            
         }            
     }
-    const getTextAreaSinpe = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{        
+    const getTextAreaSinpe = (event: React.ChangeEvent<any>) =>{        
         const actualValue = event.target.value;        
         setTextAreaSinpe(actualValue);                  
     }    
-
-    //Cambiar el estado del modal, segun haya contenido o no en el campo de Direccion
-    const verifyTextArea = () =>{
-        let isEmpty = textAreaDataDirection.trim() !== "";
-        //en vez de un if
-        setFinish(isEmpty);        
-    }           
-    
+          
     //Reiniciar los datos al cerrar el modal
-    // const resetModal = () =>{
-    //     setFinish(false);
-    //     setTextAreaDataDirection("");
-    //     setTextAreaSinpe("");        
-    //     onHide();
-    // }
+    const resetModal = () =>{
+        setTextAreaDataDirection("");
+        setTextAreaSinpe("");      
+        deleteAllProduct(myCartInStorage,setMyCartInStorage);       
+    }
 
     //Validcacion de inputs
     const purchaseProcess = async () =>{
-        //Verificar direccion
-        if(textAreaDataDirection.trim() === ""){
-            callAlertShop("danger","Campo de entrega vacío","Por favor, verifique el campo de direccón no esté vacío...")
-            return;
+
+        setSubmitAttempted(true);
+        const {address,payment,paymentSINPE} = form;
+        const newErrors: { [key: string]: string | null } = {};
+        
+        let isAddressValid = !address || address === '';
+        if(isAddressValid){
+            newErrors.address = 'El campo de direccion debe contener informacion';
         }
-        //Verificar que estemos tanto en la ultima pantalla y que haya un tipo de pago seleccionado
-        //se deben verificar al mismo tiempo, ya que el tipo de pago solo aparece si estamos en la utlima pantalla        
-        let isFinishAndSelectPaymentEmpty = finish && !payment
-        if(isFinishAndSelectPaymentEmpty){            
-            callAlertShop("danger","Campo de pago vacío","Por favor, indique un método de pago...")
-            return;
-        }     
+                
+        let isSelectPaymentValid = !payment || payment === '';
+        if(isSelectPaymentValid){            
+            newErrors.payment = 'Seleccione un tipo de pago';                        
+        }
 
-        //Verificar que el value de la caja Sinpe sea igual al codigo dado por el sistema
-        let isSinpeCodeOk = payment === PaymentMethodNumber.SINPE && textAreaSinpe.trim() === "";
-        if(isSinpeCodeOk){                        
-            callAlertShop("danger","Código de SINPE vacío","Debe colocar el cÓdigo de la transaccion SINPE")
-            return;            
-        }            
+        //Verificar si payment es del tipo SINPE, ya que se podria activar el textArea del codigo SINPE
+        //estando en otro tipo de pago por algun error  
+        var isPaymentIntValue = payment && parseInt(payment) === PaymentMethodNumber.SINPE
+        if (isPaymentIntValue) {
+            if (!paymentSINPE || paymentSINPE === "") {
+                newErrors.paymentSINPE = 'Introduzca el código obtenido del SINPE';
+            }
+        }        
 
-        const purchaseNum = await sendDataAPI("https://localhost:7580/api/Cart", myCartInStorage);        
-        // resetModal();//setteamos el modal o mandamos el resumen a la pagina
-        deleteAllProduct(myCartInStorage,setMyCartInStorage);
-        callAlertShop("success","Compra finalizada","El codigo de su compra es: " + purchaseNum);      
+        setErrors(newErrors);
+        
+        if(Object.keys(newErrors).length === 0){                        
+            console.log(form);            
+            const purchaseNum = await sendDataAPI("https://localhost:7580/api/Cart", myCartInStorage);        
+            resetModal();//setteamos el modal o mandamos el resumen a la pagina            
+            callAlertShop("success","Compra finalizada","El codigo de su compra es: " + purchaseNum);   
+        }else{
+            callAlertShop("danger","Campos de formulario incompletos","Por favor, verifique que los campos esten llenos y con la informacion solicitada")
+            
+        }
     }    
 
     return (
         <>
-          <Modal show={true} aria-labelledby="contained-modal-title-vcenter" centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                Ventanas de Compras:
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                  <fieldset>
-                      <Form.Group className="mb-3">
-                          <Form.Label style={{ fontWeight: 'bolder' }}>Dirección de entrega:</Form.Label>
-                          <Form.Control rows={5} as="textarea" placeholder="Ingresa tu dirección para la entrega" value={textAreaDataDirection} onChange={getTextAreaDirection} />
-                          <Form.Text className="text-muted">
-                              Tu información es confidencial con nosotros
-                          </Form.Text>
-                      </Form.Group>    
+                                        
+            <Form>
+                <fieldset>
+                    <Form.Group className="mb-3" controlId='address'>
+                        <Form.Label style={{ fontWeight: 'bolder' }}>Dirección de entrega:</Form.Label>
+                        <Form.Control 
+                            rows={5} 
+                            as="textarea" 
+                            placeholder="Ingresa tu dirección para la entrega" 
+                            value={textAreaDataDirection} 
+                            onChange={(e) => {setField("address",e.target.value);getTextAreaDirection(e);}} 
+                            isInvalid={submitAttempted && !!errors.address} 
+                        />
+                        {submitAttempted && errors.address && (
+                            <Form.Control.Feedback type='invalid'>{errors.address}</Form.Control.Feedback>
+                        )}
+                        <Form.Text className="text-muted">
+                            Tu información es confidencial con nosotros
+                        </Form.Text>
 
-                      {/*Cuando el useState "finish=true", mostrar las demas opciones del Select*/}
-                      {finish ? (
-                          <>
-                              <Form.Group className="mb-3">
-                                  <Form.Label htmlFor="disabledSelect" style={{ fontWeight: 'bolder' }}>Forma de pago:</Form.Label>
-                                  {/* El Form Select tiene un valor por defecto (el del useState) */}
-                                  <Form.Select id="disabledSelect" value={payment} onChange={getSelectPayment}>
-                                      <option value="">Seleccione un tipo de pago:</option>
-                                      {/* PaymentMethods son los pagos ya definidos en layout.tsx ya que no tiene sentido
-                                      que el usuario cree los */}
-                                      {PaymentMethods.map((method) => (
-                                          <option key={method.payment} value={method.payment}>{PaymentMethodNumber[method.payment]}</option>
-                                      ))}
-                                  </Form.Select>
-                              </Form.Group>
-                              
-                              {payment == PaymentMethodNumber.SINPE && (
+                    </Form.Group>    
+                                                
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="disabledSelect" style={{ fontWeight: 'bolder' }}>Forma de pago:</Form.Label>                                        
+                        <Form.Select id="disabledSelect" 
+                            value={selectPayment} 
+                            onChange={(e)=>{setField("payment",e.target.value);getSelectPayment(e);}}
+                            isInvalid={submitAttempted && !!errors.payment}
+                        >                                        
+                                <option value="">Seleccione un tipo de pago:</option>                                        
+                                {PaymentMethods.map((method) => (
+                                    <option key={method.payment} value={method.payment}>{PaymentMethodNumber[method.payment]}</option>
+                                ))}
+                        </Form.Select>
+                        {submitAttempted && errors.payment && (
+                            <Form.Control.Feedback type='invalid'>{errors.payment}</Form.Control.Feedback>
+                        )}
+                    </Form.Group>
+                    
+                    {selectPayment == PaymentMethodNumber.SINPE && (
 
-                              <>
-                                  <Form.Group className="mb-3">
-                                      <Form.Label><span style={{ fontWeight: 'bolder' }}>Nuestro número de teléfono:</span> 62889872</Form.Label>
-                                      <br />                                                                      
-                                      <br />                                  
-                                      <Form.Label style={{ fontWeight: 'bolder' }}>Comprobante del SINPE:</Form.Label>
-                                      <Form.Control rows={5} as="textarea" placeholder="Ingrese su comprobante" onChange={getTextAreaSinpe}/>
-                                  </Form.Group>
-                              </>
+                    <>
+                        <Form.Group className="mb-3">
+                            <Form.Label><span style={{ fontWeight: 'bolder' }}>Nuestro número de teléfono:</span> 62889872</Form.Label>
+                            <br />                                                                      
+                            <br />                                  
+                            <Form.Label style={{ fontWeight: 'bolder' }}>Comprobante del SINPE:</Form.Label>
+                            <Form.Control 
+                                rows={5} 
+                                as="textarea" 
+                                placeholder="Ingrese su comprobante" 
+                                onChange={(e) => {setField("paymentSINPE",e.target.value);getTextAreaSinpe(e);}}/>
+                            {submitAttempted && errors.paymentSINPE && (
+                                <Form.Control.Feedback type="invalid">{errors.paymentSINPE}</Form.Control.Feedback>
+                            )}
 
-                              )}
+                        </Form.Group>
+                    </>
 
-                              <Form.Group className="mb-3">                                                                                
-                                  <Form.Label><span style={{ fontWeight: 'bolder' }}>Código de compra:</span> 24</Form.Label>
-                              </Form.Group>     
-                          </>
-                      ):null}                    
-                                                              
-                  </fieldset>
-              </Form>                
-            </Modal.Body>
-            <Modal.Footer>
-                {
-                    finish ? <Button type="submit" onClick={purchaseProcess}>Finalizar Compra</Button> : null
-                }                
-                {
-                    finish ? null :  <Button onClick={verifyTextArea} onChange={verifyTextArea}>Continuar con la compra</Button>
-                }                                
-                {/* <Button onClick={()=>{onHide(); resetModal()}}>Close</Button>                 */}
-            </Modal.Footer>
-          </Modal>            
-          <AlertShop alertTitle={alertTitle} alertInfo={alertInfo} alertType={alertType} showAlert={showAlert} onClose={closeAlertShop}/>        
+                    )}                    
+                    <Button type="button" onClick={purchaseProcess}>Finalizar Compra</Button>                                                                                                    
+                </fieldset>
+            </Form>                
+            <AlertShop alertTitle={alertTitle} alertInfo={alertInfo} alertType={alertType} showAlert={showAlert} onClose={closeAlertShop}/>                    
         </>
     );
 }
