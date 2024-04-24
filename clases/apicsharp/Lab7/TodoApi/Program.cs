@@ -1,3 +1,4 @@
+using Core;
 using TodoApi.db;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+builder.Configuration.AddJsonFile("TodoApi/appsettings.json", optional: false, reloadOnChange: true);
+string connection = builder.Configuration.GetSection("ConnectionStrings").GetSection("MyDatabase").Value.ToString();
+Storage.Init(connection) ;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
