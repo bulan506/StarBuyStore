@@ -273,9 +273,10 @@ public sealed class StoreDB
             connection.Open();
 
 
-            // Create the products table if it does not exist
+            // Create the products table if it does not exist  //;
             string createTableQuery = @"
-                DROP DATABASE IF EXISTS store;
+
+                DROP DATABASE IF EXISTS store; 
                 CREATE DATABASE store;
                 use store;
                 
@@ -302,7 +303,16 @@ public sealed class StoreDB
                     PRIMARY KEY (sale_id, product_id),
                     FOREIGN KEY (sale_id) REFERENCES sales(Id),
                     FOREIGN KEY (product_id) REFERENCES products(id)
-                );               
+                );   
+
+                INSERT INTO sales (purchase_date, total, payment_method, purchase_number)
+                VALUES 
+                    ('2024-04-11 10:00:00', 50.00, '1', 'ABD12345'),
+                    ('2024-04-11 11:30:00', 75.20, '0', 'GML54321'),
+                    ('2024-04-11 13:45:00', 100.50, '1', 'GKS98765');
+                
+                
+             
              ";
 
 
@@ -333,6 +343,18 @@ public sealed class StoreDB
                             insertCommand.Parameters.AddWithValue("@imgUrl", product.ImgUrl);
                             insertCommand.ExecuteNonQuery();
                         }
+                    }
+
+                    string insertSaleLineQuery = @"
+                    INSERT INTO sale_lines VALUES
+                                        (1, 2, 50.00),
+                    (2, 4, 75.20),
+                    (3, 6, 100.50); ";
+
+                    using (var insertCommand = new MySqlCommand(insertSaleLineQuery, connection, transaction))
+                    {
+
+                        insertCommand.ExecuteNonQuery();
                     }
 
                     // Commit the transaction if all inserts are successful

@@ -4,8 +4,17 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '/app/ui/global.css';
 import Link from 'next/link';
 import { Chart } from 'react-google-charts';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function ReportPage() {
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
+    
+    const dailySalesData = [
+        //Datos correspondientes al día seleccionado
+    ];
 
     // Define static sales data with product information
     const salesData = [
@@ -62,10 +71,14 @@ export default function ReportPage() {
         ['Day 7', 1200],
     ];
 
-    const handleLogin = async () => {
 
-
+   
+    const handleDayChange = (date: Date | null) => {
+        if (date !== null) {
+            setSelectedDate(date);
+        }     // Cargar los datos correspondientes al nuevo día seleccionado
     };
+
 
     return (
         <div>
@@ -79,49 +92,62 @@ export default function ReportPage() {
                 </div>
             </header>
 
-
-           
-
-            <div style={{ display: 'flex' }}>
-                <div style={{ marginRight: '20px' }}>
-                    <h2>Sales Chart</h2>
-                    <Chart
-                        width={'1000px'}
-                        height={'300px'}
-                        chartType="Table"
-                        loader={<div>Loading Chart</div>}
-                        data={salesData}
-                        options={{
-                            showRowNumber: true,
-                            cssClassNames: {
-                                tableRow: 'chart-row',
-                                headerRow: 'chart-header-row',
-                                tableCell: 'chart-cell',
-                            },
-                            allowHtml: true, // Allows HTML content in cells
-                        }}
-                    />
-                </div>
-                <div>
-                    <h2>Weekly Sales Pie Chart</h2>
-                    <Chart
-                        width={'400px'}
-                        height={'300px'}
-                        chartType="PieChart"
-                        loader={<div>Loading Chart</div>}
-                        data={weeklySalesData}
-                        options={{
-                            title: 'Weekly Sales',
-                        }}
-                    />
-                </div>
+            <div style={{ marginLeft: '50px' }}>
+                <h2>Seleccionar Fecha</h2>
+                <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDayChange}
+                    dateFormat="dd/MM/yyyy"
+                />
             </div>
+
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-9">
+                        <div style={{ display: 'flex' }}>
+                            <div>
+                                <h2>Sales Chart</h2>
+                                <Chart
+                                    width={'1000px'}
+                                    height={'300px'}
+                                    chartType="Table"
+                                    loader={<div>Loading Chart</div>}
+                                    data={salesData}
+                                    options={{
+                                        showRowNumber: true,
+                                        cssClassNames: {
+                                            tableRow: 'chart-row',
+                                            headerRow: 'chart-header-row',
+                                            tableCell: 'chart-cell',
+                                        },
+                                        allowHtml: true, // Allows HTML content in cells
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <h2>Weekly Sales Pie Chart</h2>
+                        <Chart
+                            width={'400px'}
+                            height={'300px'}
+                            chartType="PieChart"
+                            loader={<div>Loading Chart</div>}
+                            data={weeklySalesData}
+                            options={{
+                                title: 'Weekly Sales',
+                            }}
+                        />
+                    </div>
+                </div>
+            </div >
+
 
             <footer className='footer' style={{ position: 'fixed', bottom: '0', width: '100%', zIndex: '9999' }}>
                 <div className="text-center p-3">
                     <h5 className="text-light"> Paula's Library</h5>
                 </div>
             </footer>
-        </div>
+        </div >
     );
 }

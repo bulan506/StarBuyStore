@@ -26,6 +26,9 @@ export default function InitPage() {
                                 <Link href="/admin/init">
                                     <button className="btn btn-dark ">Productos</button>
                                 </Link>
+                                <Link href="/admin/PayMethod">
+                                    <button className="btn btn-dark ">Payment Methods</button>
+                                </Link>
                               
                            
                             <div className="flex-grow-1"></div>

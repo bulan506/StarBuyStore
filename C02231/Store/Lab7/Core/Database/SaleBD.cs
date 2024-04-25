@@ -24,7 +24,7 @@ namespace StoreAPI.Database
                         {
                             command.Parameters.AddWithValue("@date", DateTime.Now);
                             command.Parameters.AddWithValue("@total", sale.Amount);
-                            command.Parameters.AddWithValue("@PaymentMethod", sale.PaymentMethod);
+                            command.Parameters.AddWithValue("@PaymentMethod", sale.PaymentMethod.GetHashCode().ToString());
                             command.Parameters.AddWithValue("@orderNumber", sale.NumberOrder);
 
                             command.ExecuteNonQuery();
