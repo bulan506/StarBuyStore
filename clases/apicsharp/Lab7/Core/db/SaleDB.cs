@@ -29,4 +29,6 @@ public sealed class SaleDB
             }
         }
     }
+
+    
 }

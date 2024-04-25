@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel;
 using System.Data.Common;
 using System.IO.Compression;
+using Core;
 using MySqlConnector;
 using TodoApi.models;
 
@@ -12,16 +14,15 @@ public sealed class StoreLogic
 
 
     }
-
-    public Sale Purchase (Cart cart)
-    {
+    public CartWithStatus Purchase (Cart cart, out Sale saleArg)
+    {  
         if (cart.ProductIds.Count == 0)  throw new ArgumentException("Cart must contain at least one product.");
         if (string.IsNullOrWhiteSpace(cart.Address))throw new ArgumentException("Address must be provided.");
 
         var products = Store.Instance.Products;
         var taxPercentage = Store.Instance.TaxPercentage;
 
-         // Find matching products based on the product IDs in the cart
+        // Find matching products based on the product IDs in the cart
         IEnumerable<Product> matchingProducts = products.Where(p => cart.ProductIds.Contains(p.Uuid.ToString())).ToList();
 
         // Create shadow copies of the matching products
@@ -35,14 +36,28 @@ public sealed class StoreLogic
             purchaseAmount += product.Price;
         }
 
-        PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
+        if (purchaseAmount > 1000000) 
+        {
 
-        // Create a sale object
-        var sale = new Sale(Sale.GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
+            //Broker.message("Avidarle al admin")
+            saleArg = null;
+            return new CartPendingtoApprove();
+        }
+        else
+        {
 
+            PaymentMethods paymentMethod = PaymentMethods.Find(cart.PaymentMethod);
 
+            // Create a sale object
+            var sale = new Sale(Sale.GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod);
+            saleArg = sale;
+            return new CartApproved(sale);
 
-        return sale;
-
+        }
+    }   
+    public CartWithStatus Purchase (Cart cart)
+    {
+        Sale sale;
+        return this.Purchase(cart, out sale);        
     }
 }

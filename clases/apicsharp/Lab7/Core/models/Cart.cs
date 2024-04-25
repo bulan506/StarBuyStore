@@ -7,5 +7,34 @@ public sealed class Cart
     public PaymentMethods.Type PaymentMethod { get; set; }
 
 
+}
+
+public abstract class  CartWithStatus
+{
+
+}
+
+internal class CartPendingtoApprove : CartWithStatus
+{
+    public CartPendingtoApprove()
+    {
+    }
+
+    public void Approve()
+    {
+        //TODO falta de implementar
+            throw new NotImplementedException("Pending");
+    }
+}
+
+internal class CartApproved : CartWithStatus
+{
+    public Sale Sale{ get; private set; }
+    public CartApproved(Sale sale1)
+    {
+        if(sale1 == null ) throw new ArgumentException($"{nameof(sale1)}  is required.");
+
+        this.Sale = sale1;
+    }
 
 }

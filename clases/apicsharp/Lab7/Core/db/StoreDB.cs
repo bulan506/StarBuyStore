@@ -59,6 +59,7 @@ public sealed class StoreDB
                     ('2024-04-11 10:00:00', 50.00, 1, '12345'),
                     ('2024-04-11 11:30:00', 75.20, 2, '54321'),
                     ('2024-04-11 13:45:00', 100.50, 1, '98765');
+
                 ";
 
 
@@ -105,6 +106,32 @@ public sealed class StoreDB
                     throw;
                 }
             }
+        
+            // Create command for creating stored procedure
+            using (MySqlCommand createProcedureCommand = connection.CreateCommand())
+            {
+                createProcedureCommand.CommandText = @"
+                    CREATE PROCEDURE InsertSales()
+                    BEGIN
+                        INSERT INTO sales (purchase_date, total, payment_method, purchase_number)
+                        VALUES ('2024-04-25 10:00:00', 100.00, 1, 'ABC123'),
+                               ('2024-04-26 11:30:00', 150.00, 2, 'XYZ456');
+                    END
+                   ";
+                createProcedureCommand.ExecuteNonQuery();
+                Console.WriteLine("Stored procedure InsertSales created successfully.");
+            }
+
+            using (MySqlCommand createViewCommand = connection.CreateCommand())
+            {
+                createViewCommand.CommandText = @"
+                    CREATE VIEW AllSales AS
+                    SELECT * FROM sales inner;
+                ";
+                createViewCommand.ExecuteNonQuery();
+                Console.WriteLine("View AllSales created successfully.");
+            }
+        
         }
     }
 }

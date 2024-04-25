@@ -15,3 +15,6 @@ clases/apicsharp/Lab7/UT/obj/project.nuget.cache
 clases/apicsharp/Lab7/UT/obj/UT.csproj.nuget.dgspec.json
 clases/apicsharp/Lab7/UT/obj/UT.csproj.nuget.g.props
 clases/apicsharp/Lab7/UT/obj/UT.csproj.nuget.g.targets
+clases/apicsharp/.DS_Store
+clases/apicsharp/Lab7/Core/.DS_Store
+.gitignore
