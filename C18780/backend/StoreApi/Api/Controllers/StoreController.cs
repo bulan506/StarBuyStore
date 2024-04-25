@@ -20,7 +20,7 @@ namespace StoreApi.Controllers
         public async Task<Store> GetStoreAsync()
         {
             var product = await mediator.Send(new GetProductListQuery());
-            var taxPercentage = 13;
+            var taxPercentage = 13;//nota: guardar el valor en db
             return new Store(product,taxPercentage);
         }
     }
