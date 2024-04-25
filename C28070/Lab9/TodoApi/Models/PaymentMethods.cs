@@ -25,7 +25,7 @@ public abstract class PaymentMethods {
             case Type.Sinpe:
                 return sinpe;
             default:
-                throw new ArgumentException("Invalid payment method type.");
+                throw new ArgumentException("método de pago inválido");
         }
     }
     

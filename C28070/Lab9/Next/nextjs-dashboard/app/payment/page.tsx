@@ -13,6 +13,11 @@ export default function Pago() {
 
     const [address, setAddress] = useState('');
 
+    const [purchaseNumberOficial, setpurchaseNumber] = useState('');
+
+    const [confirmacionPendiente, setConfirmacionPendiente] = useState(false); 
+
+
     useEffect(() => {
         const storedCartString = localStorage.getItem('productosCarrito');
         if (storedCartString) {
@@ -42,7 +47,11 @@ export default function Pago() {
 
 
     const manejarConfirmacionPago = async () => {
+   
         try {
+                 
+        setConfirmacionPendiente(true);
+
           const paymentMethodValue = metodoSeleccionado === 'Sinpe' ? 1 : 0;
     
           const dataSend = {
@@ -63,15 +72,14 @@ export default function Pago() {
           });
           
           if (!response.ok) {
-            throw new Error('Failed to confirm purchase.');
+            throw new Error('Fallo al confirmar la compra.');
           }
           else if (response.ok) {
-            const data = await response.json();
-            const purchase_Number = data.purchaseNumber;
-            localStorage.setItem('purchase_number', JSON.stringify(purchase_Number));
+           const purchaseNumber = await response.json();
+           setpurchaseNumber(purchaseNumber.purchaseNumber);
         }
         } catch (error) {
-        throw new Error('Error confirming purchase:', error.message);
+        throw new Error('Error al confirmar la compra:', error.message);
         }
       };
 
@@ -89,17 +97,17 @@ export default function Pago() {
                     </div>
                     {metodoSeleccionado === 'Efectivo' && (
                         <div>
-                            <p>Número de compra: {localStorage.getItem('purchase_number')}.</p>
+                            <p>Número de compra: {purchaseNumberOficial} .</p>
                             <p>Por favor espere, hasta que el administrador confirme su pago...</p>
-                            <button className="btn btn-primary me-3 btn-lg" onClick={manejarConfirmacionPago}>Confirmar compra</button>
+                            <button className="btn btn-primary me-3 btn-lg" onClick={manejarConfirmacionPago} disabled={confirmacionPendiente}>Confirmar compra</button>
                         </div>
                     )}
                     {metodoSeleccionado === 'Sinpe' && (
                         <div>
-                            <p>Número de compra: {localStorage.getItem('purchase_number')}.</p>
+                            <p>Número de compra: {purchaseNumberOficial} .</p>
                             <p>Realice el pago por medio de SinpeMovil al número 8655-8255.</p>
                             <input type="text" className="form-control mb-3" placeholder="Ingrese el código de recibo aquí" />
-                            <button className="btn btn-primary me-3 btn-lg" onClick={manejarConfirmacionPago}>Confirmar compra</button>
+                            <button className="btn btn-primary me-3 btn-lg" onClick={manejarConfirmacionPago} disabled={confirmacionPendiente}>Confirmar compra</button>
                             {pagoConfirmado && <p>Por favor espere, hasta que el administrador confirme su pago...</p>}
                         </div>
                     )}

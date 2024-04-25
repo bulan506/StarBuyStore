@@ -15,8 +15,8 @@ public sealed class StoreLogic
     private SaleDB saleDB = new SaleDB();
     public string Purchase (Cart cart)
     {
-        if (cart.ProductIds.Count == 0)  throw new ArgumentException("Cart must contain at least one product.");
-        if (string.IsNullOrWhiteSpace(cart.Address))throw new ArgumentException("Address must be provided.");
+        if (cart.ProductIds.Count == 0)  throw new ArgumentException("El carrito debe tener al menos un producto.");
+        if (string.IsNullOrWhiteSpace(cart.Address))throw new ArgumentException("Debe ingresar una dirección.");
 
         var products = Store.Instance.Products;
         var taxPercentage = Store.Instance.TaxPercentage;
@@ -38,13 +38,12 @@ public sealed class StoreLogic
         PaymentMethods paymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
 
     
-        var sale = new Sale( shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod.PaymentType);
+        var venta = new Sale( shadowCopyProducts, cart.Address, purchaseAmount, paymentMethod.PaymentType);
 
-        saleDB.save(sale);
+        saleDB.save(venta);
 
-        return sale.PurchaseNumber;
+        return venta.PurchaseNumber;
 
     }
-
 
 }}
