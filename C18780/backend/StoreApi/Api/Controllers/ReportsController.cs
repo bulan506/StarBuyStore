@@ -34,13 +34,13 @@ namespace StoreApi
         Total -Quantity * Price
         */
 
-        [HttpGet("dateTime")]
+        [HttpGet("dailySales")]
         public async Task<List<DailySales>> GetDailySalesByDateAsync(DateTime dateTime)
         {
             var dailySales = await mediator.Send(new GetDailySalesQuery() { DateTime = dateTime });
             return dailySales;
         }
-    }
+
         /*
         Traer las ventas por semana
         Entrada
@@ -50,4 +50,12 @@ namespace StoreApi
         Nombre del producto
         Total de venta del producto
         */
+
+        [HttpGet("weeklySales")]
+        public async Task<List<WeeklySales>> GetWeeklySalesByDateAsync(DateTime dateTime)
+        {
+            var weeklySales = await mediator.Send(new GetWeeklySalesByDateQuery() {DateTime = dateTime});
+            return weeklySales;
+        }
+    }
 }

@@ -17,6 +17,7 @@ builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 builder.Services.AddScoped<ISinpeRepository, SinpeRepository>();
 builder.Services.AddScoped<IDailySalesRepository, DailySalesRepository>();
+builder.Services.AddScoped<IWeeklySalesRepository, weeklySalesRepository>();
 
 
 // Registra los manejadores de MediatR específicos
@@ -32,6 +33,8 @@ builder.Services.AddTransient<IRequestHandler<UpdateProductCommand, int>, Update
 builder.Services.AddTransient<IRequestHandler<UpdateSalesCommand, int>, UpdateSalesHandler>();
 builder.Services.AddTransient<IRequestHandler<GetSalesByPurchaseNumberQuery, Sales>, GetSalesByPurchaseNumberHandler>();
 builder.Services.AddTransient<IRequestHandler<GetDailySalesQuery, List<DailySales>>, GetDailySalesByDateHandler>();
+builder.Services.AddTransient<IRequestHandler<GetWeeklySalesByDateQuery, List<WeeklySales>>, GetWeeklySalesByDateHandler>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
