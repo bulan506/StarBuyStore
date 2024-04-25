@@ -5,6 +5,8 @@ namespace StoreApi.Models
 {
     public class SalesLine
     {
+        internal Guid nameProduct;
+
         [Key]
         public Guid Uuid { get; set; }
         public int Quantity { get; set; }

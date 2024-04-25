@@ -18,14 +18,14 @@ namespace StoreApi.utils
 
         }
 
-        public static Object? Find(PaymentMethods.Type type)
+        public static PaymentMethods Find(Type type)
         {
             switch (type)
             {
                 case Type.CASH:
-                    return Type.CASH;
+                    return new Cash(); // Devuelve una instancia de Cash
                 case Type.SINPE:
-                    return Type.SINPE;
+                    return new SinpeMovil(); // Devuelve una instancia de SinpeMovil
                 default:
                     throw new NotImplementedException("Not valid");
             }

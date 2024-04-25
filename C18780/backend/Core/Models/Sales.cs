@@ -10,11 +10,9 @@ namespace StoreApi.Models
         public Guid Uuid { get; set; }
         public DateTime Date { get; set; }
         public int Confirmation { get; set; }
-        [ForeignKey("PaymentMethod")]
         public string PaymentMethod { get; set; }
         public decimal Total { get; set; }
         public string Address { get; set; }
-        [ForeignKey("PurchaseNumber")]
         public string PurchaseNumber {get; set;}
     }
 }
