@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links'; // componente que contiene los enlaces de navegación de la barra lateral
 import Abacaxi from '@/app/ui/abacaxi-logo'; // muestra el logotipo de la aplicación
-import { PowerIcon } from '@heroicons/react/24/outline'; // representa un icono de "power" para la opción de cerrar sesión
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../../ui/styles/nav.css';
 

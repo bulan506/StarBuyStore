@@ -9,7 +9,7 @@ export function useFetchInitialStore() {
     async function getProducts() {
         const res = await fetch('https://localhost:7099/api/Store');
         if (!res.ok) {
-          throw new Error('Failed to fetch products');
+          throw new Error('Failed to fetch products.');
         }
         const data = await res.json();
         setProducts(data.products);

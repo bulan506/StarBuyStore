@@ -1,0 +1,14 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    position: relative
+}
+
+.col {
+    margin-top: 5vh;
+    margin-left: auto;
+    margin-right: auto;
+}
