@@ -59,6 +59,10 @@ function Page() {
         <Link href='/login'>
             <Button variant="secondary">Iniciar compra</Button>
         </Link>
+
+        <Link href='/admin/init'>
+            <Button variant="secondary">Dashboard</Button>
+        </Link>
       <div className="main_banner">    
             
             <div className="row">
