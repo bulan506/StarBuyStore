@@ -11,6 +11,9 @@ namespace MyStoreAPI.Business
             this.cart = cart;
         }
 
+        public SaleLogic(){            
+        }
+
         public Sale processDataSale(){
 
             try
@@ -38,6 +41,19 @@ namespace MyStoreAPI.Business
            (string purchaseNum, int saleId) = DB_Sale.InsertSale(cart);
             sale = new Sale(saleId, purchaseNum, cart);
             return sale;
+        }
+
+
+        public List<RegisteredSale> getSalesFromToday(){
+            List<RegisteredSale> allRegisteredSales = DB_Sale.GetRegisteredSalesToday();            
+            // var isSalesListFull = allRegisteredSales != null && allRegisteredSales.Count > 0;
+            var isSalesListFull = allRegisteredSales != null;
+            Console.WriteLine("isSalesListFull: " + isSalesListFull);            
+            if(isSalesListFull){
+                return allRegisteredSales;
+            }else{
+                throw new NotImplementedException("No valid");
+            }            
         }
     }
 }
