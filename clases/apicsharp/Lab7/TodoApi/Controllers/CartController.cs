@@ -17,9 +17,9 @@ namespace TodoApi.Controllers
         public IActionResult CreateCart([FromBody] Cart cart)
         {
             var cartWitStatus = storeLogic.Purchase(cart);
-            if(cartWitStatus typeof CartApproved)
+            if(cartWitStatus is CartApproved)
             {
-                var cartApproved = (CartApproved)cartWitStatus;
+                var cartApproved = cartWitStatus as CartApproved;
                 var sale = cartApproved.Sale;
                 var purchaseNumber = sale.PurchaseNumber;
 

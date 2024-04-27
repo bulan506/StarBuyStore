@@ -27,7 +27,7 @@ internal class CartPendingtoApprove : CartWithStatus
     }
 }
 
-internal class CartApproved : CartWithStatus
+public class CartApproved : CartWithStatus
 {
     public Sale Sale{ get; private set; }
     public CartApproved(Sale sale1)
