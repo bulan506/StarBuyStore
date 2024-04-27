@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
 using MySql.Data.MySqlClient;
 using Store_API.Models;
 
@@ -20,7 +17,7 @@ namespace Store_API.Database
 
                     string createTablePaymentMethod = @"
                         CREATE TABLE IF NOT EXISTS PaymentMethod (
-                           PaymentMethodId INT AUTO_INCREMENT PRIMARY KEY,
+                           PaymentMethodId INT PRIMARY KEY,
                            PaymentMethodName VARCHAR(10) NOT NULL
                         );";
 
@@ -161,14 +158,16 @@ namespace Store_API.Database
                 {
                     try
                     {
+                        InsertPaymentMethods(connection, transaction);
+
                         string insertSale = @"
-                            INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethodId, DateSale)
-                            VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
+                        INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethodId, DateSale)
+                        VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
                         ";
 
                         string purchaseNumber = GeneratePurchaseNumber();
 
-                        using (MySqlCommand command = new MySqlCommand(insertSale, connection))
+                        using (MySqlCommand command = new MySqlCommand(insertSale, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@total", sale.Amount);
                             command.Parameters.AddWithValue("@subtotal", sale.Amount);
@@ -190,6 +189,32 @@ namespace Store_API.Database
                         transaction.Rollback();
                         throw;
                     }
+                }
+            }
+        }
+
+        private void InsertPaymentMethods(MySqlConnection connection, MySqlTransaction transaction)
+        {
+            string insertPaymentMethodQuery = @"
+            INSERT INTO PaymentMethod (PaymentMethodId, PaymentMethodName)
+            VALUES (@idPayment, @paymentName)
+            ON DUPLICATE KEY UPDATE PaymentMethodName = VALUES(PaymentMethodName);
+            ";
+
+        var paymentMethods = new List<(int id, string name)>
+        {
+            (0, "Efectivo"),
+            (1, "Sinpe")
+        };
+
+            using (MySqlCommand command = new MySqlCommand(insertPaymentMethodQuery, connection, transaction))
+            {
+                foreach (var paymentMethod in paymentMethods)
+                {
+                    command.Parameters.AddWithValue("@idPayment", paymentMethod.id);
+                    command.Parameters.AddWithValue("@paymentName", paymentMethod.name);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
                 }
             }
         }
@@ -225,7 +250,12 @@ namespace Store_API.Database
         private string GeneratePurchaseNumber()
         {
             Random random = new Random();
-            return random.Next(100, 999).ToString();
+            string letters = new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 3)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            string numbers = random.Next(100, 999).ToString();
+
+            return $"{letters}{numbers}";
         }
     }
 }

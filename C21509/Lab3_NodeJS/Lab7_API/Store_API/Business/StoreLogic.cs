@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Store_API.Database;
 using Store_API.Models;
 
@@ -12,13 +9,6 @@ namespace Store_API.Business
 
         public string Purchase(Cart cart)
         {
-            // Verificar los IDs de productos en el carrito
-            Console.WriteLine("Product IDs in the cart:");
-            foreach (var productId in cart.ProductIds)
-            {
-                Console.WriteLine(productId);
-            }
-
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
 

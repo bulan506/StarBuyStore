@@ -33,12 +33,11 @@ namespace Store_API.Models
             PaymentMethod = paymentMethod;
         }
 
-        // Método para verificar si la dirección contiene caracteres alfanuméricos
         private bool IsValidAddress(string address)
         {
             foreach (char c in address)
             {
-                if (!char.IsLetterOrDigit(c))
+                if (!char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c)) 
                 {
                     return false;
                 }

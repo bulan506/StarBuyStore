@@ -99,6 +99,7 @@ const PurchasedItems = () => {
         const data = await response.json();
         setPurchaseNumber(data.purchaseNumber);
         setPaymentConfirmation(`Su compra ha sido confirmada.`);
+        localStorage.removeItem('cartProducts');
       } else {
         const errorResponseData = await response.json();
         throw new Error(errorResponseData.message || 'Purchase cannot be processed');
@@ -166,8 +167,8 @@ const PurchasedItems = () => {
           ))}
         </ul>
       </div>
-      <Link href="/product">
-        <button className="button">Página principal</button>
+      <Link href="/cart">
+        <button className="button">Volver al carrito</button>
       </Link>
       <button onClick={sendDataToAPI} className="button">Confirmar Compra</button>
 

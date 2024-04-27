@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Store_API.Models;
-using Store_API.Database;
 using Store_API.Business;
 
 namespace Store_API.Controllers
