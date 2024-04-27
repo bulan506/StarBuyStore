@@ -143,12 +143,11 @@ const PurchasedItems = () => {
           <button onClick={managePaymentConfirmation} className="button">Confirmar Pago</button>
           {paymentConfirmation && <p>{paymentConfirmation}</p>}
           {paymentReceipt && <p>Adjunte el comprobante: {paymentReceipt}</p>}
-          {purchaseNumber && <p>Número de Compra: {purchaseNumber}</p>}
 
           {selectedPaymentMethod === PaymentMethod.SINPE && paymentConfirmation && (
             <div>
               <p>Número donde realizar el pago: {generatePurchaseNumber()}</p>
-              <p>Ingrese el número de comprobante:</p>
+              <p>Ingrese el número donde se realiza el pago:</p>
               <input type="text" value={paymentReceipt} onChange={(e) => setPaymentReceipt(e.target.value)} placeholder="Ingrese el comprobante" />
               <p>Una vez realizado el pago, espere la confirmación del administrador.</p>
             </div>
@@ -171,6 +170,7 @@ const PurchasedItems = () => {
         <button className="button">Volver al carrito</button>
       </Link>
       <button onClick={sendDataToAPI} className="button">Confirmar Compra</button>
+      <p>Número de Compra: {purchaseNumber}</p>
 
     </div>
   );
