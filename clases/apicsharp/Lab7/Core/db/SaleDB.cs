@@ -30,5 +30,17 @@ public sealed class SaleDB
         }
     }
 
-    
+    internal List<Report> GetSales(SalesLogic.OnEachRow onEachRow)
+    {
+           //SQL
+        List<Report> reports = new List<Report>();
+        foreach(var report in reports)
+        {   
+            onEachRow(100);//producto.Precio);
+            reports.Add(report);
+
+        }
+
+        return reports;
+    }
 }
