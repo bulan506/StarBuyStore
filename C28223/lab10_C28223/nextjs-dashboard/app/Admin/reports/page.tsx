@@ -13,9 +13,6 @@ const SalesCharAdmin = () => {
   const dataToSend = {
     DateSales: selectedDate
   };
-  //List<SalesData> Sales { get; set; }
-  //List<SaleAnnotation> SalesDaysWeek { get; set; }
-
   useEffect(() => {
     fetchData(); // Cargar datos iniciales al cargar el componente
   }, [selectedDate]);
