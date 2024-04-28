@@ -7,6 +7,7 @@ const MetodoPago = () => {
     const [numeroCompra, setNumeroCompra] = useState('');
     const [numeroComprobante, setNumeroComprobante] = useState('');
     const [modalData, setModalData] = useState(null);
+    const [modalData2, setModalData2] = useState(false);
 
     const closeModal = () => {
         setModalData(null);
@@ -17,8 +18,8 @@ const MetodoPago = () => {
     const showModalAceptado = (title, content) => {
         setModalData({ title, content });
     };
-    
-    
+
+
     const handleAceptar = () => {
         if (formaDePago === '') {
             showModal('Método de pago', 'Por favor seleccione un método de pago disponible.');
@@ -61,7 +62,8 @@ const MetodoPago = () => {
         if (response.ok) {
             const data = await response.json();
             setNumeroCompra(data.numeroCompra);
-            showModalAceptado('Compra exitosa', '¡Su compra ha sido procesada con éxito! Será redirigido al inicio.');
+            setModalData2(true);
+            showModalAceptado('Compra exitosa', `¡Su compra  ${data.numeroCompra}  ha sido procesada con éxito! Será redirigido al inicio.`);
         } else {
             const errorResponseData = await response.json();
             throw new Error(errorResponseData.message || 'Error al procesar el pago');
@@ -72,7 +74,7 @@ const MetodoPago = () => {
         return (
             <div className="Compra">
                 {modalData && modalData.title === 'Compra exitosa' && (
-                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />)}  
+                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />)}
                 <div className="smsFinal">
                     <div className="text-center">
                         <h5>Número de compra: {numeroCompra}</h5>
@@ -87,9 +89,9 @@ const MetodoPago = () => {
     const pagoS = () => {
         return (
             <div className="Compra">
-                {modalData && <Modal title={modalData.title} content={modalData.content} onClose={closeModal} />}
-                {modalData && modalData.title === 'Compra exitosa' && (
-                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />)}  
+                {!modalData2 && modalData && <Modal title={modalData.title} content={modalData.content} onClose={closeModal} />}
+                {modalData2 && modalData && modalData.title === 'Compra exitosa' && (
+                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />)}
                 <div className="smsFinal">
                     <div className="text-center">
                         <h5>Número de compra: {numeroCompra}</h5>
@@ -103,7 +105,6 @@ const MetodoPago = () => {
             </div>
         );
     };
-
 
     const handleMetodoChange = (metodoDePagoSelec) => {
         setFormaDePago(metodoDePagoSelec.target.value === 'pagoEfectivo' ? 0 : 1);
@@ -173,17 +174,16 @@ const ModalPagoAceptado = ({ title, content, onClose, closeButtonText = 'Ir al i
         onClose();
         window.location.replace('/');
         localStorage.removeItem("tienda");
-        return;    
-           
+        return;
     };
     return (
-        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block', alignItems: 'center' }}>
+        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">{title}</h5>
                         {showCloseButton && (
-                            <button type="button" className="close" onClick={onClose}  aria-label="Close">
+                            <button type="button" className="close" onClick={handleCerrarModal} aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         )}
@@ -193,11 +193,9 @@ const ModalPagoAceptado = ({ title, content, onClose, closeButtonText = 'Ir al i
                     </div>
                     {showCloseButton && (
                         <div className="modal-footer">
-                            <a >
-                                <button type="button" className="btn btn-secondary" onClick={handleCerrarModal}>
-                                    {closeButtonText}
-                                </button>
-                            </a>
+                            <button type="button" className="btn btn-secondary" onClick={handleCerrarModal}>
+                                {closeButtonText}
+                            </button>
                         </div>
                     )}
                 </div>

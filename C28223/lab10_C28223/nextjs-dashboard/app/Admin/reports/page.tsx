@@ -1,21 +1,25 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Chart } from 'react-google-charts';
 import "bootstrap/dist/css/bootstrap.min.css";
+import "@/app/ui/styles.css";
+import Menu from "@/app/Admin/init/page";
 
 const SalesCharAdmin = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]); // Fecha por defecto: hoy
   const [salesData2, setSalesData2] = useState([['Datetime', 'Purchase Number', 'Price', 'Amount of Products', { role: 'annotation' }]]);
   const [weeklySalesData, setWeeklySalesData] = useState([]);
-
   const [showModal, setShowModal] = useState(false);
+  const [charge, setCharge] = useState(false);
 
   const dataToSend = {
     DateSales: selectedDate
   };
   useEffect(() => {
     fetchData(); // Cargar datos iniciales al cargar el componente
-  }, [selectedDate]);
+  }, [selectedDate, charge]);
+  useEffect(() => {
+  }, [weeklySalesData,salesData2,showModal]);
 
   const fetchData = async () => {
     try {
@@ -28,24 +32,29 @@ const SalesCharAdmin = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        if (data.sales.length === 0) {
+        var salesAreEmpty = data.sales === null || data.sales.length===0;
+        var weekSalesAreEmpty =  data.salesDaysWeek=== null || data.salesDaysWeek.length===0;
+        if ( salesAreEmpty&& weekSalesAreEmpty) {
           setShowModal(true);
-          updateSalesData2(data);
+          setCharge(true);
+          setSalesData2(data)
         } else {
+          if(salesAreEmpty){ setShowModal(true);updateSalesData2(data)}
           const weeklyData = [['Week', 'Sales']];
           data.salesDaysWeek.forEach(day => {
             weeklyData.push([day.day, day.total]);
           });
           updateSalesData2(data);
           setWeeklySalesData(weeklyData);
+          setCharge(false); 
         }
       } else {
         throw new Error('Error al obtener datos de ventas');
       }
     } catch (error) {
     }
+  
   };
-
   const updateSalesData2 = (data) => {
     let productsString = '';
     const newData = data.sales.map(sale => {
@@ -64,7 +73,8 @@ const SalesCharAdmin = () => {
     setSalesData2([['Datetime', 'Purchase Number', 'Price', 'Amount of Products', { role: 'annotation' }], ...newData]); // Actualizar el estado con los nuevos datos y el encabezado
   };
   return (
-    <div style={{ display: 'grid', gap: '14%' }}>
+    <div className='col' >
+      <Menu/>
       {showModal && <ModalSinVentas closeModal={() => setShowModal(false)} />}
       <div>
         <div>
@@ -76,7 +86,6 @@ const SalesCharAdmin = () => {
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
           />
-          <a href="/Admin/init"><button className='btn btn-primary'>Volver al menu</button></a>
         </div>
         <h2>Sales Chart</h2>
         <Chart
@@ -95,12 +104,13 @@ const SalesCharAdmin = () => {
               tableCell: 'chart-cell',
             },
             allowHtml: true,
+            pageSize:20,
           }}
         />
       </div>
-      <div>
+      <div className= 'row'style={{ textAlign: 'center' }}>
         <h2>Weekly Sales Pie Chart</h2>
-        <Chart
+        {(!charge ? (<Chart
           width={'400px'}
           height={'300px'}
           chartType="PieChart"
@@ -113,7 +123,13 @@ const SalesCharAdmin = () => {
           options={{
             title: 'Weekly Sales',
           }}
-        />
+        />) :
+          <div>
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <span>Sin datos para esta semana.</span>
+          </div>)}
       </div>
     </div>
   );

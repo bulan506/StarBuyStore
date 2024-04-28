@@ -24,9 +24,7 @@ public LogicStoreApi(){} // Se utiliza en la creacion del purchase
 
     // Obtener los productos que coinciden con los IDs del carrito
     IEnumerable<Product> matchingProducts = products
-        .Where(p => cart.ProductIds.Any(pq => pq.ProductId == p.id.ToString()))
-        .ToList();
-
+        .Where(p => cart.ProductIds.Any(pq => pq.ProductId == p.id.ToString())).ToList();
     // Crear una copia de los productos para evitar modificar los originales
     // Aqui cambia porque tiene que ahora  calcular la cantidad de productos y el precio de cada uno
     IEnumerable<Product> shadowCopyProducts = matchingProducts
@@ -36,8 +34,7 @@ public LogicStoreApi(){} // Se utiliza en la creacion del purchase
             var clonedProduct = (Product)p.Clone();
             clonedProduct.cant = productQuantity?.Quantity ?? 0; // Asignar la cantidad correspondiente
             return clonedProduct;
-        })
-        .ToList();
+        }).ToList();
     
     decimal purchaseAmount = 0;
     foreach (var product in shadowCopyProducts)
@@ -46,10 +43,8 @@ public LogicStoreApi(){} // Se utiliza en la creacion del purchase
         product.price *= (1 + taxPercentage / 100); 
         purchaseAmount += product.price * product.cant; 
     }
-
     // Obtener el método de pago seleccionado
     PaymentMethods selectedPaymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
-
     // Crear un objeto de venta
     var sale = new Sale(Sale.GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType);
     saleDataBase.Save(sale);

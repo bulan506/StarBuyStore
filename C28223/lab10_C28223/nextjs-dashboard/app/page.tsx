@@ -82,7 +82,7 @@ const ModalProductoYaAgregado = ({ closeModal }) => {
             </button>
           </div>
           <div className="modal-body">
-            <p>Este producto ya ha sido añadido al carrito, puedes editar su cantidad confirmar tu compra.</p>
+            <p>Este producto ya ha sido añadido al carrito, puedes editar su cantidad al confirmar tu compra.</p>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>

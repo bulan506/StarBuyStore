@@ -1,5 +1,5 @@
 using storeApi.DataBase;
-StoreDataBase.CreateMysql();
+using Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +23,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+string connection = builder.Configuration.GetSection("ConnectionStrings").GetSection("MyDatabase").Value.ToString();
+string connectionStringMyDb = builder.Configuration.GetSection("ConnectionStrings").GetSection("MyDB").Value.ToString();
+Storage.Init(connection, connectionStringMyDb) ;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    StoreDataBase.CreateMysql();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

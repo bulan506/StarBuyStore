@@ -1,6 +1,7 @@
 using System;
 using System.Data.Common;
 using System.IO.Compression;
+using Core;
 using MySqlConnector;
 
 namespace storeApi.DataBase
@@ -9,8 +10,7 @@ namespace storeApi.DataBase
     {
         public static void CreateMysql()
         {
-            string connectionString = "Server=localhost;Database=mysql;Uid=root;Pwd=123456;";
-            using (var connection = new MySqlConnection(connectionString))
+            using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 connection.Open();
 
@@ -199,8 +199,7 @@ namespace storeApi.DataBase
 
         public static void InsertLinesSalesPrueba()
         {
-            string connectionString = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
-            using (var connection = new MySqlConnection(connectionString))
+            using (var connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 connection.Open();
 
@@ -289,9 +288,8 @@ namespace storeApi.DataBase
         public static List<Product> GetProductsFromDB()
         {
             List<Product> products = new List<Product>();
-            string connectionString = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
 
-            using (var connection = new MySqlConnection(connectionString))
+            using (var connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 connection.Open();
 

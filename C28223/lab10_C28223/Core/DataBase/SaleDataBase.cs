@@ -2,6 +2,7 @@ using System;
 using System.Data.Common;
 using System.IO.Compression;
 using System.Reflection.Metadata;
+using Core;
 using MySqlConnector;
 using storeApi.Models;
 
@@ -11,7 +12,7 @@ namespace storeApi.DataBase
     {
         public void Save(Sale sale)
         {
-            using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=store;Uid=root;Pwd=123456;"))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 connection.Open();
 
@@ -64,9 +65,7 @@ namespace storeApi.DataBase
         public List<SalesData> GetSalesByDate(DateTime date)
         {
             List<SalesData> salesList = new List<SalesData>();
-
-            string connectionString = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 connection.Open();
                 string query = @"
@@ -91,7 +90,7 @@ namespace storeApi.DataBase
                             string productName = reader.GetString("name");
 
                             // Crear una instancia de ProductQuantity para cada producto
-                            ProductQuantity productQuantity = new ProductQuantity (productName,quantity);
+                            ProductQuantity productQuantity = new ProductQuantity(productName, quantity);
 
                             // Buscar si ya existe una instancia de SalesData para esta compra
                             SalesData salesData = salesList.Find(s => s.PurchaseNumber == purchaseId);
@@ -117,9 +116,7 @@ namespace storeApi.DataBase
         public List<SaleAnnotation> GetSalesWeek(DateTime date)
         {
             List<SaleAnnotation> salesByDay = new List<SaleAnnotation>();
-
-            string connectionString = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 connection.Open();
                 string query = @"
@@ -127,7 +124,7 @@ namespace storeApi.DataBase
                             FROM sales s
                             WHERE YEARWEEK(s.purchase_date) = YEARWEEK(@purchase_date)
                             GROUP BY DAYNAME(s.purchase_date)";
-                
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@purchase_date", date);
