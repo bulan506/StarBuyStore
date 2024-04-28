@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 //Componentes
 import Dropdown from 'react-bootstrap/Dropdown';
-import { Chart } from "react-google-charts";
+import { Chart } from "react-google-charts";//no se le pueden pasar useStates, solo listas de listas
 
 
 //Funciones
@@ -17,16 +17,21 @@ import { RegisteredSaleAPI } from '@/app/src/models-data/RegisteredSale'
 
 export default function SalesReport(){
 
-    const [allRegisteredSales,setAllRegisteredSales] = useState<RegisteredSaleAPI[]>([]);
-    const [eventKey, setEventKey] = useState<string | null>(null); // Asegúrate de definir eventKey correctamente
+    const [allRegisteredSales,setAllRegisteredSales] = useState<RegisteredSaleAPI[]>([]);    
     const [eventDate, setEventDate] = useState<string | null>(null); // Asegúrate de definir eventKey correctamente
-    const [tableData, setTableData] = useState<any[]>([])
+    const [dataForTable, setDataForTable] = useState<any[]>([]);
+
+    //let dataForTable: any[] = [];//let por cambiara a cada rato
+
+
 
     //Colocamos los tipos de datos
     //Donde la primera lista anidada son los nombres de columnas y sus tipos
-    const defaultColName = ["Employee Name", { type: "date", label: "Start Date (Long)" }, { type: "date", label: "Start Date (Medium)" }, { type: "date", label: "Start Date (Short)" }];    
-    // const tableData = [
-    //     ["Id Venta","Codigo de Compra", "Subototal","Total","Direccion","Metodo de Pago","Fecha de compra"],
+    const defaultColName =
+        ["Id Venta","Codigo de Compra", "Subtotal","Total","Direccion","Tax","Metodo de Pago","Fecha de compra"];
+
+    // const defaultColName = ["Employee Name", { type: "date", label: "Start Date (Long)" }, { type: "date", label: "Start Date (Medium)" }, { type: "date", label: "Start Date (Short)" }];    
+    // const tableData = [    
     //     ["Mike", new Date(2008, 1, 28, 0, 31, 26), new Date(2008, 1, 28, 0, 31, 26), new Date(2008, 1, 28, 0, 31, 26)],
     //     ["Bob", new Date(2007, 5, 1, 0), new Date(2007, 5, 1, 0), new Date(2007, 5, 1, 0)],
     //     ["Alice", new Date(2006, 7, 16), new Date(2006, 7, 16), new Date(2006, 7, 16)],
@@ -34,7 +39,7 @@ export default function SalesReport(){
 
     //Datos adicionales de Chart
     const tableOptions = {
-        showRowNumber: true,
+        showRowNumber: false,
         page: 'enable',
         pageSize: 5
       };
@@ -46,25 +51,10 @@ export default function SalesReport(){
         { type: "DateFormat" as const, column: 3, options: { formatType: "short" } },
     ];
           
-    //Reiniciamos los datos de la tabla
-    function resetTableData(){
-        setTableData(defaultColName);
-    }
-    
-    const selectDropDownItem = async (eventKey: string | null)=>{                
-        if (eventKey) {            
-            setEventKey(eventKey);
-            console.log("Event Key: " + eventKey);
-        } else {
-            console.log("Nada");
-        }        
-    };
-
     //Funcion base de todo
     const selectDateResetTable = (e: { target: { value: any; }; }) =>{
         var selectedDate = e.target.value;        
         console.log("Fecha Seleccionada: " + selectedDate)
-        resetTableData();
         setEventDate(selectedDate);        
     }
 
@@ -72,29 +62,48 @@ export default function SalesReport(){
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const salesData = await getRegisteredSalesFromAPI("https://localhost:7161/api/Sale", eventDate);
+                const registeredSalesDataFromAPI = await getRegisteredSalesFromAPI("https://localhost:7161/api/Sale", eventDate);
                 // Manejar los tipos de datos que se pueden recibir desde getRegisteredSalesFromAPI()
-                if (typeof salesData === "string") {                
-                    console.error("Es un string:", salesData);
-                } else if (Array.isArray(salesData)) {                
-                    console.log("Es un objeto/array:", salesData);
-                    setAllRegisteredSales(salesData);
+                if (typeof registeredSalesDataFromAPI === "string") {
+                    console.error("Es un string:", registeredSalesDataFromAPI);                    
+                }else if (Array.isArray(registeredSalesDataFromAPI)) {                    
 
-                    allRegisteredSales.forEach((sale: any, index: number) => {
-                        console.log(`Venta ${index + 1}:`);
-                        console.log("IdSale:", sale.idSale);
-                        console.log("PurchaseNum:", sale.purchaseNum);
-                        console.log("SubTotal:", sale.subTotal);
-                    
-                    });            
-                } else {                
+
+                    const tableData = [
+                        defaultColName, 
+                        ...registeredSalesDataFromAPI.map((sale: any) => [
+                            sale.idSale,
+                            sale.purchaseNum,
+                            sale.subTotal,
+                            sale.total,                            
+                            sale.direction,
+                            sale.tax,
+                            sale.paymentMethod.payment,
+                            sale.dateTimeSale
+                        ])
+                    ];
+                    setDataForTable(tableData);
+
+
+
+                    //dataForTable.push(defaultColName);                    
+                    // registeredSalesDataFromAPI.forEach((sale: any) => {
+                    //     const saleList = Object.values(sale);
+                    //     dataForTable.push(saleList);
+                    // });                    
+                    // dataForTable.forEach(row => {
+                    //     console.log("Elemento de tableForData: " +row + "\n");
+                    // });
+                    // console.log("Que es dataForTable: " +dataForTable);
+
+                    //Lo dejo para despues
+                    //setAllRegisteredSales(registeredSalesDataFromAPI);                                        
+                } else{
                     console.log("No hay datos de ventas disponibles");
                 }
             } catch (error) {
                 console.error("Error al obtener datos de ventas:", error);
-            }
-            //Setteamos los datos
-            setTableData([...tableData,...allRegisteredSales])
+            }            
         };    
         if (eventDate) fetchData();
     }, [eventDate]);
@@ -116,9 +125,13 @@ export default function SalesReport(){
                     {allRegisteredSales && allRegisteredSales.length > 0 ? (
                         allRegisteredSales.map(sale => (
                         <div key={sale.idSale}>
-                            <p>Id de Venta: {sale.idSale}</p>
-                            <p>Número de Compra: {sale.purchaseNum}</p>
-                            <p>Subtotal: {sale.subTotal}</p>
+                            <p>Id de Venta: {typeof sale.idSale}</p>
+                            <p>Número de Compra: { typeof sale.purchaseNum}</p>
+                            <p>Subtotal: {typeof sale.subTotal}</p>
+                            <p>Total: { typeof sale.total}</p>
+                            <p>Direcccion: {typeof sale.direction}</p>
+                            <p>Metodo de pago: {typeof sale.paymentMethod.payment}</p>
+                            <p>Fecha de compra: {typeof sale.dateTimeSale}</p>
                             {/* Agrega aquí más elementos según los datos de RegisteredSaleAPI */}
                         </div>
                         ))
@@ -127,16 +140,15 @@ export default function SalesReport(){
                     )}
                 </div>
 
-                {/* <div>
+                <div>
                     <Chart
                         chartType="Table"
                         width="100%"
                         height="400px"
-                        data={tableData}
-                        options={tableOptions}
-                        formatters={formatters}
+                        data={dataForTable}
+                        options={tableOptions}                        
                     />
-                </div> */}
+                </div>
             </div>            
 
             <div className="col-sm-4">Hola</div>
