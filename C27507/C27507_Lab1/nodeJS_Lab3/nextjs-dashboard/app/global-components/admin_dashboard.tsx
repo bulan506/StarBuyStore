@@ -14,7 +14,7 @@ export default function AdminDashboard({
         <div className="container-fluid">
             <div className="row">
                 {/* Menú lateral - Columna 1 */}
-                <header id="menu_v" className="menu_v col-sm-3 bg-dark text-light">
+                <header id="menu_v" className="menu_v col-sm-2 bg-dark text-light">
                     <div className="menu_v_logo">
                         <span>Nombre de la Tienda</span>                        
                     </div>
@@ -26,7 +26,7 @@ export default function AdminDashboard({
                     </nav>
                 </header>
 
-                <div className="col-sm-9">
+                <div className="col-sm-10">
                     <div className="row">
                         {/* Menú vertical - Columna 2 */}
                         <header id="menu_h" className="menu_h col-md-12 row bg-secondary text-light">

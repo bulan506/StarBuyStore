@@ -16,6 +16,8 @@
 .menu_v{
     height: 100vh;
     overflow-y: scroll;
+    position: sticky;
+    top: 0;
 }
 
 .menu_v_logo{
@@ -35,6 +37,7 @@
     
     padding: 1rem 0;
     color: white;
+    width: 100%;
 }
 
 .menu_v_nav ul button:hover{
@@ -50,6 +53,8 @@
     background: red;
     padding: 1rem 1rem;
     align-items: center;
+    position: sticky;
+    top: 0;
 }
 .menu_h_nav ul{
     /* quitar margin automatico de bootstrap */

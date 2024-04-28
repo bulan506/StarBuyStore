@@ -1,5 +1,5 @@
-
 using System;
+using System.Globalization;
 using System.Transactions;
 using System.Collections.Generic;//para usar list
 //API
@@ -61,7 +61,7 @@ namespace MyStoreAPI.DB
             }            
         }
 
-        public static List<RegisteredSale> GetRegisteredSalesToday(){       
+        public static List<RegisteredSale> GetRegisteredSalesToday(string  dateParameter){       
 
             List<RegisteredSale>  registeredSalesToday =new List<RegisteredSale>();                        
 
@@ -79,8 +79,7 @@ namespace MyStoreAPI.DB
                     string selectSales = @"
                     SELECT IdSale,PurchaseNum, Total,Subtotal, Direction, IdPayment,DateSale 
                     FROM Sales                    
-                    Where DateSale BETWEEN '2024-04-27 00:00:00' AND '2024-04-27 23:59:59';
-                    ";
+                    WHERE DATE(DateSale) = DATE(@dateParameter);";
                     // WHERE CAST(DateSale AS DATE) = CURRENT_DATE();
                     // Where DateSale BETWEEN '2024-04-26 00:00:00' AND '2024-04-26 23:59:59'
                     // WHERE DATE(DateSale) = DATE(SYSDATE());
@@ -88,6 +87,10 @@ namespace MyStoreAPI.DB
 
                     using(MySqlCommand command = new MySqlCommand(selectSales,connectionWithDB)){
                         
+                        //Definimos el parametro a comparar
+                        DateTime dateParameterNewFormat = DateTime.ParseExact(dateParameter, "yyyy-MM-dd", CultureInfo.CurrentCulture);
+                        Console.WriteLine("Nuevo formato: " +dateParameterNewFormat);
+                        command.Parameters.AddWithValue("@dateParameter", dateParameterNewFormat);
                         using (MySqlDataReader readerTable = command.ExecuteReader()){
                             
                             while(readerTable.Read()){

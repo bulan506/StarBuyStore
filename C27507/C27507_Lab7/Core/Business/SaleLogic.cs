@@ -44,8 +44,8 @@ namespace MyStoreAPI.Business
         }
 
 
-        public List<RegisteredSale> getSalesFromToday(){
-            List<RegisteredSale> allRegisteredSales = DB_Sale.GetRegisteredSalesToday();            
+        public List<RegisteredSale> getSalesFromToday(string dateFormat){
+            List<RegisteredSale> allRegisteredSales = DB_Sale.GetRegisteredSalesToday(dateFormat);            
             // var isSalesListFull = allRegisteredSales != null && allRegisteredSales.Count > 0;
             var isSalesListFull = allRegisteredSales != null;
             Console.WriteLine("isSalesListFull: " + isSalesListFull);            

@@ -18,7 +18,7 @@ namespace MyStoreAPI.Controllers{
                 //Recibimos el codigo para el tipo de fecha                
                 SaleLogic saleLogic = new SaleLogic();
                 Console.WriteLine("El formato de fecha es: " + dateFormat);
-                List<RegisteredSale> specificListOfRegisteredSales = saleLogic.getSalesFromToday();
+                List<RegisteredSale> specificListOfRegisteredSales = saleLogic.getSalesFromToday(dateFormat);
 
                 Console.WriteLine("Número de ventas registradas hoy: " + specificListOfRegisteredSales.Count);
                 foreach (var thisSale in specificListOfRegisteredSales)
