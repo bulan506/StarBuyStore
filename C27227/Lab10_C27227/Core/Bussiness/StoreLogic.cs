@@ -15,62 +15,67 @@ public sealed class StoreLogic
 
 public async Task<Sale> Purchase(Cart cart)
 {
-    bool isCartEmpty = cart.Product.Count == 0;
-    bool isDeliveryAddressMissing = string.IsNullOrWhiteSpace(cart.address);
 
-    if (isCartEmpty)
-        throw new ArgumentException("Cart must contain at least one product.");
+    if (cart.Product.Count == 0)
+    {
+        throw new ArgumentException("El carrito debe contener al menos un producto.", nameof(cart));
+    }
 
-    if (isDeliveryAddressMissing)
-        throw new ArgumentException("Address must be provided.");
+    if (string.IsNullOrWhiteSpace(cart.address))
+    {
+        throw new ArgumentException("Se debe proporcionar una dirección de entrega.", nameof(cart));
+    }
 
-    var products = Store.Instance.Products;
-    var taxPercentage = Store.Instance.TaxPercentage;
+    var storeInstance = await Store.Instance;
+    var products = storeInstance.Products;
+    var taxPercentage = storeInstance.TaxPercentage;
     
     List<Product> matchingProducts = new List<Product>();
-    decimal purchaseAmount = 0;
+    decimal subtotal = 0;
 
     foreach (var productQuantity in cart.Product)
     {
         int productId = productQuantity.Id;
         int quantity = productQuantity.Quantity;
 
+
         Product matchingProduct = products.FirstOrDefault(p => p.Id == productId);
-
-        if (matchingProduct != null)
+        if (matchingProduct == null)
         {
-            // Create a deep copy of the product
-            Product copiedProduct = (Product)matchingProduct.Clone();
-
-            // Adjust the quantity of the copied product
-            copiedProduct.Quantity = quantity;
-
-            // Add the copied product to the list
-            matchingProducts.Add(copiedProduct);
-
-            // Calculate the total price of this product
-            decimal totalPrice = quantity * matchingProduct.Price;
-
-            // Add the total price to the purchase amount
-            purchaseAmount += totalPrice;
+            throw new ArgumentException($"El producto con ID {productId} no existe en la tienda.", nameof(cart));
         }
+
+        if (quantity <= 0)
+        {
+            throw new ArgumentException($"La cantidad del producto con ID {productId} debe ser mayor que cero.", nameof(cart));
+        }
+
+
+        Product copiedProduct = (Product)matchingProduct.Clone();
+
+
+        copiedProduct.Quantity = quantity;
+
+        matchingProducts.Add(copiedProduct);
+
+        decimal totalPrice = quantity * matchingProduct.Price;
+
+        subtotal += totalPrice;
     }
-    // Calculate the tax
-    decimal taxAmount = purchaseAmount * ((decimal)taxPercentage / 100);
-    // Calculate the total purchase amount
-    decimal total = purchaseAmount + taxAmount;
 
 
+    decimal taxAmount = subtotal * ((decimal)taxPercentage / 100);
+    decimal total = subtotal + taxAmount;
 
     PaymentMethods paymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
     var purchase_number_Sale = GeneratePurchaseNumber();
     var sale = new Sale(purchase_number_Sale, matchingProducts, cart.address, total, paymentMethod.PaymentType);
-    await saleDataBase.Save(sale);
+    await saleDataBase.SaveAsync(sale);
     return sale;
 }
 
     
-    public static string GeneratePurchaseNumber()
+    private static string GeneratePurchaseNumber()
     {
         StringBuilder sb = new StringBuilder();
 

@@ -20,13 +20,9 @@ public class DatabaseConfiguration
 
     public static void Init(string connectionString)
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new ArgumentNullException("Connection strings are required.");
-        }
-
-        _instance = new DatabaseConfiguration(connectionString);
+        _instance = connectionString != null ? new DatabaseConfiguration(connectionString) : throw new ArgumentNullException("Connection strings are required.");
     }
+
 
     private DatabaseConfiguration(string connectionString)
     {

@@ -5,8 +5,17 @@ namespace KEStoreApi;
 
 public sealed class DatabaseSale
 {
-public async Task Save(Sale sale)
+public async Task SaveAsync(Sale sale)
 {
+      if (sale == null)
+    {
+        throw new ArgumentNullException(nameof(sale), "El objeto Sale no puede ser nulo.");
+    }
+
+    if (sale.Products == null || !sale.Products.Any())
+    {
+        throw new ArgumentException("La lista de productos en la venta no puede ser nula o vacía.", nameof(sale));
+    }
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 
     using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -23,7 +32,7 @@ public async Task Save(Sale sale)
                 using (MySqlCommand command = new MySqlCommand(insertQuery, connection, transaction))
                 {
                     command.Parameters.AddWithValue("@purchase_date", DateTime.Now);
-                    command.Parameters.AddWithValue("@total", sale.amount);
+                    command.Parameters.AddWithValue("@total", sale.Total);
                     command.Parameters.AddWithValue("@payment_method", (int)sale.PaymentMethod);
                     command.Parameters.AddWithValue("@purchase_number", sale.PurchaseNumber);
                     await command.ExecuteNonQueryAsync(); 
@@ -56,8 +65,13 @@ public async Task Save(Sale sale)
     }
 }
 
- public async Task<List<SaleDetails>> GetDailySalesReport(DateTime date)
+public async Task<IEnumerable<SaleDetails>> GetDailySalesReport(DateTime? date)
 {
+    if (!date.HasValue)
+    {
+        throw new ArgumentNullException(nameof(date), "La fecha no puede ser nula.");
+    }
+    
     List<SaleDetails> salesReport = new List<SaleDetails>();
 
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
@@ -77,7 +91,7 @@ public async Task Save(Sale sale)
 
         using (MySqlCommand command = new MySqlCommand(query, connection))
         {
-            command.Parameters.AddWithValue("@date", date.Date); 
+            command.Parameters.AddWithValue("@date", date?.Date);
 
             using (MySqlDataReader reader = await command.ExecuteReaderAsync())
             {
@@ -100,43 +114,36 @@ public async Task Save(Sale sale)
 
     return salesReport;
 }
-
-public async Task<List<SalesByDay>> GetWeeklySalesReport(DateTime date)
+public async Task<IEnumerable<SalesByDay>> GetWeeklySalesReport(DateTime? date)
 {
-    List<SalesByDay> weeklySalesReport = new List<SalesByDay>();
+    if (!date.HasValue)
+    {
+        throw new ArgumentNullException(nameof(date), "La fecha no puede ser nula.");
+    }
 
+    List<SalesByDay> weeklySalesReport = new List<SalesByDay>();
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 
-    DateTime startOfWeek = date.AddDays(-(int)date.DayOfWeek);
-    string query = @"
-        SELECT DAYNAME(s.purchase_date) AS saleDayOfWeek, COUNT(*) AS saleCount
-        FROM Sales s
-        WHERE YEARWEEK(s.purchase_date) = YEARWEEK(@startDate)
-        GROUP BY saleDayOfWeek
-        ORDER BY saleDayOfWeek;
-    ";
+    DateTime startOfWeek = date.Value.AddDays(-(int)date.Value.DayOfWeek);
+    string query = @" SELECT DAYNAME(s.purchase_date) AS saleDayOfWeek, COUNT(*) AS saleCount FROM Sales s WHERE YEARWEEK(s.purchase_date) = YEARWEEK(@startDate) GROUP BY saleDayOfWeek ORDER BY saleDayOfWeek; ";
 
     using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
-        await connection.OpenAsync(); 
-
+        await connection.OpenAsync();
         using (MySqlCommand command = new MySqlCommand(query, connection))
         {
             command.Parameters.AddWithValue("@startDate", startOfWeek);
-
             using (MySqlDataReader reader = await command.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
                 {
                     string saleDayOfWeek = reader.GetString(0);
                     int saleCount = reader.GetInt32(1);
-
                     SalesByDay salesByDay = new SalesByDay
                     {
                         SaleDayOfWeek = saleDayOfWeek,
                         SaleCount = saleCount
                     };
-
                     weeklySalesReport.Add(salesByDay);
                 }
             }

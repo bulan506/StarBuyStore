@@ -3,17 +3,34 @@ import '../styles/header.css';
 import Link from 'next/link';
 
 const Navbar = ({ size, onShowLogin, onShowCart, onShowProducts }) => {
+  const handleClickLogin = () => {
+    if (typeof onShowLogin === 'function') {
+      onShowLogin();
+    }
+  };
+
+  const handleClickCart = () => {
+    if (typeof onShowCart === 'function') {
+      onShowCart();
+    }
+  };
+
+  const handleClickProducts = () => {
+    if (typeof onShowProducts === 'function') {
+      onShowProducts();
+    }
+  };
   return (
     <nav>
       <div className="nav_box">
-        <span className="my_shop" onClick={onShowProducts}>
+        <span className="my_shop" onClick={handleClickProducts}>
           KEStore
         </span>
         <div className="search_box">
           <input type="text" placeholder="Buscar..." className="search_input" />
           <button className="search_button">Buscar</button>
         </div>
-        <div className="cart" onClick={onShowCart}>
+        <div className="cart" onClick={handleClickCart}>
           <div className='icono'>
             <span>
               <svg
@@ -31,7 +48,7 @@ const Navbar = ({ size, onShowLogin, onShowCart, onShowProducts }) => {
           </div>
           <span className="cart_items">{size}</span>
         </div>
-        <div className="loginUser" onClick={onShowLogin}>
+        <div className="loginUser" onClick={handleClickLogin}>
           <Link href="/admin" className="icono">
             <span>
               <svg

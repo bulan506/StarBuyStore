@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import DatePicker from 'react-datepicker';
 import Pagination from 'react-bootstrap/Pagination';
-import { Chart, ChartData, ChartOptions } from'chart.js/auto';
+import Chart from 'chart.js/auto';
 import Sidebar from "../init/page";
 import "chartjs-plugin-datalabels";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -19,29 +19,39 @@ const TableWithPaginationAndChart = () => {
   const pieChartRef = useRef<Chart | null>(null);
 
   useEffect(() => {
-    fetchSales(selectedDate);
+    fetchData(selectedDate);
   }, [selectedDate]);
 
-  const fetchSales = (date) => {
-    if (!date) return;
+  const fetchData = async (date) => {
+    try {
+        if (!date) {
+            throw new Error('La fecha es requerida.');
+        }
+        
+        const formattedDate = date.toISOString().slice(0, 10);
+        const response = await fetch(`http://localhost:5072/api/Sale?date=${formattedDate}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-    const formattedDate = date.toISOString().slice(0, 10);
-    fetch('http://localhost:5072/api/Sale', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ date: formattedDate })
-    })
-      .then(response => response.json())
-      .then(data => {
+        if (!response.ok) {
+            throw new Error('Error en la solicitud: ' + response.statusText);
+        }
+
+        const data = await response.json();
+
+        if (!data || !data.sales || !data.salesByWeek) {
+            throw new Error('Los datos recibidos no son válidos.');
+        }
+
         setDailySales(data.sales);
-        setWeeklySales(data.salesDaysWeek);
-      })
-      .catch(error => {
+        setWeeklySales(data.salesByWeek);
+    } catch (error) {
         throw new Error('Error al enviar datos: ' + error.message);
-      });
-  };
+    }
+};
 
   const handleDateChange = (date) => {
     setSelectedDate(date);

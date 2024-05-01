@@ -29,7 +29,6 @@ DatabaseConfiguration.Init(connection);
 if (app.Environment.IsDevelopment())
 {
     DatabaseStore.Store_MySql();
-    DatabaseStore.InsertLinesSalesPrueba();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

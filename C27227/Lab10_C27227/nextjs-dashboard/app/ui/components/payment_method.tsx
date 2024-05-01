@@ -12,7 +12,11 @@ const PaymentMethods = () => {
   const tiendaLocal = JSON.parse(tiendaPago);
 
   const handlePaymentCodeChange = (event) => {
-    setPaymentCode(event.target.value);
+    if (event && event.target && typeof event.target.value === 'string') {
+      setPaymentCode(event.target.value);
+    } else {
+      throw new Error('El argumento del evento no es válido');
+    }
   };
 
   const handlePaymentMethod = () => {

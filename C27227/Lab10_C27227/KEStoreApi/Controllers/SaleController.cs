@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using KEStoreApi.Bussiness;
 using System;
 using System.Threading.Tasks;
+using static KEStoreApi.SaleLogic;
+using System.Globalization;
 
 namespace KEStoreApi
 {
@@ -10,13 +12,24 @@ namespace KEStoreApi
     [ApiController]
     public class SaleController : ControllerBase
     {
-        private SaleLogic sl = new SaleLogic();
+        private SaleLogic saleLogic = new(); 
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DateRequest request)
+        [HttpGet] 
+        public async Task<IActionResult> Get(String date)
+       
         {
-            DateTime date = request.Date;
-            ReportSales report = await sl.GetReportSalesAsync(date);
+             DateTime selectDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            if (selectDate== default(DateTime)) 
+            {
+                return BadRequest("Se requiere una fecha válida en el cuerpo de la solicitud.");
+            }
+
+            Task<ReportSales> reportTask = saleLogic.GetReportSalesAsync(selectDate);
+
+            await Task.WhenAll(reportTask);
+            ReportSales report = await reportTask;
+            
             return Ok(report);
         }
     }

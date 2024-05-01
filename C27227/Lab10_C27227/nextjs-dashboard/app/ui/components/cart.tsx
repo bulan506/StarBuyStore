@@ -11,16 +11,16 @@ const Cart_Store = () => {
     const [cartUpdated, setCartUpdated] = useState(false);
 
     if (!dataObject || !dataObject.products) {
-        return <div>No hay productos en el carrito.</div>;
-      }
-      
-      const [productQuantities, setProductQuantities] = useState(() => {
+        throw new Error('No hay productos en el carrito.');
+    }
+    
+    const [productQuantities, setProductQuantities] = useState(() => {
         const quantities = {};
         dataObject.products.forEach((product) => {
-          quantities[product.id] = (dataObject.cart.productQuantities && dataObject.cart.productQuantities[product.id]) || product.amount || 1;
+            quantities[product.id] = (dataObject.cart.productQuantities && dataObject.cart.productQuantities[product.id]) || product.amount || 1;
         });
         return quantities;
-      });
+    });
 
     let subtotal = 0;
     let subtotalImpuesto = 0;
@@ -31,6 +31,9 @@ const Cart_Store = () => {
     }
 
     const handlePrice = (newQuantities = productQuantities) => {
+        if (!newQuantities) {
+            throw new Error('Las cantidades de productos son requeridas.');
+        }
         let totalPriceWithoutTax = 0;
         dataObject.products.forEach(product => {
             totalPriceWithoutTax += (product.price * (newQuantities[product.id] || 0));
@@ -53,11 +56,14 @@ const Cart_Store = () => {
     }
 
     const updateStore = (subtotalC, subtotalImpuestoCa, totalComp, newQuantities) => {
+        if (subtotalC == null || subtotalImpuestoCa == null || totalComp == null || newQuantities == null) {
+            throw new Error('Los argumentos de la función updateStore son requeridos.');
+        }
         const carritoActualizado = {
             ...dataObject,
             cart: {
                 ...dataObject.cart,
-                subtotal : subtotalC,
+                subtotal: subtotalC,
                 subtotalImpuesto: subtotalImpuestoCa,
                 total: totalComp,
                 cartItems: newQuantities
@@ -65,17 +71,14 @@ const Cart_Store = () => {
         };
         localStorage.setItem("tienda", JSON.stringify(carritoActualizado));
     };
+    
 
     useEffect(() => {
         handlePrice();
     }, [cartUpdated]);
 
     if (!(dataObject.products.length > 0)) {
-        return (
-            <div>
-                <p>No hay productos en el carrito.</p>
-            </div>
-        );
+        throw new Error('No hay productos en el carrito.');
     }
 
     const handleQuantityChange = (productId, action) => {

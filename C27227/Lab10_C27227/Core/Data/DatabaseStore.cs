@@ -176,6 +176,28 @@ namespace KEStoreApi.Data
                                 FOREIGN KEY (id_Sale) REFERENCES Sales(purchaseNumber),
                                 FOREIGN KEY (id_Product) REFERENCES products(id)
                             );
+                                
+                            -- Semana del 7 de abril al 13 de abril
+                            INSERT INTO Sales (purchase_date, total, payment_method, purchaseNumber)
+                            VALUES 
+                                ('2024-04-07 10:00:00', 280.00, 0, 'PUR001'),
+                                ('2024-04-08 10:00:00', 480.00, 1, 'PUR002'),
+                                ('2024-04-09 12:00:00', 910.00, 1, 'PUR003'),
+                                ('2024-04-10 14:00:00', 450.00, 0, 'PUR004'),
+                                ('2024-04-11 16:00:00', 340.00, 1, 'PUR005'),
+                                ('2024-04-12 18:00:00', 650.00, 0, 'PUR006'),
+                                ('2024-04-13 20:00:00', 530.00, 1, 'PUR007');
+
+                            -- Semana del 14 de abril al 20 de abril
+                            INSERT INTO Sales (purchase_date, total, payment_method, purchaseNumber)
+                            VALUES 
+                                ('2024-04-14 10:00:00', 390.00, 0, 'PUR008'),
+                                ('2024-04-15 12:00:00', 520.00, 1, 'PUR009'),
+                                ('2024-04-16 14:00:00', 930.00, 0, 'PUR010'),
+                                ('2024-04-17 16:00:00', 950.00, 1, 'PUR011'),
+                                ('2024-04-18 18:00:00', 550.00, 0, 'PUR012'),
+                                ('2024-04-19 20:00:00', 460.00, 1, 'PUR013'),
+                                ('2024-04-20 22:00:00', 620.00, 0, 'PUR014');
                         ";
 
                     using (var command = new MySqlCommand(createTableQuery, connection, transaction))
@@ -201,73 +223,10 @@ namespace KEStoreApi.Data
                             insertCommand.ExecuteNonQuery();
                         }
                     }
-                    
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-    }
-        public static async Task<List<Product>> GetProductsFromDB()
-        {
-            List<Product> products = new List<Product>();
-            string connectionString = DatabaseConfiguration.Instance.ConnectionString;
+                     string insertQuery = @"
 
-            using (var connection = new MySqlConnection(connectionString))
-            {
-               await  connection.OpenAsync();
 
-                string query = "SELECT id, name, price, ImageUrl FROM products";
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    var readerTask = command.ExecuteReaderAsync();
-                    using (var reader   = await readerTask)
-                    {
-                        while ( await reader.ReadAsync())
-                        {
-                            products.Add(new Product
-                            {
-                                Id = reader.GetInt32("id"),
-                                Name = reader.GetString("name"),
-                                Price = reader.GetDecimal("price"),
-                                ImageUrl = reader.GetString("ImageUrl"),
-                            });
-                        }
-                    }
-                }
-            }
-
-            return products;
-        }
-        public static void InsertLinesSalesPrueba()
-        {
-            string connectionString = DatabaseConfiguration.Instance.ConnectionStringMyDb;
-
-            using (var connection = new MySqlConnection(connectionString))
-            {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        string insertQuery = @"
-                            -- Semana del 7 de abril al 13 de abril
-                            INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
-                            VALUES 
-                                ('2024-04-07 10:00:00', 280.00, 0, 'PUR001'),
-                                ('2024-04-08 10:00:00', 480.00, 1, 'PUR002'),
-                                ('2024-04-09 12:00:00', 910.00, 1, 'PUR003'),
-                                ('2024-04-10 14:00:00', 450.00, 0, 'PUR004'),
-                                ('2024-04-11 16:00:00', 340.00, 1, 'PUR005'),
-                                ('2024-04-12 18:00:00', 650.00, 0, 'PUR006'),
-                                ('2024-04-13 20:00:00', 530.00, 1, 'PUR007');
-
-                            INSERT INTO linesSales (purchase_id, product_id, quantity, price)
+                            INSERT INTO Lines_Sales (id_Sale, id_Product, quantity, price)
                             VALUES 
                                 ('PUR001', 1, 2, 100.00),
                                 ('PUR001', 3, 3, 20.00),
@@ -288,18 +247,9 @@ namespace KEStoreApi.Data
                                 ('PUR007', 3, 1, 20.00),
                                 ('PUR007', 4, 2, 80.00);
 
-                            -- Semana del 14 de abril al 20 de abril
-                            INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
-                            VALUES 
-                                ('2024-04-14 10:00:00', 390.00, 0, 'PUR008'),
-                                ('2024-04-15 12:00:00', 520.00, 1, 'PUR009'),
-                                ('2024-04-16 14:00:00', 930.00, 0, 'PUR010'),
-                                ('2024-04-17 16:00:00', 950.00, 1, 'PUR011'),
-                                ('2024-04-18 18:00:00', 550.00, 0, 'PUR012'),
-                                ('2024-04-19 20:00:00', 460.00, 1, 'PUR013'),
-                                ('2024-04-20 22:00:00', 620.00, 0, 'PUR014');
+                     
 
-                            INSERT INTO linesSales (purchase_id, product_id, quantity, price)
+                            INSERT INTO Lines_Sales (id_Sale, id_Product, quantity, price)
                             VALUES 
                                 ('PUR008', 1, 1, 100.00),
                                 ('PUR008', 3, 3, 60.00),
@@ -329,16 +279,47 @@ namespace KEStoreApi.Data
                                 throw new Exception("Error inserting data into the database");
                             }
                         }
+                    transaction.Commit();
+                    
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
+        public static async Task<IEnumerable<Product>> GetProductsFromDB()
+        {
+            List<Product> products = new List<Product>();
+            string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
+            using (var connection = new MySqlConnection(connectionString))
+            {
+               await  connection.OpenAsync();
+
+                string query = "SELECT id, name, price, ImageUrl FROM products";
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    var readerTask = command.ExecuteReaderAsync();
+                    using (var reader   = await readerTask)
                     {
-                        transaction.Rollback();
-                        throw new Exception("Error executing database transaction", ex);
+                        while ( await reader.ReadAsync())
+                        {
+                            products.Add(new Product
+                            {
+                                Id = reader.GetInt32("id"),
+                                Name = reader.GetString("name"),
+                                Price = reader.GetDecimal("price"),
+                                ImageUrl = reader.GetString("ImageUrl"),
+                            });
+                        }
                     }
                 }
             }
+
+            return products;
         }
 
     }
