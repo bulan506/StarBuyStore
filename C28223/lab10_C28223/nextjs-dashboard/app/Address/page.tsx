@@ -8,6 +8,7 @@ const AddAddress = () => {
 
 
     const enviarForm = (eventoDeEnvio:any) => {
+        if(eventoDeEnvio== null ){throw new Error('Los argumentos para enviar el formulario no pueden ser nulos.');}
         eventoDeEnvio.preventDefault();
         const updatedCart = {
             ...tiendaEnMemoria,

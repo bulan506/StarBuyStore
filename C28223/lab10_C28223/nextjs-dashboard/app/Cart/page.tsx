@@ -43,6 +43,7 @@ const Carrito = () => {
     };
 
     const handleRemove = (id) => {
+        if(id== null){throw new Error('Los argumentos para borrar el producto no pueden ser nulos.');}
         const updatedProducts = memoryStore.productos.filter((item) => item.id !== id);
         const updatedStore = { ...memoryStore, productos: updatedProducts };
         localStorage.setItem("tienda", JSON.stringify(updatedStore));
@@ -50,6 +51,7 @@ const Carrito = () => {
     };
 
     const handleQuantityChange = (id, cant) => {
+        if(id== null || cant== null){throw new Error('Los argumentos para calcular el precio no pueden ser nulos.');}
         const updatedProducts = memoryStore.productos.map((item) => {
             if (item.id === id) {
                 return { ...item, cant };

@@ -135,7 +135,7 @@ const SalesCharAdmin = () => {
 };
 
 const ModalSinVentas = ({ closeModal }:any) => {
-  if (closeModal == null) {throw new Error('Error: data es nulo o indefinido');}
+  if (closeModal == null) {throw new Error('Error: CloseModal es nulo o indefinido');}
   return (
     <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">
