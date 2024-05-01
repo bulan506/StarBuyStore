@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class CreateSinpeHandler : IRequestHandler<CreateSinpeCommand, Sinpe>
+    public sealed class CreateSinpeHandler : IRequestHandler<CreateSinpeCommand, Sinpe>
     {
         private readonly ISinpeRepository _sinpeRepository;
 

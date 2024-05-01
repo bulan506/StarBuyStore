@@ -3,7 +3,7 @@ using StoreApi.Models;
 
 namespace StoreApi.Commands
 {
-    public class CreateProductCommand : IRequest<Product>
+    public sealed class CreateProductCommand : IRequest<Product>
     {
         public string Name { get; set; }
         public string ImageUrl { get; set; }

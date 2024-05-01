@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StoreApi.Models
 {
-    public class Product : ICloneable
+    public sealed class Product : ICloneable
     {
         [Key]
         public Guid Uuid { get; set; }

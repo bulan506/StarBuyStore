@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class CreateSalesLineHandler : IRequestHandler<CreateSalesLineCommand, SalesLine>
+    public sealed class CreateSalesLineHandler : IRequestHandler<CreateSalesLineCommand, SalesLine>
     {
         private readonly ISalesLineRepository _salesLineRepository;
 

@@ -1,6 +1,6 @@
 namespace StoreApi.utils
 {
-    public class Utils
+    public sealed class Utils
     {
         public static string GetPurchaseNumber()
         {
@@ -18,6 +18,10 @@ namespace StoreApi.utils
         //devuelve el domingo
         public static DateTime GetFirstDayOfTheWeek(DateTime dateTime)
         {
+            if (dateTime.Date == DateTime.MinValue)
+            {
+                throw new ArgumentException("The dateTime cannot be empty.");
+            }
             int sunday = DayOfWeek.Sunday - dateTime.DayOfWeek;
             return dateTime.AddDays(sunday);
         }

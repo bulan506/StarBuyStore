@@ -3,14 +3,14 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Chart } from "react-google-charts";
 
 //EJemplo de data
-export const e = [
+/*export const data = [
     ["Task", "Hours per Day"],
     ["Work", 11],
     ["Eat", 2],
     ["Commute", 2],
     ["Watch TV", 2],
     ["Sleep", 7],
-];
+];*/
 
 export const options = {
     title: "My Daily Activities",

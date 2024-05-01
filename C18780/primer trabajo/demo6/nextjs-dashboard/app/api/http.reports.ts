@@ -1,40 +1,23 @@
 import { useEffect, useState } from "react";
 
-export function useFetchWeeklySales(dateTime: Date) {
-    const [weeklySales, setWeeklySales] = useState([]);
-    useEffect(() => {
-        async function getWeeklySales() {
-            const formattedDate = dateTime.toISOString().slice(0, 10);
-            const res = await fetch(`https://localhost:7099/api/Reports/weeklySales?dateTime=${formattedDate}`);
-            if (!res.ok) {
-                throw new Error('Failed to fetch WeeklySales.');
-            }
-            const data = await res.json();
-            setWeeklySales(data);
-        }
-        getWeeklySales();
-    }, []);
-    return weeklySales;
-}
-
-export default useFetchWeeklySales;
-
-
-/*export async function useFetchDailySales(dateTime: Date) {
-    const [dailySales, setDailySales] = useState([]);
+export function useFetchReports(dateTime: Date) {
+    const [dailyReports, setDailyReports] = useState([]);
+    const [weeklyReports, setWeeklyReports] = useState([]);
 
     useEffect(() => {
-        async function getDailySales() {
+        const getReportsSales = async () => {
             const formattedDate = dateTime.toISOString().slice(0, 10);
-            const res = await fetch(`https://localhost:7099/api/Reports/dailySales?dateTime=${formattedDate}`);
+            const res = await fetch(`https://localhost:7099/api/Reports/Date?dateTime=${formattedDate}`);
             if (!res.ok) {
-                throw new Error('Failed to fetch DailySales.');
+                throw new Error('Failed to fetch Reports.');
             }
             const data = await res.json();
-            setDailySales(data);
+            const { dailySalesList, weeklySalesList } = data;
+            setDailyReports(dailySalesList);
+            setWeeklyReports(weeklySalesList);
         }
-        getDailySales();
+        getReportsSales();
     }, [dateTime]);
 
-    return dailySales;
-}*/
+    return { dailyReports, weeklyReports };
+}

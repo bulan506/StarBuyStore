@@ -2,34 +2,18 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Chart } from "react-google-charts";
 
-export const data = [
+/*export const data = [
     ["Date", "Product", "Quantity", "Price"],
     ["23/04/2024", "Laptop", "3", 1000000],
     ["23/04/2024", "Laptop", "3", 1000000],
     ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-];
+];*/
 
 export const options = {
     allowHtml: true,
     showRowNumber: true,
     legend: { position: "bottom" },
-    pageSize: 10,
+    pageSize: 50,
 };
 
 export const formatters = [
@@ -44,13 +28,13 @@ export const formatters = [
     },
 ];
 
-export default function Charts() {
+export default function Charts({ data }: { data: (string | number)[][] }) {
     return (
         <>
             <Chart
                 chartType="Table"
                 width="100%"
-                height="400px"
+                height="100%"
                 data={data}
                 options={options}
                 formatters={formatters}

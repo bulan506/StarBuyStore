@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class GetSalesByPurchaseNumberHandler : IRequestHandler<GetSalesByPurchaseNumberQuery, Sales>
+    public sealed class GetSalesByPurchaseNumberHandler : IRequestHandler<GetSalesByPurchaseNumberQuery, Sales>
     {
         private readonly ISalesRepository _salesRepository;
 

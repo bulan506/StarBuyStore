@@ -1,7 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using StoreApi.utils;
-
 namespace StoreApi.Models
 {
     public sealed class Sales

@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class GetWeeklySalesByDateHandler : IRequestHandler<GetWeeklySalesByDateQuery, List<WeeklySales>>
+    public sealed class GetWeeklySalesByDateHandler : IRequestHandler<GetWeeklySalesByDateQuery, List<WeeklySales>>
     {
         private readonly IWeeklySalesRepository _weeklySalesRepository;
         public GetWeeklySalesByDateHandler(IWeeklySalesRepository weeklySalesRepository)

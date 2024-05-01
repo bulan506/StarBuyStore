@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class CreateProductHandler : IRequestHandler<CreateProductCommand, Product>
+    public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, Product>
     {
         private readonly IProductRepository _productRepository;
 

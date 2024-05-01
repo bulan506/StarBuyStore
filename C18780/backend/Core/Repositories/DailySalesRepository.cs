@@ -26,13 +26,6 @@ namespace StoreApi.Repositories
                     .Where(sl => sl.UuidSales == sale.Uuid)
                     .ToListAsync();
 
-                var dailySales = new DailySales//paso 3: el objeto que voy a guardar
-                {
-                    Date = sale.Date,
-                    PaymentMethod = sale.PaymentMethod,
-                    SalesLinesCustom = new List<SalesLinesCustom>()
-                };
-
                 foreach (var salesLine in salesLinesForSale)
                 {
                     var productName = await _dbContext.Product//paso 4: obtendo el nombre del producto que esta en el salesLine
@@ -40,16 +33,19 @@ namespace StoreApi.Repositories
                         .Select(p => p.Name)
                         .FirstOrDefaultAsync();
 
-                    dailySales.SalesLinesCustom.Add(new SalesLinesCustom//paso 5: llenar el List<SalesLinesCustom>
+                    var dailySales = new DailySales//paso 3: el objeto que voy a guardar
                     {
-                        Quantity = salesLine.Quantity,
-                        Subtotal = salesLine.Subtotal,
+                        Date = sale.Date,
+                        PaymentMethod = sale.PaymentMethod,
                         NameProduct = productName,
+                        SubTotal = salesLine.Subtotal,
+                        Quantity = salesLine.Quantity,
                         Total = salesLine.Quantity * salesLine.Subtotal
-                    });
-                }
+                    };
 
-                dailySalesList.Add(dailySales);
+                    dailySalesList.Add(dailySales);
+
+                }
             }
 
             return dailySalesList;

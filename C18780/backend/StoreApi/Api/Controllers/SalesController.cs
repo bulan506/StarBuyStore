@@ -8,7 +8,7 @@ namespace StoreApi
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SalesController : ControllerBase
+    public sealed class SalesController : ControllerBase
     {
         private readonly IMediator mediator;
 

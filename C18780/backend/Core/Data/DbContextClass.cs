@@ -4,7 +4,7 @@ using StoreApi.Models;
 
 namespace StoreApi.Data
 {
-    public class DbContextClass : DbContext
+    public sealed class DbContextClass : DbContext
     {
         protected readonly IConfiguration Configuration;
 

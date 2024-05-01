@@ -7,7 +7,7 @@ namespace StoreApi
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReportsController : ControllerBase
+    public sealed class ReportsController : ControllerBase
     {
         private readonly IMediator mediator;
 
@@ -17,7 +17,10 @@ namespace StoreApi
         }
 
         /*
-        Traer todas las ventas del dia seleccionado, informacion pertinente:
+        ----------------------------------------------------------------
+        Explicacion de GetReportsByDateAsync
+        ----------------------------------------------------------------
+        GetDailySalesQuery Trae todas las ventas del dia seleccionado, informacion pertinente:
         Entrada lista
         Fecha como 2024-04-25
 
@@ -32,30 +35,23 @@ namespace StoreApi
         paymentMethod -Select Sales PaymentMethod
 
         Total -Quantity * Price
-        */
-
-        [HttpGet("dailySales")]
-        public async Task<List<DailySales>> GetDailySalesByDateAsync(DateTime dateTime)
-        {
-            var dailySales = await mediator.Send(new GetDailySalesQuery() { DateTime = dateTime });
-            return dailySales;
-        }
-
-        /*
-        Traer las ventas por semana
+        ----------------------------------------------------------------
+        GetWeeklySalesByDateQuery Trae las ventas por semana
         Entrada
-        fecha
+        fecha como 2024-04-25
 
         Salida lista
         Nombre del producto
         Total de venta del producto
+        ----------------------------------------------------------------
         */
 
-        [HttpGet("weeklySales")]
-        public async Task<List<WeeklySales>> GetWeeklySalesByDateAsync(DateTime dateTime)
+        [HttpGet("Date")]
+        public async Task<Reports> GetReportsByDateAsync(DateTime dateTime)
         {
-            var weeklySales = await mediator.Send(new GetWeeklySalesByDateQuery() {DateTime = dateTime});
-            return weeklySales;
+            var dailySales = await mediator.Send(new GetDailySalesQuery() { DateTime = dateTime });
+            var weeklySales = await mediator.Send(new GetWeeklySalesByDateQuery() { DateTime = dateTime });
+            return new Reports(dailySales, weeklySales);
         }
     }
 }

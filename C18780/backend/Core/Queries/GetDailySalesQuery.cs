@@ -3,7 +3,7 @@ using StoreApi.Models;
 
 namespace StoreApi.Queries
 {
-    public class GetDailySalesQuery : IRequest<List<DailySales>>
+    public sealed class GetDailySalesQuery : IRequest<List<DailySales>>
     {
         public DateTime DateTime { get; set; }
     }

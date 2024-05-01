@@ -4,7 +4,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, int>
+    public sealed class DeleteProductHandler : IRequestHandler<DeleteProductCommand, int>
     {
         private readonly IProductRepository _studentRepository;
 

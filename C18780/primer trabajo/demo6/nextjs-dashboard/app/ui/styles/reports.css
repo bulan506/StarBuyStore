@@ -4,11 +4,8 @@
 }
 
 .container {
-    position: relative
-}
-
-.col {
-    margin-top: 5vh;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 5vh;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -50px;
 }
