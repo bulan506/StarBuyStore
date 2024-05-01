@@ -29,7 +29,7 @@ public sealed class Sale
         return purchaseNumber;
     }
 
-    private static void ValidateParameters(string purchaseNumber, IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod)
+    private void ValidateParameters(string purchaseNumber, IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod)
     {
         if (string.IsNullOrEmpty(purchaseNumber)){throw new ArgumentException("El número de compra no puede estar vacío o nulo.", nameof(purchaseNumber));}
         if (products == null || !products.Any()){throw new ArgumentException("La lista de productos no puede estar vacía.", nameof(products));}
@@ -41,14 +41,14 @@ public sealed class Sale
 }
 public class SaleAnnotation
 {
-    public string Day { set; get; }
+    public DayOfWeek DayOfWeek { set; get; }
 
     public decimal Total { set; get; }
-    public SaleAnnotation(string day, decimal total)
+    public SaleAnnotation(DayOfWeek dayOfWeek, decimal total)
     {
-        if (string.IsNullOrEmpty(day)){throw new ArgumentException("El día no puede estar vacío");}
+        if (dayOfWeek==default ){throw new ArgumentException("El día no puede estar vacío");}
         if (total < 0){throw new ArgumentException("El total no puede ser negativo");}
-        Day = day;
+        DayOfWeek = dayOfWeek;
         Total = total;
     }
 }

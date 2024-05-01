@@ -21,7 +21,7 @@ namespace storeApi.Models.Data
             AmountProducts = amountProducts;
             ProductsAnnotation = productsAnnotation;
         }
-        private static void ValidateSalesData(string purchaseNPurchaseNumber, DateTime purchaseDate, decimal total, int amountProducts, List<ProductQuantity> productsAnnotation)
+        private void ValidateSalesData(string purchaseNPurchaseNumber, DateTime purchaseDate, decimal total, int amountProducts, List<ProductQuantity> productsAnnotation)
         {
             if (string.IsNullOrEmpty(purchaseNPurchaseNumber)){throw new ArgumentException("El ID de compra no puede estar vacío o nulo.", nameof(purchaseNPurchaseNumber));}
             if (purchaseDate == default(DateTime)){throw new ArgumentException("La fecha de compra no puede ser la predeterminada.", nameof(purchaseDate));}

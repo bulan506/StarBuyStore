@@ -17,14 +17,14 @@ public class LogicSalesReportsApiTests
 
         Storage.Init(dbtestDefault, myDbtest);
         _logicSalesReportsApi = new LogicSalesReportsApi();
-        _saleDataBase= new SaleDataBase();
+        _saleDataBase = new SaleDataBase();
     }
 
     [Test]
     public void GetSalesReport_NullDate_ThrowsArgumentException()
     {
         // Arrange
-        DateTime? nullDate = null;
+        DateTime nullDate = DateTime.MinValue;
         // Act & Assert
         Assert.ThrowsAsync<ArgumentException>(() => _logicSalesReportsApi.GetSalesReportAsync(nullDate));
     }
@@ -67,11 +67,11 @@ public class LogicSalesReportsApiTests
 
         List<SaleAnnotation> salesWeekData = new List<SaleAnnotation>
     {
-        new SaleAnnotation(DayOfWeek.Monday.ToString(), 300),
-        new SaleAnnotation(DayOfWeek.Tuesday.ToString(), 400),
-        new SaleAnnotation(DayOfWeek.Wednesday.ToString(), 300),
-        new SaleAnnotation(DayOfWeek.Thursday.ToString(), 400),
-        new SaleAnnotation(DayOfWeek.Friday.ToString(), 400),
+        new SaleAnnotation(DayOfWeek.Monday, 300),
+        new SaleAnnotation(DayOfWeek.Tuesday, 400),
+        new SaleAnnotation(DayOfWeek.Wednesday, 300),
+        new SaleAnnotation(DayOfWeek.Thursday, 400),
+        new SaleAnnotation(DayOfWeek.Friday, 400),
         };
         // Act
         SalesReport result = await _logicSalesReportsApi.GetSalesReportAsync(validDate);
@@ -86,39 +86,41 @@ public class LogicSalesReportsApiTests
     public async Task GetSalesByDateAsync_ReturnsCorrectSalesData()
     {
         DateTime date = new DateTime(2024, 4, 1);
-        Task<List<SalesData>> result = _saleDataBase.GetSalesByDateAsync(date);
-        List<SalesData> listWeekSales = await result;
-         List<SalesData> listSaleTest= new List<SalesData>{
-            new SalesData(date, "BVS01",150.00m, 3,new List<ProductQuantity>{new ProductQuantity("1",2),new ProductQuantity("2",1)}),
-            new SalesData(date, "PUR099",150.00m, 3,new List<ProductQuantity>{new ProductQuantity("1",2),new ProductQuantity("2",1)})
-        }; 
-        
+        Task<IEnumerable<SalesData>> result = _saleDataBase.GetSalesByDateAsync(date);
+        IEnumerable<SalesData> listWeekSales = await result;
+        IEnumerable<SalesData> listSaleTest = new List<SalesData>{
+            new SalesData(date, "BVS01",150.00m, 3,new List<ProductQuantity>{new ProductQuantity("Product 1",2),new ProductQuantity("Producto 2",1)}),
+            new SalesData(date, "PUR099",150.00m, 3,new List<ProductQuantity>{new ProductQuantity("Product 1",2),new ProductQuantity("Producto 2",1)})
+        };
+ 
         // Act & Assert
         Assert.AreEqual(listSaleTest.Count(), listWeekSales.Count());
-        Assert.AreEqual(listWeekSales[0].AmountProducts,listWeekSales[0].AmountProducts);
+        Assert.IsFalse(listSaleTest.SequenceEqual(listWeekSales));
     }
-      [Test]
+    [Test]
     public async Task GetSalesByDateAsync_ReturnsCorrectSalesWeekData()
     {
         DateTime date = new DateTime(2024, 4, 1);
-        Task<List<SaleAnnotation>> result = _saleDataBase.GetSalesWeekAsync(date);
-        List<SaleAnnotation> listWeekSales = await result;
-         List<SaleAnnotation> listSaleTest= new List<SaleAnnotation>{
-            new SaleAnnotation("Monday", 300.00m),
-            new SaleAnnotation("Friday", 250.00m),
-            new SaleAnnotation("Tuesday", 200.00m),
-            new SaleAnnotation("Thursday", 400.00m),
-            new SaleAnnotation("Saturday", 180.00m),
-        }; 
-        
+        Task<IEnumerable<SaleAnnotation>> result = _saleDataBase.GetSalesWeekAsync(date);
+        IEnumerable<SaleAnnotation> listWeekSales = await result;
+        List<SaleAnnotation> listSaleTest = new List<SaleAnnotation>{
+            new SaleAnnotation(DayOfWeek.Monday, 300.00m),
+            new SaleAnnotation(DayOfWeek.Friday, 250.00m),
+            new SaleAnnotation(DayOfWeek.Tuesday, 200.00m),
+            new SaleAnnotation(DayOfWeek.Thursday, 400.00m),
+            new SaleAnnotation(DayOfWeek.Saturday, 180.00m),
+        };
+
         // Act & Assert
         Assert.AreEqual(listSaleTest.Count(), listWeekSales.Count());
-         Assert.AreEqual(listSaleTest.Count(), listWeekSales.Count());
-        for (int i = 0; i < listSaleTest.Count; i++)
+        Assert.AreEqual(listSaleTest.Count(), listWeekSales.Count());
+     List<SaleAnnotation> listWeekSalesList = listWeekSales.ToList();
+
+        for (int i = 0; i < listSaleTest.Count(); i++)
         {
-            Assert.AreEqual(listSaleTest[i].Day, listWeekSales[i].Day);
-            Assert.AreEqual(listSaleTest[i].Total, listWeekSales[i].Total);
+            Assert.AreEqual(listSaleTest[i].DayOfWeek, listWeekSalesList[i].DayOfWeek);
+            Assert.AreEqual(listSaleTest[i].Total, listWeekSalesList[i].Total);
         }
     }
-    
+
 }

@@ -233,7 +233,7 @@ namespace storeApi.DataBase
             }
         }
 
-        public static async Task<List<Product>> GetProductsFromDBAsync()
+        public static async Task<IEnumerable<Product>> GetProductsFromDBAsync()
         {
             List<Product> products = new List<Product>();
 

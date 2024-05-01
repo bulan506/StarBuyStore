@@ -49,7 +49,7 @@ const SalesCharAdmin = () => {
         throw new Error('Error al obtener datos de ventas');
       }
     } catch (error) {
-      throw new Error('Error de fetch en obtener los datos de ventas');
+      throw new Error('Error de fetch en obtener los datos de ventas'); // si ocurre un error en el fetching
     }
 
   };

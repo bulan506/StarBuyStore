@@ -8,7 +8,7 @@ namespace storeApi.DataBase
     {
         public async Task SaveAsync(Sale sale)
         {
-            if (sale == null) { throw new ArgumentNullException(nameof(sale), "El parámetro 'sale' no puede ser nulo."); }
+            if (sale == null) { throw new ArgumentNullException(nameof(sale), "El parámetro no puede ser nulo."); }
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 await connection.OpenAsync();
@@ -60,10 +60,10 @@ namespace storeApi.DataBase
             }//connection
         }//save
 
-        public async Task<List<SalesData>> GetSalesByDateAsync(DateTime? date)
+        public async Task<IEnumerable<SalesData>> GetSalesByDateAsync(DateTime date)
         {
-            if (date == default) { throw new ArgumentException("El parámetro 'date' no puede ser el valor predeterminado.", nameof(date)); }
-            if (date == null) { throw new ArgumentException("El parámetro 'date' no puede ser nulo.", nameof(date)); }
+            if (date == default) { throw new ArgumentException("El parámetro  no puede ser el valor predeterminado.", nameof(date)); }
+            if (date == null) { throw new ArgumentException("El parámetro  no puede ser nulo.", nameof(date)); }
 
             List<SalesData> salesList = new List<SalesData>();
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
@@ -102,10 +102,10 @@ namespace storeApi.DataBase
             return salesList;
         }
 
-        public async Task<List<SaleAnnotation>> GetSalesWeekAsync(DateTime? date)
+        public async Task<IEnumerable<SaleAnnotation>> GetSalesWeekAsync(DateTime date)
         {
-            if (date == default) { throw new ArgumentException("El parámetro 'date' no puede ser el valor predeterminado.", nameof(date)); }
-            if (date == null) { throw new ArgumentException("El parámetro 'date' no puede ser nulo.", nameof(date)); }
+            if (date == default) { throw new ArgumentException("El parámetro no puede ser el valor predeterminado.", nameof(date)); }
+            if (date == null) { throw new ArgumentException("El parámetro no puede ser nulo.", nameof(date)); }
             List<SaleAnnotation> salesByDay = new List<SaleAnnotation>();
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
@@ -124,9 +124,10 @@ namespace storeApi.DataBase
                     {
                         while (await reader.ReadAsync())
                         {
-                            string day = reader.GetString("day");
+                            string dayName = reader.GetString("day");
+                            DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayName, true);
                             decimal total = reader.GetDecimal("total");
-                            salesByDay.Add(new SaleAnnotation(day, total));
+                            salesByDay.Add(new SaleAnnotation(dayOfWeek, total));
                         }
                     }
                 }

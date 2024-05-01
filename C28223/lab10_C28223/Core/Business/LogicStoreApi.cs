@@ -24,7 +24,6 @@ namespace storeApi.Business
             var store = await Store.Instance;
             var products = store.Products;
             var taxPercentage = store.TaxPercentage;
-
             // Obtener los productos que coinciden con los IDs del carrito
             IEnumerable<Product> matchingProducts = products
                 .Where(p => cart.ProductIds.Any(pq => pq.ProductId == p.id.ToString())).ToList();
