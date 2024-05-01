@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TodoApi.Models;
 using TodoApi.Database;
 using TodoApi.Business;
+using System.Threading.Tasks;
 
 namespace TodoApi.Controllers
 {
@@ -14,11 +15,23 @@ namespace TodoApi.Controllers
         private StoreLogic storeLogic = new StoreLogic();
 
         [HttpPost]
-        public IActionResult CreateCart([FromBody] Cart cart)
+        public async Task<IActionResult> CreateCart([FromBody] Cart cart)
         {
-            var sale = storeLogic.Purchase(cart);
+            if (cart == null)
+            {
+                return BadRequest("Error, cart is null");
+            }
+
+            var sale = await storeLogic.Purchase(cart);
+
+            if (sale == null)
+            {
+                return BadRequest("Error processing purchase");
+            }
+
             var response = new { purchaseNumberResponse = sale.PurchaseNumber };
             return Ok(response);
         }
+
     }
 }

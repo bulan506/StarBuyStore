@@ -9,18 +9,17 @@ namespace TodoApi.Database
 {
     public sealed class SaleDB
     {
-        public void Save(Sale sale)
+        public async Task Save(Sale sale)
         {
-            using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3407;Database=mysql;Uid=root;Pwd=123456;"))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
-                using (var transaction = connection.BeginTransaction())
+                using (var transaction = await connection.BeginTransactionAsync())
                 {
                     try
                     {
                         string insertQuery = @"
-                            use store;
                             INSERT INTO sales (purchase_date, total, payment_method, purchase_number)
                             VALUES (@purchase_date, @total, @payment_method, @purchase_number);";
 
@@ -30,11 +29,10 @@ namespace TodoApi.Database
                             insertCommand.Parameters.AddWithValue("@total", sale.Amount);
                             insertCommand.Parameters.AddWithValue("@payment_method", sale.PaymentMethod);
                             insertCommand.Parameters.AddWithValue("@purchase_number", sale.PurchaseNumber);
-                            insertCommand.ExecuteNonQuery();
+                            await insertCommand.ExecuteNonQueryAsync();
                         }
 
                         string insertQueryLines = @"
-                            use store;
                             INSERT INTO saleLines (productId, purchaseNumber, price)
                             VALUES (@product_Id, @purchase_Number, @product_Price);";
 
@@ -45,33 +43,31 @@ namespace TodoApi.Database
                                 insertCommandLines.Parameters.AddWithValue("@product_Id", product.Id);
                                 insertCommandLines.Parameters.AddWithValue("@purchase_Number", sale.PurchaseNumber);
                                 insertCommandLines.Parameters.AddWithValue("@product_Price", product.Price);
-                                insertCommandLines.ExecuteNonQuery();
+                                await insertCommandLines.ExecuteNonQueryAsync();
                             }
                         }
 
                         // Commit the transaction if all inserts are successful
-                        transaction.Commit();
+                        await transaction.CommitAsync();
                     }
                     catch (Exception)
                     {
                         // Rollback the transaction if an error occurs
-                        transaction.Rollback();
-                        throw;
+                        await transaction.RollbackAsync();
                     }
                 }
             }
         }
 
-        public List<SaleReports> GetWeeklySales(DateTime date)
+        public async Task<List<SaleReports>> GetWeeklySales(DateTime date)
         {
             List<SaleReports> weeklySales = new List<SaleReports>();
 
-            using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3407;Database=mysql;Uid=root;Pwd=123456;"))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string selectQuery = @"
-                    use store;
                     SELECT DAYNAME(sale.purchase_date) AS day, SUM(sale.total) AS total
                     FROM sales sale 
                     WHERE YEARWEEK(sale.purchase_date) = YEARWEEK(@date)
@@ -81,9 +77,9 @@ namespace TodoApi.Database
                 {
                     command.Parameters.AddWithValue("@date", date);
 
-                    using (var reader = command.ExecuteReader())
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             string day = reader.GetString("day");
                             decimal total = reader.GetDecimal("total");
@@ -93,7 +89,6 @@ namespace TodoApi.Database
                     }
                 }
             }
-
             return weeklySales;
         }
     }

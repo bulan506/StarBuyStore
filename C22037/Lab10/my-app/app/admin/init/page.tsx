@@ -12,17 +12,12 @@ export default function Init() {
 
     useEffect(() => {
         fetchData();
-    }, [selectedDay]); // Asegúrate de llamar a fetchData cuando selectedDay cambie
+    }, [selectedDay]);
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`https://localhost:7067/api/Sale`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedDay)
-            });
+            const formattedDate = selectedDay.toISOString().split('T')[0];
+            const response = await fetch(`https://localhost:7067/api/Sale?date=${formattedDate}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
@@ -33,11 +28,20 @@ export default function Init() {
             }
             setWeeklySalesData(newData);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            throw new Error("Error loading data:", error.message);
         }
     };
 
+
     const handleDayChange = (selectedDay) => {
+        if (selectedDay === undefined || selectedDay === null) {
+            throw new Error("The argument must be a date");
+        }
+    
+        if (!(selectedDay instanceof Date)) {
+            throw new Error("The argument must be a date");
+        }
+
         setSelectedDay(selectedDay);
     };
 
@@ -96,7 +100,7 @@ export default function Init() {
                                         title: "Weekly Sales",
                                     }}
                                 />
-                                
+
                             </div>
                         </div>
                     )}

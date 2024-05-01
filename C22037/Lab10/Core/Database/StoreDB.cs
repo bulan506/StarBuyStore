@@ -142,7 +142,7 @@ public sealed class StoreDB
                 }
             };
 
-        using (var connection = new MySqlConnection("Server=localhost;Port=3407;Database=mysql;Uid=root;Pwd=123456;"))
+        using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
         {
             connection.Open();
 

@@ -1,10 +1,6 @@
 using Core;
 using TodoApi.Database;
 
-#if DEBUG
-    StoreDB.CreateMysql();
-#endif
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,22 +10,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var app = builder.Build();
+builder.Configuration.AddJsonFile("C:/Users/mchac/lenguajes24/C22037/Lab10/TodoApi/appsettings.json", optional: false, reloadOnChange: true);
+string connection = builder.Configuration.GetSection("ConnectionStrings").GetSection("MyDatabase").Value.ToString();
+Storage.Init(connection);
+
 // Add CORS
-builder.Services.AddCors(options =>
+app.UseCors(builder =>
 {
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
 });
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment())
 {
+    StoreDB.CreateMysql();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -37,14 +33,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
-// Use CORS
-app.UseCors(builder =>
-{
-    builder.AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader();
-});
 
 app.UseAuthorization();
 

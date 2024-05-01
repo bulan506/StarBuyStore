@@ -11,6 +11,17 @@ export default function Admin() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        if (typeof name !== 'string' || name.trim() === '') {
+            alert("Error: 'name' no es una cadena válida en handleInputChange");
+            return;
+        }
+    
+        if (typeof value !== 'string') {
+            alert("Error: 'value' no es una cadena válida en handleInputChange");
+            return;
+        }
+        
         setFormData({
             ...formData,
             [name]: value
@@ -19,7 +30,6 @@ export default function Admin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
     };
 
     return (

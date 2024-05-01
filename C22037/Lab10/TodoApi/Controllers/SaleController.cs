@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TodoApi.Database;
 
 namespace TodoApi.Models
@@ -9,11 +10,21 @@ namespace TodoApi.Models
     [ApiController]
     public class SaleController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult GetSale([FromBody]DateTime date)
+        [HttpGet]
+        public async Task<IActionResult> GetWeeklySales([FromQuery] DateTime date)
         {
+            if (date == DateTime.MinValue)
+            {
+                return BadRequest("Date parameter is required.");
+            }
+
+            if (date > DateTime.Now)
+            {
+                return BadRequest("Date cannot be in the future.");
+            }
+
             SaleDB saleDB = new SaleDB();
-            List<SaleReports> weeklySales = saleDB.GetWeeklySales(date);
+            List<SaleReports> weeklySales = await saleDB.GetWeeklySales(date);
             return Ok(weeklySales);
         }
     }

@@ -10,6 +10,7 @@ public class Storage
 
         Storage.Instance = new Storage(connectionString);
     }
+
     private Storage (string connectionString)
     {
         ConnectionString = connectionString;
