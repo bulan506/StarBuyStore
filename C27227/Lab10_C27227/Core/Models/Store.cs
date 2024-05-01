@@ -25,7 +25,7 @@ namespace KEStoreApi
 
         public static async Task<Store> InitializeInstance()
         {
-            var products = await DatabaseStore.GetProductsFromDB();
+            var products = await DatabaseStore.GetProductsFromDBaAsync();
             return new Store(products, 13);
         }
 

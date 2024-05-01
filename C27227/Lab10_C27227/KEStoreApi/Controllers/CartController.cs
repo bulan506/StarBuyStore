@@ -12,7 +12,7 @@ namespace KEStoreApi.Controllers
         private StoreLogic storeLogic = new StoreLogic();
 
         [HttpPost]
-        public async Task<IActionResult> CreateCart([FromBody] Cart cart)
+        public async Task<IActionResult> CreateCartAsync([FromBody] Cart cart)
         {
            
             if (cart == null)
@@ -26,7 +26,7 @@ namespace KEStoreApi.Controllers
             }
 
             // Realizar la compra
-            var saleTask = storeLogic.Purchase(cart);
+            var saleTask = storeLogic.PurchaseAsync(cart);
             var sale = await saleTask;
             var purchaseNumber = sale.PurchaseNumber;
             var response = new { purchaseNumber = purchaseNumber };

@@ -290,7 +290,7 @@ namespace KEStoreApi.Data
             }
         }
     }
-        public static async Task<IEnumerable<Product>> GetProductsFromDB()
+        public static async Task<IEnumerable<Product>> GetProductsFromDBaAsync()
         {
             List<Product> products = new List<Product>();
             string connectionString = DatabaseConfiguration.Instance.ConnectionString;

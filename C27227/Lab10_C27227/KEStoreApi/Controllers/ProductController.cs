@@ -9,7 +9,7 @@ namespace KEStoreApi.Controllers
     public class StoreController : ControllerBase
     {
         [HttpGet]
-         public async Task<IActionResult> GetStore()
+         public async Task<IActionResult> GetStoreAsync()
         {
             var store = await Store.Instance;
             return Ok(new

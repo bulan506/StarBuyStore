@@ -13,9 +13,12 @@ public sealed class StoreLogic
 
     }
 
-public async Task<Sale> Purchase(Cart cart)
+public async Task<Sale> PurchaseAsync(Cart cart)
 {
-
+    if(cart == null)
+    {
+        throw new ArgumentNullException(nameof(cart), "El objeto " + nameof(cart) + " no puede ser nulo.");
+    }
     if (cart.Product.Count == 0)
     {
         throw new ArgumentException("El carrito debe contener al menos un producto.", nameof(cart));
@@ -75,7 +78,7 @@ public async Task<Sale> Purchase(Cart cart)
 }
 
     
-    private static string GeneratePurchaseNumber()
+    private string GeneratePurchaseNumber()
     {
         StringBuilder sb = new StringBuilder();
 

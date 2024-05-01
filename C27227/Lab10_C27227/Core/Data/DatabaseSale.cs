@@ -9,7 +9,7 @@ public async Task SaveAsync(Sale sale)
 {
       if (sale == null)
     {
-        throw new ArgumentNullException(nameof(sale), "El objeto Sale no puede ser nulo.");
+        throw new ArgumentNullException(nameof(sale), "El objeto " + nameof(Sale) + " no puede ser nulo.");
     }
 
     if (sale.Products == null || !sale.Products.Any())
@@ -65,11 +65,11 @@ public async Task SaveAsync(Sale sale)
     }
 }
 
-public async Task<IEnumerable<SaleDetails>> GetDailySalesReport(DateTime? date)
+public async Task<IEnumerable<SaleDetails>> GetDailySalesReportAsync(DateTime date)
 {
-    if (!date.HasValue)
+    if (date == DateTime.MinValue)
     {
-        throw new ArgumentNullException(nameof(date), "La fecha no puede ser nula.");
+        throw new ArgumentException("La fecha no puede ser mayor .", nameof(date));
     }
     
     List<SaleDetails> salesReport = new List<SaleDetails>();
@@ -91,7 +91,7 @@ public async Task<IEnumerable<SaleDetails>> GetDailySalesReport(DateTime? date)
 
         using (MySqlCommand command = new MySqlCommand(query, connection))
         {
-            command.Parameters.AddWithValue("@date", date?.Date);
+            command.Parameters.AddWithValue("@date", date.Date);
 
             using (MySqlDataReader reader = await command.ExecuteReaderAsync())
             {
@@ -114,17 +114,17 @@ public async Task<IEnumerable<SaleDetails>> GetDailySalesReport(DateTime? date)
 
     return salesReport;
 }
-public async Task<IEnumerable<SalesByDay>> GetWeeklySalesReport(DateTime? date)
-{
-    if (!date.HasValue)
-    {
-        throw new ArgumentNullException(nameof(date), "La fecha no puede ser nula.");
-    }
 
+public async Task<IEnumerable<SalesByDay>> GetWeeklySalesReportAsync(DateTime date)
+{
+    if (date == DateTime.MinValue)
+        {
+            throw new ArgumentException("La fecha no puede ser mayor .", nameof(date));
+        }
     List<SalesByDay> weeklySalesReport = new List<SalesByDay>();
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 
-    DateTime startOfWeek = date.Value.AddDays(-(int)date.Value.DayOfWeek);
+    DateTime startOfWeek = date.AddDays(-(int)date.DayOfWeek);
     string query = @" SELECT DAYNAME(s.purchase_date) AS saleDayOfWeek, COUNT(*) AS saleCount FROM Sales s WHERE YEARWEEK(s.purchase_date) = YEARWEEK(@startDate) GROUP BY saleDayOfWeek ORDER BY saleDayOfWeek; ";
 
     using (MySqlConnection connection = new MySqlConnection(connectionString))

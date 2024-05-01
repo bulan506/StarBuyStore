@@ -32,7 +32,7 @@ namespace UnitTests
                 PaymentMethod = PaymentMethods.Type.SINPE
             };
             
-            Assert.ThrowsAsync<ArgumentException>(async () => await _storeLogic.Purchase(cart));
+            Assert.ThrowsAsync<ArgumentException>(async () => await _storeLogic.PurchaseAsync(cart));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace UnitTests
                 PaymentMethod = PaymentMethods.Type.CASH
             };
 
-            Assert.ThrowsAsync<ArgumentException>(async () => await _storeLogic.Purchase(cart));
+            Assert.ThrowsAsync<ArgumentException>(async () => await _storeLogic.PurchaseAsync(cart));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace UnitTests
                 PaymentMethod = PaymentMethods.Type.CASH 
             };
 
-            var sale = await _storeLogic.Purchase(cart);
+            var sale = await _storeLogic.PurchaseAsync(cart);
             Assert.NotNull(sale);
             Assert.IsInstanceOf<Sale>(sale);
             Assert.That(sale.Products.Count(), Is.EqualTo(2)); 

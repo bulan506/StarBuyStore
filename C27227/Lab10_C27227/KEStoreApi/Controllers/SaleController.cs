@@ -15,7 +15,7 @@ namespace KEStoreApi
         private SaleLogic saleLogic = new(); 
 
         [HttpGet] 
-        public async Task<IActionResult> Get(String date)
+        public async Task<IActionResult> GetSaleAsync(String date)
        
         {
              DateTime selectDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);

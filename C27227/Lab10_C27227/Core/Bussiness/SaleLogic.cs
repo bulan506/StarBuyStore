@@ -17,37 +17,29 @@ namespace KEStoreApi
             _databaseSale = databaseSale ?? throw new ArgumentNullException(nameof(databaseSale));
         }
 
-        public async Task<ReportSales> GetReportSalesAsync(DateTime? date)
+        public async Task<ReportSales> GetReportSalesAsync(DateTime date)
         {
-            if (date == null)
+            if (date < DateTime.MinValue)
             {
-                throw new ArgumentNullException("La fecha no estar vacía o nula.", nameof(date));
+                throw new ArgumentException("La fecha no puede ser DateTime.MinValue.", nameof(date));
             }
             if (date > DateTime.Now)
             {
                 throw new ArgumentOutOfRangeException(nameof(date), "La fecha no puede ser posterior a la fecha actual.");
             }
 
-            DateTime fechaMinima = new DateTime(1900, 1, 1);
-            if (date < fechaMinima)
-            {
-                throw new ArgumentOutOfRangeException(nameof(date), "La fecha no puede ser anterior a una fecha mínima específica.");
-            }
-
-            IEnumerable<SaleDetails> salesDetails = await _databaseSale.GetDailySalesReport(date);
-            IEnumerable<SalesByDay> salesByDays = await _databaseSale.GetWeeklySalesReport(date);
-
+            IEnumerable<SaleDetails> salesDetails = await _databaseSale.GetDailySalesReportAsync(date);
+            IEnumerable<SalesByDay> salesByDays = await _databaseSale.GetWeeklySalesReportAsync(date);
 
             ReportSales salesReport = new ReportSales
             {
-                Date = (DateTime)date,
+                Date = date,
                 Sales = salesDetails,
                 SalesByWeek = salesByDays 
             };
 
             return salesReport;
         }
-
         public class ReportSales
         {
             public DateTime Date { get; set; }

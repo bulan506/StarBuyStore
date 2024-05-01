@@ -43,7 +43,7 @@ namespace UnitTests
         public async Task GetReportSalesAsync_WithInvalidDate_ThrowsException()
         {
             // Arrange
-            DateTime? invalidDate = DateTime.MaxValue;
+            DateTime invalidDate = DateTime.MaxValue;
                     
             // Act & Assert
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _saleLogic.GetReportSalesAsync(invalidDate));
@@ -52,8 +52,8 @@ namespace UnitTests
         [Test]
         public void GetReportSalesAsync_WithNullDate_ThrowsException()
         {
-            DateTime? fechaNullable = null;
-            Assert.ThrowsAsync<ArgumentNullException>(() => _saleLogic.GetReportSalesAsync(fechaNullable)); 
+            DateTime minValueDate = DateTime.MinValue;
+            Assert.ThrowsAsync<ArgumentNullException>(() => _saleLogic.GetReportSalesAsync(minValueDate)); 
         }
 
     }
