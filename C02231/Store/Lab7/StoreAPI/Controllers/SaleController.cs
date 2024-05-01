@@ -33,12 +33,10 @@ namespace StoreAPI.Controllers
 
 
                
-                
-                var formattedDailySales = SalesFormatter.FormatDailySales(dailySales);
 
                 var salesReport = new { WeeklySales = weeklySales, DailySales = dailySales };
 
-                
+                //return Ok(weeklySales);
                 return Ok(salesReport);
             }
             catch (Exception ex)

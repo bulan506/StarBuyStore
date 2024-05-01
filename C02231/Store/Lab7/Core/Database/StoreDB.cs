@@ -441,7 +441,7 @@ public sealed class StoreDB
     }
 
 
-    public async Task<List<SalesReport>> GetDailySalesAsync(DateTime? date)
+    public async Task<IEnumerable<SalesReport>> GetDailySalesAsync(DateTime? date)
     {
         List<SalesReport> dailySales = new List<SalesReport>();
 
@@ -477,7 +477,7 @@ public sealed class StoreDB
         return dailySales;
     }
 
-    public async Task<List<SalesReport>> GetWeeklySalesAsync(DateTime? date)
+    public async Task<IEnumerable<SalesReport>> GetWeeklySalesAsync(DateTime? date)
     {
         List<SalesReport> weeklySales = new List<SalesReport>();
 
