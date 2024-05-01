@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Chart } from "react-google-charts";//no se le pueden pasar useStates, solo listas de listas
 
-
 //Funciones
 import { getRegisteredSalesFromAPI, sendDataAPI } from '@/app/src/api/get-post-api';
 
@@ -18,25 +17,15 @@ import { RegisteredSaleAPI } from '@/app/src/models-data/RegisteredSale'
 export default function SalesReport(){
 
     const [allRegisteredSales,setAllRegisteredSales] = useState<RegisteredSaleAPI[]>([]);    
-    const [eventDate, setEventDate] = useState<string | null>(null); // Asegúrate de definir eventKey correctamente
+    const [eventDate, setEventDate] = useState<Date | null>(null); // Asegúrate de definir eventKey correctamente
     const [dataForTable, setDataForTable] = useState<any[]>([]);
-
-    //let dataForTable: any[] = [];//let por cambiara a cada rato
-
-
+    const [dataForPie, setDataForPie] = useState<any[]>([]);
 
     //Colocamos los tipos de datos
     //Donde la primera lista anidada son los nombres de columnas y sus tipos
     const defaultColName =
         ["Id Venta","Codigo de Compra", "Subtotal","Total","Direccion","Tax","Metodo de Pago","Fecha de compra"];
-
-    // const defaultColName = ["Employee Name", { type: "date", label: "Start Date (Long)" }, { type: "date", label: "Start Date (Medium)" }, { type: "date", label: "Start Date (Short)" }];    
-    // const tableData = [    
-    //     ["Mike", new Date(2008, 1, 28, 0, 31, 26), new Date(2008, 1, 28, 0, 31, 26), new Date(2008, 1, 28, 0, 31, 26)],
-    //     ["Bob", new Date(2007, 5, 1, 0), new Date(2007, 5, 1, 0), new Date(2007, 5, 1, 0)],
-    //     ["Alice", new Date(2006, 7, 16), new Date(2006, 7, 16), new Date(2006, 7, 16)],
-    // ];
-
+    
     //Datos adicionales de Chart
     const tableOptions = {
         showRowNumber: false,
@@ -53,7 +42,9 @@ export default function SalesReport(){
           
     //Funcion base de todo
     const selectDateResetTable = (e: { target: { value: any; }; }) =>{
-        var selectedDate = e.target.value;        
+        var selectedDate = e.target.value;
+        //var selectedDate = new Date(stringDate);
+        //console.log("Tipo de dato de la fecha : " + typeof + selectedDate)
         console.log("Fecha Seleccionada: " + selectedDate)
         setEventDate(selectedDate);        
     }
@@ -83,7 +74,6 @@ export default function SalesReport(){
                         ])
                     ];
                     setDataForTable(tableData);
-
 
 
                     //dataForTable.push(defaultColName);                    

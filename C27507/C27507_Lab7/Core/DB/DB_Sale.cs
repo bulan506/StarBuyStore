@@ -6,10 +6,11 @@ using System.Collections.Generic;//para usar list
 using MyStoreAPI.Models;
 using MySqlConnector;
 using System.Runtime.InteropServices.Marshalling;
+using Core;
 namespace MyStoreAPI.DB
 {
     public class DB_Sale{
-
+        
         public static (string, int) InsertSale(Cart purchasedCart){
             try{                                        
 
@@ -61,39 +62,28 @@ namespace MyStoreAPI.DB
             }            
         }
 
-        public static List<RegisteredSale> GetRegisteredSalesToday(string  dateParameter){       
+        public static async Task<List<RegisteredSale>> GetRegisteredSalesTodayAsync(DateTime dateParameter){       
 
             List<RegisteredSale>  registeredSalesToday =new List<RegisteredSale>();                        
 
             try{
                 using(MySqlConnection connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB())){
-                    connectionWithDB.Open();
-                    // IdSale INT AUTO_INCREMENT PRIMARY KEY,                            
-                    // PurchaseNum VARCHAR(50) NOT NULL,                           
-                    // Total DECIMAL(10, 2) NOT NULL,
-                    // Subtotal DECIMAL(10, 2) NOT NULL,                                                
-                    // Direction VARCHAR(255) NOT NULL,
-                    // IdPayment INT NOT NULL,
-                    // DateSale DATETIME NOT NULL,
-                    //Extraemos solo la fecha (ignoramos horas-segundos...)
+
+                    await connectionWithDB.OpenAsync();
+
                     string selectSales = @"
                     SELECT IdSale,PurchaseNum, Total,Subtotal, Direction, IdPayment,DateSale 
                     FROM Sales                    
-                    WHERE DATE(DateSale) = DATE(@dateParameter);";
-                    // WHERE CAST(DateSale AS DATE) = CURRENT_DATE();
-                    // Where DateSale BETWEEN '2024-04-26 00:00:00' AND '2024-04-26 23:59:59'
-                    // WHERE DATE(DateSale) = DATE(SYSDATE());
-                    // WHERE DATE(DateSale) = DATE(NOW())
+                    WHERE DATE(DateSale) = DATE(@dateParameter);";                    
 
                     using(MySqlCommand command = new MySqlCommand(selectSales,connectionWithDB)){
                         
-                        //Definimos el parametro a comparar
-                        DateTime dateParameterNewFormat = DateTime.ParseExact(dateParameter, "yyyy-MM-dd", CultureInfo.CurrentCulture);
-                        Console.WriteLine("Nuevo formato: " +dateParameterNewFormat);
-                        command.Parameters.AddWithValue("@dateParameter", dateParameterNewFormat);
-                        using (MySqlDataReader readerTable = command.ExecuteReader()){
+                        //Definimos el parametro a comparar                        
+                        Console.WriteLine("Formato de fecha : " +dateParameter);
+                        command.Parameters.AddWithValue("@dateParameter", dateParameter);
+                        using (MySqlDataReader readerTable = await command.ExecuteReaderAsync()){
                             
-                            while(readerTable.Read()){
+                            while(await readerTable.ReadAsync()){
                                 
                                 var newRegisteredSale = new RegisteredSale();                                
                                 newRegisteredSale.IdSale = Convert.ToInt32(readerTable["IdSale"]);
@@ -112,7 +102,7 @@ namespace MyStoreAPI.DB
                                 else{
                                     //Si obtenemos un Id de un metodo de pago que no existe actualmente, tratarlo mas arriba
                                     //ya que ha podido ser desactivado o eliminado
-                                   throw new NotImplementedException("Not valid");
+                                   throw new BussinessException("El metodo de pago actual no es valido");
                                 }
                                 newRegisteredSale.DateTimeSale = (DateTime)readerTable["DateSale"];                            
                                 registeredSalesToday.Add(newRegisteredSale);
@@ -131,16 +121,7 @@ namespace MyStoreAPI.DB
 
         }
 
-        public static void getSalesLastWeek(string dateFormat){
-
-        }
-        public static void getSalesLastMonth(string dateFormat){
-
-        }
-
-        public static void getSalesDateFormat(string dateFormat){
-
-        }
+        public static void getSalesLastWeek(string dateFormat){}
 
         public static string generateRandomPurchaseNum(){            
             Guid purchaseNum = Guid.NewGuid();            

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MyStoreAPI.Business;
 using MyStoreAPI.DB;
 using MyStoreAPI.Models;
+using Core;
 namespace MyStoreAPI.Controllers
 
 {
@@ -23,10 +24,10 @@ namespace MyStoreAPI.Controllers
                 Console.WriteLine("Antes de mandar la respuesta post - Valor de saleConfirmed.purchaseNum: " + saleConfirmed.purchaseNum);
                 return Ok(new { purchaseNum });
             }
-            catch (NotImplementedException nie){                
+            catch (BussinessException){                
                 return StatusCode(501, "Ha ocurrido un error al generar la transaccion. Por favor inténtalo más tarde.");
             }
-            catch (Exception ex){                
+            catch (Exception){                
                 //Otros posibles errores
                 return StatusCode(500, "Ha ocurrido un error al generar la transaccion. Por favor inténtalo más tarde.");
             }
