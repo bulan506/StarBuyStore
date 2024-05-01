@@ -1,24 +1,21 @@
-using System;
-using System.Data.Common;
-using System.IO.Compression;
-using System.Reflection.Metadata;
 using Core;
 using MySqlConnector;
+using storeApi.Models.Data;
 using storeApi.Models;
-
 namespace storeApi.DataBase
 {
     public sealed class SaleDataBase
     {
-        public void Save(Sale sale)
+        public async Task SaveAsync(Sale sale)
         {
+            if (sale == null) { throw new ArgumentNullException(nameof(sale), "El parámetro 'sale' no puede ser nulo."); }
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 using (MySqlCommand command = connection.CreateCommand())
                 {
-                    using (var transaction = connection.BeginTransaction())
+                    using (var transaction = await connection.BeginTransactionAsync())
                     {
                         try
                         {
@@ -33,7 +30,7 @@ namespace storeApi.DataBase
                             command.Parameters.AddWithValue("@payment_method", (int)sale.PaymentMethod);
                             command.Parameters.AddWithValue("@purchase_id", sale.PurchaseNumber);
 
-                            command.ExecuteNonQuery();
+                            await command.ExecuteNonQueryAsync();
 
                             command.Parameters.Clear(); // limpia los parametros 
 
@@ -48,77 +45,71 @@ namespace storeApi.DataBase
                                 command.Parameters.AddWithValue("@quantity", productId.cant);
                                 command.Parameters.AddWithValue("@price", productId.price);
 
-                                command.ExecuteNonQuery();
+                                await command.ExecuteNonQueryAsync();
                                 command.Parameters.Clear(); // limpia los parametros para cada producto nuevo
                             }
-                            transaction.Commit();
+                            await transaction.CommitAsync();
                         }
                         catch (Exception)
                         {
-                            transaction.Rollback();
+                            await transaction.RollbackAsync();
                             throw;
                         }
                     }//transaction
                 }//command
             }//connection
         }//save
-        public List<SalesData> GetSalesByDate(DateTime date)
+
+        public async Task<List<SalesData>> GetSalesByDateAsync(DateTime? date)
         {
+            if (date == default) { throw new ArgumentException("El parámetro 'date' no puede ser el valor predeterminado.", nameof(date)); }
+            if (date == null) { throw new ArgumentException("El parámetro 'date' no puede ser nulo.", nameof(date)); }
+
             List<SalesData> salesList = new List<SalesData>();
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 string query = @"
-                        SELECT s.purchase_date, s.total, s.purchase_id, ls.quantity, p.name
-                        FROM sales s
-                        INNER JOIN linesSales ls ON s.purchase_id = ls.purchase_id
-                        INNER JOIN products p ON ls.product_id = p.id
-                        WHERE DATE(s.purchase_date) = DATE(@purchase_date)";
+                    SELECT s.purchase_date, s.total, s.purchase_id, SUM(ls.quantity) AS total_quantity, GROUP_CONCAT(CONCAT(p.name, ':', ls.quantity)) AS products
+                    FROM sales s
+                    INNER JOIN linesSales ls ON s.purchase_id = ls.purchase_id
+                    INNER JOIN products p ON ls.product_id = p.id
+                    WHERE DATE(s.purchase_date) = DATE(@purchase_date)
+                    GROUP BY s.purchase_id, s.purchase_date, s.total";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@purchase_date", date);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             DateTime purchaseDate = reader.GetDateTime("purchase_date");
                             decimal total = reader.GetDecimal("total");
                             string purchaseId = reader.GetString("purchase_id");
-                            int quantity = reader.GetInt32("quantity");
-                            string productName = reader.GetString("name");
-
-                            // Crear una instancia de ProductQuantity para cada producto
-                            ProductQuantity productQuantity = new ProductQuantity(productName, quantity);
-
-                            // Buscar si ya existe una instancia de SalesData para esta compra
-                            SalesData salesData = salesList.Find(s => s.PurchaseNumber == purchaseId);
-                            if (salesData == null)
-                            {
-                                // Si no existe, crear una nueva instancia de SalesData y agregarla a la lista
-                                salesData = new SalesData(purchaseDate, purchaseId, total, 0, new List<ProductQuantity>());
-                                salesList.Add(salesData);
-                            }
-
-                            // Agregar el ProductQuantity a la lista de ProductAnnotation de SalesData
-                            salesData.ProductsAnnotation.Add(productQuantity);
-
-                            // Actualizar la cantidad total de productos en la venta
-                            salesData.AmountProducts += quantity;
+                            int totalQuantity = reader.GetInt32("total_quantity");
+                            string productsString = reader.GetString("products");
+                            List<ProductQuantity> products = productsString.Split(',')
+                                .Select(p => new ProductQuantity(p.Split(':')[0], int.Parse(p.Split(':')[1])))
+                                .ToList();
+                            SalesData salesData = new SalesData(purchaseDate, purchaseId, total, totalQuantity, products);
+                            salesList.Add(salesData);
                         }
                     }
                 }
             }
-
             return salesList;
         }
-        public List<SaleAnnotation> GetSalesWeek(DateTime date)
+
+        public async Task<List<SaleAnnotation>> GetSalesWeekAsync(DateTime? date)
         {
+            if (date == default) { throw new ArgumentException("El parámetro 'date' no puede ser el valor predeterminado.", nameof(date)); }
+            if (date == null) { throw new ArgumentException("El parámetro 'date' no puede ser nulo.", nameof(date)); }
             List<SaleAnnotation> salesByDay = new List<SaleAnnotation>();
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 string query = @"
                             SELECT DAYNAME(s.purchase_date) AS day, SUM(s.total) AS total
                             FROM sales s
@@ -129,9 +120,9 @@ namespace storeApi.DataBase
                 {
                     command.Parameters.AddWithValue("@purchase_date", date);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             string day = reader.GetString("day");
                             decimal total = reader.GetDecimal("total");

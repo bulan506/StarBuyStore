@@ -9,17 +9,21 @@ namespace storeApi.Controllers
     [ApiController]
     public class SalesController : ControllerBase
     {
-        LogicSalesReportsApi lsr = new LogicSalesReportsApi();
-        [HttpPost]
-        public IActionResult CreateReportSales([FromBody] DateSale date)
+        internal readonly LogicSalesReportsApi lsr = new LogicSalesReportsApi();
+
+        [HttpGet("{date}")]
+        public async Task<IActionResult> CreateReportSales(DateTime date)
         {
-            SalesReport report = lsr.GetSalesReport(date.DateSales);
-            return Ok(report);
+            try
+            {
+                SalesReport report = await lsr.GetSalesReportAsync(date);
+
+                return Ok(report);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
-    public class DateSale
-    {
-        public string DateSales { get; set; }
-    }
-
 }

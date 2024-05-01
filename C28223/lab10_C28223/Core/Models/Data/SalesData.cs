@@ -1,25 +1,25 @@
 using System;
 using System.Collections.Generic;
 
-namespace storeApi.Models
+namespace storeApi.Models.Data
 {
     public sealed class SalesData
     {
-        public DateTime PurchaseDate { get; set; }
-        public string PurchaseNumber { get; set; }
-        public decimal Total { get; set; }
+        public DateTime PurchaseDate { get;private set; }
+        public string PurchaseNumber { get; private set; }
+        public decimal Total { get; private set; }
         public int AmountProducts { get; set; }
-        public List<ProductQuantity> ProductsAnnotation { get; set; }
+        public List<ProductQuantity> ProductsAnnotation { get; private set; }
 
         // Constructor que inicializa todas las propiedades de la clase
         public SalesData(DateTime purchaseDate, string purchaseNPurchaseNumber, decimal total, int amountProducts, List<ProductQuantity> productsAnnotation)
         {
             ValidateSalesData(purchaseNPurchaseNumber, purchaseDate, total, amountProducts, productsAnnotation); 
-            this.PurchaseDate = purchaseDate;
-            this.PurchaseNumber = purchaseNPurchaseNumber;
-            this.Total = total;
-            this.AmountProducts = amountProducts;
-            this.ProductsAnnotation = productsAnnotation;
+            PurchaseDate = purchaseDate;
+            PurchaseNumber = purchaseNPurchaseNumber;
+            Total = total;
+            AmountProducts = amountProducts;
+            ProductsAnnotation = productsAnnotation;
         }
         private static void ValidateSalesData(string purchaseNPurchaseNumber, DateTime purchaseDate, decimal total, int amountProducts, List<ProductQuantity> productsAnnotation)
         {

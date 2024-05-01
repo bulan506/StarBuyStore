@@ -1,20 +1,20 @@
-namespace storeApi;
+namespace storeApi.Models;
 public sealed class Sale
 {
     public IEnumerable<Product> Products { get; }
     public string Address { get; }
     public decimal Amount { get; }
-    public PaymentMethods.Type PaymentMethod { get; }
+    public PaymentMethods.Type PaymentMethod { get;}
     public string PurchaseNumber { get; }
 
-    public Sale(string purchaseNumber, IEnumerable<Product> products, string address, decimal Amount, PaymentMethods.Type paymentMethod)
+    public Sale(string purchaseNumber, IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod)
     {
-        ValidateParameters(purchaseNumber, products, address, Amount, paymentMethod);
-        this.Products = products;
-        this.Address = address;
-        this.Amount = Amount;
-        this.PaymentMethod = paymentMethod;
-        this.PurchaseNumber = purchaseNumber;
+        ValidateParameters(purchaseNumber, products, address, amount, paymentMethod);
+        Products = products;
+        Address = address;
+        Amount = amount;
+        PaymentMethod = paymentMethod;
+        PurchaseNumber = purchaseNumber;
     }
 
     internal static string GenerateNextPurchaseNumber()

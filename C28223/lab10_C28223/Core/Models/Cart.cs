@@ -1,4 +1,4 @@
-namespace storeApi;
+namespace storeApi.Models;
 public sealed class Cart
 {
     public List<ProductQuantity> ProductIds { get; set; }

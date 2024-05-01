@@ -3,77 +3,13 @@ using System.Data.Common;
 using System.IO.Compression;
 using Core;
 using MySqlConnector;
+using storeApi.Models;
 
 namespace storeApi.DataBase
 {
     public sealed class StoreDataBase
     {
         public static void CreateMysql()
-        {
-            using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
-            {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        // Create the products table if it does not exist
-                        string createTableQuery = @"
-                                    DROP DATABASE IF EXISTS store;
-                                    CREATE DATABASE store;
-                                    USE store;
-                                    CREATE TABLE IF NOT EXISTS products (
-                                     id INT AUTO_INCREMENT PRIMARY KEY,
-                                     name VARCHAR(100),
-                                     description VARCHAR(255),
-                                     price DECIMAL(10, 2),
-                                     imageURL VARCHAR(255)
-                                 );
-                                 CREATE TABLE IF NOT EXISTS paymentMethod (
-                                     id INT PRIMARY KEY,
-                                     method_name VARCHAR(50)
-                                 );
-                                 CREATE TABLE IF NOT EXISTS sales (
-                                     purchase_date DATETIME NOT NULL,
-                                     total DECIMAL(10, 2) NOT NULL,
-                                     payment_method INT,
-                                     purchase_id VARCHAR(30) NOT NULL PRIMARY KEY
-                                 );
-                                 CREATE TABLE IF NOT EXISTS linesSales(
-                                     id INT AUTO_INCREMENT PRIMARY KEY,
-                                     purchase_id VARCHAR(30) NOT NULL,
-                                     product_id INT,
-                                     quantity INT,
-                                     price DECIMAL(10, 2),
-                                     FOREIGN KEY (purchase_id) REFERENCES sales(purchase_id),
-                                     FOREIGN KEY (product_id) REFERENCES products(id)
-                                 );
-                                 INSERT INTO paymentMethod (id, method_name)
-                                 VALUES (0, 'Efectivo'), (1, 'Sinpe');";
-
-                        using (var command = new MySqlCommand(createTableQuery, connection, transaction))
-                        {
-                            int result = command.ExecuteNonQuery();
-                            bool dbNotCreated = result < 0;
-                            if (dbNotCreated)
-                            {
-                                throw new Exception("Error creating the database");
-                            }
-                        }
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-                InsertProducts();
-                InsertLinesSalesPrueba();
-            }
-        }
-        internal static void InsertProducts()
         {
             var products = new List<Product>
             {
@@ -162,11 +98,76 @@ namespace storeApi.DataBase
                     imageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg"
                 }
             };
-            string connectionString = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
-            using (var connection = new MySqlConnection(connectionString))
+            using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 connection.Open();
-                using (var transaction = connection.BeginTransaction())
+
+                // Create tables if it does not exist
+                string createTableQuery = @"
+                                    DROP DATABASE IF EXISTS store;
+                                    CREATE DATABASE store;
+                                    USE store;
+                                    CREATE TABLE IF NOT EXISTS products (
+                                     id INT AUTO_INCREMENT PRIMARY KEY,
+                                     name VARCHAR(100),
+                                     description VARCHAR(255),
+                                     price DECIMAL(10, 2),
+                                     imageURL VARCHAR(255)
+                                 );
+                                 CREATE TABLE IF NOT EXISTS paymentMethod (
+                                     id INT PRIMARY KEY,
+                                     method_name VARCHAR(50)
+                                 );
+                                 CREATE TABLE IF NOT EXISTS sales (
+                                     purchase_date DATETIME NOT NULL,
+                                     total DECIMAL(10, 2) NOT NULL,
+                                     payment_method INT,
+                                     purchase_id VARCHAR(30) NOT NULL PRIMARY KEY,
+                                     FOREIGN KEY (payment_method) REFERENCES paymentMethod(id)
+                                 );
+                                 CREATE TABLE IF NOT EXISTS linesSales(
+                                     id INT AUTO_INCREMENT PRIMARY KEY,
+                                     purchase_id VARCHAR(30) NOT NULL,
+                                     product_id INT,
+                                     quantity INT,
+                                     price DECIMAL(10, 2),
+                                     FOREIGN KEY (purchase_id) REFERENCES sales(purchase_id),
+                                     FOREIGN KEY (product_id) REFERENCES products(id)
+                                 );
+                                 INSERT INTO paymentMethod (id, method_name)
+                                 VALUES (0, 'Efectivo'), (1, 'Sinpe');
+                                 
+                       INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
+                         VALUES 
+                             ('2024-04-01 10:00:00', 150.00, 0, 'BVS01'),
+                             ('2024-04-01 10:00:00', 150.00, 0, 'PUR099'),
+                             ('2024-04-02 12:00:00', 200.00, 1, 'PUR02'),
+                             ('2024-04-04 16:00:00', 400.00, 1, 'PUR04'),
+                             ('2024-04-05 18:00:00', 250.00, 0, 'BVS05'),
+                             ('2024-04-06 20:00:00', 180.00, 1, 'PUR06'),
+                             ('2024-04-07 22:00:00', 350.00, 0, 'PUR07'),
+                             ('2024-04-08 10:00:00', 180.00, 0, 'PUR08'),
+                             ('2024-04-09 12:00:00', 220.00, 1, 'PUR09'),
+                             ('2024-04-10 14:00:00', 320.00, 0, 'PUR10'),
+                             ('2024-04-11 16:00:00', 420.00, 1, 'PUR11'),
+                             ('2024-04-12 18:00:00', 270.00, 0, 'PUR12'),
+                             ('2024-04-13 20:00:00', 200.00, 1, 'PUR13'),
+                             ('2024-04-14 22:00:00', 380.00, 0, 'PUR14');";
+
+                using (var command = new MySqlCommand(createTableQuery, connection))
+                {
+                    int result = command.ExecuteNonQuery();
+                    bool dbNotCreated = result < 0;
+                    if (dbNotCreated)
+                    {
+                        throw new Exception("Error creating the database");
+                    }
+                }
+            }
+            using (var connectionMyDb = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
+            {
+                connectionMyDb.Open();
+                using (var transaction = connectionMyDb.BeginTransaction())
                 {
                     try
                     {
@@ -176,79 +177,32 @@ namespace storeApi.DataBase
                                 INSERT INTO products (name, description, price, imageURL)
                                 VALUES (@name, @description, @price, @imageURL)";
 
-                            using (var command = new MySqlCommand(insertQuery, connection, transaction))
+                            using (var command = new MySqlCommand(insertQuery, connectionMyDb, transaction))
                             {
                                 command.Parameters.AddWithValue("@name", product.name);
                                 command.Parameters.AddWithValue("@description", product.description);
                                 command.Parameters.AddWithValue("@price", product.price);
                                 command.Parameters.AddWithValue("@imageURL", product.imageURL);
-
                                 command.ExecuteNonQuery();
                             }
                         }
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }// InsertProducts();
-
-        public static void InsertLinesSalesPrueba()
-        {
-            using (var connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
-            {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        // Create the products table if it does not exist
-                        string createTableQuery = @"
-                        INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
-                         VALUES 
-                             ('2024-04-01 10:00:00', 150.00, 0, 'PUR01'),
-                             ('2024-04-01 10:00:00', 150.00, 0, 'PUR099'),
-                             ('2024-04-02 12:00:00', 200.00, 1, 'PUR02'),
-                             ('2024-04-04 16:00:00', 400.00, 1, 'PUR04'),
-                             ('2024-04-05 18:00:00', 250.00, 0, 'PUR05'),
-                             ('2024-04-06 20:00:00', 180.00, 1, 'PUR06'),
-                             ('2024-04-07 22:00:00', 350.00, 0, 'PUR07');
-
+                        string createLinesQuery = @"
                               INSERT INTO linesSales (purchase_id, product_id, quantity, price)
                               VALUES 
-                                  ('PUR01', 1, 2, 50.00),
-                                  ('PUR01', 2, 1, 30.00),
+                                  ('BVS01', 1, 2, 50.00),
+                                  ('BVS01', 2, 1, 30.00),
                                   ('PUR099', 1, 2, 50.00),
                                   ('PUR099', 2, 1, 30.00),
                                   ('PUR02', 3, 3, 20.00),
                                   ('PUR04', 1, 2, 50.00),
                                   ('PUR04', 3, 1, 30.00),
                                   ('PUR04', 4, 2, 80.00),
-                                  ('PUR05', 2, 1, 40.00),
-                                  ('PUR05', 3, 3, 60.00),
+                                  ('BVS05', 2, 1, 40.00),
+                                  ('BVS05', 3, 3, 60.00),
                                   ('PUR06', 1, 2, 50.00),
                                   ('PUR06', 2, 1, 30.00),
                                   ('PUR07', 3, 1, 20.00),
-                                  ('PUR07', 4, 2, 90.00);
-                              
-                              
-                              INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
-                              VALUES 
-                                  ('2024-04-08 10:00:00', 180.00, 0, 'PUR08'),
-                                  ('2024-04-09 12:00:00', 220.00, 1, 'PUR09'),
-                                  ('2024-04-10 14:00:00', 320.00, 0, 'PUR10'),
-                                  ('2024-04-11 16:00:00', 420.00, 1, 'PUR11'),
-                                  ('2024-04-12 18:00:00', 270.00, 0, 'PUR12'),
-                                  ('2024-04-13 20:00:00', 200.00, 1, 'PUR13'),
-                                  ('2024-04-14 22:00:00', 380.00, 0, 'PUR14');
-                              
-                              INSERT INTO linesSales (purchase_id, product_id, quantity, price)
-                              VALUES 
+                                  ('PUR07', 4, 2, 90.00),
                                   ('PUR08', 1, 2, 40.00),
                                   ('PUR08', 2, 1, 30.00),
                                   ('PUR09', 3, 3, 20.00),
@@ -264,15 +218,9 @@ namespace storeApi.DataBase
                                   ('PUR13', 2, 1, 30.00),
                                   ('PUR14', 3, 1, 20.00),
                                   ('PUR14', 4, 2, 90.00);";
-
-                        using (var command = new MySqlCommand(createTableQuery, connection, transaction))
+                        using (var insertCommand = new MySqlCommand(createLinesQuery, connectionMyDb, transaction))
                         {
-                            int result = command.ExecuteNonQuery();
-                            bool dbNotCreated = result < 0;
-                            if (dbNotCreated)
-                            {
-                                throw new Exception("Error creating the database");
-                            }
+                            insertCommand.ExecuteNonQuery();
                         }
                         transaction.Commit();
                     }
@@ -285,20 +233,20 @@ namespace storeApi.DataBase
             }
         }
 
-        public static List<Product> GetProductsFromDB()
+        public static async Task<List<Product>> GetProductsFromDBAsync()
         {
             List<Product> products = new List<Product>();
 
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string query = "SELECT id, name, description, price, imageURL FROM products";
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    using (var reader = command.ExecuteReader())
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             products.Add(new Product
                             {
@@ -313,6 +261,6 @@ namespace storeApi.DataBase
                 }
             }
             return products;
-        }// GetProductsFromDB()
+        }
     }// storeDatabase
 }

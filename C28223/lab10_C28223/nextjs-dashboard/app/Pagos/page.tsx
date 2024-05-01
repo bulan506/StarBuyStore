@@ -170,6 +170,10 @@ const Modal = ({ title, content, onClose, closeButtonText = 'Cerrar', showCloseB
     );
 };
 const ModalPagoAceptado = ({ title, content, onClose, closeButtonText = 'Ir al inicio', showCloseButton = true }) => {
+    if (!title || !content || !onClose || typeof onClose !== 'function') {
+        throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.');
+      }
+    
     const handleCerrarModal = () => {
         onClose();
         window.location.replace('/');

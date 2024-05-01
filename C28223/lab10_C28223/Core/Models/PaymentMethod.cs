@@ -1,4 +1,4 @@
-namespace storeApi;
+namespace storeApi.Models;
 
 public abstract class PaymentMethods
 {

@@ -1,5 +1,6 @@
 using MySqlConnector;
 using storeApi.DataBase;
+using storeApi.Models;
 
 namespace storeApi
 {
@@ -13,12 +14,14 @@ namespace storeApi
             this.Products = products;
             this.TaxPercentage = TaxPercentage;
         }
-        public readonly static Store Instance;
-        static Store()
+        public static async Task<Store> GetInstanceAsync()
         {
-            var products = StoreDataBase.GetProductsFromDB();
-            Store.Instance = new Store(products, 13);
+            var products = await StoreDataBase.GetProductsFromDBAsync();
+            return new Store(products, 13);
         }
+        private static readonly Lazy<Task<Store>> instance = new Lazy<Task<Store>>(GetInstanceAsync);
+
+        public static Task<Store> Instance => instance.Value;
 
     }
 }

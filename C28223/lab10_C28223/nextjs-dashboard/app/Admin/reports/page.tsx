@@ -12,50 +12,49 @@ const SalesCharAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [charge, setCharge] = useState(false);
 
-  const dataToSend = {
-    DateSales: selectedDate
-  };
+
   useEffect(() => {
     fetchData(); // Cargar datos iniciales al cargar el componente
   }, [selectedDate, charge]);
   useEffect(() => {
-  }, [weeklySalesData,salesData2,showModal]);
+  }, [weeklySalesData, salesData2, showModal]);
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://localhost:7223/api/Sales', {
-        method: 'POST',
+      const response = await fetch(`https://localhost:7223/api/Sales/${selectedDate}`, {
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend) // Enviar la fecha seleccionada al servidor
-      });
+            'Content-Type': 'application/json'
+        }
+    });
       if (response.ok) {
         const data = await response.json();
-        var salesAreEmpty = data.sales === null || data.sales.length===0;
-        var weekSalesAreEmpty =  data.salesDaysWeek=== null || data.salesDaysWeek.length===0;
-        if ( salesAreEmpty&& weekSalesAreEmpty) {
+        var salesAreEmpty = data.sales === null || data.sales.length === 0;
+        var weekSalesAreEmpty = data.salesDaysWeek === null || data.salesDaysWeek.length === 0;
+        if (salesAreEmpty && weekSalesAreEmpty) {
           setShowModal(true);
           setCharge(true);
           setSalesData2(data)
         } else {
-          if(salesAreEmpty){ setShowModal(true);updateSalesData2(data)}
+          if (salesAreEmpty) { setShowModal(true); updateSalesData2(data) }
           const weeklyData = [['Week', 'Sales']];
           data.salesDaysWeek.forEach(day => {
             weeklyData.push([day.day, day.total]);
           });
           updateSalesData2(data);
           setWeeklySalesData(weeklyData);
-          setCharge(false); 
+          setCharge(false);
         }
       } else {
         throw new Error('Error al obtener datos de ventas');
       }
     } catch (error) {
+      throw new Error('Error de fetch en obtener los datos de ventas');
     }
-  
+
   };
-  const updateSalesData2 = (data) => {
+  const updateSalesData2 = (data:any) => {
+    if (data == null) {throw new Error('Error: data es nulo o indefinido');}
     let productsString = '';
     const newData = data.sales.map(sale => {
       const productsInfo = sale.productsAnnotation.map(product => {
@@ -74,7 +73,7 @@ const SalesCharAdmin = () => {
   };
   return (
     <div className='col' >
-      <Menu/>
+      <Menu />
       {showModal && <ModalSinVentas closeModal={() => setShowModal(false)} />}
       <div>
         <div>
@@ -104,11 +103,11 @@ const SalesCharAdmin = () => {
               tableCell: 'chart-cell',
             },
             allowHtml: true,
-            pageSize:20,
+            pageSize: 20,
           }}
         />
       </div>
-      <div className= 'row'style={{ textAlign: 'center' }}>
+      <div className='row' style={{ textAlign: 'center' }}>
         <h2>Weekly Sales Pie Chart</h2>
         {(!charge ? (<Chart
           width={'400px'}
@@ -135,7 +134,8 @@ const SalesCharAdmin = () => {
   );
 };
 
-const ModalSinVentas = ({ closeModal }) => {
+const ModalSinVentas = ({ closeModal }:any) => {
+  if (closeModal == null) {throw new Error('Error: data es nulo o indefinido');}
   return (
     <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">
