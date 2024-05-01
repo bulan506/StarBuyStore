@@ -10,7 +10,7 @@ namespace StoreAPI.Business
     {
         private SaleBD saleDB = new SaleBD();
 
-        public Sale Purchase(Cart cart)
+        public async Task<Sale> PurchaseAsync(Cart cart)
         {
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
@@ -33,12 +33,12 @@ namespace StoreAPI.Business
             }
 
             string purchaseNumber = GenerateNextPurchaseNumber();
-           
+
             PaymentMethods.Type paymentMethodType = cart.PaymentMethod;
 
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType, purchaseNumber);
 
-            saleDB.Save(sale);
+            await saleDB.SaveAsync(sale);
 
             return sale;
         }

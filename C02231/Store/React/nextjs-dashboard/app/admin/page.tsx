@@ -35,7 +35,7 @@ export default function LoginPage() {
             <header className="p-3 text-bg-dark">
                 <div className="row" style={{ color: 'gray' }}>
                     <div className="col-sm-9">
-                        <img src="Logo1.jpg" style={{ height: '75px', width: '200px', margin: '1.4rem' }} className="img-fluid" />
+                        <img src="Logo1.jpg" style={{ height: '75px', width: '200px', margin: '1.4rem' }} className="img-fluid" alt="Company Logo" />
                     </div>
                     <div className="col-sm-3 d-flex justify-content-end align-items-center">
                         <Link href="/">
