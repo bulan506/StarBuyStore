@@ -4,8 +4,13 @@ import '../styles/product.css';
 
 
 const Product = ({ product, handleClick}) => {
-    const { name, imageUrl, price, amount } = product;
-
+    if (product === undefined || handleClick === undefined) {
+      throw new Error("Product or handleClick is undefined");
+    }
+    const { name, imageUrl, price } = product;
+    if (!name || !imageUrl || price === undefined) {
+      throw new Error("Required product attributes are undefined");
+    }
     return (
       <div className="col-md-3 mb-4">
         <div className="border p-4 product-container">

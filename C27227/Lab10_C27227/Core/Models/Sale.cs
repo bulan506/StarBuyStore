@@ -12,25 +12,13 @@ public sealed class Sale
 
     public Sale(string purchaseNumber, IEnumerable<Product> products, string address, decimal total, PaymentMethods.Type paymentMethod)
     {
-        if (string.IsNullOrWhiteSpace(purchaseNumber))
-        {
-            throw new ArgumentException("El número de compra no puede ser nulo ni vacío.", nameof(purchaseNumber));
-        }
+        if (string.IsNullOrWhiteSpace(purchaseNumber)) { throw new ArgumentException($"El {nameof(purchaseNumber)} no puede ser nulo ni vacío."); }
 
-        if (products == null || !products.Any())
-        {
-            throw new ArgumentException("La lista de productos no puede ser nula ni vacía.", nameof(products));
-        }
+        if (products == null || !products.Any()) { throw new ArgumentException($"La {nameof(products)} no puede ser nula ni vacía." );}
+        
+        if (string.IsNullOrWhiteSpace(address)) { throw new ArgumentException($"La {nameof(address)} no puede ser nula ni vacía.");}
 
-        if (string.IsNullOrWhiteSpace(address))
-        {
-            throw new ArgumentException("La dirección no puede ser nula ni vacía.", nameof(address));
-        }
-
-        if (total <= 0)
-        {
-            throw new ArgumentException("El monto debe ser mayor que cero.", nameof(total));
-        }
+        if (total <= 0) { throw new ArgumentException("El monto debe ser mayor que cero.", nameof(total)); }
 
         this.Products = products;
         this.Address = address;

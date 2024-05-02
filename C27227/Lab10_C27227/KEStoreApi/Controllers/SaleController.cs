@@ -25,10 +25,7 @@ namespace KEStoreApi
                 return BadRequest("Se requiere una fecha válida en el cuerpo de la solicitud.");
             }
 
-            Task<ReportSales> reportTask = saleLogic.GetReportSalesAsync(selectDate);
-
-            await Task.WhenAll(reportTask);
-            ReportSales report = await reportTask;
+            ReportSales report = await saleLogic.GetReportSalesAsync(selectDate);
             
             return Ok(report);
         }

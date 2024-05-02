@@ -7,15 +7,9 @@ public sealed class DatabaseSale
 {
 public async Task SaveAsync(Sale sale)
 {
-      if (sale == null)
-    {
-        throw new ArgumentNullException(nameof(sale), "El objeto " + nameof(Sale) + " no puede ser nulo.");
-    }
+    if (sale == null) { throw new ArgumentNullException($"El objeto {nameof(Sale)} no puede ser nulo.");}
+    if (sale.Products == null || !sale.Products.Any()) {throw new ArgumentException($"La {nameof(sale.Products)} en la venta no puede ser nula o vacía.");}
 
-    if (sale.Products == null || !sale.Products.Any())
-    {
-        throw new ArgumentException("La lista de productos en la venta no puede ser nula o vacía.", nameof(sale));
-    }
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 
     using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -67,22 +61,21 @@ public async Task SaveAsync(Sale sale)
 
 public async Task<IEnumerable<SaleDetails>> GetDailySalesReportAsync(DateTime date)
 {
-    if (date == DateTime.MinValue)
-    {
-        throw new ArgumentException("La fecha no puede ser mayor .", nameof(date));
-    }
+    if (date == DateTime.MinValue) { throw new ArgumentException("La fecha no puede ser mayor .", nameof(date));  }
     
     List<SaleDetails> salesReport = new List<SaleDetails>();
 
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 
     string query = @"
-        SELECT s.purchaseNumber, s.total, s.purchase_date, ls.quantity, p.name
+       SELECT s.purchaseNumber, s.total, s.purchase_date, ls.quantity, p.name
         FROM Sales s
         JOIN Lines_Sales ls ON s.purchaseNumber = ls.id_Sale
         JOIN paymentMethod pm ON s.payment_method = pm.id
         JOIN products p ON p.id = ls.id_Product
-        WHERE DATE(s.purchase_date) = @date;
+        WHERE s.purchase_date >= @date
+            AND s.purchase_date < DATE_ADD(@date, INTERVAL 1 DAY);
+
     ";
 
     using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -117,10 +110,7 @@ public async Task<IEnumerable<SaleDetails>> GetDailySalesReportAsync(DateTime da
 
 public async Task<IEnumerable<SalesByDay>> GetWeeklySalesReportAsync(DateTime date)
 {
-    if (date == DateTime.MinValue)
-        {
-            throw new ArgumentException("La fecha no puede ser mayor .", nameof(date));
-        }
+    if (date == DateTime.MinValue) { throw new ArgumentException("La fecha no puede ser mayor .", nameof(date));}
     List<SalesByDay> weeklySalesReport = new List<SalesByDay>();
     string connectionString = DatabaseConfiguration.Instance.ConnectionString;
 

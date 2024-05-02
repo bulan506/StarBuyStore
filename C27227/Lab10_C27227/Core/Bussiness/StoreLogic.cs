@@ -15,19 +15,9 @@ public sealed class StoreLogic
 
 public async Task<Sale> PurchaseAsync(Cart cart)
 {
-    if(cart == null)
-    {
-        throw new ArgumentNullException(nameof(cart), "El objeto " + nameof(cart) + " no puede ser nulo.");
-    }
-    if (cart.Product.Count == 0)
-    {
-        throw new ArgumentException("El carrito debe contener al menos un producto.", nameof(cart));
-    }
-
-    if (string.IsNullOrWhiteSpace(cart.address))
-    {
-        throw new ArgumentException("Se debe proporcionar una dirección de entrega.", nameof(cart));
-    }
+    if(cart == null){ throw new ArgumentNullException($"El objeto {nameof(cart)} no puede ser nulo.");}
+    if (cart.Product.Count == 0) { throw new ArgumentException($"El {nameof(cart.Product.Count)} debe contener al menos un producto.");}
+    if (string.IsNullOrWhiteSpace(cart.address)){throw new ArgumentException($"Se debe proporcionar una {nameof(cart.address)}");}
 
     var storeInstance = await Store.Instance;
     var products = storeInstance.Products;
@@ -43,15 +33,9 @@ public async Task<Sale> PurchaseAsync(Cart cart)
 
 
         Product matchingProduct = products.FirstOrDefault(p => p.Id == productId);
-        if (matchingProduct == null)
-        {
-            throw new ArgumentException($"El producto con ID {productId} no existe en la tienda.", nameof(cart));
-        }
+        if (matchingProduct == null){ throw new ArgumentException($"El {nameof(cart.Product)} con ID {productId} no existe en la tienda.");}
 
-        if (quantity <= 0)
-        {
-            throw new ArgumentException($"La cantidad del producto con ID {productId} debe ser mayor que cero.", nameof(cart));
-        }
+        if (quantity <= 0) { throw new ArgumentException($"La cantidad del {nameof(cart.Product)} con ID {productId} debe ser mayor que cero.");}
 
 
         Product copiedProduct = (Product)matchingProduct.Clone();

@@ -56,7 +56,8 @@ const Cart_Store = () => {
     }
 
     const updateStore = (subtotalC, subtotalImpuestoCa, totalComp, newQuantities) => {
-        if (subtotalC == null || subtotalImpuestoCa == null || totalComp == null || newQuantities == null) {
+        if (subtotalC === undefined || subtotalImpuestoCa === undefined || totalComp === undefined || newQuantities === undefined)
+            {
             throw new Error('Los argumentos de la función updateStore son requeridos.');
         }
         const carritoActualizado = {

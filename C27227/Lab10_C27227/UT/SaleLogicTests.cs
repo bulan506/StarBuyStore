@@ -37,8 +37,15 @@ namespace UnitTests
             Assert.IsNotNull(result.Sales);
             Assert.IsNotNull(result.SalesByWeek);
             Assert.IsTrue(result.Sales.Any(), "No hay ventas en el informe.");
-        }
 
+            // Validar los montos
+            decimal totalAmount = result.Sales.Sum(s => s.Total);
+            Assert.Greater(totalAmount, 0, "El monto total de ventas debe ser mayor que cero.");
+
+            // Validar la cantidad de filas
+            int expectedRowCount = 2; // Ajusta este valor según tus requisitos
+            Assert.That(result.Sales.Count(), Is.EqualTo(expectedRowCount), $"La cantidad de filas debe ser {expectedRowCount}.");
+        }
         [Test]
         public async Task GetReportSalesAsync_WithInvalidDate_ThrowsException()
         {
@@ -53,7 +60,7 @@ namespace UnitTests
         public void GetReportSalesAsync_WithNullDate_ThrowsException()
         {
             DateTime minValueDate = DateTime.MinValue;
-            Assert.ThrowsAsync<ArgumentNullException>(() => _saleLogic.GetReportSalesAsync(minValueDate)); 
+            Assert.ThrowsAsync<ArgumentException>(() => _saleLogic.GetReportSalesAsync(minValueDate)); 
         }
 
     }

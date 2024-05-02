@@ -11,8 +11,12 @@ const LoginForm = () => {
   const [warningPassword, setWarningPassword] = useState(false);
   const [redirectToDashboard, setRedirectToDashboard] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    if(!event || !event.target){
+      throw new Error('Evento no válido.');
+      return;
+    }
+    event.preventDefault();
     if (username.trim() === '') {
       setWarningUser(true);
       setTimeout(() => {
@@ -32,7 +36,6 @@ const LoginForm = () => {
     }
   };
 
-  // Redireccionar si redirectToDashboard es true
   if (redirectToDashboard) {
     window.location.href = '/admin/init';
   }
