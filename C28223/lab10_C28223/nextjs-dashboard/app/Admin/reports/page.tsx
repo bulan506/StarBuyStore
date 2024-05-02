@@ -13,8 +13,6 @@ const SalesCharAdmin = () => {
   const [charge, setCharge] = useState(false);
   var nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-
-
   useEffect(() => {
     fetchData(); // Cargar datos iniciales al cargar el componente
   }, [selectedDate, charge]);
@@ -58,7 +56,7 @@ const SalesCharAdmin = () => {
 
   };
   const updateSalesData2 = (data:any) => {
-    if (data===undefined) {throw new Error('Error: data es nulo o indefinido');}
+    if (data==undefined) {throw new Error('Error: data es nulo o indefinido');}
     let productsString = '';
     const newData = data.sales.map(sale => {
     const productsInfo = sale.productsAnnotation.map(product => {
@@ -139,7 +137,7 @@ const SalesCharAdmin = () => {
 };
 
 const ModalSinVentas = ({ closeModal }:any) => {
-  if (closeModal===undefined) {throw new Error('Error: CloseModal es nulo o indefinido');}
+  if (closeModal==undefined) {throw new Error('Error: CloseModal es nulo o indefinido');}
   return (
     <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">

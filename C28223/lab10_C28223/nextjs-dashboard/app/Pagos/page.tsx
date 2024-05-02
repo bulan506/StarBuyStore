@@ -19,7 +19,7 @@ const MetodoPago = () => {
     };
     const showModalAceptado = (title, content) => {
         if (!title || !content ) {throw new Error('Error: Los argumentos title, content deben existir.');}
-        if (title===undefined||content===undefined) {throw new Error('Error: Los argumentos title no pueden ser indefinidos');}
+        if (title==undefined||content==undefined) {throw new Error('Error: Los argumentos title no pueden ser indefinidos');}
         setModalData({ title, content });
     };
 
@@ -111,11 +111,11 @@ const MetodoPago = () => {
     };
 
     const handleMetodoChange = (metodoDePagoSelec) => {
-        if (metodoDePagoSelec===undefined ) {throw new Error('Error: El argumento de metodo de pago no puede ser un null.');}
+        if (metodoDePagoSelec==undefined ) {throw new Error('Error: El argumento de metodo de pago no puede ser un null.');}
         setFormaDePago(metodoDePagoSelec.target.value === 'pagoEfectivo' ? 0 : 1);
     };
     const handleSinComprobanteChange = (comprobanteDePago) => {
-        if (comprobanteDePago===undefined ) {throw new Error('Error: El argumento de Comprobante de pago no puede ser un null.');}
+        if (comprobanteDePago==undefined ) {throw new Error('Error: El argumento de Comprobante de pago no puede ser un null.');}
         setNumeroComprobante(comprobanteDePago.target.value);
     };
 
@@ -149,7 +149,7 @@ const MetodoPago = () => {
 
 const Modal = ({ title, content, onClose, closeButtonText = 'Cerrar', showCloseButton = true }) => {
     if (!title || !content || !onClose || typeof onClose !== 'function') {throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.');}
-    if (title===undefined||content===undefined|| onClose===undefined) {throw new Error('Error: Los argumentos title, content no pueden ser indefinidos');}
+    if (title==undefined||content==undefined|| onClose==undefined) {throw new Error('Error: Los argumentos title, content no pueden ser indefinidos');}
     return (
         <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
             <div className="modal-dialog" role="document">
@@ -179,7 +179,7 @@ const Modal = ({ title, content, onClose, closeButtonText = 'Cerrar', showCloseB
 };
 const ModalPagoAceptado = ({ title, content, onClose, closeButtonText = 'Ir al inicio', showCloseButton = true }) => {
     if (!title || !content || !onClose || typeof onClose !== 'function') { throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.');}
-    if (title===undefined||content===undefined|| onClose===undefined) {throw new Error('Error: Los argumentos title, content no pueden ser indefinidos');}
+    if (title==undefined||content==undefined|| onClose==undefined) {throw new Error('Error: Los argumentos title, content no pueden ser indefinidos');}
     const handleCerrarModal = () => {
         onClose();
         window.location.replace('/');

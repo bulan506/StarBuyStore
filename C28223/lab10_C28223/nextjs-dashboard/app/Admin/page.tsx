@@ -5,7 +5,7 @@ import "@/app/ui/styles.css";
 
 const LoginAdmin = () => {
     const handleSubmit = (event:any) => {
-        if(event===undefined){throw new Error('Error:  es nulo o indefinido');}
+        if(event==undefined){throw new Error('Error: es nulo o indefinido');}
         event.preventDefault();
         window.location.href = '/Admin/init';
     };
