@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using MySqlConnector;
 using storeapi.Models;
 using core;
+
 namespace storeapi.Database
 {
     public sealed class StoreDB
     {
-
-
         public static void CreateMysql()
         {
             var storeDB = new StoreDB();
@@ -60,7 +59,7 @@ namespace storeapi.Database
                     {
                         foreach (Product product in products)
                         {
-                            ValidateProductForInsert(product);
+                            storeDB.ValidateProductForInsert(product);
 
                             string insertProductQuery = @"
                                 INSERT INTO products (name, price, description, image)
@@ -90,7 +89,6 @@ namespace storeapi.Database
 
         public static List<string[]> RetrieveDatabaseInfo()
         {
-            StoreDB storeDB = new StoreDB();
             List<string[]> databaseInfo = new List<string[]>();
             using (MySqlConnection connection = new MySqlConnection(DataConnection.Instance.ConnectionStringMyDb))
             {
@@ -119,31 +117,7 @@ namespace storeapi.Database
             return databaseInfo;
         }
 
-        private static int GetProductCount(string connectionString)
-        {
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                throw new ArgumentException("La cadena de conexión no puede ser nula o vacía.", nameof(connectionString));
-            }
-
-            int productCount = 0;
-
-            using (var connection = new MySqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string countQuery = "SELECT COUNT(*) FROM products";
-
-                using (var command = new MySqlCommand(countQuery, connection))
-                {
-                    productCount = Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
-
-            return productCount;
-        }
-
-        private static void ValidateProductForInsert(Product product)
+        private void ValidateProductForInsert(Product product)
         {
             if (product == null)
             {
