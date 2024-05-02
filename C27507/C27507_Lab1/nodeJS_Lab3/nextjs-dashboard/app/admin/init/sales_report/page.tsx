@@ -13,56 +13,45 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //import "./../../../src/css/sales_report.css"
 
 import { RegisteredSaleAPI } from '@/app/src/models-data/RegisteredSale'
+import { RegisteredSaleReport } from '@/app/src/models-data/RegisteredSaleReport';
 
 export default function SalesReport(){
-
-    const [allRegisteredSales,setAllRegisteredSales] = useState<RegisteredSaleAPI[]>([]);    
+    
     const [eventDate, setEventDate] = useState<Date | null>(null); // Asegúrate de definir eventKey correctamente
     const [dataForTable, setDataForTable] = useState<any[]>([]);
     const [dataForPie, setDataForPie] = useState<any[]>([]);
+    const [validateData, setValidateData] = useState(false);
 
     //Colocamos los tipos de datos
     //Donde la primera lista anidada son los nombres de columnas y sus tipos
-    const defaultColName =
+    const defaultTableColName =
         ["Id Venta","Codigo de Compra", "Subtotal","Total","Direccion","Tax","Metodo de Pago","Fecha de compra"];
+    const defaultPieTagName =
+        ["Dia","Total de Ventas"];
     
     //Datos adicionales de Chart
     const tableOptions = {
         showRowNumber: false,
         page: 'enable',
         pageSize: 5
-      };
+    };
 
-    //Formatos para los datos tipo fecha:
-    const formatters = [
-        { type: "DateFormat" as const, column: 1, options: { formatType: "long" } },
-        { type: "DateFormat" as const, column: 2, options: { formatType: "medium" } },
-        { type: "DateFormat" as const, column: 3, options: { formatType: "short" } },
-    ];
-          
-    //Funcion base de todo
-    const selectDateResetTable = (e: { target: { value: any; }; }) =>{
-        var selectedDate = e.target.value;
-        //var selectedDate = new Date(stringDate);
-        //console.log("Tipo de dato de la fecha : " + typeof + selectedDate)
-        console.log("Fecha Seleccionada: " + selectedDate)
-        setEventDate(selectedDate);        
-    }
+    const pieOptions = {
+        title: "Total de ventas de la ultima semana: ",
+    };
 
-    //Recibimos los datos cada que se detecte que cambio el valor seleccionado del input date
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const registeredSalesDataFromAPI = await getRegisteredSalesFromAPI("https://localhost:7161/api/Sale", eventDate);
-                // Manejar los tipos de datos que se pueden recibir desde getRegisteredSalesFromAPI()
-                if (typeof registeredSalesDataFromAPI === "string") {
-                    console.error("Es un string:", registeredSalesDataFromAPI);                    
-                }else if (Array.isArray(registeredSalesDataFromAPI)) {                    
+    //Validar que los datos de la API esten seguros
+    function validateRegisteredSaleReport(reportSale: RegisteredSaleReport | null) : void{
+        const isReportSaleValid = reportSale !== null && reportSale.salesByDay !== null;    
+        const isSalesByWeekValid = reportSale !== null && reportSale.salesByWeek !== null;    
+        if (isReportSaleValid && isSalesByWeekValid) {
+            console.log(reportSale?.salesByDay);   
+            console.log(reportSale?.salesByWeek);                       
+            setValidateData(true);
 
-
-                    const tableData = [
-                        defaultColName, 
-                        ...registeredSalesDataFromAPI.map((sale: any) => [
+            const tableData = [
+                        defaultTableColName, 
+                        ...reportSale.salesByDay.map((sale: any) => [
                             sale.idSale,
                             sale.purchaseNum,
                             sale.subTotal,
@@ -75,19 +64,40 @@ export default function SalesReport(){
                     ];
                     setDataForTable(tableData);
 
+                    const pieData = [
+                        defaultPieTagName, 
+                        ...reportSale.salesByWeek.map((sale: any) => [
+                            sale.dayOfWeek,
+                            sale.total,                            
+                        ])
+                    ];
+                    setDataForPie(pieData);
+        } else {
+            setValidateData(false);
+        }
+    }    
 
-                    //dataForTable.push(defaultColName);                    
-                    // registeredSalesDataFromAPI.forEach((sale: any) => {
-                    //     const saleList = Object.values(sale);
-                    //     dataForTable.push(saleList);
-                    // });                    
-                    // dataForTable.forEach(row => {
-                    //     console.log("Elemento de tableForData: " +row + "\n");
-                    // });
-                    // console.log("Que es dataForTable: " +dataForTable);
+    //Funcion base de todo
+    const selectDateResetTable = (e: { target: { value: any; }; }) =>{
+        var selectedDate = e.target.value;
+        setEventDate(selectedDate);        
+    }
 
-                    //Lo dejo para despues
-                    //setAllRegisteredSales(registeredSalesDataFromAPI);                                        
+    //Recibimos los datos cada que se detecte que cambio el valor seleccionado del input date
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const registeredSalesReport = await getRegisteredSalesFromAPI("https://localhost:7161/api/Sale", eventDate);                
+
+                //Validar el tipo de informacion recibida (string = error)
+                if (typeof registeredSalesReport === "string") {
+                    console.error("Es un string:", registeredSalesReport);
+
+                    //Si es un objeto usamos los useState para cada Chart
+                }else if (typeof registeredSalesReport  === "object") {    
+                    //console.log(registeredSalesReport?.salesByDay);   
+                    //console.log(registeredSalesReport?.salesByWeek);                       
+                    validateRegisteredSaleReport(registeredSalesReport);                                                       
                 } else{
                     console.log("No hay datos de ventas disponibles");
                 }
@@ -109,39 +119,32 @@ export default function SalesReport(){
                     <br />
                     <input type="date" onChange={selectDateResetTable} style={{ border: '1px solid black',padding: '1rem', width: '50%' }} />
                 </div>
-                                            
-
-                <div>
-                    {allRegisteredSales && allRegisteredSales.length > 0 ? (
-                        allRegisteredSales.map(sale => (
-                        <div key={sale.idSale}>
-                            <p>Id de Venta: {typeof sale.idSale}</p>
-                            <p>Número de Compra: { typeof sale.purchaseNum}</p>
-                            <p>Subtotal: {typeof sale.subTotal}</p>
-                            <p>Total: { typeof sale.total}</p>
-                            <p>Direcccion: {typeof sale.direction}</p>
-                            <p>Metodo de pago: {typeof sale.paymentMethod.payment}</p>
-                            <p>Fecha de compra: {typeof sale.dateTimeSale}</p>
-                            {/* Agrega aquí más elementos según los datos de RegisteredSaleAPI */}
-                        </div>
-                        ))
-                    ) : (
-                        <p>No hay datos de ventas disponibles</p>
-                    )}
-                </div>
-
-                <div>
-                    <Chart
+                                                            
+                <div>                
+                    {validateData ? (
+                        <Chart
                         chartType="Table"
                         width="100%"
                         height="400px"
                         data={dataForTable}
                         options={tableOptions}                        
-                    />
+                        />
+                    ):null}
+                    
                 </div>
             </div>            
 
-            <div className="col-sm-4">Hola</div>
+            <div className="col-sm-4">
+                {validateData ? (
+                    <Chart
+                        chartType="PieChart"
+                        data={dataForPie}
+                        options={pieOptions}
+                        width={"100%"}
+                        height={"400px"}
+                    />
+                ): null}                                
+            </div>
         </section>
     );
 }

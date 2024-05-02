@@ -1,5 +1,7 @@
 //Interfaces
 import { RegisteredSaleAPI } from "../models-data/RegisteredSale";
+import { RegisteredSaleReport } from "../models-data/RegisteredSaleReport";
+import { RegisteredSaleWeek } from "../models-data/RegisteredSaleWeek";
 
     //POST Sale
     export async function sendDataAPI(directionAPI:string, data:any): Promise<string | null> {
@@ -38,7 +40,7 @@ import { RegisteredSaleAPI } from "../models-data/RegisteredSale";
     }
 
 
-    export async function getRegisteredSalesFromAPI(directionAPI: string, data: any): Promise<string | RegisteredSaleAPI[] | null> {
+    export async function getRegisteredSalesFromAPI(directionAPI: string, data: any): Promise<string | RegisteredSaleReport | null> {
 
 
         //Especificacion POST
@@ -62,16 +64,7 @@ import { RegisteredSaleAPI } from "../models-data/RegisteredSale";
             const jsonRegisteredSales = await responsePost.json();
             console.log("Respuesta JSON: " + jsonRegisteredSales);
             console.log(jsonRegisteredSales.specificListOfRegisteredSales);
-            // console.log(typeof jsonRegisteredSales.specificListOfRegisteredSales);
-            console.log("Respuesta formateada:", JSON.stringify(jsonRegisteredSales.specificListOfRegisteredSales, null, 2));            
 
-            // jsonRegisteredSales.specificListOfRegisteredSales.forEach((sale: any, index: number) => {
-            //     console.log(`Venta ${index + 1}:`);
-            //     console.log("IdSale:", sale.idSale);
-            //     console.log("PurchaseNum:", sale.purchaseNum);
-            //     console.log("SubTotal:", sale.subTotal);
-            
-            // });            
             return jsonRegisteredSales.specificListOfRegisteredSales;
             
         } catch (error) {
