@@ -23,10 +23,10 @@ namespace storeApi.Models.Data
         }
         private void ValidateSalesData(string purchaseNPurchaseNumber, DateTime purchaseDate, decimal total, int amountProducts, List<ProductQuantity> productsAnnotation)
         {
-            if (string.IsNullOrEmpty(purchaseNPurchaseNumber)){throw new ArgumentException("El ID de compra no puede estar vacío o nulo.", nameof(purchaseNPurchaseNumber));}
+            if (string.IsNullOrEmpty(purchaseNPurchaseNumber)){throw new ArgumentException($"El ID de compra no puede estar vacío o nulo, {nameof(purchaseNPurchaseNumber)}");}
             if (purchaseDate == default(DateTime)){throw new ArgumentException("La fecha de compra no puede ser la predeterminada.", nameof(purchaseDate));}
             if (total < 0){throw new ArgumentException("El total debe ser mayor que cero.", nameof(total));}
-            if (amountProducts < 0){throw new ArgumentException("La cantidad de productos debe ser mayor que cero.", nameof(amountProducts));}
+            if (amountProducts < 0){throw new ArgumentException($"{nameof(amountProducts)}de los productos debe ser mayor que cero.");}
         }
     }
 }

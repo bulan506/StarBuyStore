@@ -4,7 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import "@/app/ui/styles.css";
 
 const LoginAdmin = () => {
-    const handleSubmit = (event) => {
+    const handleSubmit = (event:any) => {
+        if(event===undefined){throw new Error('Error:  es nulo o indefinido');}
         event.preventDefault();
         window.location.href = '/Admin/init';
     };

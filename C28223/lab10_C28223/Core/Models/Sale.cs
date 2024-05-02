@@ -42,12 +42,11 @@ public sealed class Sale
 public class SaleAnnotation
 {
     public DayOfWeek DayOfWeek { set; get; }
-
     public decimal Total { set; get; }
     public SaleAnnotation(DayOfWeek dayOfWeek, decimal total)
     {
-        if (dayOfWeek==default ){throw new ArgumentException("El día no puede estar vacío");}
-        if (total < 0){throw new ArgumentException("El total no puede ser negativo");}
+        if (dayOfWeek==null ){throw new ArgumentException($"El {nameof(dayOfWeek)} no puede estar vacío o indefinido");}
+        if (total < 0){throw new ArgumentException($"El {nameof(total)} no puede ser negativo");}
         DayOfWeek = dayOfWeek;
         Total = total;
     }

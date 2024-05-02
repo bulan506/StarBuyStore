@@ -28,8 +28,8 @@ public class ProductQuantity
     public int Quantity { get; set; }
     public ProductQuantity(string productId, int quantity)
     {
-        if (string.IsNullOrWhiteSpace(productId)) { throw new ArgumentException("El ID del producto no puede estar vacío o nulo.", nameof(productId)); }
-        if (quantity < 0) { throw new ArgumentOutOfRangeException(nameof(quantity), "La cantidad no puede ser menor que cero."); }
+        if (string.IsNullOrWhiteSpace(productId)) { throw new ArgumentException($"El {nameof(productId)} producto no puede estar vacío o nulo."); }
+        if (quantity < 0) { throw new ArgumentOutOfRangeException($" {nameof(quantity)} no puede ser menor que cero."); }
         ProductId = productId;
         Quantity = quantity;
     }

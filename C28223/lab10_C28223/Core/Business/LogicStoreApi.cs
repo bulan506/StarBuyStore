@@ -18,8 +18,7 @@ namespace storeApi.Business
         {
             var productIdsIsEmpty = cart == null || cart.ProductIds == null || cart.ProductIds.Count == 0;
             var addressIsNullOrWhiteSpace = string.IsNullOrWhiteSpace(cart.Address);
-
-            if (productIdsIsEmpty) throw new ArgumentException("Cart must contain at least one product.");
+            if (productIdsIsEmpty) throw new ArgumentException($"Variable {nameof(cart)}must contain at least one product.");
             if (addressIsNullOrWhiteSpace) throw new ArgumentException("Address must be provided.");
             var store = await Store.Instance;
             var products = store.Products;

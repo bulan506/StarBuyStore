@@ -17,7 +17,6 @@ namespace storeApi.Controllers
             try
             {
                 SalesReport report = await lsr.GetSalesReportAsync(date);
-
                 return Ok(report);
             }
             catch (ArgumentException ex)

@@ -9,7 +9,8 @@ const AddAddress = () => {
 
     const enviarForm = (eventoDeEnvio:any) => {
         //valida que no sea nulo
-        if(eventoDeEnvio== null ){throw new Error('Los argumentos para enviar el formulario no pueden ser nulos.');}
+        if(eventoDeEnvio===null||eventoDeEnvio===undefined ){throw new Error('Los argumentos para enviar el formulario no pueden ser nulos.');}
+        if(direccionDelEnvio===null||direccionDelEnvio===undefined|| direccionDelEnvio.trim()===''){throw new Error('Los parametros para enviar el formulario no pueden ser nulos.');}
         eventoDeEnvio.preventDefault();
         const updatedCart = {
             ...tiendaEnMemoria,

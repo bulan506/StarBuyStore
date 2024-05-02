@@ -5,7 +5,7 @@ import "@/app/ui/styles.css";
 import Link from 'next/link';
 
 const Header = ({ size, setShow }) => {
-  if(size== null || setShow== null){throw new Error('Los argumentos para mostrar el header no pueden ser nulos.');}
+  if(size===undefined || setShow===undefined){throw new Error('Los argumentos para mostrar el header no pueden ser nulos.');}
   const handleReloadPage = () => {
     window.location.reload();
   };

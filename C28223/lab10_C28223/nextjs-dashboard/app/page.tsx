@@ -9,7 +9,7 @@ import Carousel from 'react-bootstrap/Carousel';
 
 // cards
 const Product = ({ product, handleClick }) => {
-  if (product==null || handleClick==null) {
+  if ( product===undefined|| handleClick===undefined) {
     throw new Error('Error: Los argumentos de producto no pueden ser nulos.');
   }
   const { name, description, imageURL, price } = product;
@@ -31,7 +31,7 @@ const Product = ({ product, handleClick }) => {
 };
 
 const CarruselProductos=({productos, handleClick}) =>{
-  if (productos==null || handleClick==null) {
+  if (productos===undefined || handleClick==undefined) {
     throw new Error('Error: Los argumentos de CarruselProductos no pueden ser nulos.');
   }
   return (
@@ -48,7 +48,7 @@ const CarruselProductos=({productos, handleClick}) =>{
 };
 
 const MostrarProductos = ({ handleClick }) => {
-  if ( handleClick==null) {throw new Error('Error: Los argumentos de MostrarProductos no pueden ser nulos.');}
+  if ( handleClick===undefined) {throw new Error('Error: Los argumentos de MostrarProductos no pueden ser nulos.');}
   const [Productos, setProductos] = useState([]);
   useEffect(() => {
     const loadData = async () => {
@@ -78,7 +78,7 @@ const MostrarProductos = ({ handleClick }) => {
 
 
 const ModalProductoYaAgregado = ({ closeModal }) => {
-  if ( closeModal==null) {throw new Error('Error: Los argumentos de ModalProductoYaAgregado no pueden ser nulos.');}
+  if ( closeModal===undefined) {throw new Error('Error: Los argumentos de ModalProductoYaAgregado no pueden ser nulos.');}
   return (
     <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">
@@ -127,7 +127,7 @@ export default function Page() {
   }, [store]);
 
   const handleClick = (item) => {
-    if(item== null ){throw new Error('Los argumentos para agregar un productom no pueden ser nulos.');}
+    if(item===undefined ){throw new Error('Los argumentos para agregar un productom no pueden ser nulos.');}
     const isPresent = store.productos.some(producto => producto.id === item.id);
     if (isPresent) {
       setShowModal(true);

@@ -11,6 +11,8 @@ const SalesCharAdmin = () => {
   const [weeklySalesData, setWeeklySalesData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [charge, setCharge] = useState(false);
+  var nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
 
 
   useEffect(() => {
@@ -39,7 +41,9 @@ const SalesCharAdmin = () => {
           if (salesAreEmpty) { setShowModal(true); updateSalesData2(data) }
           const weeklyData = [['Week', 'Sales']];
           data.salesDaysWeek.forEach(day => {
-            weeklyData.push([day.day, day.total]);
+            var dayOfWeekNumber = day.dayOfWeek;
+            var indiceDia = (dayOfWeekNumber - 1 + 7) % 7;
+            weeklyData.push([nombresDias[indiceDia], day.total]);
           });
           updateSalesData2(data);
           setWeeklySalesData(weeklyData);
@@ -54,10 +58,10 @@ const SalesCharAdmin = () => {
 
   };
   const updateSalesData2 = (data:any) => {
-    if (data == null) {throw new Error('Error: data es nulo o indefinido');}
+    if (data===undefined) {throw new Error('Error: data es nulo o indefinido');}
     let productsString = '';
     const newData = data.sales.map(sale => {
-      const productsInfo = sale.productsAnnotation.map(product => {
+    const productsInfo = sale.productsAnnotation.map(product => {
         return `${product.productId}, cantidad: ${product.quantity}`;
       });
       productsString = productsInfo.join('  \n'); // Unir los productos con saltos de línea
@@ -135,7 +139,7 @@ const SalesCharAdmin = () => {
 };
 
 const ModalSinVentas = ({ closeModal }:any) => {
-  if (closeModal == null) {throw new Error('Error: CloseModal es nulo o indefinido');}
+  if (closeModal===undefined) {throw new Error('Error: CloseModal es nulo o indefinido');}
   return (
     <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">

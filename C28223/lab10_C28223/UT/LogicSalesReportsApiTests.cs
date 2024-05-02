@@ -14,7 +14,6 @@ public class LogicSalesReportsApiTests
     {
         var dbtestDefault = "Server=localhost;Database=mysql;Uid=root;Pwd=123456;";
         var myDbtest = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
-
         Storage.Init(dbtestDefault, myDbtest);
         _logicSalesReportsApi = new LogicSalesReportsApi();
         _saleDataBase = new SaleDataBase();
