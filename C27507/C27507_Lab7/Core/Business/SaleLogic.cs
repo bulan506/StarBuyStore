@@ -67,24 +67,24 @@ namespace MyStoreAPI.Business
 
             List<RegisteredSale> allRegisteredSalesByDay = await DB_Sale.GetRegisteredSalesByDayAsync(dateFormat);                                                
 
-            if (allRegisteredSalesByDay == null)throw new BussinessException("La lista de ventas puede ser 0, pero no nula");
+            if (allRegisteredSalesByDay == null)throw new BussinessException($"{nameof(thisRegisteredSale)} puede ser 0, pero no nula");
             foreach (var thisRegisteredSale in allRegisteredSalesByDay){
 
                 if (thisRegisteredSale.IdSale <= 0)        
-                    throw new ArgumentException("El Id de la venta debe ser un número entero positivo.");        
+                    throw new BussinessException($"{nameof(thisRegisteredSale)} debe contener un IdSale entero positivo.");
         
                 if (string.IsNullOrEmpty(thisRegisteredSale.PurchaseNum))        
-                    throw new ArgumentException("El número de compra no puede ser nulo o vacío.");        
+                    throw new BussinessException($"{nameof(thisRegisteredSale)} no puede contener un codigo de compra nulo o vacío.");        
                 
                 if (thisRegisteredSale.SubTotal <= 0)
-                    throw new BussinessException("El subtotal de la venta no puede ser menor ni igual que cero.");
+                    throw new BussinessException($"{nameof(thisRegisteredSale)} el Subtotal de la venta no puede ser menor ni igual que cero.");
 
                 if (thisRegisteredSale.Tax < 0)
-                    throw new BussinessException("El impuesto de la venta no puede ser menor que cero.");
+                    throw new BussinessException($"{nameof(thisRegisteredSale)} el impuesto de la venta no puede ser menor que cero.");
     
 
                 if (thisRegisteredSale.Total <= 0)        
-                    throw new BussinessException("El total de la venta no puede ser menor ni igual que cero.");
+                    throw new BussinessException($"{nameof(thisRegisteredSale)} el total de la venta no puede ser menor ni igual que cero.");
             }
             return allRegisteredSalesByDay;
         }
@@ -96,8 +96,8 @@ namespace MyStoreAPI.Business
 
             foreach (var thisRegisteredSale in allRegisteredSalesByWeek){
                 if (string.IsNullOrEmpty(thisRegisteredSale.dayOfWeek)) throw new BussinessException("Los dias de la semana no son validos");
-                if (thisRegisteredSale.total == null) throw new BussinessException("El total de ventas de un dia de la semana no puede ser nulo");
-                if (thisRegisteredSale.total <= 0) throw new BussinessException("El total de ventas de un dia de la semana no puede ser menor a cero");
+                if (thisRegisteredSale.total == null) throw new BussinessException($"{nameof(thisRegisteredSale)} el total de ventas de un dia de la semana no puede ser nulo");
+                if (thisRegisteredSale.total <= 0) throw new BussinessException($"{nameof(thisRegisteredSale)} el total de ventas de un dia de la semana no puede ser menor a cero");
             }
             return allRegisteredSalesByWeek;
         }

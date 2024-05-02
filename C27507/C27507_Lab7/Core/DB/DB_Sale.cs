@@ -101,14 +101,13 @@ namespace MyStoreAPI.DB
                             //dicho metodo de pago
                             int paymentId = Convert.ToInt32(readerTable["IdPayment"]);                                                                
                             PaymentMethod paymentMethod = PaymentMethods.paymentMethodsList.FirstOrDefault(p => (int)p.payment == paymentId);
-                            if (paymentMethod != null){
-                                newRegisteredSale.PaymentMethod = paymentMethod;
-                            }
-                            else{
+                            if (paymentMethod == null){
                                 //Si obtenemos un Id de un metodo de pago que no existe actualmente, tratarlo mas arriba
                                 //ya que ha podido ser desactivado o eliminado
-                            throw new BussinessException("El metodo de pago actual no es valido");
+                                //throw new BussinessException("El metodo de pago actual no es valido");
+                                throw new BussinessException($"{nameof(paymentMethod)} no puede ser nulo");
                             }
+                            newRegisteredSale.PaymentMethod = paymentMethod;
                             newRegisteredSale.DateTimeSale = (DateTime)readerTable["DateSale"];      
 
                             registeredSalesToday.Add(newRegisteredSale);

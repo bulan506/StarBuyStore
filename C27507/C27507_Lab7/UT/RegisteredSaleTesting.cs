@@ -1,0 +1,68 @@
+﻿using Core;
+using MyStoreAPI.Business;
+using NUnit.Framework;
+
+namespace UT{
+
+    [TestFixture]
+    public class RegisteredSaleTesting{
+
+        [SetUp]
+        public void SetUp(){
+
+        }
+
+
+        //Test para los datos de consultas de ventas
+        [Test]
+        public async Task RegisteredSaleValidData(){
+
+            var saleLogic = new SaleLogic();
+            var validDateFormat = "2024-05-27";
+            var validResult = await saleLogic.getSalesByDayAndWeekAsync(validDateFormat);
+            Assert.IsNotNull(validResult);        
+        }
+
+        [Test]
+        public async Task RegisteredSaleNullData(){
+
+            var invalidDateFormat1 = "Lorem ipsum";
+            var invalidDateFormat2 = "";
+            var invalidDateFormat3 = " ";
+            var saleLogic = new SaleLogic();        
+            var invalidResult1 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat1);
+            var invalidResult2 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat2);
+            var invalidResult3 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat3);
+
+
+            Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat1));
+            Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat2));
+            Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat3));
+
+        }
+
+        [Test]
+        public async Task RegisteredSaleEmptyData(){
+
+            var validDateFormat = "2024-04-27";
+            //registro de ventas de una fecha futura (deberia devolver una lista en 0)
+            var validDateFormatWithNoData = "2024-06-10";
+            
+            var saleLogic = new SaleLogic();        
+            var noEmptyData= await saleLogic.getSalesByDayAndWeekAsync(validDateFormat);                        
+            var noEmptyDataSalesByDay = noEmptyData.salesByDay;
+            var noEmptyDataSalesByWeek = noEmptyData.salesByWeek;
+
+
+            var emptyData= await saleLogic.getSalesByDayAndWeekAsync(validDateFormatWithNoData);                
+            var emptyDataSalesByDay = emptyData.salesByDay;
+            var emptyDataSalesByWeek = emptyData.salesByWeek;
+            
+            Assert.IsEmpty(emptyDataSalesByWeek);
+            Assert.IsEmpty(emptyDataSalesByDay);
+
+            Assert.IsNotEmpty(noEmptyDataSalesByDay);
+            Assert.IsNotEmpty(noEmptyDataSalesByWeek);
+        }        
+    }
+}
