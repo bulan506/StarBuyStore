@@ -9,8 +9,8 @@ namespace StoreAPI.Database
     {
         public async Task SaveAsync(Sale sale)
         {
-            if (sale == null) throw new ArgumentNullException(nameof(sale), "The sale object cannot be null.");
-            if (sale.Products == null) throw new ArgumentException("The sale must contain at least one product.", nameof(sale));
+            if (sale == null) throw new ArgumentNullException($"The {nameof(sale)} object cannot be null.");
+            if (sale.Products == null) throw new ArgumentException($"The {nameof(sale)} must contain at least one product.");
 
 
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
