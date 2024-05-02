@@ -6,7 +6,6 @@ import Carousel from 'react-bootstrap/Carousel';
 export const Products = ({ }) => {
 
   const [productList, setProductList] = useState([]);
-
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -39,10 +38,10 @@ export const Products = ({ }) => {
 
 
   const onAddProduct = (product) => {
-    debugger
+    if (product == null) throw new Error('Invalid Parameter');
     if (storeData.productos.some(item => item.id === product.id)) {
       setShowModal(true);
-      console.log(showModal);
+      
     } else {
       const updatedStore = {
         ...storeData,

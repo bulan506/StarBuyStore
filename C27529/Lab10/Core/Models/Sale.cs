@@ -14,10 +14,18 @@ public sealed class Sale
 
     public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethod.Type paymentMethod)
     {
-        Products = products;
-        Address = address;
-        Amount = amount;
-        PaymentMethod = paymentMethod;
-        PurchaseNumber = StoreLogic.GenerateNextPurchaseNumber();
+        if (products != null && address != null && amount != 0 && paymentMethod != 0)
+        {
+            Products = products;
+            Address = address;
+            Amount = amount;
+            PaymentMethod = paymentMethod;
+            PurchaseNumber = StoreLogic.GenerateNextPurchaseNumber();
+        }
+        else
+        {
+            throw new ArgumentException("Uno o más parámetros son nulos o tienen valores no válidos.");
+        }
+
     }
 }

@@ -8,6 +8,7 @@ namespace storeApi.Database
     {
         public void Save(Sale sale)
         {
+            if(sale == null) throw new ArgumentException("Sale must contain at least one product.");
             using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;Database=mysql;Uid=root;Pwd=123456;"))
             {
                 connection.Open();
@@ -15,7 +16,7 @@ namespace storeApi.Database
                 {
                     try
                     {
-                        
+
                         string insertQuery = @"
                             use store;
 
@@ -62,5 +63,56 @@ namespace storeApi.Database
                 }
             }
         }
+        public Dictionary<string, decimal> getWeekSales(DateTime date)
+        {
+            Dictionary<string, decimal> weekSales = new Dictionary<string, decimal>();
+
+            using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;Database=mysql;Uid=root;Pwd=123456;"))
+            {
+                connection.Open();
+
+                string selectQuery = @"
+                use store;
+
+                SELECT DAYNAME(sale.purchase_date) AS day,
+                sale.purchase_number,
+                SUM(sale.total) AS total
+                FROM sales sale 
+                WHERE YEARWEEK(sale.purchase_date) = YEARWEEK(@date)
+                GROUP BY DAYNAME(sale.purchase_date), sale.purchase_number; ";
+
+                using (var command = new MySqlCommand(selectQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@date", date);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string day = reader.GetString("day");
+                            decimal total = reader.GetDecimal("total");
+                            string key = day ; 
+                            weekSales.Add(key, total);
+                        }
+
+                    }
+                }
+            }
+
+            return weekSales;
+        }
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

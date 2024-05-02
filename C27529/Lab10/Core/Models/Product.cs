@@ -7,8 +7,8 @@ public class Product : ICloneable
     public required string Description { get; set; }
     public Guid Uuid { get; set; }
     public int Id { get; set; }
+    public ProductCategory Category { get; set; } 
 
-        // Implementation of the ICloneable interface
     public object Clone()
     {
         return new Product
@@ -18,7 +18,8 @@ public class Product : ICloneable
             Name =this.Name,
             Description = this.Description,
             Price = this.Price,
-            ImageURL = this.ImageURL
+            ImageURL = this.ImageURL,
+            Category = this.Category
 
         };
     }

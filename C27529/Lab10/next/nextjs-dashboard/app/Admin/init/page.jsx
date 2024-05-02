@@ -12,7 +12,10 @@ function Page() {
 
 
   const isSelected = (pageNumber) => {
-    setSelected(pageNumber);
+    if(pageNumber!=null && (pageNumber==0||pageNumber==1)){
+      setSelected(pageNumber);
+    }
+      
   };
 
   return (

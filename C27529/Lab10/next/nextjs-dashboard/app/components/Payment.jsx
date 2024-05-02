@@ -30,10 +30,6 @@ export const Payment = () => {
                 },
                 body: JSON.stringify(data)
             };
-            console.log(data.productIds);
-            console.log(store.carrito.direccionEntrega);
-            console.log(data.paymentMethod);
-            console.log(data.total);
             const response = await fetch('https://localhost:7280/api/Cart', requestOptions);
             if (!response.ok) {
                 throw new Error('Failed to post data');

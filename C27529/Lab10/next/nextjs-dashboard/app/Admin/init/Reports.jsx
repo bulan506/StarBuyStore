@@ -1,68 +1,98 @@
-/*import React from 'react'
-import { useState } from 'react';
+import React from 'react'
+import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
+import 'chart.js/auto';
+import { Pie } from 'react-chartjs-2';
 import "react-datepicker/dist/react-datepicker.css";
+import { useHref } from 'react-router-dom';
+import { ArcElement } from "chart.js";
 
 
 function Reports() {
 
-  const [startDate, setStartDate] = useState(new Date());
-  console.log("Mes"+startDate.getMonth()+1);
-  console.log("Dia"+startDate.getDay());
+  const [weekDate, setweekDate] = useState(new Date());
+  const [weekSaleData, setWeekSaleData] = useState([]);
+
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`https://localhost:7280/api/Sale`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(weekDate)
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      if (data != null) {
+        const newData = Object.entries(data).map(([day, total]) => ({ day, total }));
+        setWeekSaleData(newData);
+      } else {
+        throw new Error('Empty data received');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  //Config Pie Chart
+  const data = {
+    labels: weekSaleData.map(item => item.day),
+    datasets: [{
+      data: weekSaleData.map(item => item.total),
+      backgroundColor: weekSaleData.map(() => randColor())
+    }]
+  };
+
+  const opciones = {
+    responsive: true
+  }
+
+
+  useEffect(() => {
+    fetchData();
+  }, [weekDate]);
+
   return (
     <div className="product-list-container">
-      <h2>Reports</h2>
-      Seleccionar Fecha: 
-      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-      
 
+      <h2>Reports</h2>
+      Seleccionar Fecha:
+      <DatePicker selected={weekDate} onChange={(date) => setweekDate(date)} />
+
+      <div>
+        <h6 className="centered">Ventas Diarias</h6>
+
+        {weekSaleData.map((item, index) => (
+          <div key={index}>
+            <p>{item.day}: {item.total}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="chartContainer">
+        <h6 className="centered">Ventas Semanales</h6>
+        <Pie data={data} options={opciones} />
+      </div>
     </div>
+
 
   )
 }
 
-export default Reports*/
 
-import React, { useState, useEffect } from 'react';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+function randColor() {
+  const characters = '0123456789ABCDEF';
+  let color = '#';
 
-function Reports() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [dailySales, setDailySales] = useState(null);
+  for (let i = 0; i < 6; i++) {
+    color += characters[Math.floor(Math.random() * 16)];
+  }
 
-  useEffect(() => {
-    // Función para obtener datos de ventas diarias desde la base de datos
-    const fetchDailySales = async () => {
-      try {
-        // Hacer la solicitud al servidor para obtener los datos de ventas diarias
-        const response = await fetch(`URL_DE_TU_API/daily-sales?date=${startDate.toISOString()}`);
-        const data = await response.json();
-        // Actualizar el estado con los datos de ventas diarias
-        setDailySales(data);
-      } catch (error) {
-        console.error('Error al obtener datos de ventas diarias:', error);
-      }
-    };
-
-    // Llamar a la función para obtener los datos de ventas diarias cuando cambie la fecha seleccionada
-    fetchDailySales();
-  }, [startDate]);
-
-  return (
-    <div className="product-list-container">
-      <h2>Reports</h2>
-      <p>Seleccionar Fecha:</p>
-      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-
-      {dailySales && (
-        <div>
-          <h3>Ventas Diarias</h3>
-          <p>{dailySales}</p> {/* Aquí debes formatear y mostrar los datos de ventas */}
-        </div>
-      )}
-    </div>
-  );
+  return color;
 }
 
-export default Reports;
+export default Reports

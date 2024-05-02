@@ -11,9 +11,9 @@ function Page() {
 
 
   const handleSubmit = (e) => {
-    e.preventDefault();
     if (username === 'usu' && password === '1234') {
       if (username != null && password != null) {
+        e.preventDefault();
         setIsModalOpen(false);
         window.location.href = '/Admin/init'; //aqui se entra como admin        
       }
