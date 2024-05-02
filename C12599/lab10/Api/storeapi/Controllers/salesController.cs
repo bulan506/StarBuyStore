@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,20 +19,23 @@ namespace storeapi.Controllers
                 return BadRequest("La fecha no puede estar vacía.");
             }
 
-          
-            Task<IEnumerable<string[]>> taskTransactionDay =  SalesDB.GetForDayAsync(date);
-            Task<IEnumerable<string[]>> taskTransactionWeek = SalesDB.GetForWeekAsync(date);
+            if (!DateTime.TryParseExact(date, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                return BadRequest("Formato de fecha inválido.");
+            }
 
-        
+            var salesDB = new SalesDB();
+
+            Task<IEnumerable<string[]>> taskTransactionDay = salesDB.GetForDayAsync(parsedDate);
+            Task<IEnumerable<string[]>> taskTransactionWeek = salesDB.GetForWeekAsync(parsedDate);
+
             await Task.WhenAll(taskTransactionDay, taskTransactionWeek);
 
-        
             IEnumerable<TransactionManager.TransactionRecord> transactionsDays =
                 await TransactionManager.LoadTransactionsFromDatabaseAsync(taskTransactionDay.Result);
             IEnumerable<TransactionManager.TransactionRecord> transactionsWeeks =
                 await TransactionManager.LoadTransactionsFromDatabaseAsync(taskTransactionWeek.Result);
 
-        
             var response = new Dictionary<string, IEnumerable<TransactionManager.TransactionRecord>>
             {
                 ["transactionsDays"] = transactionsDays,
@@ -43,4 +46,3 @@ namespace storeapi.Controllers
         }
     }
 }
-
