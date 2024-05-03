@@ -1,58 +1,58 @@
-using System;
-using System.Collections.Generic;
-using storeapi.Database;
-
-namespace storeapi.Models
+public sealed class Payment
 {
-    public sealed class Payment
+    public PaymentMethods Cash { get; private set; }
+    public PaymentMethods Sinpe { get; private set; }
+
+    public static readonly Payment Instance = new Payment();
+
+    private Payment()
     {
-        public PaymentMethods Cash { get; private set; }
-        public PaymentMethods Sinpe { get; private set; }
+        (Cash, Sinpe) = LoadPaymentMethodsFromDatabase();
 
-        public static readonly Payment Instance = new Payment();
-
-        private Payment()
+        if (Cash == null || Sinpe == null)
         {
-            (Cash, Sinpe) = LoadPaymentMethodsFromDatabase();
-            
-            if (Cash == null || Sinpe == null)
-            {
-                throw new InvalidOperationException("No se encontraron ambos métodos de pago necesarios.");
-            }
+            throw new InvalidOperationException("No se encontraron ambos métodos de pago necesarios.");
         }
+    }
 
-        private (PaymentMethods, PaymentMethods) LoadPaymentMethodsFromDatabase()
+    private (PaymentMethods, PaymentMethods) LoadPaymentMethodsFromDatabase()
+    {
+        PaymentMethods cash = null;
+        PaymentMethods sinpe = null;
+
+        List<string[]> methodData = PaymentDB.RetrievePaymentMethods();
+
+        foreach (string[] row in methodData)
         {
-            PaymentMethods cash = null;
-            PaymentMethods sinpe = null;
-
-            List<string[]> methodData = PaymentDB.RetrievePaymentMethods();
-
-            foreach (string[] row in methodData)
+            if (row.Length >= 2)
             {
-                if (row.Length >= 2)
+                if (int.TryParse(row[0], out int id) && Enum.TryParse(row[1], out PaymentMethods.Type type))
                 {
-                    if (int.TryParse(row[0], out int id) && Enum.TryParse(row[1], out PaymentMethods.Type type))
+                    // Utilizar PaymentMethods.Find para obtener las instancias existentes
+                    PaymentMethods paymentMethod = PaymentMethods.Find(type);
+                    
+                    if (paymentMethod != null)
                     {
-                        if (type == PaymentMethods.Type.CASH)
+                        if (paymentMethod.PaymentType == PaymentMethods.Type.CASH)
                         {
-                            cash = new Cash();
+                            cash = paymentMethod;
                         }
-                        else if (type == PaymentMethods.Type.SINPE)
+                        else if (paymentMethod.PaymentType == PaymentMethods.Type.SINPE)
                         {
-                            sinpe = new Sinpe();
+                            sinpe = paymentMethod;
                         }
                     }
                 }
             }
-
-            // Validación después de cargar los métodos de pago desde la base de datos
-            if (cash == null || sinpe == null)
-            {
-                throw new InvalidOperationException("No se encontraron ambos métodos de pago necesarios.");
-            }
-
-            return (cash, sinpe);
         }
+
+        // Validación después de cargar los métodos de pago desde la base de datos
+        if (cash == null || sinpe == null)
+        {
+            throw new InvalidOperationException("No se encontraron ambos métodos de pago necesarios.");
+        }
+
+        return (cash, sinpe);
     }
 }
+
