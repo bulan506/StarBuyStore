@@ -62,9 +62,7 @@ namespace storeApi.DataBase
 
         public async Task<IEnumerable<SalesData>> GetSalesByDateAsync(DateTime date)
         {
-            if (date == default) { throw new ArgumentException($"El parámetro {nameof(date)}  no puede ser el valor predeterminado.", nameof(date)); }
-            if (date == null) { throw new ArgumentException("El parámetro  no puede ser nulo.", nameof(date)); }
-
+            if (date == DateTime.MinValue || date == DateTime.MaxValue) { throw new ArgumentException($"La variable {nameof(date)} no puede ser defualt."); }
             List<SalesData> salesList = new List<SalesData>();
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
@@ -104,8 +102,7 @@ namespace storeApi.DataBase
 
         public async Task<IEnumerable<SaleAnnotation>> GetSalesWeekAsync(DateTime date)
         {
-            if (date == default) { throw new ArgumentException("El parámetro no puede ser el valor predeterminado.", nameof(date)); }
-            if (date == null) { throw new ArgumentException("El parámetro no puede ser nulo.", nameof(date)); }
+            if (date == DateTime.MinValue || date == DateTime.MaxValue) { throw new ArgumentException($"La variable {nameof(date)} no puede ser defualt."); }
             List<SaleAnnotation> salesByDay = new List<SaleAnnotation>();
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {

@@ -47,12 +47,25 @@ namespace storeApi.Business
             // Obtener el método de pago seleccionado
             PaymentMethods selectedPaymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
             // Crear un objeto de venta
-            var sale = new Sale(Sale.GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType);
+            var sale = new Sale(GenerateNextPurchaseNumber(), shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType);
 
             // Guardar la venta de forma asíncrona
             await saleDataBase.SaveAsync(sale);
 
             return sale;
         }
+
+        private string GenerateNextPurchaseNumber()
+        {
+            const string chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random random = new Random();
+            string purchaseNumber = "";
+            for (int i = 0; i < 6; i++)
+            {
+                purchaseNumber += chars[random.Next(chars.Length)];
+            }
+            return purchaseNumber;
+        }
+
     }
 }

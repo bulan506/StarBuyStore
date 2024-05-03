@@ -17,18 +17,6 @@ public sealed class Sale
         PurchaseNumber = purchaseNumber;
     }
 
-    internal static string GenerateNextPurchaseNumber()
-    {
-        const string chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Random random = new Random();
-        string purchaseNumber = "";
-        for (int i = 0; i < 6; i++)
-        {
-            purchaseNumber += chars[random.Next(chars.Length)];
-        }
-        return purchaseNumber;
-    }
-
     private void ValidateParameters(string purchaseNumber, IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod)
     {
         if (string.IsNullOrEmpty(purchaseNumber)){throw new ArgumentException("El número de compra no puede estar vacío o nulo.", nameof(purchaseNumber));}
