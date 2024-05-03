@@ -11,55 +11,47 @@ const Page = () => {
       productos: [],
       count: 0,
     },
-    productList: [],
+    productList: [], // Inicializar como un array vacío
   });
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://localhost:7043/api/Store');
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const json = await response.json();
-      const productList = json.products || [];
-      setState(prevState => ({
-        ...prevState,
-        productList,
-      }));
+        const response = await fetch('https://localhost:7043/api/Store');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const json = await response.json();
+        const productList = json.products || [];
+        setState(prevState => ({
+          ...prevState,
+          productList,
+        }));
+    
     };
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const cartData = localStorage.getItem('cartData');
-    if (cartData) {
-      const parsedCartData = JSON.parse(cartData);
-      setState(prevState => ({
-        ...prevState,
-        cart: parsedCartData,
-      }));
-    }
-  }, []);
-
   const handleAddToCart = (product) => {
+    // Validar el objeto de producto antes de agregarlo al carrito
     if (!product || typeof product !== 'object' || !product.hasOwnProperty('id') || !product.hasOwnProperty('name') || !product.hasOwnProperty('price')) {
       throw new Error('Invalid product object');
     }
 
+    // Validar si el producto ya está en el carrito
     const { cart } = state;
     const { productos, count } = cart;
-
     const isProductInCart = productos.some(item => item.id === product.id);
-
     if (isProductInCart) {
       throw new Error('Product is already in the cart');
     }
 
+    // Validar el precio del producto
     if (typeof product.price !== 'number' || product.price <= 0) {
       throw new Error('Product price must be a positive number');
     }
 
+    // Actualizar el carrito
     const updatedCart = {
       ...cart,
       productos: [...productos, product],
@@ -71,58 +63,50 @@ const Page = () => {
       cart: updatedCart,
     }));
 
+    // Guardar el carrito en localStorage
     localStorage.setItem('cartData', JSON.stringify(updatedCart));
   };
 
   const renderCarouselItems = (start, end) => {
-  const { productList } = state;
+    const { productList } = state;
+    if (!productList || productList.length === 0) {
+      return []; // Devolver un arreglo vacío si no hay productos
+    }
 
-  // Validar el parámetro 'start'
-  if (typeof start !== 'number' || start < 0 || start >= productList.length) {
-    throw new Error('Invalid start index for rendering carousel items');
-  }
+    // Validar índices de inicio y fin
+    if (typeof start !== 'number' || start < 0 || start >= productList.length ||
+        typeof end !== 'number' || end <= start || end > productList.length) {
+      throw new Error('Invalid start/end index for rendering carousel items');
+    }
 
-  // Validar el parámetro 'end'
-  if (typeof end !== 'number' || end <= start || end > productList.length) {
-    throw new Error('Invalid end index for rendering carousel items');
-  }
-
-  // Verificar si 'productList' no está definido o es un arreglo vacío
-  if (!productList || productList.length === 0) {
-    return []; // Devolver un arreglo vacío si 'productList' no está disponible o está vacío
-  }
-
-
-  const slicedProducts = productList.slice(start, end);
-  return slicedProducts.map((product) => (
-    <Carousel.Item key={product.id}>
-      <div className="text-center">
-        <img src={product.imageUrl} alt={product.name} style={{ maxHeight: '300px' }} />
-        <h3>{product.name}</h3>
-        <p>{product.description}</p>
-        <p>Precio: ${product.price}</p>
-        <button className="btn btn-primary" onClick={() => handleAddToCart(product)}>
-          Comprar
-        </button>
-      </div>
-    </Carousel.Item>
-  ));
-};
+    const slicedProducts = productList.slice(start, end);
+    return slicedProducts.map((product) => (
+      <Carousel.Item key={product.id}>
+        <div className="text-center">
+          <img src={product.imageUrl} alt={product.name} style={{ maxHeight: '300px' }} />
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+          <p>Precio: ${product.price}</p>
+          <button className="btn btn-primary" onClick={() => handleAddToCart(product)}>
+            Comprar
+          </button>
+        </div>
+      </Carousel.Item>
+    ));
+  };
 
   const renderGridItems = (start, end) => {
     const { productList } = state;
-
-    // Validar el parámetro 'start'
-    if (typeof start !== 'number' || start < 0 || start >= productList.length) {
-      throw new Error('Invalid start index for rendering grid items');
+    if (!productList || productList.length === 0) {
+      return []; // Devolver un arreglo vacío si no hay productos
     }
 
-    // Validar el parámetro 'end'
-    if (typeof end !== 'number' || end <= start || end > productList.length) {
-      throw new Error('Invalid end index for rendering grid items');
+    // Validar índices de inicio y fin
+    if (typeof start !== 'number' || start < 0 || start >= productList.length ||
+        typeof end !== 'number' || end <= start || end > productList.length) {
+      throw new Error('Invalid start/end index for rendering grid items');
     }
 
-    // Obtener los productos dentro del rango [start, end) y renderizar cada uno como una tarjeta (card)
     const slicedProducts = productList.slice(start, end);
     return slicedProducts.map((product) => (
       <div key={product.id} className="col-sm-3 mb-4">
