@@ -62,10 +62,7 @@ namespace TodoApi.Database
 
         public async Task<SalesReport> GetSalesReportAsync(DateTime date)
         {
-            if (date == DateTime.MinValue)
-            {
-                throw new ArgumentException("Date cannot be:", nameof(date));
-            }
+            if (date == DateTime.MinValue) throw new ArgumentException("Date cannot be:", nameof(date));
             List<WeeklyReport> weeklySales = (List<WeeklyReport>)await GetWeeklySalesAsync(date);
             List<DailyReport> dailySales = (List<DailyReport>)await GetDailySalesAsync(date);
             SalesReport salesReport = new SalesReport(dailySales, weeklySales);

@@ -218,8 +218,7 @@ public sealed class StoreDB
             {
                 int result = command.ExecuteNonQuery();
                 bool dbNoCreated = result < 0;
-                if (dbNoCreated)
-                    throw new Exception("Error creating the bd");
+                if (dbNoCreated) throw new Exception("Error creating the bd");
             }
 
             // Begin a transaction

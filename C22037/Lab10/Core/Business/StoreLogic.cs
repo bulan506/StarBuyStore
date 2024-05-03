@@ -16,7 +16,6 @@ namespace TodoApi.Business
             if (cart == null) throw new ArgumentNullException("Cart cannot be null.");
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
-            if (cart.PaymentMethod.GetType == null) throw new ArgumentNullException("Payment Method cannot be null");
 
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
@@ -51,8 +50,7 @@ namespace TodoApi.Business
             Random random = new Random();
 
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string randomLetters = new string(Enumerable.Repeat(chars, 3)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
+            string randomLetters = new string(Enumerable.Repeat(chars, 3).Select(s => s[random.Next(s.Length)]).ToArray());
 
             int randomNumber = random.Next(100000, 999999);
 
