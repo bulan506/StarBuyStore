@@ -7,7 +7,7 @@ using StoreAPI.models;
 namespace UT
 {
 
-  public class Tests
+  public class TestsStoreLogic
   {
 
     private StoreLogic storeLogic;

@@ -23,7 +23,7 @@ export default function ReportPage() {
         try {
             const formattedDate = selectedDate.toISOString().split('T')[0]; //fecha en formato ISO 8601 sin la hora
             const response = await fetch(`http://localhost:5207/api/Sale?date=${formattedDate}`);
-            
+                
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
@@ -34,11 +34,11 @@ export default function ReportPage() {
             const weeklyData = [['Day', 'Total']];
             const dailyData = [['Purcharse Date', 'Purcharse Number', 'Total']];
 
-            for (const item of data.weeklySales) {
+            for (const item of data.salesDaysWeek) {
                 weeklyData.push([item.dayOfWeek, item.total]);
             }
 
-            for (const item of data.dailySales) {
+            for (const item of data.sales) {
                 dailyData.push([item.purchaseDate, item.purchaseNumber, item.total]);
             }
            
@@ -46,7 +46,7 @@ export default function ReportPage() {
             setWeeklySalesData(weeklyData);
 
         } catch (error) {
-            throw new Error('Error fetching data:');
+            throw new Error('Error to send data');
         }
     };
 
@@ -113,6 +113,7 @@ export default function ReportPage() {
                     <div className="col-md-4">
                         <h2>Weekly Sales Pie Chart</h2>
                         <Chart
+                            //400px
                             width={'100%'}
                             height={'300px'}
                             chartType="PieChart"
