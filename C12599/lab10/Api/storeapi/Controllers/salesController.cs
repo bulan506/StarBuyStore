@@ -19,7 +19,7 @@ namespace storeapi.Controllers
                 return BadRequest("La fecha no puede estar vacía.");
             }
 
-            if (!DateTime.TryParseExact(date, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            if (!DateTime.TryParseExact(date, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
                 return BadRequest("Formato de fecha inválido.");
             }
