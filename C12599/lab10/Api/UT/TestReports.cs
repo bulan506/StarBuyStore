@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using storeapi.Database;
 
 namespace storeapi.UT
 {
@@ -8,13 +10,14 @@ namespace storeapi.UT
     public class SalesDBTests
     {
         [Test]
-        public async Task GetForWeekAsync_ReturnsMockDataWithTotal()
+        public async Task GetForWeekAsync_ValidDate_ReturnsDataWithTotal()
         {
             // Arrange
-            var salesDB = new MockSalesDB();
+            var salesDB = new SalesDB();
+            var validDate = new DateTime(2024, 04, 30); // Fecha válida
 
             // Act
-            var result = await salesDB.GetForWeekAsync("2024-04-30");
+            var result = await salesDB.GetForWeekAsync(validDate);
 
             // Assert
             Assert.IsNotNull(result);
@@ -26,13 +29,26 @@ namespace storeapi.UT
         }
 
         [Test]
-        public async Task GetForDayAsync_ReturnsMockDataWithTotal()
+        public async Task GetForWeekAsync_MinDate_ThrowsArgumentException()
         {
             // Arrange
-            var salesDB = new MockSalesDB();
+            var salesDB = new SalesDB();
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await salesDB.GetForWeekAsync(DateTime.MinValue));
+            Assert.AreEqual("La fecha no puede ser DateTime.MinValue", ex.Message);
+            Assert.AreEqual("date", ex.ParamName);
+        }
+
+        [Test]
+        public async Task GetForDayAsync_ValidDate_ReturnsDataWithTotal()
+        {
+            // Arrange
+            var salesDB = new SalesDB();
+            var validDate = new DateTime(2024, 04, 30); // Fecha válida
 
             // Act
-            var result = await salesDB.GetForDayAsync("2024-04-30");
+            var result = await salesDB.GetForDayAsync(validDate);
 
             // Assert
             Assert.IsNotNull(result);
@@ -42,5 +58,18 @@ namespace storeapi.UT
             decimal totalDay = result.Sum(row => decimal.Parse(row[0])); // Suma de los totales en la primera columna
             Assert.AreEqual(200M, totalDay); // Verifica que el total sea el esperado
         }
+
+        [Test]
+        public async Task GetForDayAsync_MinDate_ThrowsArgumentException()
+        {
+            // Arrange
+            var salesDB = new SalesDB();
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await salesDB.GetForDayAsync(DateTime.MinValue));
+            Assert.AreEqual("La fecha no puede ser DateTime.MinValue", ex.Message);
+            Assert.AreEqual("date", ex.ParamName);
+        }
     }
 }
+
