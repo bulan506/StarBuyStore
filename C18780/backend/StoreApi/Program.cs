@@ -19,7 +19,6 @@ builder.Services.AddScoped<ISinpeRepository, SinpeRepository>();
 builder.Services.AddScoped<IDailySalesRepository, DailySalesRepository>();
 builder.Services.AddScoped<IWeeklySalesRepository, weeklySalesRepository>();
 
-
 // Registra los manejadores de MediatR específicos
 builder.Services.AddTransient<IRequestHandler<GetProductListQuery, List<Product>>, GetProductListHandler>();
 builder.Services.AddTransient<IRequestHandler<GetProductByIdQuery, Product>, GetProductByIdHandler>();
