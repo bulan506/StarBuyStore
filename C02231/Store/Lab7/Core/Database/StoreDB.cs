@@ -456,7 +456,7 @@ public sealed class StoreDB
             use store;
             SELECT purchase_number, purchase_date, total
             FROM sales 
-            WHERE YEARWEEK(purchase_date) = YEARWEEK(@date)";
+            WHERE DATE(purchase_date) = @date";
 
             using (var command = new MySqlCommand(selectQuery, connection))
             {
