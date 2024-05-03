@@ -165,24 +165,22 @@ namespace Store_API.Database
                         VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
                         ";
 
-                        string purchaseNumber = GeneratePurchaseNumber();
-
                         using (MySqlCommand command = new MySqlCommand(insertSale, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@total", sale.Amount);
                             command.Parameters.AddWithValue("@subtotal", sale.Amount);
-                            command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
+                            command.Parameters.AddWithValue("@purchaseNumber", sale.PurchaseNumber);
                             command.Parameters.AddWithValue("@address", sale.Address);
                             command.Parameters.AddWithValue("@paymentMethod", (int)sale.PaymentMethod);
                             command.Parameters.AddWithValue("@dateSale", DateTime.Now);
                             command.ExecuteNonQuery();
                         }
 
-                        InsertSalesLines(connection, transaction, purchaseNumber, sale.Products.ToList());
+                        InsertSalesLines(connection, transaction, sale.PurchaseNumber, sale.Products.ToList());
 
                         transaction.Commit();
 
-                        return purchaseNumber;
+                        return sale.PurchaseNumber;
                     }
                     catch (Exception ex)
                     {
@@ -201,11 +199,11 @@ namespace Store_API.Database
             ON DUPLICATE KEY UPDATE PaymentMethodName = VALUES(PaymentMethodName);
             ";
 
-        var paymentMethods = new List<(int id, string name)>
-        {
-            (0, "Efectivo"),
-            (1, "Sinpe")
-        };
+            var paymentMethods = new List<(int id, string name)>
+            {
+                (0, "Efectivo"),
+                (1, "Sinpe")
+            };
 
             using (MySqlCommand command = new MySqlCommand(insertPaymentMethodQuery, connection, transaction))
             {
@@ -247,15 +245,156 @@ namespace Store_API.Database
             }
         }
 
-        private string GeneratePurchaseNumber()
+        public void InsertSalesData()
         {
-            Random random = new Random();
-            string letters = new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 3)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
 
-            string numbers = random.Next(100, 999).ToString();
+                    string insertSalesQuery = @"
+                INSERT INTO Sales (PurchaseDate, Total, PaymentMethodId, PurchaseNumber)
+                VALUES
+                    ('2024-04-27 08:00:00', 50.00, 1, 'ACD789'),
+                    ('2024-04-27 12:30:00', 35.75, 0, 'BTR321'),
+                    ('2024-04-28 10:15:00', 75.20, 1, 'CJR579'),
+                    ('2024-04-28 14:45:00', 20.50, 0, 'DET468'),
+                    ('2024-04-29 09:20:00', 45.60, 0, 'EBY321'),
+                    ('2024-04-29 16:00:00', 90.00, 1, 'FKJ789'),
+                    ('2024-04-30 11:45:00', 60.30, 0, 'GNM579'),
+                    ('2024-04-30 13:20:00', 25.75, 1, 'HFK468'),
+                    ('2024-05-01 08:30:00', 55.00, 0, 'IMH321'),
+                    ('2024-05-01 15:10:00', 70.25, 1, 'JLO789');
+            ";
 
-            return $"{letters}{numbers}";
+                    using (MySqlCommand command = new MySqlCommand(insertSalesQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    string insertSalesLinesQuery = @"
+                INSERT INTO SalesLines (IdSale, IdProduct, Price)
+                VALUES
+                    (1, 1, 50.00),
+                    (2, 2, 35.75),
+                    (3, 3, 75.20),
+                    (4, 4, 20.50),
+                    (5, 5, 45.60),
+                    (6, 6, 90.00),
+                    (7, 7, 60.30),
+                    (8, 8, 25.75),
+                    (9, 9, 55.00),
+                    (10, 10, 70.25);
+            ";
+
+                    using (MySqlCommand command = new MySqlCommand(insertSalesLinesQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<SaleAttribute>> ObtainDailySalesAsync(DateTime date)
+        {
+            if (date == DateTime.MinValue)
+            {
+                throw new ArgumentException("The date cannot be", nameof(date));
+            }
+
+            var salesReport = new List<SaleAttribute>();
+
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                var query = @"
+                    SELECT s.IdSale, s.PurchaseNumber, s.Total, s.DateSale, p.Name AS Product
+                    FROM Sales s
+                    JOIN SalesLines sl ON s.IdSale = sl.IdSale
+                    JOIN Products p ON sl.IdProduct = p.IdProduct
+                    WHERE DATE(s.DateSale) = @date;
+                ";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@date", date.Date);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var sale = new SaleAttribute
+                            {
+                                SaleId = reader.GetInt32(0),
+                                PurchaseNumber = reader.GetString(1),
+                                Total = reader.GetDecimal(2),
+                                PurchaseDate = reader.GetDateTime(3),
+                                Product = reader.GetString(4),
+                                DailySale = date.ToString("dddd"),
+                                SaleCounter = 1
+                            };
+
+                            salesReport.Add(sale);
+                        }
+                    }
+                }
+            }
+
+            return salesReport;
+        }
+
+        public async Task<IEnumerable<SaleAttribute>> ObtainWeeklySalesAsync(DateTime date)
+        {
+            if (date == DateTime.MinValue)
+            {
+                throw new ArgumentException("The date cannot be", nameof(date));
+            }
+
+            var weeklySalesReport = new List<SaleAttribute>();
+            var startOfWeek = date.AddDays(-(int)date.DayOfWeek);
+
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                var query = @"
+                    SELECT DAYNAME(s.DateSale) AS SaleDayOfWeek, COUNT(*) AS SaleCount
+                    FROM Sales s
+                    WHERE YEARWEEK(s.DateSale) = YEARWEEK(@startDate)
+                    GROUP BY SaleDayOfWeek
+                    ORDER BY SaleDayOfWeek;
+                ";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@startDate", startOfWeek);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var saleDayOfWeek = reader.GetString(0);
+                            var saleCount = reader.GetInt32(1);
+
+                            var salesByDay = new SaleAttribute
+                            {
+                                DailySale = saleDayOfWeek,
+                                SaleCounter = saleCount
+                            };
+
+                            weeklySalesReport.Add(salesByDay);
+                        }
+                    }
+                }
+            }
+
+            return weeklySalesReport;
         }
     }
 }

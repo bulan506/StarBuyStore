@@ -6,10 +6,10 @@ namespace Store_API.Models
         public string Address { get; }
         public decimal Amount { get; }
         public PaymentMethods.Type PaymentMethod { get; }
+        public string PurchaseNumber { get; set; } 
 
-        public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod)
+        public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethods.Type paymentMethod, string purchaseNumber)
         {
-            //Validaciones para evitar valores nulos
             if (products == null || string.IsNullOrWhiteSpace(address))
             {
                 throw new ArgumentNullException("Products and address cannot be null or empty.");
@@ -31,13 +31,14 @@ namespace Store_API.Models
             Address = address;
             Amount = amount;
             PaymentMethod = paymentMethod;
+            PurchaseNumber = purchaseNumber;
         }
 
         private bool IsValidAddress(string address)
         {
             foreach (char c in address)
             {
-                if (!char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c)) 
+                if (!char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c))
                 {
                     return false;
                 }

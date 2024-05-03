@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Store_API.Database;
 
 namespace Store_API.Models

@@ -5,7 +5,7 @@ namespace Store_API.Business
 {
     public sealed class StoreLogic
     {
-        private DB_API dbAPI= new DB_API();
+        private DB_API dbAPI = new DB_API();
 
         public string Purchase(Cart cart)
         {
@@ -23,11 +23,25 @@ namespace Store_API.Business
 
             PaymentMethods.Type paymentMethodType = cart.PaymentMethod;
 
-            var sale = new Sale(matchingProducts, cart.Address, purchaseAmount, paymentMethodType);
+            string purchaseNumber = GeneratePurchaseNumber();
 
-            string purchaseNumber = dbAPI.InsertSale(sale);
+            var sale = new Sale(matchingProducts, cart.Address, purchaseAmount, paymentMethodType, purchaseNumber);
+
+            sale.PurchaseNumber = purchaseNumber;
+            dbAPI.InsertSale(sale);
 
             return purchaseNumber;
+        }
+
+        private string GeneratePurchaseNumber()
+        {
+            Random random = new Random();
+            string letters = new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 3)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            string numbers = random.Next(100, 999).ToString();
+
+            return $"{letters}{numbers}";
         }
     }
 }

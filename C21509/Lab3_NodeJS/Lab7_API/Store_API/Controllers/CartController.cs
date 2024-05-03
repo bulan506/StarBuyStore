@@ -14,13 +14,19 @@ namespace Store_API.Controllers
         [Consumes("application/json")]
         public IActionResult CreateCart([FromBody] Cart cart)
         {
-             Cart actualCart = new Cart(
-                cart.ProductIds,
-                cart.Address,
-                cart.PaymentMethod,
-                cart.Total,
-                cart.Subtotal
-             );
+
+            if (cart == null)
+            {
+                return BadRequest("The cart object cannot be null.");
+            }
+
+            Cart actualCart = new Cart(
+               cart.ProductIds,
+               cart.Address,
+               cart.PaymentMethod,
+               cart.Total,
+               cart.Subtotal
+            );
 
             var successPurchase = storeLogic.Purchase(actualCart);
             var response = new { successPurchase };
