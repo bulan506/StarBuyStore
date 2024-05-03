@@ -11,10 +11,11 @@ namespace StoreAPI.Business
         private SaleBD saleDB = new SaleBD();
 
         public async Task<Sale> PurchaseAsync(Cart cart)
-        {
+        { 
+            if (cart == null || cart.ProductIds == null || cart.ProductIds.Count == 0) throw new ArgumentException("The cart cannot be empty.");
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
-            if (cart == null || cart.ProductIds == null || cart.ProductIds.Count == 0) throw new ArgumentException("The cart cannot be empty.");
+           
 
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
@@ -44,7 +45,7 @@ namespace StoreAPI.Business
             return sale;
         }
 
-        private static string GenerateNextPurchaseNumber()
+        private string GenerateNextPurchaseNumber()
         {
             Random random = new Random();
 

@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Data.Common;
 using System.IO.Compression;
 using Core;
@@ -300,8 +301,8 @@ public sealed class StoreDB
                 CREATE TABLE IF NOT EXISTS saleLines (
                     sale_id INT,
                     product_id INT,
-                    final_price DECIMAL(10, 2),
                     quantity int,
+                    final_price DECIMAL(10, 2),
                     PRIMARY KEY (sale_id, product_id),
                     FOREIGN KEY (sale_id) REFERENCES sales(Id),
                     FOREIGN KEY (product_id) REFERENCES products(id)
@@ -322,7 +323,7 @@ public sealed class StoreDB
                     ('2024-04-12 09:15:00', 63000, '1', 'XYZ12345'), ('2024-04-12 16:45:00', 7500, '1', 'ASD6123'),
                     ('2024-04-12 18:00:00', 9500, '0', 'NEW75309'), ('2024-04-12 18:00:00', 9500, '0', 'IKJ2491'),
                     ('2024-04-13 18:00:00', 9300, '0', 'NHJ4298'), ('2024-04-13 19:15:00', 8600, '1', 'NEW64257'),
-                    ('2024-04-13 19:15:00', 8600, '1', 'RTM1473'), ('2024-04-15 19:15:00', 9700, '1', 'ZXW3749'),
+                    ('2024-04-14 19:15:00', 8600, '1', 'RTM1473'), ('2024-04-15 19:15:00', 9700, '1', 'ZXW3749'),
                     ('2024-04-15 20:30:00', 7300, '0', 'DCE6301'), ('2024-04-16 09:00:00', 14000, '1', 'NEW98765'),
                     ('2024-04-16 20:30:00', 7200, '0', 'NEW97531'),('2024-04-16 20:30:00', 7200, '0', 'QWE9573'),
                     ('2024-04-17 10:30:00', 8100, '0', 'LKJ8902'), ('2024-04-18 09:00:00', 15400, '1', 'NEW86420'),
@@ -441,9 +442,11 @@ public sealed class StoreDB
     }
 
 
-    public async Task<IEnumerable<SalesReport>> GetDailySalesAsync(DateTime? date)
+    public async Task<IEnumerable<DaySalesReports>> GetDailySalesAsync(DateTime date)
     {
-        List<SalesReport> dailySales = new List<SalesReport>();
+        if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
+
+        List<DaySalesReports> dailySales = new List<DaySalesReports>();
 
         using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
         {
@@ -451,10 +454,9 @@ public sealed class StoreDB
 
             string selectQuery = @"
             use store;
-            SELECT DATE(S.purchase_date) AS purchase_date, SUM(S.total) AS total
-            FROM sales S 
-            WHERE DATE(S.purchase_date) = @date
-            GROUP BY DATE(S.purchase_date);";
+            SELECT purchase_number, purchase_date, total
+            FROM sales 
+            WHERE YEARWEEK(purchase_date) = YEARWEEK(@date)";
 
             using (var command = new MySqlCommand(selectQuery, connection))
             {
@@ -464,11 +466,11 @@ public sealed class StoreDB
                 {
                     while (await reader.ReadAsync())
                     {
-                        //DateTime purchaseDate = reader.GetDateTime("purchase_date");
-                        string? purchaseDate = reader.GetString("purchase_date").ToString();
+                        DateTime purchaseDate = reader.GetDateTime("purchase_date");
+                        string purchaseNumber = reader.GetString("purchase_Number");
                         decimal total = reader.GetDecimal("total");
-                        SalesReport salesReport = new SalesReport(null, purchaseDate, total);
-                        dailySales.Add(salesReport);
+                        DaySalesReports dayReport = new DaySalesReports(purchaseDate, purchaseNumber.ToString(), total);
+                        dailySales.Add(dayReport);
                     }
                 }
             }
@@ -477,9 +479,11 @@ public sealed class StoreDB
         return dailySales;
     }
 
-    public async Task<IEnumerable<SalesReport>> GetWeeklySalesAsync(DateTime? date)
+    public async Task<IEnumerable<WeekSalesReport>> GetWeeklySalesAsync(DateTime date)
     {
-        List<SalesReport> weeklySales = new List<SalesReport>();
+        if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
+
+        List<WeekSalesReport> weeklySales = new List<WeekSalesReport>();
 
         using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
         {
@@ -502,8 +506,8 @@ public sealed class StoreDB
                     {
                         string? day = reader.GetString("day").ToString();
                         decimal total = reader.GetDecimal("total");
-                        SalesReport salesReport = new SalesReport(day, null, total);
-                        weeklySales.Add(salesReport);
+                        WeekSalesReport weekSalesReport = new WeekSalesReport(day, total);
+                        weeklySales.Add(weekSalesReport);
                     }
                 }
             }
@@ -511,6 +515,5 @@ public sealed class StoreDB
 
         return weeklySales;
     }
-
 
 }

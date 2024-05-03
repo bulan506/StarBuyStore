@@ -4,8 +4,9 @@ using StoreAPI.Database;
 using StoreAPI.models;
 using System;
 using System.Collections.Generic;
-using static StoreAPI.Business.SaleReportLogic;
+using System.Globalization;
 using System.Threading.Tasks;
+using static StoreAPI.Database.StoreDB;
 
 namespace StoreAPI.Controllers
 {
@@ -14,29 +15,16 @@ namespace StoreAPI.Controllers
     public class SaleController : ControllerBase
     {
 
-
-        [HttpPost]
-        public async Task<IActionResult> GetSale([FromBody] DateTime? date)
+        [HttpGet]
+        public async Task<IActionResult> GetSaleAsync([FromQuery] DateTime date)
         {
             try
             {
-                if (!date.HasValue) return BadRequest("The date is mandatory.");
+                if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
 
-                StoreDB storeDB = new StoreDB();
-                var weeklySalesTask = storeDB.GetWeeklySalesAsync(date);
-                var dailySalesTask = storeDB.GetDailySalesAsync(date);
+                SaleReportLogic saleLogic = new SaleReportLogic();
 
-                await Task.WhenAll(weeklySalesTask, dailySalesTask);
-
-                var weeklySales = weeklySalesTask.Result;
-                var dailySales = dailySalesTask.Result;
-
-
-               
-
-                var salesReport = new { WeeklySales = weeklySales, DailySales = dailySales };
-
-                //return Ok(weeklySales);
+                SalesReport salesReport = await saleLogic.GetSalesReportAsync(date);
                 return Ok(salesReport);
             }
             catch (Exception ex)

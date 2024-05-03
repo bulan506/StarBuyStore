@@ -1,25 +1,41 @@
 using StoreAPI.models;
 using StoreAPI.Database;
-using System.Text.Json;
 
 namespace StoreAPI.Business
 {
     public sealed class SaleReportLogic
     {
-        public static class SalesFormatter
+
+        private readonly StoreDB storeDB;
+
+        public SaleReportLogic()
         {
-            public static List<SalesReport> FormatDailySales(List<SalesReport> dailySales)
-            {
-                List<SalesReport> formattedSales = new List<SalesReport>();
+            storeDB = new StoreDB();
+        }
 
-                foreach (var sale in dailySales)
-                {
-                    string purchaseDate = DateTime.Parse(sale.PurchaseDate).ToString("yyyy-MM-dd");
-                    formattedSales.Add(new SalesReport(null, purchaseDate, sale.Total));
-                }
+        public async Task<SalesReport> GetSalesReportAsync(DateTime date)
+        {
+            if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
+            StoreDB storeDB = new StoreDB();
 
-                return formattedSales;
-            }
+            List<WeekSalesReport> weeklySales = (List<WeekSalesReport>)await storeDB.GetWeeklySalesAsync(date);
+            List<DaySalesReports> dailySales = (List<DaySalesReports>)await storeDB.GetDailySalesAsync(date);
+            SalesReport salesReport = new SalesReport(dailySales, weeklySales);
+            return salesReport;
+        }
+
+    }
+    public class SalesReport
+    {
+
+        public List<DaySalesReports> DailySales { get; set; }
+        public List<WeekSalesReport> WeeklySales { get; set; }
+        public SalesReport(List<DaySalesReports> dailySales, List<WeekSalesReport> weeklySales)
+        {
+            if (dailySales == null || weeklySales == null) throw new  ArgumentNullException("Parameters cannot be null");
+    
+            DailySales = dailySales;
+            WeeklySales = weeklySales;
         }
     }
 }

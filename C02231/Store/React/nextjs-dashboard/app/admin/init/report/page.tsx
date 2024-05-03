@@ -9,54 +9,51 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 export default function ReportPage() {
 
-    const [selectedDay, setSelectedDay] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [weeklySalesData, setWeeklySalesData] = useState([['Day', 'Total']]);
     const [dailySalesData, setDailySalesData] = useState([['Day', 'Total']]);
 
 
     useEffect(() => {
         fetchData();
-    }, [selectedDay]);
+    }, [selectedDate]);
 
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:5207/api/Sale`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedDay)
-            });
+            const formattedDate = selectedDate.toISOString().split('T')[0]; //fecha en formato ISO 8601 sin la hora
+            const response = await fetch(`http://localhost:5207/api/Sale?date=${formattedDate}`);
+            
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
             const data = await response.json();
-            const weeklyData = [['Week', 'Sales']];
-            const dailyData = [['Day', 'Total']];
+
+            console.log("Datos de fetch:", data);
+
+            const weeklyData = [['Day', 'Total']];
+            const dailyData = [['Purcharse Date', 'Purcharse Number', 'Total']];
+
             for (const item of data.weeklySales) {
-                weeklyData.push([item.day, item.total]);
+                weeklyData.push([item.dayOfWeek, item.total]);
             }
+
             for (const item of data.dailySales) {
-                dailyData.push([item.purchaseDate, item.total]);
+                dailyData.push([item.purchaseDate, item.purchaseNumber, item.total]);
             }
-            const dailySalesDataFormatted = data.dailySales.map(item => [item.purchaseDate, item.total]);
-            setDailySalesData([['Day', 'Total'], ...dailySalesDataFormatted]);
-
+           
+            setDailySalesData(dailyData)
             setWeeklySalesData(weeklyData);
-            //setDailySalesData(dailyData);
 
-            console.log("Datos de ventas semanales:", weeklySalesData);
-            console.log("Datos de ventas diarias:", dailySalesData);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            throw new Error('Error fetching data:');
         }
     };
 
 
     const handleDayChange = (selectedDay: Date | null) => {
         if (selectedDay !== null) {
-            setSelectedDay(selectedDay);
+            setSelectedDate(selectedDay);
         }
     };
 
@@ -79,9 +76,9 @@ export default function ReportPage() {
             <div style={{ marginLeft: '50px' }}>
                 <label style={{ margin: '10px' }}> Select a Day</label>
                 <DatePicker
-                    selected={selectedDay}
+                    selected={selectedDate}
                     onChange={handleDayChange}
-                    //  onKeyDown={(e) => e.preventDefault()}
+                    onKeyDown={(e) => e.preventDefault()}
                     renderInput={(params) => <input {...params} />}
 
                 />
@@ -116,7 +113,6 @@ export default function ReportPage() {
                     <div className="col-md-4">
                         <h2>Weekly Sales Pie Chart</h2>
                         <Chart
-                            //400px
                             width={'100%'}
                             height={'300px'}
                             chartType="PieChart"
