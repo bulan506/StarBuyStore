@@ -2,11 +2,16 @@ using System;
 using System.Data.Common;
 using System.IO.Compression;
 using MySqlConnector;
-using storeApi.Models;
+using Core;
+using System.Data;
+
 
 namespace storeApi.db;
 public sealed class StoreDB
 {
+
+
+
     public StoreDB()
     {
 
@@ -15,79 +20,160 @@ public sealed class StoreDB
 
     public static void CreateMysql()
     {
+
+
         var products = new List<Product>
             {
-                new Product
-                {
-                    Id = 1,
-                    Name = "Producto 1",
-                    Description = "Audífonos con alta fidelidad",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Headset_1x._SY116_CB667159060_.jpg"
-                },
-                new Product
-                {
-                    Id = 2,
-                    Name = "Producto 2",
-                    Description = "Control PS4",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Controller2.png"
-                },
-                new Product
-                {
-                    Id = 3,
-                    Name = "Producto 3",
-                    Description = "PS4 1TB",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Playstation3.jpg"
-                },
-                new Product
-                {
-                    Id = 4,
-                    Name = "Producto 4",
-                    Description = "Crash Bandicoot 4 Switch",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Game.png"
-                },
-                new Product
-                {
-                    Id = 5,
-                    Name = "Producto 5",
-                    Description = "Mouse Logitech",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_Quad_Mouse.jpg"
-                },
-                new Product
-                {
-                    Id = 6,
-                    Name = "Producto 6",
-                    Description = "Silla Oficina",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_Quad_Chair.jpg"
-                },
-                new Product
-                {
-                    Id = 7,
-                    Name = "Producto 7",
-                    Description = "Laptop Acer",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Laptop.png"
-                },
-                new Product
-                {
-                    Id = 8,
-                    Name = "Producto 8",
-                    Description = "Oculus Quest 3",
-                    Price = 20000,
-                    ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Oculus2.jpg"
-                }
+               new Product
+            {
+                Id = 1,
+                Name = "Producto 1",
+                Description = "Audífonos con alta fidelidad",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Headset_1x._SY116_CB667159060_.jpg",
+                Category = ProductCategory.Audifonos
+            },
+            new Product
+            {
+                Id = 2,
+                Name = "Producto 2",
+                Description = "Control PS4",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Controller2.png",
+                Category = ProductCategory.Controles
+            },
+            new Product
+            {
+                Id = 3,
+                Name = "Producto 3",
+                Description = "PS4 1TB",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Playstation3.jpg",
+                Category = ProductCategory.Consolas
+            },
+            new Product
+            {
+                Id = 4,
+                Name = "Producto 4",
+                Description = "Crash Bandicoot 4 Switch",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Game.png",
+                Category = ProductCategory.Videojuegos
+            },
+            new Product
+            {
+                Id = 5,
+                Name = "Producto 5",
+                Description = "Mouse Logitech",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_Quad_Mouse.jpg",
+                Category = ProductCategory.Mouse
+            },
+            new Product
+            {
+                Id = 6,
+                Name = "Producto 6",
+                Description = "Silla Oficina",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_Quad_Chair.jpg",
+                Category = ProductCategory.Sillas
+            },
+            new Product
+            {
+                Id = 7,
+                Name = "Producto 7",
+                Description = "Laptop Acer",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Laptop.png",
+                Category = ProductCategory.Laptops
+            },
+            new Product
+            {
+                Id = 8,
+                Name = "Producto 8",
+                Description = "Oculus Quest 3",
+                Price = 20000,
+                ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Oculus2.jpg",
+                Category = ProductCategory.RealidadVirtual
+            },
+            new Product
+            {
+                Id = 9,
+                Name = "Producto 9",
+                Description = "Teclado mecánico RGB",
+                Price = 15000,
+                ImageURL = "https://m.media-amazon.com/images/I/61uofDvRldS._AC_UL320_.jpg",
+                Category = ProductCategory.Teclados
+            },
+            new Product
+            {
+                Id = 10,
+                Name = "Producto 10",
+                Description = "Monitor gaming 144Hz",
+                Price = 30000,
+                ImageURL = "https://m.media-amazon.com/images/I/71sPOWyMwVL._AC_UL320_.jpg",
+                Category = ProductCategory.Monitores
+            },
+            new Product
+            {
+                Id = 11,
+                Name = "Producto 11",
+                Description = "Cámara DSLR Canon EOS",
+                Price = 40000,
+                ImageURL = "https://m.media-amazon.com/images/I/61o0MBO9jFL._AC_UL320_.jpg",
+                Category = ProductCategory.Camaras
+            },
+            new Product
+            {
+                Id = 12,
+                Name = "Producto 12",
+                Description = "Smartwatch Samsung Galaxy",
+                Price = 25000,
+                ImageURL = "https://m.media-amazon.com/images/I/711f6KLsMaL._AC_UL320_.jpg",
+                Category = ProductCategory.Smartwatches
+            },
+            new Product
+            {
+                Id = 13,
+                Name = "Producto 13",
+                Description = "Bicicleta de montaña",
+                Price = 150000,
+                ImageURL = "https://m.media-amazon.com/images/I/817X9TvYQ3L._AC_UL320_.jpg",
+                Category = ProductCategory.Bicicletas
+            },
+            new Product
+            {
+                Id = 14,
+                Name = "Producto 14",
+                Description = "Robot aspirador",
+                Price = 35000,
+                ImageURL = "https://m.media-amazon.com/images/I/619TvTYML3L._AC_UY218_.jpg",
+                Category = ProductCategory.RobotsAspiradores
+            },
+            new Product
+            {
+                Id = 15,
+                Name = "Producto 15",
+                Description = "Proyector de cine en casa",
+                Price = 50000,
+                ImageURL = "https://m.media-amazon.com/images/I/71iPl3A0ubL._AC_UL320_.jpg",
+                Category = ProductCategory.Proyectores
+            },
+            new Product
+            {
+                Id = 16,
+                Name = "Producto 16",
+                Description = "Cafetera espresso",
+                Price = 20000,
+                ImageURL = "https://m.media-amazon.com/images/I/71BvCt6eAFL._AC_UL320_.jpg",
+                Category = ProductCategory.Cafeteras
+            }
             };
 
 
 
 
-        string connectionString = "Server=localhost;Database=mysql;Uid=root;Pwd=123456;";
-        using (var connection = new MySqlConnection(connectionString))
+        using (var connection = new MySqlConnection(ConnectionDB.Instance.ConnectionString))
         {
             connection.Open();
 
@@ -102,10 +188,14 @@ public sealed class StoreDB
                 );
                 
                 CREATE TABLE IF NOT EXISTS products (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(100),
-                    price DECIMAL(10, 2)
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100),
+                description TEXT,
+                price DECIMAL(10, 2),
+                imageURL VARCHAR(255),
+                category VARCHAR(30)
                 );
+
                 
                 CREATE TABLE IF NOT EXISTS sales (
                     Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -172,14 +262,18 @@ public sealed class StoreDB
                 {
                     foreach (Product product in products)
                     {
+
                         string insertProductQuery = @"
-                            INSERT INTO products (name, price)
-                            VALUES (@name, @price);";
+                            INSERT INTO products (name, description, price, imageURL, category)
+                            VALUES (@name, @description ,@price, @imageURL, @category);";
 
                         using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
                         {
                             insertCommand.Parameters.AddWithValue("@name", product.Name);
+                            insertCommand.Parameters.AddWithValue("@description", product.Description);
                             insertCommand.Parameters.AddWithValue("@price", product.Price);
+                            insertCommand.Parameters.AddWithValue("@imageURL", product.ImageURL);
+                            insertCommand.Parameters.AddWithValue("@category", product.Category.ToString());
                             insertCommand.ExecuteNonQuery();
                         }
                     }
@@ -196,4 +290,41 @@ public sealed class StoreDB
             }
         }
     }
+    public static List<Product> GetProducts()
+    {
+        List<Product> products = new List<Product>();
+        using (MySqlConnection connection = new MySqlConnection(ConnectionDB.Instance.ConnectionString))
+        {
+            connection.Open();
+
+            string sql = "use store; select * from products;";
+
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                
+                using (var reader = command.ExecuteReader())
+                {
+                    
+                    while (reader.Read())
+                    {
+                        Product product = new Product
+                        {
+                            Id = reader.GetInt32("id"),
+                            Name = reader.GetString("name"),
+                            Description = reader.GetString("description"),
+                            Price = reader.GetDecimal("price"),
+                            ImageURL = reader.GetString("imageURL"),
+                            Category = Enum.Parse<ProductCategory>(reader.GetString("category"))
+                        };
+
+                        products.Add(product);
+                    }
+                }
+            }
+        }
+        return products;
+    }
+
+
+
 }

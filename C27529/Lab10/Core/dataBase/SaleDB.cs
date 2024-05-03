@@ -53,12 +53,14 @@ namespace storeApi.Database
                             }
                         }
                         transaction.Commit();
-                        Console.WriteLine("Sale saved to database successfully.");
+                        
+                        throw new ArgumentException("Sale saved to database successfully.");
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        Console.WriteLine("An error occurred while saving sale to database: " + ex.Message);
+                       
+                        throw new ArgumentException("An error occurred while saving sale to database:"  + ex.Message);
                     }
                 }
             }

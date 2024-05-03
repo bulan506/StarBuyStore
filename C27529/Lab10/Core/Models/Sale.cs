@@ -14,7 +14,7 @@ public sealed class Sale
 
     public Sale(IEnumerable<Product> products, string address, decimal amount, PaymentMethod.Type paymentMethod)
     {
-        if (products != null && address != null && amount != 0 && paymentMethod != 0)
+        if (products != null && products.Count() < 0 && address != null && address != "" && amount <= 0 )
         {
             Products = products;
             Address = address;
