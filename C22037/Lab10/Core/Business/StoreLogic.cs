@@ -16,6 +16,7 @@ namespace TodoApi.Business
             if (cart == null) throw new ArgumentNullException("Cart cannot be null.");
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
+            if (cart.PaymentMethod.GetType == null) throw new ArgumentNullException("Payment Method cannot be null");
 
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
@@ -40,7 +41,7 @@ namespace TodoApi.Business
 
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
 
-            await saleDB.Save(sale);
+            await saleDB.SaveAsync(sale);
                 
             return sale;
         }

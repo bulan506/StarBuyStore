@@ -9,8 +9,9 @@ namespace TodoApi.Database
 {
     public sealed class SaleDB
     {
-        public async Task Save(Sale sale)
+        public async Task SaveAsync(Sale sale)
         {
+            if (sale == null) throw new ArgumentException($"{nameof(sale)} cannot be null.");
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 await connection.OpenAsync();
@@ -59,9 +60,21 @@ namespace TodoApi.Database
             }
         }
 
-        public async Task<List<SaleReports>> GetWeeklySales(DateTime date)
+        public async Task<SalesReport> GetSalesReportAsync(DateTime date)
         {
-            List<SaleReports> weeklySales = new List<SaleReports>();
+            if (date == DateTime.MinValue)
+            {
+                throw new ArgumentException("Date cannot be:", nameof(date));
+            }
+            List<WeeklyReport> weeklySales = (List<WeeklyReport>)await GetWeeklySalesAsync(date);
+            List<DailyReport> dailySales = (List<DailyReport>)await GetDailySalesAsync(date);
+            SalesReport salesReport = new SalesReport(dailySales, weeklySales);
+            return salesReport;
+        }
+
+        private async Task<IEnumerable<WeeklyReport>> GetWeeklySalesAsync(DateTime date)
+        {
+            List<WeeklyReport> weeklySales = new List<WeeklyReport>();
 
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
@@ -83,13 +96,46 @@ namespace TodoApi.Database
                         {
                             string day = reader.GetString("day");
                             decimal total = reader.GetDecimal("total");
-                            SaleReports saleReports = new SaleReports(day, total);
-                            weeklySales.Add(saleReports);
+                            WeeklyReport weeklyReport = new WeeklyReport(day, total);
+                            weeklySales.Add(weeklyReport);
                         }
                     }
                 }
             }
             return weeklySales;
+        }
+
+        private async Task<IEnumerable<DailyReport>> GetDailySalesAsync(DateTime date)
+        {
+            List<DailyReport> dailylySales = new List<DailyReport>();
+
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = @"
+                    SELECT purchase_date, purchase_number, total
+                    FROM sales
+                    WHERE YEARWEEK(purchase_date) = YEARWEEK(@date)";
+
+                using (var command = new MySqlCommand(selectQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@date", date);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            DateTime purchaseDate = reader.GetDateTime("purchase_date");
+                            string purchaseNumber = reader.GetString("purchase_number");
+                            decimal total = reader.GetDecimal("total");
+                            DailyReport dailyReport = new DailyReport(purchaseDate, purchaseNumber.ToString(), total); // Convertir purchaseNumber a string si es necesario
+                            dailylySales.Add(dailyReport);
+                        }
+                    }
+                }
+            }
+            return dailylySales;
         }
     }
 }

@@ -9,6 +9,7 @@ export default function Init() {
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedDay, setSelectedDay] = useState(new Date());
     const [weeklySalesData, setWeeklySalesData] = useState([['Day', 'Total']]);
+    const [dailySalesData, setDailySalesData] = useState([['Purchase Date', 'Purchase Number', 'Total']]);
 
     useEffect(() => {
         fetchData();
@@ -18,26 +19,33 @@ export default function Init() {
         try {
             const formattedDate = selectedDay.toISOString().split('T')[0];
             const response = await fetch(`https://localhost:7067/api/Sale?date=${formattedDate}`);
+
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
             const data = await response.json();
-            const newData = [['Day', 'Total']];
-            for (const item of data) {
-                newData.push([item.day, item.total]);
+
+            const newWeeklyData = [['Day', 'Total']];
+            for (const item of data.weeklyReport) {
+                newWeeklyData.push([item.day, item.total]);
             }
-            setWeeklySalesData(newData);
+            setWeeklySalesData(newWeeklyData);
+
+            const newDailyData = [['Purchase Date', 'Purchase Number', 'Total']];
+            for (const item of data.dailyReport) {
+                newDailyData.push([item.purchaseDate, item.purchaseNumber, item.total]);
+            }
+            setDailySalesData(newDailyData);
         } catch (error) {
-            throw new Error("Error loading data:", error.message);
+            console.error("Error loading data:", error.message);
         }
     };
-
 
     const handleDayChange = (selectedDay) => {
         if (selectedDay === undefined || selectedDay === null) {
             throw new Error("The argument must be a date");
         }
-    
+
         if (!(selectedDay instanceof Date)) {
             throw new Error("The argument must be a date");
         }
@@ -84,9 +92,9 @@ export default function Init() {
                                     height={"300px"}
                                     chartType="Table"
                                     loader={<div>Loading Chart</div>}
-                                    data={weeklySalesData}
+                                    data={dailySalesData}
                                     options={{
-                                        title: "Weekly Sales"
+                                        title: "Daily Sales"
                                     }}
                                 />
 

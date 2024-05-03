@@ -82,10 +82,20 @@ export default function Home() {
   }
 
   function rows(array, size) {
+
+    if (array === undefined) {
+      throw new Error("There are no products.");
+    }
+
+    if (size === undefined) {
+      throw new Error("No index specified.");
+    }
+
     const row = [];
     for (let i = 0; i < array.length; i += size) {
       row.push(array.slice(i, i + size));
     }
+    
     return row;
   }
 

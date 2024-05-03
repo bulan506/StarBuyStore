@@ -11,7 +11,7 @@ namespace TodoApi.Models
     public class SaleController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetWeeklySales([FromQuery] DateTime date)
+        public async Task<IActionResult> GetWeeklySalesAsync([FromQuery] DateTime date)
         {
             if (date == DateTime.MinValue)
             {
@@ -24,8 +24,8 @@ namespace TodoApi.Models
             }
 
             SaleDB saleDB = new SaleDB();
-            List<SaleReports> weeklySales = await saleDB.GetWeeklySales(date);
-            return Ok(weeklySales);
+            SalesReport salesReport = await saleDB.GetSalesReportAsync(date);
+            return Ok(salesReport);
         }
     }
 }
