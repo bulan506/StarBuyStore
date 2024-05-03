@@ -53,8 +53,8 @@ namespace UT
       Assert.IsNotNull(salesReport);
       Assert.IsNotNull(salesReport.DailySales);
       Assert.IsNotNull(salesReport.WeeklySales);
-      Assert.IsTrue(salesReport.DailySales.Count > 0);
-      Assert.IsTrue(salesReport.WeeklySales.Count > 0);
+      Assert.IsTrue(salesReport.DailySales.Any());
+      Assert.IsTrue(salesReport.WeeklySales.Any());
     }
 
 

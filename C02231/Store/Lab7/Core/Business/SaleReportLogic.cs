@@ -18,8 +18,13 @@ namespace StoreAPI.Business
             if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
             StoreDB storeDB = new StoreDB();
 
-            List<WeekSalesReport> weeklySales = (List<WeekSalesReport>)await storeDB.GetWeeklySalesAsync(date);
-            List<DaySalesReports> dailySales = (List<DaySalesReports>)await storeDB.GetDailySalesAsync(date);
+            Task<IEnumerable<WeekSalesReport>> weeklySalesTask = storeDB.GetWeeklySalesAsync(date);
+            Task<IEnumerable<DaySalesReports>> dailySalesTask = storeDB.GetDailySalesAsync(date);
+            await Task.WhenAll(weeklySalesTask, dailySalesTask);
+
+            IEnumerable<WeekSalesReport> weeklySales = await weeklySalesTask;
+            IEnumerable<DaySalesReports> dailySales = await dailySalesTask;
+
             SalesReport salesReport = new SalesReport(dailySales, weeklySales);
             return salesReport;
         }
@@ -28,12 +33,12 @@ namespace StoreAPI.Business
     public class SalesReport
     {
 
-        public List<DaySalesReports> DailySales { get; set; }
-        public List<WeekSalesReport> WeeklySales { get; set; }
-        public SalesReport(List<DaySalesReports> dailySales, List<WeekSalesReport> weeklySales)
+        public IEnumerable<DaySalesReports> DailySales { get; set; }
+        public IEnumerable<WeekSalesReport> WeeklySales { get; set; }
+        public SalesReport(IEnumerable<DaySalesReports> dailySales, IEnumerable<WeekSalesReport> weeklySales)
         {
-            if (dailySales == null || weeklySales == null) throw new  ArgumentNullException("Parameters cannot be null");
-    
+            if (dailySales == null || weeklySales == null) throw new ArgumentNullException("Parameters cannot be null");
+
             DailySales = dailySales;
             WeeklySales = weeklySales;
         }

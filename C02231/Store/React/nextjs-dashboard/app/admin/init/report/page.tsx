@@ -34,11 +34,11 @@ export default function ReportPage() {
             const weeklyData = [['Day', 'Total']];
             const dailyData = [['Purcharse Date', 'Purcharse Number', 'Total']];
 
-            for (const item of data.salesDaysWeek) {
+            for (const item of data.weeklySales) {
                 weeklyData.push([item.dayOfWeek, item.total]);
             }
 
-            for (const item of data.sales) {
+            for (const item of data.dailySales) {
                 dailyData.push([item.purchaseDate, item.purchaseNumber, item.total]);
             }
            
