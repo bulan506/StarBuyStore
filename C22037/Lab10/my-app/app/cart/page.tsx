@@ -30,6 +30,9 @@ export default function CartPage() {
   }, [taxRate]);
 
   const handleRemoveFromCart = (productId) => {
+    if (productId === undefined) {
+      throw new Error('ProductId cannot be undefined.');
+    }
     const updatedCartItems = { ...cartItems };
     delete updatedCartItems[productId];
     setCartItems(updatedCartItems);

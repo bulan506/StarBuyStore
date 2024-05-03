@@ -11,7 +11,7 @@ namespace TodoApi.Business
     {
         private SaleDB saleDB = new SaleDB();
 
-        public async Task<Sale> Purchase(Cart cart)
+        public async Task<Sale> PurchaseAsync(Cart cart)
         {
             if (cart == null) throw new ArgumentNullException("Cart cannot be null.");
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");

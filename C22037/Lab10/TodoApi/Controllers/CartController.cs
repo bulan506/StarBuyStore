@@ -15,14 +15,14 @@ namespace TodoApi.Controllers
         private StoreLogic storeLogic = new StoreLogic();
 
         [HttpPost]
-        public async Task<IActionResult> CreateCart([FromBody] Cart cart)
+        public async Task<IActionResult> CreateCartAsync([FromBody] Cart cart)
         {
             if (cart == null)
             {
                 return BadRequest("Error, cart is null");
             }
 
-            var sale = await storeLogic.Purchase(cart);
+            var sale = await storeLogic.PurchaseAsync(cart);
 
             if (sale == null)
             {

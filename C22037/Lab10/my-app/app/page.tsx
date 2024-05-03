@@ -38,6 +38,11 @@ export default function Home() {
   }, []);
 
   const handleAddToCart = (productId) => {
+
+    if (productId === undefined) {
+      throw new Error('ProductId cannot be undefined.');
+    }
+
     const storedCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
     const productToAdd = productList.products.find(product => product.id === productId);
     if (productToAdd) {
@@ -51,6 +56,11 @@ export default function Home() {
   };
 
   const Product = ({ product }) => {
+
+    if (product === undefined) {
+      throw new Error('Product cannot be undefined.');
+    }
+
     return (
       <div className="col-sm-3">
         <div className="Product">
@@ -65,6 +75,11 @@ export default function Home() {
   };
 
   const ProductCarousel = ({ id }) => {
+    
+    if (id === undefined) {
+      throw new Error('Id cannot be undefined.');
+    }
+    
     return (
       <Carousel>
         {productList && productList.products.map((product, index) => (

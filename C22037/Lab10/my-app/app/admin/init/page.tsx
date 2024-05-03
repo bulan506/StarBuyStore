@@ -37,7 +37,7 @@ export default function Init() {
             }
             setDailySalesData(newDailyData);
         } catch (error) {
-            console.error("Error loading data:", error.message);
+            throw new Error("Error loading data.");
         }
     };
 

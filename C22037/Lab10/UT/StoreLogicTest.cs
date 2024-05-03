@@ -19,7 +19,7 @@ public class StoreLogicTest
     {
         StoreLogic storeLogic = new StoreLogic();
         Cart cart = new Cart() { ProductIds = new List<string>(), Address = "" };
-        Assert.ThrowsAsync<ArgumentException>(async () => await storeLogic.Purchase(cart));
+        Assert.ThrowsAsync<ArgumentException>(async () => await storeLogic.PurchaseAsync(cart));
     }
 
     [Test]
@@ -28,7 +28,7 @@ public class StoreLogicTest
         StoreLogic storeLogic = new StoreLogic();
         var list = new List<string> { "1" };
         Cart cart = new Cart() { ProductIds = list, Address = "" };
-        Assert.ThrowsAsync<ArgumentException>(async () => await storeLogic.Purchase(cart));
+        Assert.ThrowsAsync<ArgumentException>(async () => await storeLogic.PurchaseAsync(cart));
     }
 
     [Test]
@@ -38,7 +38,7 @@ public class StoreLogicTest
         var list = new List<string>();
         list.Add("1");
         Cart cart = new Cart() { ProductIds = list, Address = "Santiago" };
-        var sale = await storeLogic.Purchase(cart);
+        var sale = await storeLogic.PurchaseAsync(cart);
         Assert.IsNotNull(sale.PurchaseNumber);
     }
 }

@@ -7,8 +7,15 @@ export default function Address() {
     const [address, setAddress] = useState('');
 
     const handleAddressChange = (e) => {
-        setAddress(e.target.value);
-    };
+        const newAddress = e.target.value;
+        
+        if (newAddress === undefined) {
+          throw new Error('Address cannot be undefined.');
+        }
+      
+        setAddress(newAddress);
+      };
+      
 
     const handleSaveAddress = () => {
         if (address.trim() !== '') {
