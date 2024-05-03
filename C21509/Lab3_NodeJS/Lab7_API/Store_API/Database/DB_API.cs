@@ -148,22 +148,22 @@ namespace Store_API.Database
             return productListToStoreInstance;
         }
 
-        public string InsertSale(Sale sale)
+        public async Task<string> InsertSaleAsync(Sale sale)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
-                using (var transaction = connection.BeginTransaction())
+                using (var transaction = await connection.BeginTransactionAsync())
                 {
                     try
                     {
-                        InsertPaymentMethods(connection, transaction);
+                        await InsertPaymentMethodsAsync(connection, transaction);
 
                         string insertSale = @"
-                        INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethodId, DateSale)
-                        VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
-                        ";
+                    INSERT INTO Sales (Total, Subtotal, PurchaseNumber, Address, PaymentMethodId, DateSale)
+                    VALUES (@total, @subtotal, @purchaseNumber, @address, @paymentMethod, @dateSale);
+                ";
 
                         using (MySqlCommand command = new MySqlCommand(insertSale, connection, transaction))
                         {
@@ -173,37 +173,37 @@ namespace Store_API.Database
                             command.Parameters.AddWithValue("@address", sale.Address);
                             command.Parameters.AddWithValue("@paymentMethod", (int)sale.PaymentMethod);
                             command.Parameters.AddWithValue("@dateSale", DateTime.Now);
-                            command.ExecuteNonQuery();
+                            await command.ExecuteNonQueryAsync();
                         }
 
-                        InsertSalesLines(connection, transaction, sale.PurchaseNumber, sale.Products.ToList());
+                        await InsertSalesLinesAsync(connection, transaction, sale.PurchaseNumber, sale.Products.ToList());
 
-                        transaction.Commit();
+                        await transaction.CommitAsync();
 
                         return sale.PurchaseNumber;
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                         throw;
                     }
                 }
             }
         }
 
-        private void InsertPaymentMethods(MySqlConnection connection, MySqlTransaction transaction)
+        private async Task InsertPaymentMethodsAsync(MySqlConnection connection, MySqlTransaction transaction)
         {
             string insertPaymentMethodQuery = @"
-            INSERT INTO PaymentMethod (PaymentMethodId, PaymentMethodName)
-            VALUES (@idPayment, @paymentName)
-            ON DUPLICATE KEY UPDATE PaymentMethodName = VALUES(PaymentMethodName);
-            ";
+        INSERT INTO PaymentMethod (PaymentMethodId, PaymentMethodName)
+        VALUES (@idPayment, @paymentName)
+        ON DUPLICATE KEY UPDATE PaymentMethodName = VALUES(PaymentMethodName);
+    ";
 
             var paymentMethods = new List<(int id, string name)>
-            {
-                (0, "Efectivo"),
-                (1, "Sinpe")
-            };
+    {
+        (0, "Efectivo"),
+        (1, "Sinpe")
+    };
 
             using (MySqlCommand command = new MySqlCommand(insertPaymentMethodQuery, connection, transaction))
             {
@@ -211,13 +211,13 @@ namespace Store_API.Database
                 {
                     command.Parameters.AddWithValue("@idPayment", paymentMethod.id);
                     command.Parameters.AddWithValue("@paymentName", paymentMethod.name);
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                     command.Parameters.Clear();
                 }
             }
         }
 
-        private void InsertSalesLines(MySqlConnection connection, MySqlTransaction transaction, string purchaseNumber, List<Product> products)
+        private async Task InsertSalesLinesAsync(MySqlConnection connection, MySqlTransaction transaction, string purchaseNumber, List<Product> products)
         {
             string selectIdSale = "SELECT IdSale FROM Sales WHERE PurchaseNumber = @purchaseNumber";
             decimal idSaleFromSelect;
@@ -225,13 +225,13 @@ namespace Store_API.Database
             using (MySqlCommand command = new MySqlCommand(selectIdSale, connection, transaction))
             {
                 command.Parameters.AddWithValue("@purchaseNumber", purchaseNumber);
-                idSaleFromSelect = Convert.ToDecimal(command.ExecuteScalar());
+                idSaleFromSelect = Convert.ToDecimal(await command.ExecuteScalarAsync());
             }
 
             string insertSalesLine = @"
-                INSERT INTO SalesLines (IdSale, IdProduct, Price)
-                VALUES (@idSale, @idProduct, @price);
-            ";
+        INSERT INTO SalesLines (IdSale, IdProduct, Price)
+        VALUES (@idSale, @idProduct, @price);
+    ";
 
             foreach (var product in products)
             {
@@ -240,11 +240,10 @@ namespace Store_API.Database
                     command.Parameters.AddWithValue("@idSale", idSaleFromSelect);
                     command.Parameters.AddWithValue("@idProduct", product.Id);
                     command.Parameters.AddWithValue("@price", product.Price);
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                 }
             }
         }
-
         public void InsertSalesData()
         {
             try

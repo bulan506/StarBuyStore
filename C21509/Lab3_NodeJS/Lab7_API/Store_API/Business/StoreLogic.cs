@@ -7,7 +7,7 @@ namespace Store_API.Business
     {
         private DB_API dbAPI = new DB_API();
 
-        public string Purchase(Cart cart)
+        public async Task<string> PurchaseAsync(Cart cart)
         {
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
@@ -28,7 +28,7 @@ namespace Store_API.Business
             var sale = new Sale(matchingProducts, cart.Address, purchaseAmount, paymentMethodType, purchaseNumber);
 
             sale.PurchaseNumber = purchaseNumber;
-            dbAPI.InsertSale(sale);
+            await dbAPI.InsertSaleAsync(sale);
 
             return purchaseNumber;
         }

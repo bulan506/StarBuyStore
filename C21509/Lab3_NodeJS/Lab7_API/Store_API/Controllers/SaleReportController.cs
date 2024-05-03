@@ -3,32 +3,33 @@ using Store_API.Business;
 
 namespace Store_API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class SaleReportController : ControllerBase
+    [Route("[controller]")]
+    public class SalesReportController : ControllerBase
     {
         private readonly SaleReportLogic _saleReportLogic;
 
-        public SaleReportController(SaleReportLogic saleReportLogic)
+        public SalesReportController(SaleReportLogic saleReportLogic)
         {
-            _saleReportLogic = saleReportLogic ?? throw new ArgumentNullException(nameof(saleReportLogic), "The SaleReportLogic object cannot be null.");
+            _saleReportLogic = saleReportLogic;
         }
 
         [HttpGet("{date}")]
-        public async Task<IActionResult> GetSalesReport(DateTime date)
+        public async Task<IActionResult> GetSalesReportAsync(DateTime date)
         {
+            if (date == DateTime.MinValue || date > DateTime.Now)
+            {
+                return BadRequest("Invalid date. Date cannot be later than the current date.");
+            }
+
             try
             {
                 var salesReport = await _saleReportLogic.GenerateSalesReportAsync(date);
                 return Ok(salesReport);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while generating the sales report.");
+                return StatusCode(500, $"An error occurred while generating the sales report: {ex.Message}");
             }
         }
     }
