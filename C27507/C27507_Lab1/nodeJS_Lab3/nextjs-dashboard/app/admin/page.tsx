@@ -22,23 +22,7 @@ export default function Login(){
 	const router = useRouter();       
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-	const [formStatus, setFormStatus] = useState(true);
-
-	// const [isLogged, setIsLoggued] = useState(false);
-    // const goToLogin = useRouter();
-            
-    // useEffect(()=>{        
-
-    //     //Verificamos si existe un item en el localStorage
-    //     const login = localStorage.getItem("login");
-    //     if(login === null){            
-    //         setIsLoggued(true);
-    //         //nos vamos al login
-    //         goToLogin.push("/./../admin");
-    //     }else{
-    //         localStorage.setItem("login","login")
-    //     }
-    // },[])
+	const [formStatus, setFormStatus] = useState(true);	
 
 	const submitForm = () => {        		
 		formValidations()		

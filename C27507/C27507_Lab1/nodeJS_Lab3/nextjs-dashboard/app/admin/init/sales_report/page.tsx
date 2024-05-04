@@ -14,6 +14,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { RegisteredSaleAPI } from '@/app/src/models-data/RegisteredSale'
 import { RegisteredSaleReport } from '@/app/src/models-data/RegisteredSaleReport';
+import { AlertShop } from '@/app/global-components/generic_overlay';
 
 export default function SalesReport(){
     
@@ -21,6 +22,23 @@ export default function SalesReport(){
     const [dataForTable, setDataForTable] = useState<any[]>([]);
     const [dataForPie, setDataForPie] = useState<any[]>([]);
     const [validateData, setValidateData] = useState(false);
+    
+    //Estados  para los alert de Boostrap
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertInfo,setAlertInfo] = useState("");
+    const [alertTitle,setAlertTitle] = useState("");
+    const [alertType,setAlertType] = useState("");
+
+    //funciones para gestionar los alert
+    function closeAlertShop(): void {
+        setShowAlert(false);     
+    }
+    function callAlertShop (alertType:string,alertTitle:string,alertInfo:string): void {
+        setAlertTitle(alertTitle);
+        setAlertInfo(alertInfo);
+        setAlertType(alertType)
+        setShowAlert(true);
+    }
 
     //Colocamos los tipos de datos
     //Donde la primera lista anidada son los nombres de columnas y sus tipos
@@ -42,9 +60,9 @@ export default function SalesReport(){
 
     //Validar que los datos de la API esten seguros
     function validateRegisteredSaleReport(reportSale: RegisteredSaleReport | null) : void{
-        const isReportSaleValid = reportSale !== null && reportSale.salesByDay !== null;    
+        const isSalesByDayValid = reportSale !== null && reportSale.salesByDay !== null;    
         const isSalesByWeekValid = reportSale !== null && reportSale.salesByWeek !== null;    
-        if (isReportSaleValid && isSalesByWeekValid) {
+        if (isSalesByDayValid && isSalesByWeekValid) {
             console.log(reportSale?.salesByDay);   
             console.log(reportSale?.salesByWeek);                       
             setValidateData(true);
@@ -89,20 +107,19 @@ export default function SalesReport(){
             try {
                 const registeredSalesReport = await getRegisteredSalesFromAPI("https://localhost:7161/api/Sale", eventDate);                
 
-                //Validar el tipo de informacion recibida (string = error)
+                //Validar el tipo de informacion recibida (string = error 504/501...etc)
                 if (typeof registeredSalesReport === "string") {
                     console.error("Es un string:", registeredSalesReport);
-
+                    setValidateData(false);
                     //Si es un objeto usamos los useState para cada Chart
-                }else if (typeof registeredSalesReport  === "object") {    
-                    //console.log(registeredSalesReport?.salesByDay);   
-                    //console.log(registeredSalesReport?.salesByWeek);                       
+                }else if (typeof registeredSalesReport  === "object") {                        
                     validateRegisteredSaleReport(registeredSalesReport);                                                       
                 } else{
                     console.log("No hay datos de ventas disponibles");
+                    setValidateData(false);
                 }
             } catch (error) {
-                console.error("Error al obtener datos de ventas:", error);
+                callAlertShop("Error","Error al obtener datos","Al parecer los datos no pueden ser mostrados. Por favor intentalo de nuevo");
             }            
         };    
         if (eventDate) fetchData();
@@ -121,30 +138,36 @@ export default function SalesReport(){
                 </div>
                                                             
                 <div>                
-                    {validateData ? (
-                        <Chart
-                        chartType="Table"
-                        width="100%"
-                        height="400px"
-                        data={dataForTable}
-                        options={tableOptions}                        
-                        />
-                    ):null}
+                    {
+                        validateData ? (
+                                <Chart
+                                chartType="Table"
+                                width="100%"
+                                height="400px"
+                                data={dataForTable}
+                                options={tableOptions}                        
+                                />
+                        ):
+                        null
+                    }
                     
                 </div>
             </div>            
 
             <div className="col-sm-4">
-                {validateData ? (
-                    <Chart
-                        chartType="PieChart"
-                        data={dataForPie}
-                        options={pieOptions}
-                        width={"100%"}
-                        height={"400px"}
-                    />
-                ): null}                                
+                {
+                    validateData ? (
+                        <Chart
+                            chartType="PieChart"
+                            data={dataForPie}
+                            options={pieOptions}
+                            width={"100%"}
+                            height={"400px"}
+                        />
+                    ): null                
+                }
             </div>
+            <AlertShop alertTitle={alertTitle} alertInfo={alertInfo} alertType={alertType} showAlert={showAlert} onClose={closeAlertShop}/>                    
         </section>
     );
 }

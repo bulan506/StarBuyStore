@@ -7,19 +7,14 @@ using MyStoreAPI.Models;
 namespace MyStoreAPI.Business
 {
     public class SaleLogic{
+        
+        private DB_Sale db_sale {get;}
 
-        private Sale sale {get;set;}
-        private Cart cart {get;}
-        private DB_Sale DB_Sale {get;}
-        public SaleLogic(Cart cart){
-            this.cart = cart;            
+        public SaleLogic(){            
+            this.db_sale = new DB_Sale();            
         }
 
-        public SaleLogic(){                        
-        }
-
-
-        public Sale processDataSale(){
+        public Sale processDataSale(Cart cart){
 
             // Utilizamos la lógica del carrito y sus validaciones
             CartLogic cartLogic = new CartLogic(cart);
@@ -34,7 +29,7 @@ namespace MyStoreAPI.Business
             //Insertamos los datos del carrito en la tabla Sale
             //Retornamos el id en la tabla y el codigo de compra unico
            (string purchaseNum, int saleId) = DB_Sale.InsertSale(cart);
-            sale = new Sale(saleId, purchaseNum, cart);
+            Sale sale = new Sale(saleId, purchaseNum, cart);
             return sale;
         }
         
@@ -49,13 +44,12 @@ namespace MyStoreAPI.Business
             }
             DateTime newDateFormat = DateTime.ParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture);
             if (newDateFormat == null) throw new BussinessException("El formato de fecha actual no puede ser nulo");
+            
             if (newDateFormat == DateTime.MinValue) throw new BussinessException("El formato de fecha actual no puede ser la fecha minima");
 
             //Si las validaciones principales son correctas, hacemos el llamado a la bd para cada tarea
             List<RegisteredSale> salesByDayList = await getSalesFromTodayAsync(newDateFormat);
             List<RegisteredSaleWeek> salesByWeekList = await getSalesFromLastWeekAsync(newDateFormat);
-
-            //await Task.WhenAll(salesByDayList, salesByWeekList);
 
             return new RegisteredSaleReport {
                 salesByDay = salesByDayList,
@@ -65,9 +59,9 @@ namespace MyStoreAPI.Business
 
         private async Task<List<RegisteredSale>> getSalesFromTodayAsync(DateTime dateFormat){                                                            
 
-            List<RegisteredSale> allRegisteredSalesByDay = await DB_Sale.GetRegisteredSalesByDayAsync(dateFormat);                                                
+            List<RegisteredSale> allRegisteredSalesByDay = await db_sale.GetRegisteredSalesByDayAsync(dateFormat);                                                
 
-            if (allRegisteredSalesByDay == null)throw new BussinessException($"{nameof(thisRegisteredSale)} puede ser 0, pero no nula");
+            if (allRegisteredSalesByDay == null)throw new BussinessException($"{nameof(allRegisteredSalesByDay)} puede ser 0, pero no nula");
             foreach (var thisRegisteredSale in allRegisteredSalesByDay){
 
                 if (thisRegisteredSale.IdSale <= 0)        
@@ -90,7 +84,7 @@ namespace MyStoreAPI.Business
         }
 
         private async Task<List<RegisteredSaleWeek>> getSalesFromLastWeekAsync(DateTime dateFormat){
-            List<RegisteredSaleWeek> allRegisteredSalesByWeek = await DB_Sale.GetRegisteredSalesByWeekAsync(dateFormat);                                                
+            List<RegisteredSaleWeek> allRegisteredSalesByWeek = await db_sale.GetRegisteredSalesByWeekAsync(dateFormat);                                                
 
             if (allRegisteredSalesByWeek == null)throw new BussinessException("La lista de ventas puede ser 0, pero no nula");
 
@@ -100,6 +94,18 @@ namespace MyStoreAPI.Business
                 if (thisRegisteredSale.total <= 0) throw new BussinessException($"{nameof(thisRegisteredSale)} el total de ventas de un dia de la semana no puede ser menor a cero");
             }
             return allRegisteredSalesByWeek;
-        }
+        }        
+
+        // if (string.IsNullOrEmpty(dateFormat)) throw new BussinessException("El formato de fecha actual no es valido");
+        //     //Machote para validar si el string obtenido del datePicker es valido
+        //     DateTime defaultDateTime;
+        //     bool isDateFormatValid = DateTime.TryParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out defaultDateTime);
+        //     if (!isDateFormatValid){
+        //         throw new BussinessException("El formato de fecha actual no es válido");
+        //     }
+        //     DateTime newDateFormat = DateTime.ParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture);
+        //     if (newDateFormat == null) throw new BussinessException("El formato de fecha actual no puede ser nulo");
     }
+
+    
 }

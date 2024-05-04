@@ -17,8 +17,8 @@ namespace MyStoreAPI.Controllers
         public IActionResult CreateCart([FromBody] Cart cart){                        
             
             try{
-                SaleLogic saleLogic = new SaleLogic(cart);
-                Sale saleConfirmed = saleLogic.processDataSale();
+                SaleLogic saleLogic = new SaleLogic();
+                Sale saleConfirmed = saleLogic.processDataSale(cart);
                 var purchaseNum = saleConfirmed.purchaseNum;
 
                 Console.WriteLine("Antes de mandar la respuesta post - Valor de saleConfirmed.purchaseNum: " + saleConfirmed.purchaseNum);

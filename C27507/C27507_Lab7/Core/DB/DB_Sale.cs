@@ -7,10 +7,14 @@ using MyStoreAPI.Models;
 using MySqlConnector;
 using System.Runtime.InteropServices.Marshalling;
 using Core;
-namespace MyStoreAPI.DB
-{
+namespace MyStoreAPI.DB{    
+    
+
     public class DB_Sale{
         
+        public DB_Sale(){            
+        }
+                
         public static (string, int) InsertSale(Cart purchasedCart){
             try{                                        
 
@@ -31,7 +35,8 @@ namespace MyStoreAPI.DB
                         ";
 
                         //id global unico para el comprobante                    
-                        purchaseNum = generateRandomPurchaseNum();
+                        Utility utility = new Utility();
+                        purchaseNum = utility.generateRandomPurchaseNum();
                         MySqlCommand command = new MySqlCommand(insertSale, connectionWithDB);
                         command.Parameters.AddWithValue("@total", purchasedCart.Total);
                         command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
@@ -62,7 +67,7 @@ namespace MyStoreAPI.DB
             }            
         }
 
-        public static async Task<List<RegisteredSale>> GetRegisteredSalesByDayAsync(DateTime dateParameter){       
+        public async Task<List<RegisteredSale>> GetRegisteredSalesByDayAsync(DateTime dateParameter){       
 
             List<RegisteredSale>  registeredSalesToday =new List<RegisteredSale>();                        
             //Para evitar el error de "MySQL Transaction is active" manejamos las instancias individualmente
@@ -108,8 +113,10 @@ namespace MyStoreAPI.DB
                                 throw new BussinessException($"{nameof(paymentMethod)} no puede ser nulo");
                             }
                             newRegisteredSale.PaymentMethod = paymentMethod;
-                            newRegisteredSale.DateTimeSale = (DateTime)readerTable["DateSale"];      
-
+                            newRegisteredSale.DateTimeSale = (DateTime)readerTable["DateSale"];    
+                            //Validamos los datos
+                            newRegisteredSale.validateRegisteredSale();
+  
                             registeredSalesToday.Add(newRegisteredSale);
                         }
                     }
@@ -118,16 +125,16 @@ namespace MyStoreAPI.DB
 
             }catch (Exception ex){                                
                 Console.WriteLine("Mensaje desde DB_Sale: " + ex);
-                transaction.Rollback();
+                await transaction.RollbackAsync();
                 throw;
 
             }finally{
-                connectionWithDB.Close();
+                await connectionWithDB.CloseAsync();
             }            
             return registeredSalesToday;
         }
 
-        public static async Task<List<RegisteredSaleWeek>> GetRegisteredSalesByWeekAsync(DateTime dateParameter){
+        public async Task<List<RegisteredSaleWeek>> GetRegisteredSalesByWeekAsync(DateTime dateParameter){
             List<RegisteredSaleWeek>  registeredSaleWeek =new List<RegisteredSaleWeek>();                                    
             MySqlConnection connectionWithDB = null;
             MySqlTransaction transaction = null;
@@ -154,8 +161,8 @@ namespace MyStoreAPI.DB
                             //generar una nueva clase de formato
                             var salesByLastWeek = new RegisteredSaleWeek();                                                            
                             salesByLastWeek.dayOfWeek = readerTable["Day"].ToString();
-                            salesByLastWeek.total = Convert.ToDecimal(readerTable["Total"]);                            
-                              
+                            salesByLastWeek.total = Convert.ToDecimal(readerTable["Total"]);
+                            salesByLastWeek.validateRegisteredSaleWeek();
                             registeredSaleWeek.Add(salesByLastWeek);
                         }
                     }
@@ -165,26 +172,14 @@ namespace MyStoreAPI.DB
 
             }catch(Exception ex){
 
-                Console.WriteLine("Mensaje desde DB_Sale: " + ex);
-                transaction.Rollback();
+                Console.WriteLine("Mensaje desde DB_Sale: " + ex);                
+                await transaction.RollbackAsync();
                 throw;
 
             }finally{
-                connectionWithDB.Close();
+                await connectionWithDB.CloseAsync();
             }            
             return registeredSaleWeek;
-        }
-
-        public static string generateRandomPurchaseNum(){            
-            Guid purchaseNum = Guid.NewGuid();            
-            string largeString = purchaseNum.ToString().Replace("-", "");            
-            Random random = new Random();            
-            string randomCharacter = "";            
-            for (int i = 0; i < 8; i += 2){                
-                int randomIndex = random.Next(i, i + 2);
-                randomCharacter += largeString[randomIndex];
-            }
-            return randomCharacter;
-        }        
+        }                
     }    
 }

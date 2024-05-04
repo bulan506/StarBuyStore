@@ -68,6 +68,7 @@ import { RegisteredSaleWeek } from "../models-data/RegisteredSaleWeek";
             return jsonRegisteredSales.specificListOfRegisteredSales;
             
         } catch (error) {
+            console.log(error);
             throw new Error('Failed to POST data: '+ error);
         }        
     }
