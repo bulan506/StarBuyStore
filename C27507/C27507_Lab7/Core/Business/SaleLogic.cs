@@ -34,22 +34,11 @@ namespace MyStoreAPI.Business
         }
         
         //Metodos para los reportes de Ventas
-        public async Task<RegisteredSaleReport> getSalesByDayAndWeekAsync(string dateFormat){
-            if (string.IsNullOrEmpty(dateFormat)) throw new BussinessException("El formato de fecha actual no es valido");
-            //Machote para validar si el string obtenido del datePicker es valido
-            DateTime defaultDateTime;
-            bool isDateFormatValid = DateTime.TryParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out defaultDateTime);
-            if (!isDateFormatValid){
-                throw new BussinessException("El formato de fecha actual no es válido");
-            }
-            DateTime newDateFormat = DateTime.ParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture);
-            if (newDateFormat == null) throw new BussinessException("El formato de fecha actual no puede ser nulo");
-            
-            if (newDateFormat == DateTime.MinValue) throw new BussinessException("El formato de fecha actual no puede ser la fecha minima");
-
+        public async Task<RegisteredSaleReport> getSalesByDayAndWeekAsync(DateTime dateFormat){                    
+            if (dateFormat == DateTime.MinValue) throw new BussinessException("El formato de fecha actual no puede ser la fecha minima");
             //Si las validaciones principales son correctas, hacemos el llamado a la bd para cada tarea
-            List<RegisteredSale> salesByDayList = await getSalesFromTodayAsync(newDateFormat);
-            List<RegisteredSaleWeek> salesByWeekList = await getSalesFromLastWeekAsync(newDateFormat);
+            List<RegisteredSale> salesByDayList = await getSalesFromTodayAsync(dateFormat);
+            List<RegisteredSaleWeek> salesByWeekList = await getSalesFromLastWeekAsync(dateFormat);
 
             return new RegisteredSaleReport {
                 salesByDay = salesByDayList,
@@ -95,17 +84,5 @@ namespace MyStoreAPI.Business
             }
             return allRegisteredSalesByWeek;
         }        
-
-        // if (string.IsNullOrEmpty(dateFormat)) throw new BussinessException("El formato de fecha actual no es valido");
-        //     //Machote para validar si el string obtenido del datePicker es valido
-        //     DateTime defaultDateTime;
-        //     bool isDateFormatValid = DateTime.TryParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out defaultDateTime);
-        //     if (!isDateFormatValid){
-        //         throw new BussinessException("El formato de fecha actual no es válido");
-        //     }
-        //     DateTime newDateFormat = DateTime.ParseExact(dateFormat, "yyyy-MM-dd", CultureInfo.CurrentCulture);
-        //     if (newDateFormat == null) throw new BussinessException("El formato de fecha actual no puede ser nulo");
     }
-
-    
 }

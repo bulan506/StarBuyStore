@@ -18,7 +18,7 @@ import { AlertShop } from '@/app/global-components/generic_overlay';
 
 export default function SalesReport(){
     
-    const [eventDate, setEventDate] = useState<Date | null>(null); // Asegúrate de definir eventKey correctamente
+    const [eventDate, setEventDate] = useState<string | null>(null);
     const [dataForTable, setDataForTable] = useState<any[]>([]);
     const [dataForPie, setDataForPie] = useState<any[]>([]);
     const [validateData, setValidateData] = useState(false);
@@ -98,7 +98,15 @@ export default function SalesReport(){
     //Funcion base de todo
     const selectDateResetTable = (e: { target: { value: any; }; }) =>{
         var selectedDate = e.target.value;
-        setEventDate(selectedDate);        
+        const dateParts = selectedDate.split('-');
+        const year = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // Los meses en JS son de 0 a 11
+        const day = parseInt(dateParts[2], 10);
+        var validDate = new Date(year,month,day);
+        //Usamos formato estandar ISO          
+        console.log(validDate.toISOString());
+        console.log(typeof validDate.toISOString());
+        setEventDate(validDate.toISOString());
     }
 
     //Recibimos los datos cada que se detecte que cambio el valor seleccionado del input date

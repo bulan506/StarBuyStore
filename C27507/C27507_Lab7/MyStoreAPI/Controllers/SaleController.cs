@@ -12,13 +12,10 @@ namespace MyStoreAPI.Controllers
     public class SaleController: ControllerBase{
         [HttpPost]
         [Consumes("application/json")]
-        public async Task<IActionResult> GetSaleAsync([FromBody] string dateFormat){
-
-            try{
-                //Recibimos el codigo para el tipo de fecha                
+        public async Task<IActionResult> GetSaleAsync([FromBody] DateTime dateFormat){
+            try{                                
                 SaleLogic saleLogic = new SaleLogic();
-                RegisteredSaleReport specificListOfRegisteredSales = await saleLogic.getSalesByDayAndWeekAsync(dateFormat);
-                
+                RegisteredSaleReport specificListOfRegisteredSales = await saleLogic.getSalesByDayAndWeekAsync(dateFormat);                
                 return Ok(new { specificListOfRegisteredSales });
             }
             //501 son para NotImplemented o Excepciones Propias
