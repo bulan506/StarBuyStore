@@ -4,6 +4,8 @@ using System;
 using storeApi.Models;
 using System.Net.Http.Headers;
 using storeApi.db;
+
+using System.Collections.Generic;
 namespace storeApi
 {
 
@@ -32,13 +34,13 @@ namespace storeApi
 
     public sealed class Store
     {
-        public List<Product> Products { get; private set; }
+        public IEnumerable<Product> Products { get; private set; } 
         public int TaxPercentage { get; private set; }
 
-        private Store(List<Product> products, int TaxPercentage)
+        private Store(IEnumerable<Product> products, int taxPercentage)
         {
             this.Products = products;
-            this.TaxPercentage = TaxPercentage;
+            this.TaxPercentage = taxPercentage;
         }
 
         public readonly static Store Instance;
@@ -46,16 +48,13 @@ namespace storeApi
         // Static constructor
         static Store()
         {
-            List<Product> products = productsFromDB();
+            IEnumerable<Product> products = productsFromDB(); // Utiliza IEnumerable<Product> en lugar de List<Product>
             Store.Instance = new Store(products, 13);
         }
 
-
-        private static List<Product> productsFromDB()
+        private static IEnumerable<Product> productsFromDB()
         {
-
-            return StoreDB.GetProducts();
-
+            return StoreDB.GetProducts(); // Asegúrate de que GetProducts() devuelve IEnumerable<Product>
         }
     }
 }

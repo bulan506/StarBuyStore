@@ -38,7 +38,7 @@ export const Products = ({ }) => {
 
 
   const onAddProduct = (product) => {
-    if (product == null) throw new Error('Invalid Parameter');
+    if (product == undefined) throw new Error('Invalid Parameter');
     if (storeData.productos.some(item => item.id === product.id)) {
       setShowModal(true);
       

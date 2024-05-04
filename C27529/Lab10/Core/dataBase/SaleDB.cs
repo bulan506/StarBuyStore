@@ -6,17 +6,18 @@ namespace storeApi.Database
 {
     public sealed class SaleDB
     {
-        public void Save(Sale sale)
+        public async Task SaveAsync(Sale sale) 
         {
-            if(sale == null) throw new ArgumentException("Sale must contain at least one product.");
+            if (sale == null) throw new ArgumentException("Sale must contain at least one product.");
+
             using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;Database=mysql;Uid=root;Pwd=123456;"))
             {
-                connection.Open();
-                using (MySqlTransaction transaction = connection.BeginTransaction())
+                await connection.OpenAsync();  
+
+                using (MySqlTransaction transaction = await connection.BeginTransactionAsync())
                 {
                     try
                     {
-
                         string insertQuery = @"
                             use store;
 
@@ -30,8 +31,8 @@ namespace storeApi.Database
                             command.Parameters.AddWithValue("@total", sale.Amount);
                             command.Parameters.AddWithValue("@payment_method", sale.PaymentMethod);
                             command.Parameters.AddWithValue("@purchase_number", sale.PurchaseNumber);
-                            command.ExecuteNonQuery();
-                        }
+                            await command.ExecuteNonQueryAsync(); 
+                                                    }
 
                         string insertQueryLineDB = @"
                             use store;
@@ -41,26 +42,21 @@ namespace storeApi.Database
                         {
                             using (var insertCommand = new MySqlCommand(insertQueryLineDB, connection, transaction))
                             {
-
-
                                 insertCommand.Parameters.AddWithValue("@product_Id", product.Id);
                                 insertCommand.Parameters.AddWithValue("@purchase_Number", sale.PurchaseNumber);
                                 insertCommand.Parameters.AddWithValue("@product_Price", product.Price);
-                                insertCommand.ExecuteNonQuery();
-
-
-
+                                await insertCommand.ExecuteNonQueryAsync(); 
                             }
                         }
-                        transaction.Commit();
-                        
-                        throw new ArgumentException("Sale saved to database successfully.");
+
+                        await transaction.CommitAsync();
+
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
-                       
-                        throw new ArgumentException("An error occurred while saving sale to database:"  + ex.Message);
+                        await transaction.RollbackAsync();
+
+                        throw new ArgumentException("An error occurred while saving sale to database:" + ex.Message);
                     }
                 }
             }
@@ -89,14 +85,20 @@ namespace storeApi.Database
 
                     using (var reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
-                        {
-                            string day = reader.GetString("day");
-                            decimal total = reader.GetDecimal("total");
-                            string key = day ; 
-                            weekSales.Add(key, total);
-                        }
+                         while (reader.Read())
+                {
+                    string day = reader.GetString("day");
+                    decimal total = reader.GetDecimal("total");
 
+                    if (weekSales.ContainsKey(day))
+                    {
+                        weekSales[day] += total;
+                    }
+                    else
+                    {
+                        weekSales.Add(day, total);
+                    }
+                }
                     }
                 }
             }
@@ -104,17 +106,9 @@ namespace storeApi.Database
             return weekSales;
         }
 
+     
+
+
+
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

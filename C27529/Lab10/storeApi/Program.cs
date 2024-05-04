@@ -1,4 +1,8 @@
+using Core;
+using storeApi.db;
+
 #if DEBUG
+Core.ConnectionDB.Init("Server=localhost;Database=mysql;Uid=root;Pwd=123456;");
 storeApi.db.StoreDB.CreateMysql();
 #endif
 

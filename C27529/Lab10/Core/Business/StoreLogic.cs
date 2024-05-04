@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks; // Importa este namespace para usar async/await
 using storeApi.Models;
 using storeApi.Database;
 
@@ -8,10 +9,9 @@ namespace storeApi.Business
 {
     public sealed class StoreLogic
     {
+        private SaleDB saleDB = new SaleDB();
 
-         private SaleDB saleDB = new SaleDB();
-
-        public Sale Purchase(Cart cart)
+        public async Task<Sale> PurchaseAsync(Cart cart)
         {
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
@@ -25,15 +25,14 @@ namespace storeApi.Business
             // Create shadow copies of the matching products
             IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
 
-            
-
             string purchaseNumber = GenerateNextPurchaseNumber();
 
             PaymentMethod.Type paymentMethodType = cart.PaymentMethod;
-            
+
             var sale = new Sale(shadowCopyProducts, cart.Address, cart.Total, paymentMethodType);
-            
-            saleDB.Save(sale);
+
+            await saleDB.SaveAsync(sale); // Usa el método SaveAsync y espera su ejecución
+
             return sale;
         }
 

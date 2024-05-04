@@ -8,37 +8,56 @@ import { useHref } from 'react-router-dom';
 import { ArcElement } from "chart.js";
 
 
+
+
 function Reports() {
 
   const [weekDate, setweekDate] = useState(new Date());
-  const [weekSaleData, setWeekSaleData] = useState([]);
+  const [dailyDate, setDailyDay] = useState(new Date());
 
+  const [weekSaleData, setWeekSaleData] = useState([]);
+  const [dailySaleData, setDaliySaleData] = useState([]);
 
   const fetchData = async () => {
     try {
+
+      const datesPayload = {
+        weekDate: weekDate,
+        dailyDate: dailyDate
+      };
+
       const response = await fetch(`https://localhost:7280/api/Sale`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(weekDate)
+        body: JSON.stringify(datesPayload)
       });
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       const data = await response.json();
+
       if (data != null) {
-        const newData = Object.entries(data).map(([day, total]) => ({ day, total }));
-        setWeekSaleData(newData);
+
+        const newDataWeek = Object.entries(data.weekSales).map(([day, total]) => ({ day, total }));
+        setWeekSaleData(newDataWeek);
+
+        const newDataDaily = Object.entries(data.dailySales).map(([day, total]) => ({ day, total }));
+        setDaliySaleData(newDataDaily);
+        console.log(newDataDaily);
+
+
+
       } else {
         throw new Error('Empty data received');
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      throw new Error('Error fetching data:', error);
     }
   };
 
-  //Config Pie Chart
+  // config pie
   const data = {
     labels: weekSaleData.map(item => item.day),
     datasets: [{
@@ -47,13 +66,17 @@ function Reports() {
     }]
   };
 
+
+
   const opciones = {
     responsive: true
   }
 
 
+
   useEffect(() => {
     fetchData();
+
   }, [weekDate]);
 
   return (
@@ -62,16 +85,31 @@ function Reports() {
       <h2>Reports</h2>
       Seleccionar Fecha:
       <DatePicker selected={weekDate} onChange={(date) => setweekDate(date)} />
-
       <div>
         <h6 className="centered">Ventas Diarias</h6>
 
-        {weekSaleData.map((item, index) => (
-          <div key={index}>
-            <p>{item.day}: {item.total}</p>
-          </div>
-        ))}
+        {dailySaleData !== undefined && dailySaleData.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th style={{ paddingRight: '20px' }}>Día</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dailySaleData.map((item, index) => (
+                <tr key={index}>
+                  <td style={{ paddingRight: '20px' }}>{item.day}</td>
+                  <td>{item.total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No hay datos de ventas semanales disponibles.</p>
+        )}
       </div>
+
 
       <div className="chartContainer">
         <h6 className="centered">Ventas Semanales</h6>
