@@ -11,6 +11,10 @@ namespace StoreApi.Handler
 
         public GetProductByIdHandler(IProductRepository productRepository)
         {
+            if (productRepository == null)
+            {
+                throw new ArgumentException("Illegal action, productRepository is invalid.");
+            }
             _productRepository = productRepository;
         }
 

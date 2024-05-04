@@ -10,6 +10,10 @@ namespace StoreApi.Handler
 
         public UpdateProductHandler(IProductRepository productRepository)
         {
+            if (productRepository == null)
+            {
+                throw new ArgumentException("Illegal action, productRepository is invalid.");
+            }
             _productRepository = productRepository;
         }
         public async Task<int> Handle(UpdateProductCommand command, CancellationToken cancellationToken)

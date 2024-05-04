@@ -11,6 +11,10 @@ namespace StoreApi.Handler
 
         public GetSalesByPurchaseNumberHandler(ISalesRepository salesRepository)
         {
+            if (salesRepository == null)
+            {
+                throw new ArgumentException("Illegal action, salesRepository is invalid.");
+            }
             _salesRepository = salesRepository;
         }
 

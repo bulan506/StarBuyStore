@@ -11,6 +11,10 @@ namespace StoreApi.Handler
 
         public CreateSalesLineHandler(ISalesLineRepository salesLineRepository)
         {
+            if (salesLineRepository == null)
+            {
+                throw new ArgumentException("Illegal action, salesLineRepository is invalid.");
+            }
             _salesLineRepository = salesLineRepository;
         }
 

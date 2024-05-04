@@ -11,6 +11,10 @@ namespace StoreApi.Handler
 
         public GetDailySalesByDateHandler(IDailySalesRepository dailySalesRepository)
         {
+            if (dailySalesRepository == null)
+            {
+                throw new ArgumentException("Illegal action, dailySalesRepository is invalid.");
+            }
             _dailySalesRepository = dailySalesRepository;
         }
 

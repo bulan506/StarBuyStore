@@ -13,6 +13,10 @@ namespace StoreApi
 
         public ReportsController(IMediator mediator)
         {
+            if (mediator == null)
+            {
+                throw new ArgumentException("Illegal action, the mediator is being touched. The mediator is null and void.");
+            }
             this.mediator = mediator;
         }
 

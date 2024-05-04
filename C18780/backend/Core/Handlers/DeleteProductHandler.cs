@@ -10,6 +10,10 @@ namespace StoreApi.Handler
 
         public DeleteProductHandler(IProductRepository studentRepository)
         {
+            if (studentRepository == null)
+            {
+                throw new ArgumentException("Illegal action, studentRepository is invalid.");
+            }
             _studentRepository = studentRepository;
         }
 

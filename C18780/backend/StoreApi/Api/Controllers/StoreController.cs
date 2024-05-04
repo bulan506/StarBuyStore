@@ -13,6 +13,10 @@ namespace StoreApi.Controllers
 
         public StoreController(IMediator mediator)
         {
+            if (mediator == null)
+            {
+                throw new ArgumentException("Illegal action, the mediator is being touched. The mediator is null and void.");
+            }
             this.mediator = mediator;
         }
 
@@ -21,7 +25,7 @@ namespace StoreApi.Controllers
         {
             var product = await mediator.Send(new GetProductListQuery());
             var taxPercentage = 13;//nota: guardar el valor en db
-            return new Store(product,taxPercentage);
+            return new Store(product, taxPercentage);
         }
     }
 

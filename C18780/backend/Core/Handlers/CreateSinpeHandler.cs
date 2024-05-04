@@ -11,6 +11,10 @@ namespace StoreApi.Handler
 
         public CreateSinpeHandler(ISinpeRepository sinpeRepository)
         {
+            if (sinpeRepository == null)
+            {
+                throw new ArgumentException("Illegal action, sinpeRepository is invalid.");
+            }
             _sinpeRepository = sinpeRepository;
         }
 

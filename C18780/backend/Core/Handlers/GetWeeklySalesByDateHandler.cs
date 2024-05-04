@@ -10,6 +10,10 @@ namespace StoreApi.Handler
         private readonly IWeeklySalesRepository _weeklySalesRepository;
         public GetWeeklySalesByDateHandler(IWeeklySalesRepository weeklySalesRepository)
         {
+            if (weeklySalesRepository == null)
+            {
+                throw new ArgumentException("Illegal action, weeklySalesRepository is invalid.");
+            }
             _weeklySalesRepository = weeklySalesRepository;
         }
         public async Task<IEnumerable<WeeklySales>> Handle(GetWeeklySalesByDateQuery query, CancellationToken cancellationToken)
