@@ -7,6 +7,8 @@ using MyStoreAPI.Models;
 using MySqlConnector;
 using System.Runtime.InteropServices.Marshalling;
 using Core;
+using Moq;
+
 namespace MyStoreAPI.DB{    
     
 
@@ -68,6 +70,8 @@ namespace MyStoreAPI.DB{
         }
 
         public async Task<IEnumerable<RegisteredSale>> GetRegisteredSalesByDayAsync(DateTime dateParameter){       
+            
+            if (dateParameter == DateTime.MinValue) throw new BussinessException($"{nameof(dateParameter)} es fecha no valida");
 
             List<RegisteredSale>  registeredSalesToday =new List<RegisteredSale>();                        
             //Para evitar el error de "MySQL Transaction is active" manejamos las instancias individualmente
@@ -123,8 +127,7 @@ namespace MyStoreAPI.DB{
                 }
                 await transaction.CommitAsync();                
 
-            }catch (Exception ex){                                
-                Console.WriteLine("Mensaje desde DB_Sale: " + ex);
+            }catch (Exception ex){                                                
                 await transaction.RollbackAsync();
                 throw;
 
@@ -135,6 +138,9 @@ namespace MyStoreAPI.DB{
         }
 
         public async Task<IEnumerable<RegisteredSaleWeek>> GetRegisteredSalesByWeekAsync(DateTime dateParameter){
+
+            if (dateParameter == DateTime.MinValue) throw new BussinessException($"{nameof(dateParameter)} es fecha no valida");
+            
             List<RegisteredSaleWeek>  registeredSaleWeek =new List<RegisteredSaleWeek>();                                    
             MySqlConnection connectionWithDB = null;
             MySqlTransaction transaction = null;
@@ -171,8 +177,7 @@ namespace MyStoreAPI.DB{
 
 
             }catch(Exception ex){
-
-                Console.WriteLine("Mensaje desde DB_Sale: " + ex);                
+                
                 await transaction.RollbackAsync();
                 throw;
 

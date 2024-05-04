@@ -10,6 +10,8 @@ namespace UT{
         [SetUp]
         public void SetUp(){
 
+
+
         }
 
 
@@ -64,5 +66,32 @@ namespace UT{
             Assert.IsNotEmpty(noEmptyDataSalesByDay);
             Assert.IsNotEmpty(noEmptyDataSalesByWeek);
         }        
-    }
+
+
+        [Test]
+        public async Task RowCountRegisteredSale(){
+
+            var validDateFormat = "2024-04-27";
+            //registro de ventas de una fecha futura (deberia devolver una lista en 0)            
+            
+            var saleLogic = new SaleLogic();        
+            var noEmptyData= await saleLogic.getSalesByDayAndWeekAsync(validDateFormat);                        
+            var noEmptyDataSalesByDay = noEmptyData.salesByDay;
+            var noEmptyDataSalesByWeek = noEmptyData.salesByWeek;
+
+            Assert.IsNotEmpty(noEmptyDataSalesByWeek);            
+
+            // Verificar que el total de las ventas sea mayor o igual a 0
+            foreach (var sale in noEmptyDataSalesByDay)
+            {                                
+                Assert.IsTrue(sale.Total >= 0);
+            }
+            foreach (var sale in noEmptyDataSalesByWeek)
+            {                                              
+                Assert.IsTrue(sale.Total >= 0);
+            }
+            // Verificar que la cantidad de filas sea mayor a 0
+            Assert.IsTrue(noEmptyDataSalesByDay.Count > 0);
+            Assert.IsTrue(noEmptyDataSalesByWeek.Count > 0);            
+        }
 }
