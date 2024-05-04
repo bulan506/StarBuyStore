@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using NUnit.Framework;
 using TodoApi;
 using TodoApi.Business;
 using TodoApi.Database;
@@ -18,16 +19,17 @@ public class StoreLogicTest
     public async Task Validate_Products_Empty()
     {
         StoreLogic storeLogic = new StoreLogic();
-        Cart cart = new Cart() { ProductIds = new List<string>(), Address = "" };
+        var list = new List<string> ();
+        Cart cart = new Cart(list, "Santiago", 0, 10.0m);
         Assert.ThrowsAsync<ArgumentException>(async () => await storeLogic.PurchaseAsync(cart));
     }
 
-    [Test]
+     [Test]
     public async Task Validate_Address_Empty()
     {
         StoreLogic storeLogic = new StoreLogic();
         var list = new List<string> { "1" };
-        Cart cart = new Cart() { ProductIds = list, Address = "" };
+        Cart cart = new Cart(list, "", 0, 10.0m);
         Assert.ThrowsAsync<ArgumentException>(async () => await storeLogic.PurchaseAsync(cart));
     }
 
@@ -35,10 +37,16 @@ public class StoreLogicTest
     public async Task HappyPath()
     {
         StoreLogic storeLogic = new StoreLogic();
-        var list = new List<string>();
-        list.Add("1");
-        Cart cart = new Cart() { ProductIds = list, Address = "Santiago" };
+        var list = new List<String>();
+        Product product = new Product("Olla",
+         "https://images-na.ssl-images-amazon.com/images/I/71JSM9i1bQL.AC_UL160_SR160,160.jpg",
+          45.2m, "Descripción", 1);
+        list.Add(product.Id.ToString());
+        Cart cart = new Cart(list, "Santiago", 0, product.Price);
         var sale = await storeLogic.PurchaseAsync(cart);
+        var listProducts = sale.Products;
         Assert.IsNotNull(sale.PurchaseNumber);
+        Assert.AreEqual(cart.ProductIds.Count, listProducts.Count);
+        Assert.AreEqual(cart.Total, sale.Amount);
     }
 }

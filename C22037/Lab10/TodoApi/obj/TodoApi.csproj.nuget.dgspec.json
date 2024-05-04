@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj": {}
+    "c:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj": {}
   },
   "projects": {
     "C:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\Core\\Core.csproj": {
@@ -68,14 +68,14 @@
         }
       }
     },
-    "C:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj": {
+    "c:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj",
+        "projectUniqueName": "c:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj",
         "projectName": "TodoApi",
-        "projectPath": "C:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj",
+        "projectPath": "c:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\TodoApi.csproj",
         "packagesPath": "C:\\Users\\mchac\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\obj\\",
+        "outputPath": "c:\\Users\\mchac\\lenguajes24\\C22037\\Lab10\\TodoApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mchac\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -111,6 +111,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[8.0.3, )"

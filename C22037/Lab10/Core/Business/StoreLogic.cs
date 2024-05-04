@@ -26,19 +26,11 @@ namespace TodoApi.Business
             // Create shadow copies of the matching products
             IEnumerable<Product> shadowCopyProducts = matchingProducts.Select(p => (Product)p.Clone()).ToList();
 
-            // Calculate purchase amount by multiplying each product's price with the store's tax percentage
-            decimal purchaseAmount = 0;
-            foreach (var product in shadowCopyProducts)
-            {
-                product.Price *= (1 + (decimal)taxPercentage / 100);
-                purchaseAmount += product.Price;
-            }
-
             string purchaseNumber = GenerateNextPurchaseNumber();
 
             PaymentMethod.Type paymentMethodType = cart.PaymentMethod;
 
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, paymentMethodType);
+            var sale = new Sale(shadowCopyProducts, cart.Address, cart.Total, paymentMethodType);
 
             await saleDB.SaveAsync(sale);
                 
