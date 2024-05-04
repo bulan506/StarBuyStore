@@ -16,36 +16,6 @@ namespace StoreApi
             this.mediator = mediator;
         }
 
-        /*
-        ----------------------------------------------------------------
-        Explicacion de GetReportsByDateAsync
-        ----------------------------------------------------------------
-        GetDailySalesQuery Trae todas las ventas del dia seleccionado, informacion pertinente:
-        Entrada lista
-        Fecha como 2024-04-25
-
-        Salida lista
-        Date -Select Sales
-
-        Quantity -Sales SalesLine
-
-        Name Product  -Select Sales SalesLine Product
-        Price -Select Sales SalesLine Product
-
-        paymentMethod -Select Sales PaymentMethod
-
-        Total -Quantity * Price
-        ----------------------------------------------------------------
-        GetWeeklySalesByDateQuery Trae las ventas por semana
-        Entrada
-        fecha como 2024-04-25
-
-        Salida lista
-        Nombre del producto
-        Total de venta del producto
-        ----------------------------------------------------------------
-        */
-
         [HttpGet("Date")]
         public async Task<Reports> GetReportsByDateAsync(DateTime dateTime)
         {
