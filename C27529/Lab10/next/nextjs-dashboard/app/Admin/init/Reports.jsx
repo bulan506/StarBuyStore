@@ -43,8 +43,8 @@ function Reports() {
         const newDataWeek = Object.entries(data.weekSales).map(([day, total]) => ({ day, total }));
         setWeekSaleData(newDataWeek);
 
-        const newDataDaily = Object.entries(data.dailySales).map(([day, total]) => ({ day, total }));
-        setDaliySaleData(newDataDaily);
+        const newDataDaily = data.map(item => ({ day: item.day, total: item.total }));
+        setDailySaleData(newDataDaily);
         console.log(newDataDaily);
 
 
@@ -86,9 +86,7 @@ function Reports() {
       Seleccionar Fecha:
       <DatePicker selected={weekDate} onChange={(date) => setweekDate(date)} />
       <div>
-        <h6 className="centered">Ventas Diarias</h6>
-
-        {dailySaleData !== undefined && dailySaleData.length > 0 ? (
+        {dailySaleData && dailySaleData.length > 0 ? (
           <table>
             <thead>
               <tr>
@@ -106,7 +104,7 @@ function Reports() {
             </tbody>
           </table>
         ) : (
-          <p>No hay datos de ventas semanales disponibles.</p>
+          <p>No hay datos de ventas diarias disponibles.</p>
         )}
       </div>
 

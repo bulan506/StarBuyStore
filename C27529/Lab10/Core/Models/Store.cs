@@ -37,7 +37,7 @@ namespace storeApi
         public IEnumerable<Product> Products { get; private set; } 
         public int TaxPercentage { get; private set; }
 
-        private Store(IEnumerable<Product> products, int taxPercentage)
+        private Store(IEnumerable<Product> products, int taxPercentage) 
         {
             this.Products = products;
             this.TaxPercentage = taxPercentage;
@@ -48,13 +48,13 @@ namespace storeApi
         // Static constructor
         static Store()
         {
-            IEnumerable<Product> products = productsFromDB(); // Utiliza IEnumerable<Product> en lugar de List<Product>
+            IEnumerable<Product> products = productsFromDB();
             Store.Instance = new Store(products, 13);
         }
 
         private static IEnumerable<Product> productsFromDB()
         {
-            return StoreDB.GetProducts(); // Asegúrate de que GetProducts() devuelve IEnumerable<Product>
+            return StoreDB.GetProducts(); 
         }
     }
 }

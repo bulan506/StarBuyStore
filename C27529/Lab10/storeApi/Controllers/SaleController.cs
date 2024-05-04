@@ -22,7 +22,7 @@ namespace TodoApi.Models
         private class CombinedSalesData
         {
             public Dictionary<string, decimal> WeekSales { get; set; }
-            public Dictionary<string, decimal> DailySales { get; set; }
+            public List<(string purchaseNumber, decimal total)> DailySales { get; set; }
         }
 
         [HttpPost]
@@ -38,12 +38,10 @@ namespace TodoApi.Models
                 return BadRequest("Invalid today date.");
             }
 
-            Console.WriteLine(dateString.dailyDate);
-            // Console.WriteLine(dateString.weekDate);
 
             SaleDB saleDB = new SaleDB();
             Dictionary<string, decimal> weekSales = saleDB.getWeekSales(dateString.weekDate);
-            Dictionary<string, decimal> dailySales = saleDB.getWeekSales(dateString.dailyDate);
+            List<(string purchaseNumber, decimal total)> dailySales = saleDB.getDailySales(dateString.dailyDate);
 
 
             CombinedSalesData combinedSales = new CombinedSalesData
@@ -54,13 +52,6 @@ namespace TodoApi.Models
 
 
 
-            foreach (var kvp in dailySales)
-            {
-                string product = kvp.Key;
-                decimal sales = kvp.Value;
-
-                Console.WriteLine($"Producto: {product}, Ventas Diarias: {sales}");
-            }
 
 
             return Ok(combinedSales);

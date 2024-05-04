@@ -106,6 +106,43 @@ namespace storeApi.Database
             return weekSales;
         }
 
+
+        public List<(string purchaseNumber, decimal total)> getDailySales(DateTime date)
+{
+    List<(string purchaseNumber, decimal total)> dailySales = new List<(string purchaseNumber, decimal total)>();
+
+    using (MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;Database=mysql;Uid=root;Pwd=123456;"))
+    {
+        connection.Open();
+
+        string selectQuery = @"
+            USE store;
+
+            SELECT sale.purchase_number,
+                   sale.total
+            FROM sales sale
+            WHERE DATE(sale.purchase_date) = DATE(@date);";
+
+        using (var command = new MySqlCommand(selectQuery, connection))
+        {
+            command.Parameters.AddWithValue("@date", date);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string purchaseNumber = reader.GetString("purchase_number");
+                    decimal total = reader.GetDecimal("total");
+                    dailySales.Add((purchaseNumber, total));
+                }
+            }
+        }
+    }
+
+    return dailySales;
+}
+
+
      
 
 
