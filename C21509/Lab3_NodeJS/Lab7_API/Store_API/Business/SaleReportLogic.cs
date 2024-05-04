@@ -7,9 +7,9 @@ namespace Store_API.Business
     {
         private readonly DB_API _dbApi;
 
-        public SaleReportLogic(DB_API dbApi)
+        public SaleReportLogic()
         {
-            _dbApi = dbApi ?? throw new ArgumentNullException(nameof(dbApi), "The DB_API object cannot be null.");
+            
         }
 
         public async Task<SalesReport> GenerateSalesReportAsync(DateTime date)

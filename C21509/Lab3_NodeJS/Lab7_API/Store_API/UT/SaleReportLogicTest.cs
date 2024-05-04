@@ -35,14 +35,12 @@ namespace UnitTests
             };
 
             _mockDBApi.ObtainDailySalesAsync = async (_) =>
-            {
-                await Task.Delay(10); 
+            { 
                 return mockDailySales;
             };
 
             _mockDBApi.ObtainWeeklySalesAsync = async (_) =>
             {
-                await Task.Delay(10); 
                 return mockWeeklySales;
             };
 

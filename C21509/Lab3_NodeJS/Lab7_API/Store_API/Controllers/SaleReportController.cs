@@ -9,9 +9,9 @@ namespace Store_API.Controllers
     {
         private readonly SaleReportLogic _saleReportLogic;
 
-        public SalesReportController(SaleReportLogic saleReportLogic)
+       public SalesReportController()
         {
-            _saleReportLogic = saleReportLogic;
+            _saleReportLogic = new SaleReportLogic();
         }
 
         [HttpGet("{date}")]
