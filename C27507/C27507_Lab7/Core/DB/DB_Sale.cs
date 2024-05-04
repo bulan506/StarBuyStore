@@ -57,14 +57,12 @@ namespace MyStoreAPI.DB{
                         DB_SaleLine.InsertSalesLine(connectionWithDB,purchaseNum,purchasedCart);
                     }     
                     //encapsula los metodos rollback y commit de Transaction
-                    scopeTransaction.Complete();
-                    Console.WriteLine("Exito al realizar la compra, guadado en Sales: ");    
+                    scopeTransaction.Complete();                    
 
                     //Si la transaccion se cumple con exito, devolvemos el codigo y el id para la instancia de Sale   
                     return (purchaseNum, thisIdSale);
                 }
-            }catch (Exception ex){
-                Console.WriteLine("Error al generar InsertSale: " + ex);    
+            }catch (Exception ex){                
                 throw;                
             }            
         }

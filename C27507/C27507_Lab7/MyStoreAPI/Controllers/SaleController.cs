@@ -19,12 +19,10 @@ namespace MyStoreAPI.Controllers
                 return Ok(new { specificListOfRegisteredSales });
             }
             //501 son para NotImplemented o Excepciones Propias
-            catch (BussinessException ex){                
-                Console.WriteLine(ex);
+            catch (BussinessException ex){                                
                 return StatusCode(501, "Ha ocurrido un error al obtener los datos. Por favor inténtalo más tarde. ");
             }
-            catch (Exception ex){
-                Console.WriteLine(ex);
+            catch (Exception ex){                
                 return StatusCode(500, "Ha ocurrido un error al obtener los datos. Por favor inténtalo más tarde.");
             }
             

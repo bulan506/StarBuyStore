@@ -16,6 +16,9 @@ namespace MyStoreAPI.Business
 
         public Sale processDataSale(Cart cart){
 
+            if (newCart == null)
+                throw new BussinessException($"{nameof(cart)} no puede ser nulo");            
+
             // Utilizamos la lógica del carrito y sus validaciones
             CartLogic cartLogic = new CartLogic(cart);
             cartLogic.validateCart(); // Esta llamada puede lanzar excepciones
@@ -37,12 +40,15 @@ namespace MyStoreAPI.Business
         public async Task<RegisteredSaleReport> getSalesByDayAndWeekAsync(DateTime dateFormat){                    
             if (dateFormat == DateTime.MinValue) throw new BussinessException("El formato de fecha actual no puede ser la fecha minima");
             //Si las validaciones principales son correctas, hacemos el llamado a la bd para cada tarea
-            IEnumerable<RegisteredSale> salesByDayList = await getSalesFromTodayAsync(dateFormat);
-            IEnumerable<RegisteredSaleWeek> salesByWeekList = await getSalesFromLastWeekAsync(dateFormat);
+
+            Task<IEnumerable<RegisteredSale>> salesByDayTask = getSalesFromTodayAsync(dateFormat);
+            Task<IEnumerable<RegisteredSaleWeek>> salesByWeekTask = getSalesFromLastWeekAsync(dateFormat);
+
+            await Task.WhenAll(salesByDayTask, salesByWeekTask);
 
             return new RegisteredSaleReport {
-                salesByDay = salesByDayList,
-                salesByWeek = salesByWeekList
+                salesByDay = await salesByDayTask,
+                salesByWeek = await salesByWeekTask
             };
         }
 
