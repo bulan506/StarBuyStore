@@ -5,14 +5,14 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public sealed class GetWeeklySalesByDateHandler : IRequestHandler<GetWeeklySalesByDateQuery, List<WeeklySales>>
+    public sealed class GetWeeklySalesByDateHandler : IRequestHandler<GetWeeklySalesByDateQuery, IEnumerable<WeeklySales>>
     {
         private readonly IWeeklySalesRepository _weeklySalesRepository;
         public GetWeeklySalesByDateHandler(IWeeklySalesRepository weeklySalesRepository)
         {
             _weeklySalesRepository = weeklySalesRepository;
         }
-        public async Task<List<WeeklySales>> Handle(GetWeeklySalesByDateQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<WeeklySales>> Handle(GetWeeklySalesByDateQuery query, CancellationToken cancellationToken)
         {
             ValidateQuery(query);
             return await _weeklySalesRepository.GetWeeklySalesByDateAsync(query.DateTime);

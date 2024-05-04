@@ -2,13 +2,6 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Chart } from "react-google-charts";
 
-/*export const data = [
-    ["Date", "Product", "Quantity", "Price"],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-    ["23/04/2024", "Laptop", "3", 1000000],
-];*/
-
 export const options = {
     allowHtml: true,
     showRowNumber: true,
@@ -20,6 +13,15 @@ export const formatters = [
     {
         type: "NumberFormat" as const,
         column: 3,
+        options: {
+            prefix: "₡",
+            negativeColor: "red",
+            negativeParens: true,
+        },
+    },
+    {
+        type: "NumberFormat" as const,
+        column: 5,
         options: {
             prefix: "₡",
             negativeColor: "red",

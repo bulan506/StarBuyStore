@@ -4,6 +4,6 @@ namespace StoreApi.Repositories
 {
     public interface IDailySalesRepository
     {
-        public Task<List<DailySales>> GetDailySalesListAsync(DateTime dateTime);
+        public Task<IEnumerable<DailySales>> GetDailySalesListAsync(DateTime dateTime);
     }
 }

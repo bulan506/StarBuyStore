@@ -5,7 +5,7 @@ using StoreApi.Repositories;
 
 namespace StoreApi.Handler
 {
-    public sealed class GetDailySalesByDateHandler : IRequestHandler<GetDailySalesQuery, List<DailySales>>
+    public sealed class GetDailySalesByDateHandler : IRequestHandler<GetDailySalesQuery, IEnumerable<DailySales>>
     {
         private readonly IDailySalesRepository _dailySalesRepository;
 
@@ -14,7 +14,7 @@ namespace StoreApi.Handler
             _dailySalesRepository = dailySalesRepository;
         }
 
-        public async Task<List<DailySales>> Handle(GetDailySalesQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DailySales>> Handle(GetDailySalesQuery query, CancellationToken cancellationToken)
         {
             ValidateQuery(query);
 

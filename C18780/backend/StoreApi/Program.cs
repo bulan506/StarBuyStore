@@ -17,7 +17,7 @@ builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 builder.Services.AddScoped<ISinpeRepository, SinpeRepository>();
 builder.Services.AddScoped<IDailySalesRepository, DailySalesRepository>();
-builder.Services.AddScoped<IWeeklySalesRepository, weeklySalesRepository>();
+builder.Services.AddScoped<IWeeklySalesRepository, WeeklySalesRepository>();
 
 // Registra los manejadores de MediatR específicos
 builder.Services.AddTransient<IRequestHandler<GetProductListQuery, List<Product>>, GetProductListHandler>();
@@ -31,8 +31,8 @@ builder.Services.AddTransient<IRequestHandler<GetSalesByIdQuery, Sales>, GetSale
 builder.Services.AddTransient<IRequestHandler<UpdateProductCommand, int>, UpdateProductHandler>();
 builder.Services.AddTransient<IRequestHandler<UpdateSalesCommand, int>, UpdateSalesHandler>();
 builder.Services.AddTransient<IRequestHandler<GetSalesByPurchaseNumberQuery, Sales>, GetSalesByPurchaseNumberHandler>();
-builder.Services.AddTransient<IRequestHandler<GetDailySalesQuery, List<DailySales>>, GetDailySalesByDateHandler>();
-builder.Services.AddTransient<IRequestHandler<GetWeeklySalesByDateQuery, List<WeeklySales>>, GetWeeklySalesByDateHandler>();
+builder.Services.AddTransient<IRequestHandler<GetDailySalesQuery, IEnumerable<DailySales>>, GetDailySalesByDateHandler>();
+builder.Services.AddTransient<IRequestHandler<GetWeeklySalesByDateQuery, IEnumerable<WeeklySales>>, GetWeeklySalesByDateHandler>();
 
 
 builder.Services.AddControllers();

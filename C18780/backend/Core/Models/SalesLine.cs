@@ -9,9 +9,9 @@ namespace StoreApi.Models
         public Guid Uuid { get; set; }
         public int Quantity { get; set; }
         public decimal Subtotal { get; set; }
-        [ForeignKey("UuidProduct")]
+        [ForeignKey("Product")]
         public Guid UuidProduct { get; set; }
-        [ForeignKey("UuidSales")]
+        [ForeignKey("Sales")]
         public Guid UuidSales { get; set; }
     }
 }
