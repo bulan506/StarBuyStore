@@ -67,7 +67,7 @@ namespace MyStoreAPI.DB{
             }            
         }
 
-        public async Task<List<RegisteredSale>> GetRegisteredSalesByDayAsync(DateTime dateParameter){       
+        public async Task<IEnumerable<RegisteredSale>> GetRegisteredSalesByDayAsync(DateTime dateParameter){       
 
             List<RegisteredSale>  registeredSalesToday =new List<RegisteredSale>();                        
             //Para evitar el error de "MySQL Transaction is active" manejamos las instancias individualmente
@@ -134,7 +134,7 @@ namespace MyStoreAPI.DB{
             return registeredSalesToday;
         }
 
-        public async Task<List<RegisteredSaleWeek>> GetRegisteredSalesByWeekAsync(DateTime dateParameter){
+        public async Task<IEnumerable<RegisteredSaleWeek>> GetRegisteredSalesByWeekAsync(DateTime dateParameter){
             List<RegisteredSaleWeek>  registeredSaleWeek =new List<RegisteredSaleWeek>();                                    
             MySqlConnection connectionWithDB = null;
             MySqlTransaction transaction = null;

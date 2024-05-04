@@ -57,18 +57,14 @@ import { RegisteredSaleWeek } from "../models-data/RegisteredSaleWeek";
         try {         
             let responsePost = await fetch(directionAPI,postConfig);
             if(!responsePost.ok){                
-                const errorMessage = await responsePost.text();
-                console.log("Error: " + errorMessage);
+                const errorMessage = await responsePost.text();                
                 return errorMessage;
             }        
-            const jsonRegisteredSales = await responsePost.json();
-            console.log("Respuesta JSON: " + jsonRegisteredSales);
-            console.log(jsonRegisteredSales.specificListOfRegisteredSales);
+            const jsonRegisteredSales = await responsePost.json();            
 
             return jsonRegisteredSales.specificListOfRegisteredSales;
             
-        } catch (error) {
-            console.log(error);
+        } catch (error) {            
             throw new Error('Failed to POST data: '+ error);
         }        
     }

@@ -62,9 +62,7 @@ export default function SalesReport(){
     function validateRegisteredSaleReport(reportSale: RegisteredSaleReport | null) : void{
         const isSalesByDayValid = reportSale !== null && reportSale.salesByDay !== null;    
         const isSalesByWeekValid = reportSale !== null && reportSale.salesByWeek !== null;    
-        if (isSalesByDayValid && isSalesByWeekValid) {
-            console.log(reportSale?.salesByDay);   
-            console.log(reportSale?.salesByWeek);                       
+        if (isSalesByDayValid && isSalesByWeekValid) {            
             setValidateData(true);
 
             const tableData = [
@@ -103,9 +101,7 @@ export default function SalesReport(){
         const month = parseInt(dateParts[1], 10) - 1; // Los meses en JS son de 0 a 11
         const day = parseInt(dateParts[2], 10);
         var validDate = new Date(year,month,day);
-        //Usamos formato estandar ISO          
-        console.log(validDate.toISOString());
-        console.log(typeof validDate.toISOString());
+        //Usamos formato estandar ISO                  
         setEventDate(validDate.toISOString());
     }
 
@@ -116,14 +112,12 @@ export default function SalesReport(){
                 const registeredSalesReport = await getRegisteredSalesFromAPI("https://localhost:7161/api/Sale", eventDate);                
 
                 //Validar el tipo de informacion recibida (string = error 504/501...etc)
-                if (typeof registeredSalesReport === "string") {
-                    console.error("Es un string:", registeredSalesReport);
+                if (typeof registeredSalesReport === "string") {                    
                     setValidateData(false);
                     //Si es un objeto usamos los useState para cada Chart
                 }else if (typeof registeredSalesReport  === "object") {                        
                     validateRegisteredSaleReport(registeredSalesReport);                                                       
-                } else{
-                    console.log("No hay datos de ventas disponibles");
+                } else{                    
                     setValidateData(false);
                 }
             } catch (error) {

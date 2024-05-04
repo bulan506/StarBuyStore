@@ -3,7 +3,7 @@
 namespace MyStoreAPI.Models{
 
     public class RegisteredSaleReport {
-        public List<RegisteredSale> salesByDay { get; set; }
-        public List<RegisteredSaleWeek> salesByWeek { get; set; }
+        public IEnumerable<RegisteredSale> salesByDay { get; set; }
+        public IEnumerable<RegisteredSaleWeek> salesByWeek { get; set; }
     }
 }

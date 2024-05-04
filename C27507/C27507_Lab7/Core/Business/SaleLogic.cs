@@ -37,8 +37,8 @@ namespace MyStoreAPI.Business
         public async Task<RegisteredSaleReport> getSalesByDayAndWeekAsync(DateTime dateFormat){                    
             if (dateFormat == DateTime.MinValue) throw new BussinessException("El formato de fecha actual no puede ser la fecha minima");
             //Si las validaciones principales son correctas, hacemos el llamado a la bd para cada tarea
-            List<RegisteredSale> salesByDayList = await getSalesFromTodayAsync(dateFormat);
-            List<RegisteredSaleWeek> salesByWeekList = await getSalesFromLastWeekAsync(dateFormat);
+            IEnumerable<RegisteredSale> salesByDayList = await getSalesFromTodayAsync(dateFormat);
+            IEnumerable<RegisteredSaleWeek> salesByWeekList = await getSalesFromLastWeekAsync(dateFormat);
 
             return new RegisteredSaleReport {
                 salesByDay = salesByDayList,
@@ -46,9 +46,9 @@ namespace MyStoreAPI.Business
             };
         }
 
-        private async Task<List<RegisteredSale>> getSalesFromTodayAsync(DateTime dateFormat){                                                            
+        private async Task<IEnumerable<RegisteredSale>> getSalesFromTodayAsync(DateTime dateFormat){                                                            
 
-            List<RegisteredSale> allRegisteredSalesByDay = await db_sale.GetRegisteredSalesByDayAsync(dateFormat);                                                
+            IEnumerable<RegisteredSale> allRegisteredSalesByDay = await db_sale.GetRegisteredSalesByDayAsync(dateFormat);                                                
 
             if (allRegisteredSalesByDay == null)throw new BussinessException($"{nameof(allRegisteredSalesByDay)} puede ser 0, pero no nula");
             foreach (var thisRegisteredSale in allRegisteredSalesByDay){
@@ -72,8 +72,8 @@ namespace MyStoreAPI.Business
             return allRegisteredSalesByDay;
         }
 
-        private async Task<List<RegisteredSaleWeek>> getSalesFromLastWeekAsync(DateTime dateFormat){
-            List<RegisteredSaleWeek> allRegisteredSalesByWeek = await db_sale.GetRegisteredSalesByWeekAsync(dateFormat);                                                
+        private async Task<IEnumerable<RegisteredSaleWeek>> getSalesFromLastWeekAsync(DateTime dateFormat){
+            IEnumerable<RegisteredSaleWeek> allRegisteredSalesByWeek = await db_sale.GetRegisteredSalesByWeekAsync(dateFormat);                                                
 
             if (allRegisteredSalesByWeek == null)throw new BussinessException("La lista de ventas puede ser 0, pero no nula");
 
