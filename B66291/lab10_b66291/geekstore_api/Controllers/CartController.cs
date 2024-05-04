@@ -14,12 +14,11 @@ namespace geekstore_api.Controllers
          private CartDb data= new CartDb(); 
 
         [HttpPost]
-        public async Task<IActionResult> CreateCart([FromBody] Cart cart)
+        public async Task<IActionResult> CreateCartAsync([FromBody] Cart cart)
         {
             try
 			{
-				var sale = await store.Purchase(cart); 
-				data.procesarOrden(sale); 
+				var sale = await store.PurchaseAsync(cart); 
 				var numeroCompra = sale.PurchaseNumber; 
 				var response = new { numeroCompra }; 
 				return Ok(response);

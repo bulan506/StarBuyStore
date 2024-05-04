@@ -4,7 +4,9 @@ import Link from 'next/link';
 import '../styles/navbar.css'
 
 const Navbar = ({cantidad_Productos}) => {
-  
+  if((cantidad_Productos) == undefined){
+    throw new Error("error al obtener cantidad de productos");
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container-fluid">

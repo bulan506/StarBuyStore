@@ -15,6 +15,9 @@ const Login = () => {
 
   const procesarForm = (e) => {
     e.preventDefault();
+    if(e == undefined){
+      throw new Error("error al ingresar informacion de logueo");
+    }
     if (!username || !password) {
       setError("complete la informacion por favor");
     } else {

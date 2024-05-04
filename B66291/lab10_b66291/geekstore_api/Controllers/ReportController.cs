@@ -16,27 +16,22 @@ namespace geekstore_api.Controllers
     public class ReportController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Report>>> GetSales(string date)
+        public async Task<ActionResult<Ienumerable<Report>>> GetSalesAsync(string date)
         {
             try {
-				
-            DateTime selectedDate= DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var dailySalesTask = ReportDb.ExtraerVentasDiarias(selectedDate); 
-            var weeklySalesTask = ReportDb.ExtraerVentasSemanal(selectedDate); 
+            var dailySalesTask = ReportDb.ExtraerVentasDiariasAsync(selectedDate); 
+            var weeklySalesTask = ReportDb.ExtraerVentasSemanalAsync(selectedDate); 
 
             await Task.WhenAll(dailySalesTask, weeklySalesTask);
 
-            var dailySales = dailySalesTask.Result;
-            var dailySalesList = ReportLogic.TransformarDatos(dailySales);
+            var dailySales = await dailySalesTask;
+            var weeklySales = await weeklySalesTask;
 
-            var weeklySales = weeklySalesTask.Result;
+            var dailySalesList = ReportLogic.TransformarDatos(dailySales);
             var weeklySalesList = ReportLogic.TransformarDatos(weeklySales);
 
-            List<object>[] reportList = new List<object>[2];
-            reportList = ReportLogic.listarReportes(dailySalesList, weeklySalesList);
+            return Ok(new { dailySalesList, weeklySalesList });
 
-            return Ok(reportList); 
-            
             } catch(ArgumentException ex){
                 return BadRequest(ex.Message);
             }

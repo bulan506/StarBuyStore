@@ -22,7 +22,7 @@ public class PurchaseTesting
 
         var saleInfo = new StoreLogic(); 
 
-        var sale = await saleInfo.Purchase(cart);
+        var sale = await saleInfo.PurchaseAsync(cart);
 
         Assert.IsNotNull(sale);
         Assert.AreEqual(2, sale.Products.Count());
@@ -42,6 +42,6 @@ public class PurchaseTesting
             PaymentMethod = PaymentMethods.Type.CASH,
         };
         var purchaseService = new StoreLogic(); 
-        Assert.ThrowsAsync<ArgumentException>(async () => await purchaseService.Purchase(cart));
+        Assert.ThrowsAsync<ArgumentException>(async () => await purchaseService.PurchaseAsync(cart));
     }
 }

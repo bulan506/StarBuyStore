@@ -26,6 +26,9 @@ const Reports = () => {
 
  
   const formatDataForChart = (sales) => {
+    if(sales == undefined){
+      throw new Error("error al obtener ventas");
+    }
     return [
       ['PurchaseNumber', 'PurchaseDate', 'Total', 'Cantidad'],
       ...sales.map(report => [report.purchaseNumber, report.purchaseDate, report.total, report.pcantidad])

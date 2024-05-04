@@ -9,13 +9,11 @@ namespace core.DataBase
 {
     public class ReportDb
     {
-        public static async Task<List<Report>> ExtraerVentasDiarias(DateTime date) 
+        public async Task<Ienumerable<Report>> ExtraerVentasDiariasAsync(DateTime date) 
         { 
-            List<Report> salesList = new List<Report>();
+            Ienumerable<Report> salesList = new List<Report>();
 
-            string connectionString = "Server=localhost;Database=geekStoreDB;Uid=root;Pwd=123456;";//seria optmimo cambiarlo
-
-            using (var connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 await connection.OpenAsync();
 
@@ -56,13 +54,11 @@ namespace core.DataBase
             return salesList;
         }
 
-        public static async Task<List<Report>> ExtraerVentasSemanal(DateTime selectedDate)
+        public async Task<Ienumerable<Report>> ExtraerVentasSemanalAsync(DateTime selectedDate)
         {
-            List<Report> salesList = new List<Report>();
+            Ienumerable<Report> salesList = new List<Report>();
 
-            string connectionString = "Server=localhost;Database=geekStoreDB;Uid=root;Pwd=123456;";
-
-            using (var connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 await connection.OpenAsync(); 
 

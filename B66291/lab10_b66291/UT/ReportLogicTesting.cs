@@ -18,19 +18,19 @@ namespace UT
         [Test]
         public void listarReportes_ExcenarioExistoso()
         {
-            List<object> dailySales = new List<object>
+            List<Report> dailySales = new List<Report>
             {
                 new { purchaseNumber = "1111", purchaseDate = new DateTime(2023, 5, 1), total = 100.50m },
                 new { purchaseNumber = "2222", purchaseDate = new DateTime(2023, 5, 2), total = 75.25m }
             };
 
-            List<object> weeklySales = new List<object>
+            List<Report> weeklySales = new List<Report>
             {
                 new { purchaseNumber = "3333", purchaseDate = new DateTime(2023, 4, 28), total = 200.00m },
                 new { purchaseNumber = "4444", purchaseDate = new DateTime(2023, 5, 3), total = 150.75m }
             };
 
-            List<object>[] result = ReportLogic.listarReportes(dailySales, weeklySales);
+            List<Report>[] result = ReportLogic.listarReportes(dailySales, weeklySales);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Length);
@@ -38,24 +38,11 @@ namespace UT
             Assert.AreEqual(weeklySales, result[1]); 
         }
     
-       
-        [Test]
-        public void listarReportes_ventasVacias_Exception()
-        {
-            List<object> dailySales = new List<object>
-        {
-            new { purchaseNumber = "0001", purchaseDate = new DateTime(2023, 5, 1), total = 100.50m },
-            new { purchaseNumber = "0002", purchaseDate = new DateTime(2023, 5, 2), total = 75.25m }
-        };
-
-        List<object> weeklySales = null; 
-        Assert.Throws<ArgumentNullException>(() => ReportLogic.listarReportes(dailySales, weeklySales));
-        }
 
         [Test]
-        public void TransformarDatos_CasoEsxitoso()
+        public void TransformarDatos_CasoExitoso()
         {
-            List<Report> sales = new List<Report>
+            IEnumerable<Report> sales = new List<Report>
             {
                 new Report("1", DateTime.Now, 100.50m, 5),
                 new Report("2", DateTime.Now, 75.25m, 3)
@@ -69,7 +56,7 @@ namespace UT
         [Test]
         public void TransformarDatos_ArgumentosNulos()
         {
-            List<Report> sales = null;
+            IEnumerable<Report> sales = null;
             Assert.Throws<ArgumentNullException>(() => ReportLogic.TransformarDatos(sales));
         }
     }

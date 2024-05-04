@@ -7,36 +7,42 @@ namespace core.DataBase
 {
     public class CartDb
     {
-        private readonly string connectionString = "Server=localhost;Database=geekStoreDB;Uid=root;Pwd=123456;";
 
-        public async Task procesarOrden(Sale saleTask)
+        public async Task saveAsync(Sale saleTask)
         {
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            if (saleTask == null){           
+                throw new ArgumentNullException("error venta se ingreso vacia");
+            }
+            using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
-                await connection.OpenAsync().ConfigureAwait(false);
+
+                await connection.OpenAsync();
 
                 using (MySqlCommand command = connection.CreateCommand())
                 {
-                    using (var transaction = await connection.BeginTransactionAsync().ConfigureAwait(false))
+                    using (var transaction = await connection.BeginTransactionAsync())
                     {
                         try
                         {
                             command.Transaction = transaction;
-                            await InsertSale(command, saleTask).ConfigureAwait(false);
-                            await InsertSaleLines(command, saleTask).ConfigureAwait(false);
-                            await transaction.CommitAsync().ConfigureAwait(false);
+                            await InsertSale(command, saleTask);
+                            await InsertSaleLines(command, saleTask);
+                            await transaction.CommitAsync();
                         }
                         catch (Exception)
                         {
-                            await transaction.RollbackAsync().ConfigureAwait(false);
+                            await transaction.RollbackAsync();
                         }
                     }
                 }
             }
         }
 
-        public async Task InsertSale(MySqlCommand command, Sale sale) 
+        public async Task InsertSaleAsync(MySqlCommand command, Sale sale) 
         {
+            if (command == null || sale == null){           
+                throw new ArgumentNullException("error venta se encuentra vacia al inserta en DB");
+            }
             command.CommandText = @"
                 INSERT INTO sales (purchase_date, total, payment_type, purchase_number)
                 VALUES (@purchase_date, @total, @payment_type, @purchase_number);";
@@ -46,11 +52,14 @@ namespace core.DataBase
             command.Parameters.AddWithValue("@total", sale.Amount);
             command.Parameters.AddWithValue("@payment_type", (int)sale.PaymentMethod);
 
-            await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync();
         }
 
-        internal async Task InsertSaleLines(MySqlCommand command, Sale sale) 
+        internal async Task InsertSaleLinesAsync(MySqlCommand command, Sale sale) 
         {
+            if (command == null || sale == null){           
+                throw new ArgumentNullException("error venta se encuentra vacia al ingresar la linea en DB");
+            }
             foreach (var product in sale.Products)
             {
                 command.CommandText = @"
@@ -62,7 +71,7 @@ namespace core.DataBase
                 command.Parameters.AddWithValue("@quantity", product.pcant); 
                 command.Parameters.AddWithValue("@price", product.price);
 
-                await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+                await command.ExecuteNonQueryAsync();
                 command.Parameters.Clear(); 
             }
         }

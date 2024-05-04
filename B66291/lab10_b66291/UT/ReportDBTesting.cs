@@ -23,8 +23,8 @@ public class ReportDBTesting
 			public async Task ExtraerVentasDiarias_EscenarioExitoso()
 			{
 				DateTime date = new DateTime(2024, 5, 1); 
-				List<Report> salesList;
-				salesList = await ReportDb.ExtraerVentasDiarias(date);
+				IEnumerable<Report> salesList;
+				salesList = await ReportDb.ExtraerVentasDiariasAsync(date);
 				Assert.IsNotNull(salesList);
 			}
 
@@ -33,7 +33,7 @@ public class ReportDBTesting
 			{
 				DateTime date = new DateTime(2024, 5, 3); 
 				ReportDb reportDb = new ReportDb();
-				List<Report> dailySales = await ReportDb.ExtraerVentasDiarias(date);
+				IEnumerable<Report> dailySales = await ReportDb.ExtraerVentasDiariasAsync(date);
 				Assert.IsNotNull(dailySales);
 				Assert.IsTrue(dailySales.Count > 0);
 			}
@@ -42,8 +42,8 @@ public class ReportDBTesting
 			public async Task ExtraerVentasDiarias_ArgumentoVacio()
 			{
 				DateTime date = new DateTime(2024, 5, 1); 
-				List<Report> salesList;
-				salesList = await ReportDb.ExtraerVentasDiarias(date);
+				IEnumerable<Report> salesList;
+				salesList = await ReportDb.ExtraerVentasDiariasAync(date);
 				Assert.IsNotNull(salesList);
 			}
         
@@ -52,8 +52,8 @@ public class ReportDBTesting
 			public async Task ExtraerVentasSemanal_EscenarioExitoso()
 			{
 				DateTime selectedDate = new DateTime(2024, 5, 1);
-				List<Report> salesList;
-				salesList = await ReportDb.ExtraerVentasSemanal(selectedDate);
+				IEnumerable<Report> salesList;
+				salesList = await ReportDb.ExtraerVentasSemanalAsync(selectedDate);
 				Assert.IsNotNull(salesList);
 			}
 
@@ -62,7 +62,7 @@ public class ReportDBTesting
 			{
 				DateTime selectedDate = new DateTime(2024, 5, 3); 
 				ReportDb reportDb = new ReportDb();
-				List<Report> weeklySales = await ReportDb.ExtraerVentasSemanal(selectedDate);
+				IEnumerable<Report> weeklySales = await ReportDb.ExtraerVentasSemanalAsync(selectedDate);
 				Assert.IsNotNull(weeklySales);
 				Assert.IsTrue(weeklySales.Count > 0);
 			}

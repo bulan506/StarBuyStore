@@ -10,13 +10,15 @@ namespace core.Business
     {
         public StoreLogic() { }
 
-        public async Task<Sale> Purchase(Cart cart)
+        private CartDb data= new CartDb();
+
+        public async Task<Sale> PurchaseAsync(Cart cart)
         {
             if (cart.ProductIds.Count == 0)
-                throw new ArgumentException("Cart must contain at least one product.");
+                throw new ArgumentException("Carrito debe tener al menos un producto");
 
             if (string.IsNullOrWhiteSpace(cart.Address))
-                throw new ArgumentException("Address must be provided.");
+                throw new ArgumentException("Se debe asignar una direccion");
 
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
@@ -36,9 +38,9 @@ namespace core.Business
 
             PaymentMethods selectedPaymentMethod = PaymentMethods.SetPaymentType(cart.PaymentMethod);
 
-            await Task.Delay(1000);
+            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType, Sale.generarNumeroCompra()); 
 
-            var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType, Sale.generarNumeroCompra()); //aqui pasa a sale y esp escribo en db
+            data.saveAsync(sale); 
 
             return sale;
         }
