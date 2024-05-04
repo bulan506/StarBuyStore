@@ -9,7 +9,7 @@ import '../ui/globals.css';
 const Ventas = () => {
     const [state, setState] = useState({
         transactionsDays: [],
-        selectedDate: null,
+        selectedDate: new Date(),
         pieChartData: [],
     });
 
@@ -17,6 +17,10 @@ const Ventas = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!selectedDate) {
+                return; // Manejar el caso en que selectedDate sea null
+            }
+
             const formattedDate = selectedDate.toISOString().split('T')[0];
             const url = `https://localhost:7043/api/Sales/transactions?date=${formattedDate}`;
 
@@ -42,27 +46,26 @@ const Ventas = () => {
         fetchData();
     }, [selectedDate]);
 
+
     const generatePieChartData = (transactions) => {
         if (!transactions || !Array.isArray(transactions)) {
             throw new Error('Los datos de transacciones no son válidos.');
         }
+    
         const countByPurchaseNumber = {};
-        transactions.forEach(transaction => {
-            const { purchaseNumber } = transaction;
-            if (!purchaseNumber) {
-                throw new Error('El número de compra no puede estar vacío.');
-            }
-            countByPurchaseNumber[purchaseNumber] = (countByPurchaseNumber[purchaseNumber] || 0) + 1;
+        transactions.forEach((purchaseNumber, index) => {
+            countByPurchaseNumber[`PurchaseNumber ${purchaseNumber}`] = (countByPurchaseNumber[`PurchaseNumber ${purchaseNumber}`] || 0) + 1;
         });
-
+    
         const pieData = Object.keys(countByPurchaseNumber).map((purchaseNumber, index) => ({
             name: purchaseNumber,
             value: countByPurchaseNumber[purchaseNumber],
             color: `hsl(${(index * 360) / Object.keys(countByPurchaseNumber).length}, 70%, 50%)`,
         }));
-
+    
         return pieData;
     };
+    
 
     const handleDateChange = (date) => {
         if (!date) {
@@ -114,6 +117,7 @@ const Ventas = () => {
                                 <th>Número de Compra</th>
                                 <th>Monto Total</th>
                                 <th>Fecha de Transacción</th>
+                                <th>Productos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,6 +126,13 @@ const Ventas = () => {
                                     <td>{transaction.purchaseNumber}</td>
                                     <td>{transaction.totalAmount}</td>
                                     <td>{new Date(transaction.transactionDate).toLocaleString()}</td>
+                                    <td>
+                                        <ul>
+                                            {transaction.products.map((product, index) => (
+                                                <li key={index}>{product}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -133,3 +144,4 @@ const Ventas = () => {
 };
 
 export default Ventas;
+
