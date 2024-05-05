@@ -16,17 +16,13 @@ namespace geekstore_api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCartAsync([FromBody] Cart cart)
         {
-            try
-			{
-				var sale = await store.PurchaseAsync(cart); 
-				var numeroCompra = sale.PurchaseNumber; 
-				var response = new { numeroCompra }; 
-				return Ok(response);
-			}
-			catch (ArgumentException ex)
-			{
-				return BadRequest(ex.Message);
-			}
+            if(cart == null){
+                return BadRequest("El objeto no puede ser nulo");
+            } 
+            var sale = await store.PurchaseAsync(cart); 
+			var numeroCompra = sale.PurchaseNumber; 
+			var response = new { numeroCompra }; 
+			return Ok(response);
 		}
     }
 }

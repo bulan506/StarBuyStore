@@ -14,12 +14,16 @@ namespace core.Business
 
         public async Task<Sale> PurchaseAsync(Cart cart)
         {
-            if (cart.ProductIds.Count == 0)
+            if (cart == null)
+            {
+                throw new ArgumentNullException(nameof(cart), "El carrito no puede ser nulo");
+            }
+            if (cart.ProductIds.Count == 0){
                 throw new ArgumentException("Carrito debe tener al menos un producto");
-
-            if (string.IsNullOrWhiteSpace(cart.Address))
-                throw new ArgumentException("Se debe asignar una direccion");
-
+            }
+            if (string.IsNullOrWhiteSpace(cart.Address)){
+                throw new ArgumentException("Se debe asignar una direccion al carrito");
+            }
             var products = Store.Instance.Products;
             var taxPercentage = Store.Instance.TaxPercentage;
 
@@ -40,7 +44,7 @@ namespace core.Business
 
             var sale = new Sale(shadowCopyProducts, cart.Address, purchaseAmount, selectedPaymentMethod.PaymentType, Sale.generarNumeroCompra()); 
 
-            data.saveAsync(sale); 
+            await data.saveAsync(sale); 
 
             return sale;
         }

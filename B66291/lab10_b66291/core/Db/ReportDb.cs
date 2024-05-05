@@ -9,8 +9,12 @@ namespace core.DataBase
 {
     public class ReportDb
     {
-        public async Task<Ienumerable<Report>> ExtraerVentasDiariasAsync(DateTime date) 
+        public async Task<Ienumerable<Report>> ExtraerVentasDiariasAsync(DateTime selectedDate) 
         { 
+            if (selectedDate == DateTime.MinValue || selectedDate == DateTime.MaxValue) { 
+                throw new ArgumentException($"La variable {nameof(date)} no puede ser default.");
+            }
+
             Ienumerable<Report> salesList = new List<Report>();
 
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
@@ -56,6 +60,10 @@ namespace core.DataBase
 
         public async Task<Ienumerable<Report>> ExtraerVentasSemanalAsync(DateTime selectedDate)
         {
+            if (selectedDate == DateTime.MinValue || selectedDate == DateTime.MaxValue) { 
+                throw new ArgumentException($"La variable {nameof(date)} no puede ser default.");
+            }
+
             Ienumerable<Report> salesList = new List<Report>();
 
             using (MySqlConnection connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
@@ -90,7 +98,7 @@ namespace core.DataBase
                                 }
                                 }else
                                 {
-                                    throw new ArgumentException("La fecha de compra es nula.");
+                                    throw new ArgumentException("La fecha de compra es nula");
                                 }
                         
                             }

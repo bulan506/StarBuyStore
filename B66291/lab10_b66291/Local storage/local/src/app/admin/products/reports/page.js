@@ -44,6 +44,9 @@ const Reports = () => {
    const headersForPieChart = ['PurchaseNumber', 'Total'];
 
    const handleDateChange = async (event) => {
+    if(event == undefined){
+      throw new Error("error la fecha no fue ingresada correctamente");
+    }
     const selectedDate = event.date;
     const formattedDate = selectedDate.toISOString().slice(0, 10);
       try {

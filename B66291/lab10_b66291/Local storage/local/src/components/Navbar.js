@@ -4,8 +4,11 @@ import Link from 'next/link';
 import '../styles/navbar.css'
 
 const Navbar = ({cantidad_Productos}) => {
-  if((cantidad_Productos) == undefined){
-    throw new Error("error al obtener cantidad de productos");
+  if (cantidad_Productos == undefined) {
+    throw new Error("La cantidad de productos no puede estar indefinida");
+  }
+  if(cantidad_Productos == 0){
+    throw new Error("La cantidad de productos no puede ser 0");
   }
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">

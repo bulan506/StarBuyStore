@@ -17,8 +17,11 @@ namespace geekstore_api.Controllers
     {
         [HttpGet]
         public async Task<ActionResult<Ienumerable<Report>>> GetSalesAsync(string date)
-        {
-            try {
+        {          
+            if(date == null){
+                return BadRequest("La fecha no puede ser nula");
+            } 
+            
             var dailySalesTask = ReportDb.ExtraerVentasDiariasAsync(selectedDate); 
             var weeklySalesTask = ReportDb.ExtraerVentasSemanalAsync(selectedDate); 
 
@@ -31,10 +34,6 @@ namespace geekstore_api.Controllers
             var weeklySalesList = ReportLogic.TransformarDatos(weeklySales);
 
             return Ok(new { dailySalesList, weeklySalesList });
-
-            } catch(ArgumentException ex){
-                return BadRequest(ex.Message);
-            }
         }
     }
 }

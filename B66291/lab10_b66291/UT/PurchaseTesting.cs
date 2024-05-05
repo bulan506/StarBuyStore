@@ -30,6 +30,7 @@ public class PurchaseTesting
         Assert.Greater(sale.Amount, 0); 
         Assert.AreEqual(PaymentMethods.Type.CASH, sale.PaymentMethod);
         Assert.IsFalse(string.IsNullOrWhiteSpace(sale.PurchaseNumber)); 
+        Assert.AreEqual(cart.ProductIds.Count, sale.Products.Count());
     }
 
     [Test]
