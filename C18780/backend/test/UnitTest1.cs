@@ -1,103 +1,117 @@
 using StoreApi.Models;
 using StoreApi.Repositories;
-using StoreApi.Queries;
-using StoreApi.Handler;
-using Microsoft.EntityFrameworkCore;
-using StoreApi.Data;
-using StoreApi.Commands;
+using Microsoft.Extensions.Configuration;
 
 namespace StoreApiTests
 {
     public class ProductTests
     {
+        private IConfiguration _configuration;
         private IProductRepository _productRepository;
-        private GetProductListHandler _getProductListHandler;
-        private GetProductByIdHandler _getProductByIdHandler;
-        private CreateProductHandler _createProductHandler;
 
         [SetUp]
         public void Setup()
         {
-            var options = new DbContextOptionsBuilder<DbContextClass>()
-                .UseInMemoryDatabase(databaseName: "TestDB")
-                .Options;
+            _configuration = new ConfigurationBuilder()
+                       .AddJsonFile("appsettings.json")
+                       .Build();
+            _productRepository = new ProductRepository(_configuration);
+        }
 
-            _productRepository = new ProductRepository(new DbContextClass(options));
-            _getProductListHandler = new GetProductListHandler(_productRepository);
-            _getProductByIdHandler = new GetProductByIdHandler(_productRepository);
-            _createProductHandler = new CreateProductHandler(_productRepository);
+
+        [Test]
+        public async Task AddSalesAsync_ValidSales_ReturnsSales()
+        {
+            var salesRepository = new SalesRepository(_configuration);
+            var sales = new Sales
+            {
+                Date = DateTime.Now,
+                Confirmation = 0,
+                PaymentMethod = "CASH",
+                Total = 100000,
+                Address = "San Jose",
+                PurchaseNumber = "123456"
+            };
+
+            var result = await salesRepository.AddSalesAsync(sales);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(sales.Date, result.Date);
+            Assert.AreEqual(sales.Confirmation, result.Confirmation);
+            Assert.AreEqual(sales.PaymentMethod, result.PaymentMethod);
+            Assert.AreEqual(sales.Total, result.Total);
+            Assert.AreEqual(sales.Address, result.Address);
+            Assert.AreEqual(sales.PurchaseNumber, result.PurchaseNumber);
         }
 
         [Test]
-        public async Task GetProductListAsync_ShouldReturnProducts()
+        public async Task GetSalesByPurchaseNumberAsync_ExistingPurchaseNumber_ReturnsSales()
         {
-            // Arrange
-            var product1 = new Product { Uuid = Guid.NewGuid(), Name = "Product 1", Description = "Description 1", Price = 10.99m, ImageUrl = "https://example.com/product1.jpg" };
-            var product2 = new Product { Uuid = Guid.NewGuid(), Name = "Product 2", Description = "Description 2", Price = 15.99m, ImageUrl = "https://example.com/product2.jpg" };
-            await _productRepository.AddProductAsync(product1);
-            await _productRepository.AddProductAsync(product2);
+            var salesRepository = new SalesRepository(_configuration);
+            var existingPurchaseNumber = "123456";
 
-            // Act
-            var result = await _getProductListHandler.Handle(new GetProductListQuery(), CancellationToken.None);
+            var result = await salesRepository.GetSalesByPurchaseNumberAsync(existingPurchaseNumber);
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
-            Assert.Contains(product1, result);
-            Assert.Contains(product2, result);
+            Assert.NotNull(result);
+            Assert.AreEqual(existingPurchaseNumber, result.PurchaseNumber);
         }
 
         [Test]
-        public async Task GetProductByIdAsync_ShouldReturnProduct()
+        public async Task GetSalesByPurchaseNumberAsync_NonExistingPurchaseNumber_ReturnsNull()
         {
-            // Arrange
-            var expectedProduct = new Product
+            var salesRepository = new SalesRepository(_configuration);
+            var nonExistingPurchaseNumber = "999999";
+
+            var result = await salesRepository.GetSalesByPurchaseNumberAsync(nonExistingPurchaseNumber);
+
+            Assert.Null(result);
+        }
+
+        [Test]
+        public async Task AddProductAsync_ValidProduct_ReturnsProduct()
+        {
+            var product = new Product
             {
                 Uuid = Guid.NewGuid(),
-                Name = "Product 1",
-                Description = "Description 1",
-                Price = 9999,
-                ImageUrl = "https://example.com/product1.jpg"
+                Name = "Test Product",
+                ImageUrl = "test_image.jpg",
+                Price = 50000,
+                Description = "Test description"
             };
-            await _productRepository.AddProductAsync(expectedProduct);
 
             // Act
-            var result = await _getProductByIdHandler.Handle(new GetProductByIdQuery { Uuid = expectedProduct.Uuid }, CancellationToken.None);
+            var result = await _productRepository.AddProductAsync(product);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(expectedProduct.Uuid, result.Uuid);
-            Assert.AreEqual(expectedProduct.Name, result.Name);
-            Assert.AreEqual(expectedProduct.Description, result.Description);
-            Assert.AreEqual(expectedProduct.Price, result.Price);
-            Assert.AreEqual(expectedProduct.ImageUrl, result.ImageUrl);
+            Assert.NotNull(result);
+            Assert.AreEqual(product.Uuid, result.Uuid);
         }
 
         [Test]
-        public async Task CreateProductAsync_ShouldReturnCreatedProduct()
+        public async Task GetProductByIdAsync_NonExistingId_ReturnsNull()
         {
-            // Arrange
-            var productToCreate = new Product
+            var nonExistingProductId = Guid.NewGuid(); 
+
+            var result = await _productRepository.GetProductByIdAsync(nonExistingProductId);
+
+            Assert.Null(result);
+        }
+
+        [Test]
+        public async Task UpdateProductAsync_ValidProduct_ReturnsOne()
+        {
+            var existingProduct = new Product
             {
-                Name = "New Product",
-                Description = "Description of new product",
-                Price = 9999,
-                ImageUrl = "https://example.com/new-product.jpg"
+                Uuid = Guid.NewGuid(),
+                Name = "Existing Product",
+                ImageUrl = "update_image.jpg",
+                Price = 1000000,
+                Description = "Update description"
             };
 
-            // Act
-            var result = await _createProductHandler.Handle(new CreateProductCommand(
-                productToCreate.Name,
-                productToCreate.ImageUrl,
-                productToCreate.Price,
-                productToCreate.Description), CancellationToken.None);
+            var result = await _productRepository.UpdateProductAsync(existingProduct);
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(productToCreate.Name, result.Name);
-            Assert.AreEqual(productToCreate.Description, result.Description);
-            Assert.AreEqual(productToCreate.Price, result.Price);
-            Assert.AreEqual(productToCreate.ImageUrl, result.ImageUrl);
+            Assert.AreEqual(1, result);
         }
     }
 }
