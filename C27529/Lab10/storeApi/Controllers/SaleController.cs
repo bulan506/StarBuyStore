@@ -1,22 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks; // Asegúrate de importar este namespace
 using storeApi.Database;
 
 namespace TodoApi.Models
 {
     [Route("api/[controller]")]
     [ApiController]
-
-
     public class SaleController : ControllerBase
     {
-
-
-        public class weekDailyDate
+        public class WeekDailyDate
         {
-            public DateTime weekDate { get; set; }
-            public DateTime dailyDate { get; set; }
+            public DateTime WeekDate { get; set; }
+            public DateTime DailyDate { get; set; }
         }
 
         private class CombinedSalesData
@@ -26,23 +23,27 @@ namespace TodoApi.Models
         }
 
         [HttpPost]
-        public IActionResult GetSale([FromBody] weekDailyDate dateString)
+        public async Task<IActionResult> GetSale([FromBody] WeekDailyDate dateString)
         {
-            if (dateString.weekDate == DateTime.MinValue)
+            if (dateString.WeekDate == DateTime.MinValue)
             {
                 return BadRequest("Invalid start date format");
             }
 
-            if (dateString.dailyDate == DateTime.MinValue)
+            if (dateString.DailyDate == DateTime.MinValue)
             {
                 return BadRequest("Invalid today date.");
             }
 
-
             SaleDB saleDB = new SaleDB();
-            Dictionary<string, decimal> weekSales = saleDB.getWeekSales(dateString.weekDate);
-            List<(string purchaseNumber, decimal total)> dailySales = saleDB.getDailySales(dateString.dailyDate);
+            
+            Task<Dictionary<string, decimal>> weekSalesTask = saleDB.getWeekSalesAsync(dateString.WeekDate);
+            Task<List<(string purchaseNumber, decimal total)>> dailySalesTask = saleDB.getDailySales(dateString.DailyDate);
+            
+            await Task.WhenAll(weekSalesTask, dailySalesTask);
 
+            Dictionary<string, decimal> weekSales = await weekSalesTask;
+            List<(string purchaseNumber, decimal total)> dailySales = await dailySalesTask;
 
             CombinedSalesData combinedSales = new CombinedSalesData
             {
@@ -50,12 +51,7 @@ namespace TodoApi.Models
                 DailySales = dailySales
             };
 
-
-
-
-
             return Ok(combinedSales);
         }
-
     }
 }

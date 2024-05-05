@@ -45,7 +45,6 @@ function Reports() {
 
         const newDataDaily = data.map(item => ({ day: item.day, total: item.total }));
         setDailySaleData(newDataDaily);
-        console.log(newDataDaily);
 
 
 
