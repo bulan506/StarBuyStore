@@ -11,6 +11,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [isCartActive, setIsCartActive] = useState(false);
 
@@ -37,6 +38,7 @@ export default function Home() {
         const result = await getData();
         const paymentTypes = result.paymentMethods.map(payment => payment.paymentType);
         setProducts(result.products);
+        setCategories(result.categoriesList)
         setCart(cart => ({
           ...cart,
           carrito: {
@@ -161,9 +163,26 @@ export default function Home() {
   };
 
   const MyRow = () => {
+    /* categories.sort((a, b) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    }) */
+
     return (
       <>
-        <h1>Lista de productos</h1>
+        <div className="row">
+          <div className="col-auto">
+            <h1>Lista de productos</h1>
+            <select className="form-control">
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         <div className="row justify-content-md-center">
           {products.map(product => <Product key={product.uuid} product={product} handleAddToCart={handleAddToCart} />)}
         </div>
