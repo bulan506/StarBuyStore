@@ -61,7 +61,7 @@ public class Categories
         categoryList.Add(newCategory);
     }
 
-    public List<Category> GetCategories()
+    public IEnumerable<Category> GetCategories()
     {
         return categoryList;
     }

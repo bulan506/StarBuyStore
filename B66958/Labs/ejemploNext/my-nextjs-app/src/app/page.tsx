@@ -169,7 +169,6 @@ export default function Home() {
       let selected = event.target.value;
       setSelectedCategory(selected)
       if (selected === "0") {
-        console.log("category was 0")
         var allProducts = await getData();
         setProducts(allProducts.products)
       } else

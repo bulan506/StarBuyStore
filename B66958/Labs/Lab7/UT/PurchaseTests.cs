@@ -2,7 +2,7 @@ using ApiLab7;
 
 namespace UT;
 
-public class Tests
+public class PurchaseTests
 {
     Store store;
 
