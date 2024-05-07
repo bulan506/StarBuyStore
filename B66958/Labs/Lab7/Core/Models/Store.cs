@@ -23,6 +23,13 @@ public sealed class Store
 
     public static readonly Store Instance;
 
+    public IEnumerable<Product> ProductsByCategory(int category)
+    {
+        if (category < 1)
+            throw new ArgumentException("A category must have an ID, and it should be above 0");
+        return Instance.Products.Where(product => product.CategoryId == category);
+    }
+
     static Store()
     {
         db = Db.Instance;

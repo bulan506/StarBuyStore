@@ -233,7 +233,8 @@ public class Db
                                 Name = reader[1].ToString(),
                                 Description = reader[2].ToString(),
                                 ImageUrl = reader[3].ToString(),
-                                Price = (decimal)reader[4]
+                                Price = (decimal)reader[4],
+                                CategoryId = reader.GetInt32(5)
                             };
 
                             products.Add(product);
