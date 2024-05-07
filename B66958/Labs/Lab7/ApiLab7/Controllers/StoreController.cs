@@ -17,6 +17,8 @@ namespace ApiLab7.Controllers
         [HttpGet("Products")]
         public IEnumerable<Product> GetCategories(int category)
         {
+            if (category < 1)
+                throw new ArgumentException("The category number must be above 0");
             return Store.Instance.ProductsByCategory(category);
         }
     }
