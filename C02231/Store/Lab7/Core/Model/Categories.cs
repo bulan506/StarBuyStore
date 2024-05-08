@@ -21,7 +21,6 @@ public class Categories
     {
         categoryList = new List<Category>
         {
-            new(0, "All"),
             new(1, "Fantasy"),
             new (2, "Romance"),
             new (3, "Science Fiction"),
