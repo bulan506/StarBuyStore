@@ -16,7 +16,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpGet("Products")]
-        public IEnumerable<Product> GetCategories(int category)
+        public IEnumerable<Product> GetCategories([FromQuery] int category)
         {
             if (category <= -1)
                 throw new ArgumentException($"The {nameof(category)} number must positive");

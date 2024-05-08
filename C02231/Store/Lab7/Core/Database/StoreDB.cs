@@ -325,7 +325,7 @@ public sealed class StoreDB
                     name VARCHAR(100),
                     author VARCHAR(100),
                     price DECIMAL(10, 2),
-                    category_id INT,
+                    idCategory INT,
                     imgUrl VARCHAR(255)
                 );
                 
@@ -394,15 +394,15 @@ public sealed class StoreDB
                     foreach (Product product in products)
                     {
                         string insertProductQuery = @"
-                            INSERT INTO products (name, author, price, category_id, imgUrl)
-                            VALUES (@name, @author, @price, @category_id , @imgUrl);";
+                            INSERT INTO products (name, author, price, idCategory, imgUrl)
+                            VALUES (@name, @author, @price, @idCategory , @imgUrl);";
 
                         using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
                         {
                             insertCommand.Parameters.AddWithValue("@name", product.Name);
                             insertCommand.Parameters.AddWithValue("@author", product.Author);
                             insertCommand.Parameters.AddWithValue("@price", product.Price);
-                            insertCommand.Parameters.AddWithValue("@category_id", product.IdCategory);
+                            insertCommand.Parameters.AddWithValue("@idCategory", product.IdCategory);
                             insertCommand.Parameters.AddWithValue("@imgUrl", product.ImgUrl);
                             insertCommand.ExecuteNonQuery();
                         }
@@ -474,6 +474,7 @@ public sealed class StoreDB
                         }
                         databaseInfo.Add(row);
                     }
+                   
                 }
             }
         }

@@ -82,7 +82,9 @@ public sealed class Store
             if (row.ContainsKey("id") && row.ContainsKey("price"))
             {
                 if (int.TryParse(row["id"], out int id) &&
-                    decimal.TryParse(row["price"], out decimal price))
+                    decimal.TryParse(row["price"], out decimal price) &&
+                    int.TryParse(row["idCategory"], out int idCategory)) // Conversión de idCategory a int
+     
                 {
                     string name = row["name"];
                     string author = row["author"];
@@ -94,6 +96,7 @@ public sealed class Store
                         Name = name,
                         Author = author,
                         Price = price,
+                        IdCategory = idCategory,
                         ImgUrl = imageUrl
                     };
 
