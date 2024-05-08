@@ -16,7 +16,7 @@ namespace MyStoreAPI.Business
 
         public Sale processDataSale(Cart cart){
 
-            if (newCart == null)
+            if (cart == null)
                 throw new BussinessException($"{nameof(cart)} no puede ser nulo");            
 
             // Utilizamos la lógica del carrito y sus validaciones
