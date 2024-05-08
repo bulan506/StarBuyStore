@@ -8,8 +8,11 @@ export default function Home() {
 
   const [storeProducts, setStoreProducts] = useState([]);
   const [carrusel, setCarrusel] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  useEffect( () => {    
+  useEffect(() => {
     const loadData = async () => {
       try {
         //const response = await fetch('http://localhost:5000/api/Store');
@@ -18,15 +21,15 @@ export default function Home() {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        //console.log(data);
         setStoreProducts(data);
         setCarrusel(data);
+        setCategories(data.categoriesList);
       } catch (error) {
         throw new Error('Failed to fetch data');
       }
-    
+
     };
-  
+
     loadData();
 
   }, []);
@@ -45,6 +48,8 @@ export default function Home() {
   });
 
   const handleAddToCart = (product) => {
+    if (product === undefined) throw new Error('The product is empty.');
+
     let productsNotInCart = !cart.products.some(item => item.id === product.id);
     if (productsNotInCart) {
       let updatedProductos = [...cart.products, product];
@@ -58,7 +63,7 @@ export default function Home() {
     }
   };
 
-  
+
   useEffect(() => {
     const storedCartData = JSON.parse(localStorage.getItem('cartItem') || '{}');
     setCart({
@@ -67,6 +72,45 @@ export default function Home() {
       count: storedCartData.count || 0
     });
   }, []);
+
+  const handleCategoryChange = async (event) => {
+    try {
+      const selected = event.target.value;
+      setSelectedCategory(selected);
+      let productsForCategory = [];
+      console.log(selected);
+      if (selected === "0") {
+        const response = await fetch('http://localhost:5207/api/Store/Products');
+        setFilteredProducts([]); // Reiniciar los productos filtrados si se selecciona "ALL"
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        productsForCategory = await response.json();
+        setFilteredProducts(productsForCategory);
+      } else {
+        const response = await fetch(`http://localhost:5207/api/Store/Products?category=${selected}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        productsForCategory = await response.json();
+        setFilteredProducts(productsForCategory);
+        console.log(productsForCategory);
+      }
+      //
+      //console.log('Datos recibidos:', productsForCategory);
+      const categories = productsForCategory.map(product => product.idCategory);
+
+      console.log(categories);
+
+      setCategories(categories);
+      setStoreProducts(productsForCategory);
+      //console.log('Store Products:', productsForCategory);
+      //console.log('Categorías recibidas:', categories);
+
+    } catch (error) {
+      throw new Error('Fail handleCategory: ' + error.message);
+    }
+  };
 
   return (
 
@@ -108,10 +152,28 @@ export default function Home() {
 
       <div className='container'>
         <h2 className='text-left mt-5 mb-5'>List of Books</h2>
+
+        <select className="btn btn-secondary dropdown-toggle" onChange={handleCategoryChange} value={selectedCategory}>
+          <option value={0}>ALL</option>
+
+          {categories.map(category => (
+            <option key={category.idCategory} value={category.idCategory}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+
+        
+        
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
           {storeProducts && storeProducts.products && storeProducts.products.map(item => (
             <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
           ))}
+
+          {filteredProducts && filteredProducts.map(item => (
+            <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
+          ))}
+
           <CarruselComponent carrusel={carrusel} />
         </div>
       </div >
@@ -128,6 +190,8 @@ export default function Home() {
 }
 
 const Products = ({ product, handleAddToCart }) => {
+  if (product === undefined) throw new Error('The product is empty.');
+
   const { id, name, author, imgUrl, price } = product;
   return (
     <div className="row my-3">
@@ -152,6 +216,7 @@ const Products = ({ product, handleAddToCart }) => {
 //Carrusel
 
 const CarruselComponent = ({ carrusel }) => {
+  if (carrusel === undefined) throw new Error('The carrusel is empty.');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
