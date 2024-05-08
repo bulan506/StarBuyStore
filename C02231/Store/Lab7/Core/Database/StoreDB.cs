@@ -7,7 +7,6 @@ public sealed class StoreDB
 {
     public static void CreateMysql()
     {
-        //añadir id por categoria: Dicción, ROmance, Fantasía, ect. Esto se podría manjear quiza como el tipo de pago, saber que un id es igual a x categoria
         Categories categories = Categories.Instance;
 
         // Obtener la lista actual de categorías
@@ -80,7 +79,7 @@ public sealed class StoreDB
             Author = "Gabriel García Márquez",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073911290_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 14900,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 7
         },
 
@@ -90,7 +89,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9789585457935_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 12800,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 8
         },
 
@@ -130,7 +129,7 @@ public sealed class StoreDB
             Author = "Lewis Carrol",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 7900,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 0
         },
          new Product
@@ -139,7 +138,7 @@ public sealed class StoreDB
             Author = "Lewis Carrol",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 7900,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 12
         },
        new Product
@@ -148,7 +147,7 @@ public sealed class StoreDB
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574043_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price =19800,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 13
         },
         new Product
@@ -157,7 +156,7 @@ public sealed class StoreDB
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574074_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 19800,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 14
         },
         new Product
@@ -166,7 +165,7 @@ public sealed class StoreDB
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574104_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 19800,
-            IdCategory = 10,
+            IdCategory = 7,
             Id = 15
         },
         new Product
@@ -238,7 +237,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780439023528_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 8,
+            IdCategory = 9,
             Id = 23
         },
         new Product
@@ -247,7 +246,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780545586177_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 8,
+            IdCategory = 9,
             Id = 24
         },
         new Product
@@ -256,7 +255,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780545663267_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 8,
+            IdCategory = 9,
             Id = 25
         },
         new Product
@@ -265,7 +264,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781339016573_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 8,
+            IdCategory = 9,
             Id = 26
         },
           new Product
@@ -274,7 +273,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404741_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 8700,
-            IdCategory = 7,
+            IdCategory = 8,
             Id = 27
         },
           new Product
@@ -283,7 +282,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404734_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 7,
+            IdCategory = 8,
             Id = 28
         },
           new Product
@@ -292,11 +291,20 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756411329_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 7,
+            IdCategory = 8,
             Id = 29
+        },
+        new Product
+        {
+            Name = "Girl On The Train",
+            Author = "Paula Hawkins",
+            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781594634024_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+            Price = 13900,
+            IdCategory = 5,
+            Id = 30
         }
       };
-//Falta terror y Misterio buscar para agregar at least un producto de cada 
+
 
 
         // string connectionString = "Server=localhost;Database=mysql;Port=3306;Uid=root;Pwd=123456;";

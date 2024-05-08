@@ -30,8 +30,7 @@ public class Categories
             new (6, "NonFiction"),
             new (7, "Fiction"),
             new (8, "Adventure"),
-            new (9, "Dystopian"),
-            new (10, "Horror")
+            new (9, "Dystopian")
         };
 
         categoryList.Sort((category1, category2) => string.Compare(category1.Name, category2.Name));
