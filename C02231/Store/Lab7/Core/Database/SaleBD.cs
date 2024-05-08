@@ -56,13 +56,14 @@ namespace StoreAPI.Database
                 foreach (var product in products)
                 {
                     string insertSaleLineQuery = @"
-                        INSERT INTO saleLines (sale_id, product_id, final_price)
-                        VALUES (@saleId, @productId, @finalPrice);";
+                        INSERT INTO saleLines (sale_id, product_id, quantity, final_price)
+                        VALUES (@saleId, @productId, @quantity, @finalPrice);";
 
                     using (var insertCommand = new MySqlCommand(insertSaleLineQuery, connection, transaction))
                     {
                         insertCommand.Parameters.AddWithValue("@saleId", saleId);
                         insertCommand.Parameters.AddWithValue("@productId", product.Id);
+                        insertCommand.Parameters.AddWithValue("@quantity", 1);
                         insertCommand.Parameters.AddWithValue("@finalPrice", product.Price);
                         await insertCommand.ExecuteNonQueryAsync();
                     }

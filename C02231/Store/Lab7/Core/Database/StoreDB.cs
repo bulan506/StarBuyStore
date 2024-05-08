@@ -1,7 +1,3 @@
-using System;
-using System.Data;
-using System.Data.Common;
-using System.IO.Compression;
 using Core;
 using MySqlConnector;
 using StoreAPI.models;
@@ -11,7 +7,6 @@ public sealed class StoreDB
 {
     public static void CreateMysql()
     {
-
         var products = new List<Product>{
 
         new Product
@@ -408,7 +403,7 @@ public sealed class StoreDB
             }
         }
     }
-    public static List<Dictionary<string, string>> RetrieveDatabaseInfo()
+    internal static List<Dictionary<string, string>> RetrieveDatabaseInfo()
     {
         List<Dictionary<string, string>> databaseInfo = new List<Dictionary<string, string>>();
 
@@ -454,9 +449,12 @@ public sealed class StoreDB
 
             string selectQuery = @"
             use store;
-            SELECT purchase_number, purchase_date, total
-            FROM sales 
-            WHERE DATE(purchase_date) = @date";
+            SELECT S.purchase_number AS purchase_Number, S.purchase_date AS purchase_date, S.total AS total,  SUM(Sl.quantity) AS quantity, GROUP_CONCAT(P.name SEPARATOR ', ') AS productsName
+            FROM sales S
+            INNER JOIN saleLines Sl ON S.id = Sl.sale_id
+			INNER JOIN products P ON Sl.product_id = P.id 
+            WHERE DATE(S.purchase_date) = @date
+            GROUP BY S.purchase_number, S.purchase_date, S.total";
 
             using (var command = new MySqlCommand(selectQuery, connection))
             {
@@ -468,8 +466,10 @@ public sealed class StoreDB
                     {
                         DateTime purchaseDate = reader.GetDateTime("purchase_date");
                         string purchaseNumber = reader.GetString("purchase_Number");
+                        int quantity = reader.GetInt32("quantity");
                         decimal total = reader.GetDecimal("total");
-                        DaySalesReports dayReport = new DaySalesReports(purchaseDate, purchaseNumber.ToString(), total);
+                        string productsString = reader.GetString("productsName");
+                        DaySalesReports dayReport = new DaySalesReports(purchaseDate, purchaseNumber.ToString(), quantity, total, productsString);
                         dailySales.Add(dayReport);
                     }
                 }

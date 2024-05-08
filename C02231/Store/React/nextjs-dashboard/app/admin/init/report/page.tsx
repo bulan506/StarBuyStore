@@ -32,14 +32,14 @@ export default function ReportPage() {
             console.log("Datos de fetch:", data);
 
             const weeklyData = [['Day', 'Total']];
-            const dailyData = [['Purcharse Date', 'Purcharse Number', 'Total']];
+            const dailyData = [['Purcharse Date', 'Purcharse Number', 'Quantity', 'Total', 'Products']];
 
             for (const item of data.weeklySales) {
                 weeklyData.push([item.dayOfWeek, item.total]);
             }
 
             for (const item of data.dailySales) {
-                dailyData.push([item.purchaseDate, item.purchaseNumber, item.total]);
+                dailyData.push([item.purchaseDate, item.purchaseNumber, item.quantity , item.total, item.products]);
             }
            
             setDailySalesData(dailyData)
@@ -53,7 +53,9 @@ export default function ReportPage() {
 
     const handleDayChange = (selectedDay: Date | null) => {
         if (selectedDay !== null) {
-            setSelectedDate(selectedDay);
+            const utcDate = new Date(selectedDay.toUTCString());
+            const serverTimeZoneDate = new Date(selectedDay.toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
+            setSelectedDate(serverTimeZoneDate);
         }
     };
 
@@ -79,38 +81,38 @@ export default function ReportPage() {
                     selected={selectedDate}
                     onChange={handleDayChange}
                     onKeyDown={(e) => e.preventDefault()}
-                    renderInput={(params) => <input {...params} />}
-
                 />
             </div>
 
             <div className="container">
-                <div className="row">
-                    <div className="col-md-8">
-                        <div style={{ display: 'flex' }}>
-                            <div>
-                                <h2>Sales Chart</h2>
-                                <Chart
-                                    width={'1000px'}
-                                    height={'300px'}
-                                    chartType="Table"
-                                    loader={<div>Loading Chart</div>}
-                                    data={dailySalesData}
-                                    options={{
-                                        showRowNumber: true,
-                                        cssClassNames: {
-                                            tableRow: 'chart-row',
-                                            headerRow: 'chart-header-row',
-                                            tableCell: 'chart-cell',
-                                            title: "Weekly Sales",
-                                        },
-                                        allowHtml: true, // Allows HTML content in cells
-                                    }}
-                                />
-                            </div>
+            <div className="row">
+                <div className="col-md-8">
+                    <div style={{ display: 'flex' }}>
+                        <div>
+                            <h2>Sales Chart</h2>
+                            <Chart
+                                width={'100%'}
+                                height={'300px'}
+                                chartType="Table"
+                                loader={<div>Loading Chart</div>}
+                                data={dailySalesData}
+                                options={{
+                                    showRowNumber: true,
+                                    cssClassNames: {
+                                        tableRow: 'chart-row',
+                                        headerRow: 'chart-header-row',
+                                        tableCell: 'chart-cell',
+                                        title: "Weekly Sales",
+                                    },
+                                    allowHtml: true, // Allows HTML content in cells
+                                    pageSize: 20,
+                                }}
+                            />
                         </div>
                     </div>
-                    <div className="col-md-4">
+                </div>
+                <div className="col-md-4">
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <h2>Weekly Sales Pie Chart</h2>
                         <Chart
                             //400px
@@ -125,7 +127,8 @@ export default function ReportPage() {
                         />
                     </div>
                 </div>
-            </div >
+            </div>
+        </div>
 
 
             <footer className='footer' style={{ position: 'fixed', bottom: '0', width: '100%', zIndex: '9999' }}>
