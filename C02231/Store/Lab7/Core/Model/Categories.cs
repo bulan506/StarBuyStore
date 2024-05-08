@@ -21,6 +21,7 @@ public class Categories
     {
         categoryList = new List<Category>
         {
+            new(0, "All"),
             new(1, "Fantasy"),
             new (2, "Romance"),
             new (3, "Science Fiction"),
@@ -50,7 +51,7 @@ public struct Category
     public string Name { get; }
     public Category(int idCategory, string name)
     {
-        if (idCategory < 0) throw new ArgumentException($"A Category {nameof(IdCategory)} is required");
+        if (idCategory <= -1) throw new ArgumentException($"A Category {nameof(idCategory)} is required");
         if (name == null) throw new ArgumentException($"The category {nameof(name)} is required");
 
         IdCategory = idCategory;

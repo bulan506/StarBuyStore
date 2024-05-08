@@ -12,7 +12,15 @@ namespace StoreAPI.Controllers
         [HttpGet]
         public Store GetStore()
         {
-            return Store.Instance ;
+            return Store.Instance;
+        }
+
+        [HttpGet("Products")]
+        public IEnumerable<Product> GetCategories(int category)
+        {
+            if (category <= -1)
+                throw new ArgumentException($"The {nameof(category)} number must positive");
+            return Store.Instance.CategoryProducts(category);
         }
     }
 
