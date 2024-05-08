@@ -6,9 +6,10 @@ public class PurchaseTests
 {
     Store store;
 
-    [SetUp]
-    public void Setup()
+    [OneTimeSetUp]
+    public void SetUp()
     {
+        Db.BuildDb("Data Source=163.178.173.130;User ID=basesdedatos;Password=BaSesrp.2024; Encrypt=False;");
         store = Store.Instance;
     }
 
