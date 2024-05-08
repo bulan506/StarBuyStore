@@ -30,6 +30,12 @@ public sealed class Store
         return Instance.Products.Where(product => product.CategoryId == category);
     }
 
+    public IEnumerable<Product> ProductsByCategoriesAndName(List<int> categories, string name){
+        if(categories.Count() == 0 || categories == null){
+            throw new ArgumentException("At least one category is expected");
+        }
+    }
+
     static Store()
     {
         db = Db.Instance;
