@@ -14,7 +14,7 @@ public sealed class DaySalesReports
     {
 
         if (purchaseDate == DateTime.MinValue) throw new ArgumentException("Invalid date provided.", nameof(purchaseDate));
-        if (total == null) throw new ArgumentException("The sale total is required.");
+        if (total < 0) throw new ArgumentException("The sale total is required.");
         if (products == null) throw new ArgumentException("The products are required.");
         if(quantity == 0) throw new ArgumentException("The quantity is required.");
 

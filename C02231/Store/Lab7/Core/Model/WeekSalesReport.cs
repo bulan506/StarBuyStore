@@ -9,7 +9,7 @@ public sealed class WeekSalesReport
     public WeekSalesReport(string dayOfWeek, decimal total)
     {
         if (dayOfWeek == null) throw new ArgumentNullException($"nameof(dayOfWeek) cannot be null.");
-        if (total== null) throw new ArgumentException("The sale total is required.");
+        if (total < 0) throw new ArgumentException("The sale total is required.");
 
         DayOfWeek = dayOfWeek;
         Total = total;
