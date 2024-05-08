@@ -13,58 +13,100 @@ namespace MyStoreAPI.DB{
     
 
     public class DB_Sale{
+
+        private DB_SaleLine DB_SaleLine {get;}
         
         public DB_Sale(){            
+            DB_SaleLine = new DB_SaleLine();
         }
                 
-        public static (string, int) InsertSale(Cart purchasedCart){
-            try{                                        
+        public async Task<int> InsertSaleAsync(string purchaseNum, DateTime dateTimeSale,Cart purchasedCart){
 
-                using (TransactionScope scopeTransaction = new TransactionScope()){
-                    
-                    string purchaseNum = "";
-                    int thisIdSale = 0;
+            if(string.IsNullOrEmpty(purchaseNum)) throw new BussinessException($"{nameof(purchaseNum)} no puede ser nulo ni estar vacio");
+            if(dateTimeSale == DateTime.MinValue) throw new BussinessException($"{nameof(dateTimeSale)} es fecha no valida");
+            if(purchasedCart == null) throw new ArgumentException($"{nameof(purchasedCart)} no puede ser nulo");
 
-                    //El bloque using(MySql....) es una buena practica ya que conecta y desconecta de la bd, liberando recursos
-                    //y evitar dejando conexiones abiertas
-                    using (MySqlConnection connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB())){
-                        connectionWithDB.Open();                    
+            MySqlConnection connectionWithDB = null;
+            MySqlTransaction transaction = null;
+            int thisIdSale = 0; // id a devolver
 
-                        //Hacemos el insert
-                        string insertSale = @"
-                        INSERT INTO Sales (Total,PurchaseNum, Subtotal, Direction, IdPayment,DateSale)
-                        VALUES (@total, @purchaseNum, @subtotal, @direction, @idPayment,@dateSale);
-                        ";
+            try{
+                connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB());                
+                await connectionWithDB.OpenAsync();
+                transaction = await connectionWithDB.BeginTransactionAsync();
 
-                        //id global unico para el comprobante                    
-                        Utility utility = new Utility();
-                        purchaseNum = utility.generateRandomPurchaseNum();
-                        MySqlCommand command = new MySqlCommand(insertSale, connectionWithDB);
+                //Hacemos el insert
+                string insertSale = @"
+                INSERT INTO Sales (Total,PurchaseNum, Subtotal, Direction, IdPayment,DateSale)
+                VALUES (@total, @purchaseNum, @subtotal, @direction, @idPayment,@dateSale);
+                ";
+                using(MySqlCommand command = new MySqlCommand(insertSale,connectionWithDB)){
+
+                        //asociamos las acciones a realizar con una transaction
+                        command.Transaction = transaction;
+
                         command.Parameters.AddWithValue("@total", purchasedCart.Total);
                         command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
                         command.Parameters.AddWithValue("@subtotal", purchasedCart.Subtotal);
                         command.Parameters.AddWithValue("@direction", purchasedCart.Direction);                  
                         command.Parameters.AddWithValue("@idPayment", purchasedCart.PaymentMethod.payment);
-                        command.Parameters.AddWithValue("@dateSale", DateTime.Now);
-                        command.ExecuteNonQuery();
+                        command.Parameters.AddWithValue("@dateSale", dateTimeSale);
+                        await command.ExecuteNonQueryAsync();
 
                          //Devolver el id de la venta generada (porque es IDENTITY(1,1))
+                         //Reutilizamos el comando para evitar crear otro solo por un SELECT
+                        command.Parameters.Clear();
                         string selectThisId = "SELECT IdSale FROM Sales WHERE PurchaseNum = @purchaseNum";
-                        command = new MySqlCommand(selectThisId, connectionWithDB);
+                        command.CommandText = selectThisId;
                         command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
-                        thisIdSale = Convert.ToInt32(command.ExecuteScalar());
-                                            
-                        DB_SaleLine.InsertSalesLine(connectionWithDB,purchaseNum,purchasedCart);
-                    }     
-                    //encapsula los metodos rollback y commit de Transaction
-                    scopeTransaction.Complete();                    
-
-                    //Si la transaccion se cumple con exito, devolvemos el codigo y el id para la instancia de Sale   
-                    return (purchaseNum, thisIdSale);
+                        thisIdSale = Convert.ToInt32(await command.ExecuteScalarAsync());                                                                    
                 }
-            }catch (Exception ex){                
-                throw;                
-            }            
+                await DB_SaleLine.InsertSalesLineAsync(connectionWithDB,transaction,thisIdSale,purchaseNum,purchasedCart);
+                //Commiteamos tanto la insercion en DB_Sale y DB_SaleLine
+                await transaction.CommitAsync();
+            }catch(Exception ex){
+                
+                await transaction.RollbackAsync();
+                throw;
+
+            }finally{
+                await connectionWithDB.CloseAsync();
+            }
+            return thisIdSale;
+
+            // try{                                        
+
+            //     using (TransactionScope scopeTransaction = new TransactionScope()){
+                                        
+            //         int thisIdSale = 0;                    
+            //         using (MySqlConnection connectionWithDB = new MySqlConnection(DB_Connection.INIT_CONNECTION_DB())){
+            //             connectionWithDB.Open();                                        
+            //             string insertSale = @"
+            //             INSERT INTO Sales (Total,PurchaseNum, Subtotal, Direction, IdPayment,DateSale)
+            //             VALUES (@total, @purchaseNum, @subtotal, @direction, @idPayment,@dateSale);
+            //             ";
+                        
+            //             MySqlCommand command = new MySqlCommand(insertSale, connectionWithDB);
+            //             command.Parameters.AddWithValue("@total", purchasedCart.Total);
+            //             command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
+            //             command.Parameters.AddWithValue("@subtotal", purchasedCart.Subtotal);
+            //             command.Parameters.AddWithValue("@direction", purchasedCart.Direction);                  
+            //             command.Parameters.AddWithValue("@idPayment", purchasedCart.PaymentMethod.payment);
+            //             command.Parameters.AddWithValue("@dateSale", dateTimeSale);
+            //             command.ExecuteNonQuery();
+            //             string selectThisId = "SELECT IdSale FROM Sales WHERE PurchaseNum = @purchaseNum";
+            //             command = new MySqlCommand(selectThisId, connectionWithDB);
+            //             command.Parameters.AddWithValue("@purchaseNum", purchaseNum);
+            //             thisIdSale = Convert.ToInt32(command.ExecuteScalar());
+                                            
+            //             DB_SaleLine.InsertSalesLine(connectionWithDB,purchaseNum,purchasedCart);
+            //         }                         
+            //         scopeTransaction.Complete();                    
+            //         return thisIdSale;
+            //     }
+            // }catch (Exception ex){                
+            //     throw;                
+            // }            
         }
 
         public async Task<IEnumerable<RegisteredSale>> GetRegisteredSalesByDayAsync(DateTime dateParameter){       
@@ -171,7 +213,7 @@ namespace MyStoreAPI.DB{
                         }
                     }
                 }
-                await transaction.CommitAsync(); 
+                await transaction.CommitAsync();
 
 
             }catch(Exception ex){

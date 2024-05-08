@@ -20,35 +20,35 @@ namespace UT{
         public async Task RegisteredSaleValidData(){
 
             var saleLogic = new SaleLogic();
-            var validDateFormat = "2024-05-27";
+            DateTime validDateFormat = new DateTime(2024,05,27);
             var validResult = await saleLogic.getSalesByDayAndWeekAsync(validDateFormat);
             Assert.IsNotNull(validResult);        
         }
 
-        [Test]
-        public async Task RegisteredSaleNullData(){
+        // [Test]
+        // public async Task RegisteredSaleNullData(){
 
-            var invalidDateFormat1 = "Lorem ipsum";
-            var invalidDateFormat2 = "";
-            var invalidDateFormat3 = " ";
-            var saleLogic = new SaleLogic();        
-            var invalidResult1 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat1);
-            var invalidResult2 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat2);
-            var invalidResult3 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat3);
+        //     var invalidDateFormat1 = "Lorem ipsum";
+        //     var invalidDateFormat2 = "";
+        //     var invalidDateFormat3 = " ";
+        //     var saleLogic = new SaleLogic();        
+        //     var invalidResult1 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat1);
+        //     var invalidResult2 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat2);
+        //     var invalidResult3 = await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat3);
 
 
-            Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat1));
-            Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat2));
-            Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat3));
+        //     Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat1));
+        //     Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat2));
+        //     Assert.ThrowsAsync<BussinessException>(async () => await saleLogic.getSalesByDayAndWeekAsync(invalidDateFormat3));
 
-        }
+        // }
 
         [Test]
         public async Task RegisteredSaleEmptyData(){
-
-            var validDateFormat = "2024-04-27";
-            //registro de ventas de una fecha futura (deberia devolver una lista en 0)
-            var validDateFormatWithNoData = "2024-06-10";
+            
+            DateTime validDateFormat = new DateTime(2024,04,27);
+            //registro de ventas de una fecha futura (deberia devolver una lista en 0)            
+            DateTime validDateFormatWithNoData = new DateTime(2024,06,10);
             
             var saleLogic = new SaleLogic();        
             var noEmptyData= await saleLogic.getSalesByDayAndWeekAsync(validDateFormat);                        
@@ -71,7 +71,8 @@ namespace UT{
         [Test]
         public async Task RowCountRegisteredSale(){
 
-            var validDateFormat = "2024-04-27";
+            //var validDateFormat = "2024-04-27";
+            DateTime validDateFormat = new DateTime(2024,04,27);
             //registro de ventas de una fecha futura (deberia devolver una lista en 0)            
             
             var saleLogic = new SaleLogic();        
@@ -88,10 +89,11 @@ namespace UT{
             }
             foreach (var sale in noEmptyDataSalesByWeek)
             {                                              
-                Assert.IsTrue(sale.Total >= 0);
+                Assert.IsTrue(sale.total >= 0);
             }
             // Verificar que la cantidad de filas sea mayor a 0
-            Assert.IsTrue(noEmptyDataSalesByDay.Count > 0);
-            Assert.IsTrue(noEmptyDataSalesByWeek.Count > 0);            
+            Assert.IsTrue(noEmptyDataSalesByDay.Count() > 0);
+            Assert.IsTrue(noEmptyDataSalesByWeek.Count() > 0);            
         }
+    }
 }

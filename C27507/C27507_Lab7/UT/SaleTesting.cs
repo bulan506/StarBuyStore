@@ -5,24 +5,26 @@ using MyStoreAPI.Models;
 using NUnit.Framework;
 
 namespace UT{
-
+    
     [TestFixture]
     public class SaleTesting{
+
+        private List<Product> someProductsFromDB;
 
         [SetUp]
         public void SetUp(){
             
             //var productsFromDB = DB.SelectProducts();
             var productsFromDB = Store.Instance.Products;
-            List<Product> someProductsFromDB = new List<Product>();
-            someProductsFromDB.add(productsFromDB[0]);
-            someProductsFromDB.add(productsFromDB[1]);
+            someProductsFromDB = new List<Product>();
+            someProductsFromDB.Add(productsFromDB[0]);
+            someProductsFromDB.Add(productsFromDB[1]);
         }
 
 
         //Test para los datos de consultas de ventas
         [Test]
-        public void SaleDaaTesting(){
+        public async Task SaleDaaTesting(){
 
             var cartTest = new Cart{
                 allProduct = someProductsFromDB,
@@ -33,8 +35,8 @@ namespace UT{
             };
 
             //Asumimos que los datos del carrito se procesan como una venta
-            SaleLogic saleLogic = new SaleLogic(cartTest);
-            Sale saleConfirmed = saleLogic.processDataSale();
+            SaleLogic saleLogic = new SaleLogic();            
+            Sale saleConfirmed = await saleLogic.createSaleAsync(cartTest);
             var purchaseNum = saleConfirmed.purchaseNum;
             
             Assert.NotNull(saleConfirmed);

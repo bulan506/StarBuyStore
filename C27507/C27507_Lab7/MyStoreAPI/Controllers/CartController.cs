@@ -14,11 +14,11 @@ namespace MyStoreAPI.Controllers
 
         [HttpPost]
         [Consumes("application/json")]
-        public IActionResult CreateCart([FromBody] Cart cart){                        
+        public async Task<IActionResult> CreateCartAsync([FromBody] Cart cart){                        
             
             try{
                 SaleLogic saleLogic = new SaleLogic();
-                Sale saleConfirmed = saleLogic.processDataSale(cart);
+                Sale saleConfirmed = await saleLogic.createSaleAsync(cart);
                 var purchaseNum = saleConfirmed.purchaseNum;
 
                 Console.WriteLine("Antes de mandar la respuesta post - Valor de saleConfirmed.purchaseNum: " + saleConfirmed.purchaseNum);

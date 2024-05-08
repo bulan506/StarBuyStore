@@ -14,26 +14,53 @@ namespace MyStoreAPI.Business
             this.db_sale = new DB_Sale();            
         }
 
-        public Sale processDataSale(Cart cart){
+        public async Task<Sale> createSaleAsync(Cart cart){
 
             if (cart == null)
                 throw new BussinessException($"{nameof(cart)} no puede ser nulo");            
-
             // Utilizamos la lógica del carrito y sus validaciones
-            CartLogic cartLogic = new CartLogic(cart);
-            cartLogic.validateCart(); // Esta llamada puede lanzar excepciones
+            CartLogic cartLogic = new CartLogic(cart);            
+            cartLogic.validateCart();
 
-            // Si la información del carrito es válida, empezamos a generar la venta
-            return createSale(cart);
+            string purchaseNum = generateRandomPurchaseNum();
+            DateTime dateTimeSale = DateTime.Now;
+            int saleId = await db_sale.InsertSaleAsync(purchaseNum,dateTimeSale,cart);
+            Sale sale = new Sale(saleId,purchaseNum,dateTimeSale,cart);
+            return sale;
+        }
 
+        public async Task<Sale> createSaleAsync(Cart cart,DateTime dateTimeSale){
+
+            if (cart == null)
+                throw new BussinessException($"{nameof(cart)} no puede ser nulo");            
+            // Utilizamos la lógica del carrito y sus validaciones
+            CartLogic cartLogic = new CartLogic(cart);            
+            cartLogic.validateCart();
+            string purchaseNum = generateRandomPurchaseNum();            
+            int saleId = await db_sale.InsertSaleAsync(purchaseNum,dateTimeSale,cart);
+            Sale sale = new Sale(saleId,purchaseNum,dateTimeSale,cart);
+            return sale;
         }
                                                  
-        private Sale createSale(Cart cart){
-            //Insertamos los datos del carrito en la tabla Sale
-            //Retornamos el id en la tabla y el codigo de compra unico
-           (string purchaseNum, int saleId) = DB_Sale.InsertSale(cart);
-            Sale sale = new Sale(saleId, purchaseNum, cart);
-            return sale;
+        // private async Task<Sale> createSale(Cart cart){            
+        //     string purchaseNum = generateRandomPurchaseNum();
+        //     DateTime dateTimeSale = DateTime.Now;
+        //     int saleId = await DB_Sale.InsertSaleAsync(purchaseNum,dateTimeSale,cart);
+        //     Sale sale = new Sale(saleId,purchaseNum,dateTimeSale,cart);
+        //     return sale;
+        // }
+
+
+        private string generateRandomPurchaseNum(){            
+            Guid purchaseNum = Guid.NewGuid();            
+            string largeString = purchaseNum.ToString().Replace("-", "");            
+            Random random = new Random();            
+            string randomCharacter = "";            
+            for (int i = 0; i < 8; i += 2){                
+                int randomIndex = random.Next(i, i + 2);
+                randomCharacter += largeString[randomIndex];
+            }
+            return randomCharacter;
         }
         
         //Metodos para los reportes de Ventas
