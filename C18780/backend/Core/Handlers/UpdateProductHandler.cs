@@ -26,6 +26,7 @@ namespace StoreApi.Handler
             product.Name = command.Name;
             product.Description = command.Description;
             product.ImageUrl = command.ImageUrl;
+            product.Category = command.Category;
 
 
             return await _productRepository.UpdateProductAsync(product);
@@ -51,6 +52,10 @@ namespace StoreApi.Handler
             if (command.Uuid == Guid.Empty)
             {
                 throw new ArgumentException("The uuid cannot be empty.");
+            }
+            if (command.Category == Guid.Empty)
+            {
+                throw new ArgumentException("The category cannot be empty.");
             }
         }
     }

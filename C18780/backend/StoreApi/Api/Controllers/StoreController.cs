@@ -20,13 +20,21 @@ namespace StoreApi.Controllers
             this.mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<Store> GetStoreAsync()
+        [HttpGet("category")]
+        public async Task<Store> GetStoreAsync(string name)
         {
-            var product = await mediator.Send(new GetProductListQuery());
             var taxPercentage = 13;//nota: guardar el valor en db
-            return new Store(product, taxPercentage);
+            if (name.Equals("All"))
+            {
+                var product = await mediator.Send(new GetProductListQuery());
+                return new Store(product, taxPercentage);
+            }
+            else
+            {
+                var guidCategory = await mediator.Send(new GetCategoryByNameQuery() { Name = name });
+                var product = await mediator.Send(new GetProductByCategoryQuery() { Category = guidCategory.Uuid });
+                return new Store(product, taxPercentage);
+            }
         }
     }
-
 }

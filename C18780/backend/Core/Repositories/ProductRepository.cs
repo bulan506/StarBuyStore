@@ -35,6 +35,14 @@ namespace StoreApi.Repositories
             }
         }
 
+        public async Task<List<Product>> GetProductByCategoryAsync(Guid category)
+        {
+            using (var dbContext = new DbContextClass(_configuration))
+            {
+                return await dbContext.Product.Where(x => x.Category == category).ToListAsync();
+            }
+        }
+
         public async Task<Product> GetProductByIdAsync(Guid uuid)
         {
             using (var dbContext = new DbContextClass(_configuration))

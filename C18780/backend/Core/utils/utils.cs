@@ -1,3 +1,6 @@
+using System.Collections;
+using StoreApi.Models;
+
 namespace StoreApi.utils
 {
     public sealed class Utils
@@ -25,5 +28,7 @@ namespace StoreApi.utils
             int sunday = DayOfWeek.Sunday - dateTime.DayOfWeek;
             return dateTime.AddDays(sunday);
         }
+
+
     }
 }
