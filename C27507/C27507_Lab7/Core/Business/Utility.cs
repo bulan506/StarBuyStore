@@ -20,3 +20,11 @@ public class Utility{
         }
 
 }
+
+public class CategoryComparer : IComparer<Category>
+{
+    public int Compare(Category x, Category y)
+    {
+        return x.Description.CompareTo(y.Description);
+    }
+}

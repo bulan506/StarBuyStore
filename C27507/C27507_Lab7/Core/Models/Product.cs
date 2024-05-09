@@ -8,7 +8,7 @@ namespace MyStoreAPI.Models
         public decimal quantity { get; set; }        
         public string description { get; set; }        
         public decimal id { get; set; }
-
+        public int idCategorie {get;set;}
 
         public object Clone()
         {
@@ -18,7 +18,8 @@ namespace MyStoreAPI.Models
                 imageUrl = this.imageUrl,
                 price = this.price,
                 quantity = this.quantity,                
-                description = this.description
+                description = this.description,
+                idCategorie = this.idCategorie;
             };
         }
     }

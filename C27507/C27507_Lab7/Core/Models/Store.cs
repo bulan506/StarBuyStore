@@ -5,15 +5,18 @@ using System.Collections.Generic;//para usar list
 
 namespace MyStoreAPI.Models
 {
-    public sealed class Store
-    {
+    public sealed class Store{
         public List<Product> Products { get; private set; }
+        //La mantenemos en memoria en la unica instancia de Store
+        public ArrayList StoreCategories {get; private set;}
         public int TaxPercentage { get; private set; }            
         public bool StoreConnectedWithDB {get; private set;}
 
         private Store(){            
             this.TaxPercentage = 13;
-            this.Products = new List<Product>();            
+            this.Products = new List<Product>();   
+            //Se crean las categorias
+            this.StoreCategories = assignCategoriesToProducts();
 
             //Hacemos de cuenta que se crea con exito las tablas o las reconoce en Program.cs          
             if(!DB_Product.ProductsInTableExist()){
@@ -43,7 +46,24 @@ namespace MyStoreAPI.Models
                                                 
             //unica instancia de Store (con los productos y la conexion a la DB)            
             Store.Instance = new Store();                                    
-        }                    
+        }
+
+        //Categorias
+        private ArrayList AssignCategoriesToProducts(){
+
+            ArrayList allCategories = new ArrayList(){
+                new Category { Id = 1, Name = "Redes" },
+                new Category { Id = 2, Name = "Celulares" },
+                new Category { Id = 3, Name = "Videojuegos" },
+                new Category { Id = 4, Name = "Entretenimiento" },
+                new Category { Id = 5, Name = "Musica" },
+                new Category { Id = 6, Name = "Computadoras" }
+            };
+
+            //Nos ahorramos la creacion de una clase Compare<Categorie>
+            //allCategories.Sort((x, y) => string.Compare(x.Description, y.Description));
+            return allCategories;
+        }
 
         //Generamos productos en caso de que por alguna razon la tabla este vacia     
         public List<Product> createStoreProducts(){
@@ -56,7 +76,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/tablet_samsung.jpg",
                     price = 25,
                     quantity = 0,                
-                    description = "lorem ipsum"                
+                    description = "lorem ipsum",
+                    idCategorie = 2       
                 });
 
                 products.Add(new Product
@@ -66,6 +87,7 @@ namespace MyStoreAPI.Models
                     price = 50,
                     quantity = 0,
                     description = "lorem ipsum"
+                    idCategorie = 4
                 });
 
                 products.Add(new Product
@@ -74,7 +96,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/auri.jfif",
                     price = 100,
                     quantity = 0,
-                    description = "lorem ipsum"
+                    description = "lorem ipsum",
+                    idCategorie = 5
                 });
 
                 products.Add(new Product
@@ -83,7 +106,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/dualshock4.jpg",
                     price = 35,
                     quantity = 0,                
-                    description = "lorem ipsum"                
+                    description = "lorem ipsum",
+                    idCategorie = 3
                 });
 
                 products.Add(new Product
@@ -92,7 +116,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/teclado.jpg",
                     price = 75,
                     quantity = 0,              
-                    description = "lorem ipsum"  
+                    description = "lorem ipsum",
+                    idCategorie = 6
                 });
 
                 products.Add(new Product
@@ -101,7 +126,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/a54_samsung.jpg",
                     price = 250,
                     quantity = 0,              
-                    description = "lorem ipsum"                  
+                    description = "lorem ipsum"
+                    idCategorie = 2
                 });
 
                 products.Add(new Product
@@ -110,7 +136,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/dualshock5.jpg",
                     price = 250,
                     quantity = 0,                
-                    description = "lorem ipsum"
+                    description = "lorem ipsum",
+                    idCategorie = 3
                 });
 
                 products.Add(new Product
@@ -119,7 +146,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/a54_samsung.png",
                     price = 150,
                     quantity = 0,                
-                    description = "carousel"
+                    description = "carousel",
+                    idCategorie = 2
                 });
 
                 products.Add(new Product
@@ -128,7 +156,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/mouse.png",
                     price = 2500,
                     quantity = 0,                
-                    description = "lorem ipsum"
+                    description = "lorem ipsum",
+                    idCategorie = 1
                 });
 
                 products.Add(new Product
@@ -137,7 +166,8 @@ namespace MyStoreAPI.Models
                     imageUrl = "./img/router_archerVR400.jpg",
                     price = 75,
                     quantity = 0,                
-                    description = "lorem ipsum"
+                    description = "lorem ipsum",
+                    idCategorie = 1
                 });
 
                 return products;
