@@ -24,5 +24,6 @@ namespace StoreApi.Data
         public DbSet<Sales> Sales { get; set; }
         public DbSet<Sinpe> Sinpe { get; set; }
         public DbSet<Category> Category { get; set; }
+        
     }
 }

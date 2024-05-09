@@ -6,7 +6,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../../ui/styles/nav.css';
 import { useFetchCategoriesList } from '@/app/api/http.category';
 import { Category } from '@/app/lib/data-definitions';
-import { useState } from 'react';
 
 const Categories = ({ categories, onAdd }: { categories: Category[], onAdd: any }) => {
   return (

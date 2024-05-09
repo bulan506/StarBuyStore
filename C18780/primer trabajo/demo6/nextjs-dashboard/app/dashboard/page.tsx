@@ -71,7 +71,6 @@ export default function Page() {
   const initialStore = useFetchInitialStore(category);
   const initialCart = getInitialCartLocalStorage();
   const [count, setCount] = useState(initialCart.cart.products.length > 0 ? initialCart.cart.products.length : 0);
-  
   const handleAddToCart = ({ product }: { product: Product }) => {
     initialCart.cart.products.push(product);
     initialCart.cart.subtotal = initialCart.cart.subtotal + product.price;
@@ -79,12 +78,10 @@ export default function Page() {
     setCount(count + 1);
     saveInitialCartLocalStorage(initialCart);
   }
-
   const handleAddtoCategory = ({ category }: { category: Category }) => {
     setCategory(category.name);
     console.log(initialStore);
   }
-
   return (
     <>
       <SideNav countCart={count} onAdd={handleAddtoCategory} />

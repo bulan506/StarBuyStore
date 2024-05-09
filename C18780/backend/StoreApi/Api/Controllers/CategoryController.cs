@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using StoreApi.Commands;
 using StoreApi.Models;
 using StoreApi.Queries;
-
 namespace StoreApi
 {
     [Route("api/[controller]")]
@@ -42,13 +41,27 @@ namespace StoreApi
         }
 
         [HttpGet("categoryId")]
-        public Category GetCategoryById(Guid uuid)
+        public Categories GetCategoryById(Guid uuid)
         {
+            foreach (var category in categories)
+            {
+                if (category.Uuid == uuid)
+                {
+                    return category;
+                }
+            }
             return default;
         }
         [HttpGet("categoryName")]
-        public Category GetCategoryByName(string name)
+        public Categories GetCategoryByName(string name)
         {
+            foreach (var category in categories)
+            {
+                if (category.Name.Equals(name))
+                {
+                    return category;
+                }
+            }
             return default;
         }
 

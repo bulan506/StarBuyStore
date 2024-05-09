@@ -7,6 +7,5 @@ namespace StoreApi.Models
         [Key]
         public Guid Uuid { get; set; }
         public string Name { get; set; }
-
     }
 }

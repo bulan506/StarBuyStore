@@ -23,7 +23,7 @@ namespace StoreApi.Controllers
         [HttpGet("category")]
         public async Task<Store> GetStoreAsync(string name)
         {
-            var taxPercentage = 13;//nota: guardar el valor en db
+            var taxPercentage = 13;
             if (name.Equals("All"))
             {
                 var product = await mediator.Send(new GetProductListQuery());

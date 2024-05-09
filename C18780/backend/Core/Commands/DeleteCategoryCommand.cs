@@ -1,5 +1,4 @@
 using MediatR;
-
 namespace StoreApi.Commands
 {
     public sealed class DeleteCategoryCommand : IRequest<int>

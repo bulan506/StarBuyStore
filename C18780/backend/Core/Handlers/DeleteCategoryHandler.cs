@@ -1,7 +1,6 @@
 using MediatR;
 using StoreApi.Commands;
 using StoreApi.Repositories;
-
 namespace StoreApi.Handler
 {
     public sealed class DeleteCategoryHandler : IRequestHandler<DeleteCategoryCommand, int>
