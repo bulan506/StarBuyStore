@@ -24,6 +24,7 @@ export default function Home() {
         setStoreProducts(data);
         setCarrusel(data);
         setCategories(data.categoriesList);
+        
       } catch (error) {
         throw new Error('Failed to fetch data');
       }
@@ -78,10 +79,9 @@ export default function Home() {
       const selected = event.target.value;
       setSelectedCategory(selected);
       let productsForCategory = [];
-      console.log(selected);
       if (selected === "0") {
         const response = await fetch('http://localhost:5207/api/Store/Products');
-        setFilteredProducts([]); // Reiniciar los productos filtrados si se selecciona "ALL"
+        setFilteredProducts([]); 
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -94,18 +94,10 @@ export default function Home() {
         }
         productsForCategory = await response.json();
         setFilteredProducts(productsForCategory);
-        console.log(productsForCategory);
       }
-      //
-      //console.log('Datos recibidos:', productsForCategory);
-      const categories = productsForCategory.map(product => product.idCategory);
 
-      console.log(categories);
-
-      setCategories(categories);
       setStoreProducts(productsForCategory);
-      //console.log('Store Products:', productsForCategory);
-      //console.log('Categorías recibidas:', categories);
+
 
     } catch (error) {
       throw new Error('Fail handleCategory: ' + error.message);
@@ -156,7 +148,7 @@ export default function Home() {
         <select className="btn btn-secondary dropdown-toggle" onChange={handleCategoryChange} value={selectedCategory}>
           <option value={0}>ALL</option>
 
-          {categories.map(category => (
+          {categories && categories.map(category => (
             <option key={category.idCategory} value={category.idCategory}>
               {category.name}
             </option>
