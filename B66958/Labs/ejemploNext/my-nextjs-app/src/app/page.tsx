@@ -11,6 +11,8 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const [isCartActive, setIsCartActive] = useState(false);
 
@@ -37,6 +39,7 @@ export default function Home() {
         const result = await getData();
         const paymentTypes = result.paymentMethods.map(payment => payment.paymentType);
         setProducts(result.products);
+        setCategories(result.categoriesList);
         setCart(cart => ({
           ...cart,
           carrito: {
@@ -161,9 +164,44 @@ export default function Home() {
   };
 
   const MyRow = () => {
+
+    async function handleCategoryChange(event: any) {
+      let selected = event.target.value;
+      setSelectedCategory(selected)
+      if (selected === "0") {
+        var allProducts = await getData();
+        setProducts(allProducts.products)
+      } else
+        try {
+          const res = await fetch(`https://localhost:7151/api/Store/Products?category=${selected}`, {
+            method: 'GET',
+            headers: {
+              'content-type': 'application/json'
+            }
+          })
+          var productsForCategory = await res.json();
+          setProducts(productsForCategory)
+        } catch (error) {
+          setErrorMessage(error);
+          setIsErrorShowing(true);
+        }
+    }
+
     return (
       <>
-        <h1>Lista de productos</h1>
+        <div className="row">
+          <div className="col-auto">
+            <h1>Lista de productos</h1>
+            <select className="form-control" onChange={handleCategoryChange} value={selectedCategory}>
+              <option value={0}>Todas las categorías</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         <div className="row justify-content-md-center">
           {products.map(product => <Product key={product.uuid} product={product} handleAddToCart={handleAddToCart} />)}
         </div>
