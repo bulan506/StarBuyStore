@@ -27,3 +27,8 @@ export type Cart = {
         methodPayment: number | null;
     };
 }
+
+export type Category = {
+    uuid: UUID;
+    name: string;
+}
