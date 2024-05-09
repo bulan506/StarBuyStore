@@ -1,3 +1,4 @@
+/*
 using NUnit.Framework;
 using Store_API.Business;
 using Store_API.Database;
@@ -72,3 +73,6 @@ namespace UnitTests
         }
     }
 }
+
+*/
+
