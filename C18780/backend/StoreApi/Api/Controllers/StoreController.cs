@@ -20,7 +20,6 @@ namespace StoreApi.Controllers
             this.mediator = mediator;
             this.categoryController = categoryController;
         }
-
         [HttpGet("getStore")]
         public async Task<Store> GetStoreAsync(string category)
         {

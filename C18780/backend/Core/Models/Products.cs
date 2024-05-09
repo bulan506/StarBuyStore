@@ -7,4 +7,5 @@ namespace StoreApi.Models
             this.products = products;
         }
     }
+    
 }

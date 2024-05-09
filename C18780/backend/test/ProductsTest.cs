@@ -64,7 +64,6 @@ namespace StoreApiTests
 
             Assert.AreEqual(1, result);
         }
-
         [Test]
         public async Task GetProductByCategory()
         {

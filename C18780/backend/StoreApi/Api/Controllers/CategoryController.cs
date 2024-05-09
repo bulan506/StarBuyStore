@@ -33,7 +33,6 @@ namespace StoreApi
             }
             categories.Sort(new CategoryNameComparator());
         }
-
         [HttpGet]
         public async Task<List<Categories>> GetCategoryListAsync()
         {
