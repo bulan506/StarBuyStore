@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace StoreApiTests
 {
-    public class ProductTests
+    public class HappyPathTest
     {
         private IConfiguration _configuration;
         private IProductRepository _productRepository;
@@ -76,13 +76,13 @@ namespace StoreApiTests
                 Name = "Test Product",
                 ImageUrl = "test_image.jpg",
                 Price = 50000,
-                Description = "Test description"
+                Description = "Test description",
+                Category = Guid.Parse("4a8c74b4-cf8e-4fbf-81a2-3d11e1e37d18")
             };
 
-            // Act
+
             var result = await _productRepository.AddProductAsync(product);
 
-            // Assert
             Assert.NotNull(result);
             Assert.AreEqual(product.Uuid, result.Uuid);
         }
@@ -90,7 +90,7 @@ namespace StoreApiTests
         [Test]
         public async Task GetProductByIdAsync_NonExistingId_ReturnsNull()
         {
-            var nonExistingProductId = Guid.NewGuid(); 
+            var nonExistingProductId = Guid.NewGuid();
 
             var result = await _productRepository.GetProductByIdAsync(nonExistingProductId);
 
@@ -113,6 +113,14 @@ namespace StoreApiTests
 
             Assert.AreEqual(1, result);
         }
+
+        [Test]
+        public async Task GetProductByCategory()
+        {
+            Guid category = Guid.Parse("4a8c74b4-cf8e-4fbf-81a2-3d11e1e37d18");
+            var result = await _productRepository.GetProductByCategoryAsync(category);
+            Assert.NotNull(result);
+        }
     }
-    
+
 }

@@ -52,8 +52,7 @@ namespace StoreApi
             }
             return default;
         }
-        [HttpGet("categoryName")]
-        public Categories GetCategoryByName(string name)
+        internal Categories GetCategoryByName(string name)
         {
             foreach (var category in categories)
             {

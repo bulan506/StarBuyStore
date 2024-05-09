@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace StoreApi.Models
+{
+    public static sealed class SearchWithDictionary
+    {
+        private static readonly Dictionary<string, List<Product>> index;
+
+        public ProductSearch(List<Product> products)
+        {
+            index = new Dictionary<string, List<Product>>();
+
+            foreach (var product in products)
+            {
+                var words = product.Name.Split(' ').Concat(product.Description.Split(' '));
+                foreach (var word in words)
+                {
+                    if (!index.ContainsKey(word))
+                    {
+                        index[word] = new List<Product>();
+                    }
+                    index[word].Add(product);
+                }
+            }
+
+            foreach (var list in index.Values)
+            {
+                list.Sort((p1, p2) => p1.Uuid.CompareTo(p2.Uuid));
+            }
+        }
+
+        public List<Product> Search(string keyword)
+        {
+            if (index.ContainsKey(keyword))
+            {
+                return index[keyword];
+            }
+            else
+            {
+                return new List<Product>();
+            }
+        }
+    }
+}
