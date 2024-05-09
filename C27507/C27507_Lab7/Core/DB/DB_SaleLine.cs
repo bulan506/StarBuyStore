@@ -27,6 +27,7 @@ namespace MyStoreAPI.DB
                     INSERT INTO SalesLines (IdSale, IdProduct,Quantity,PricePaid,OriginalProductName, OriginalProductPrice)
                     VALUES (@saleId, @productId,@productQuantity,@pricePaid, @originalProductName, @originalProductPrice);";
 
+
                 using (MySqlCommand command = new MySqlCommand(insertSalesLine, connectionWithDB)){                        
                     command.Transaction = transaction;             
                     foreach (var actualProductId in purchasedCart.allProduct){

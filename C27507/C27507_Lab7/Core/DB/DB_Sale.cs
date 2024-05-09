@@ -53,6 +53,7 @@ namespace MyStoreAPI.DB{
                         command.Parameters.AddWithValue("@dateSale", dateTimeSale);
                         await command.ExecuteNonQueryAsync();
 
+
                          //Devolver el id de la venta generada (porque es IDENTITY(1,1))
                          //Reutilizamos el comando para evitar crear otro solo por un SELECT
                         command.Parameters.Clear();

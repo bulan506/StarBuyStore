@@ -34,6 +34,7 @@ namespace MyStoreAPI.Models
             //mockDataAsync(Products);
         }
 
+
         //Le decimos que solo acepte clases estaticas, con readonly le indicamos que solo 1
         public static readonly Store Instance;
 

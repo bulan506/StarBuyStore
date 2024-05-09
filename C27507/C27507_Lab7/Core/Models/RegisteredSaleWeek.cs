@@ -7,6 +7,7 @@ namespace MyStoreAPI.Models{
         public string dayOfWeek  {get;set;}
         public decimal total {get;set;}
 
+
         public RegisteredSaleWeek(string dayOfWeek, decimal total){
             this.dayOfWeek = dayOfWeek;
             this.total = total;

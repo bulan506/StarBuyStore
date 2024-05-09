@@ -9,6 +9,7 @@ namespace MyStoreAPI.Business
 
         private Cart newCart {get;}
 
+
         public CartLogic(Cart newCart){
             this.newCart = newCart;
         }

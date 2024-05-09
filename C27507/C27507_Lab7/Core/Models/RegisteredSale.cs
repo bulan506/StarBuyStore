@@ -11,6 +11,7 @@ namespace MyStoreAPI.Models{
         public PaymentMethod PaymentMethod { get; set; }
         public DateTime DateTimeSale{ get; set; }
         
+        
         public RegisteredSale(int idSale, string purchaseNum, decimal subtotal, decimal tax, decimal total, string direction, PaymentMethod paymentMethod,DateTime dateTimeSale){                                                
             IdSale = idSale;
             PurchaseNum = purchaseNum;

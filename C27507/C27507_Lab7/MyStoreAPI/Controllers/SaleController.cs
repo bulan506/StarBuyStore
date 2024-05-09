@@ -7,6 +7,7 @@ using MyStoreAPI.Models;
 namespace MyStoreAPI.Controllers
 {
 
+
     [Route("api/[controller]")]
     [ApiController]
     public class SaleController: ControllerBase{

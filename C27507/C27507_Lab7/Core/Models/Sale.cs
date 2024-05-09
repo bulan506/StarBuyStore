@@ -14,6 +14,7 @@ namespace MyStoreAPI.Models
             if (idSale <= 0)
                 throw new ArgumentException($"{nameof(idSale)} no puede ser negativo ni igual a cero.");
     
+    
             if (string.IsNullOrWhiteSpace(purchaseNum))
                 throw new ArgumentException($"{nameof(purchaseNum)} no puede estar vacío.");
 

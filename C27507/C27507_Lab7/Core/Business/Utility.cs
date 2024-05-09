@@ -5,6 +5,7 @@ public class Utility{
     public Utility(){
         
     }
+    
 
     public string generateRandomPurchaseNum(){            
             Guid purchaseNum = Guid.NewGuid();            
