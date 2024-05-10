@@ -1,3 +1,4 @@
+using MyStoreAPI.Models;
 namespace MyStoreAPI.Models
 {
     public class Product: ICloneable
@@ -8,7 +9,7 @@ namespace MyStoreAPI.Models
         public decimal quantity { get; set; }        
         public string description { get; set; }        
         public decimal id { get; set; }
-        public int idCategorie {get;set;}
+        public Category category {get;set;}
 
         public object Clone()
         {
@@ -19,7 +20,7 @@ namespace MyStoreAPI.Models
                 price = this.price,
                 quantity = this.quantity,                
                 description = this.description,
-                idCategorie = this.idCategorie;
+                category = this.category
             };
         }
     }

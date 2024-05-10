@@ -1,5 +1,4 @@
-﻿namespace MyStoreAPI;
-
+﻿using Core;
 using Microsoft.AspNetCore.Mvc;
 //API
 using MyStoreAPI.Business;
@@ -16,12 +15,12 @@ namespace MyStoreAPI.Controllers
     public class ProductsController : ControllerBase{                
         
         [HttpGet]
-        public IActionResult returnFilteredProducts(id specificCategorie){
+        public IActionResult returnFilteredProducts(int specificCategorie){
 
             //Creamos una instancia para filtrar los products   
 
             ProductsLogic productsLogic = new ProductsLogic();
-            IEnumerable<Product> filteredProducts = productsLogic.filterProductsByCategorie(specificCategorie);
+            IEnumerable<Product> filteredProducts = productsLogic.filterProductsByCategory(specificCategorie);
             return Ok(filteredProducts);
 
             //Falta el control de errores

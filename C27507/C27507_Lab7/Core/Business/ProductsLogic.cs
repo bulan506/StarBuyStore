@@ -1,26 +1,32 @@
-﻿namespace Core;
+﻿using MyStoreAPI.Models;
+namespace Core;
 
 public class ProductsLogic{
         
-    private Products dataFromStore {get;};
+    public Products dataFromStore {get;}
     
-    public ProductsLogic(){                       
+    public ProductsLogic(){
+        this.dataFromStore = new Products();
+        
+        if(dataFromStore == null) 
+            throw new BussinessException($"{nameof(dataFromStore)} no puede ser nulo");        
     }
 
-    public IEnumerable<Product> filterProductsByCategorie(string categoryProp){        
+    public IEnumerable<Product> filterProductsByCategory(int categoryId){        
 
-        if (string.IsNullOrEmpty(categoryProp))
-            throw new BussinessException($"{nameof(categoryProp)} no puede ser nulo ni vacio");            
+        if (categoryId <= 0 )
+            throw new BussinessException($"{nameof(categoryId)} id de categoria no valido");
         //verificar que la categoria exista en el struct 
-        var flag = -1;
-        foreach (var c in dataFromStore.categoriesFromStore){
-            if(c.name == categoryProp) flag = 1;
-        }
-        if(flag === -1)throw new BussinessException($"{nameof(categoryProp)} no existe");            
-        var filteredProudcts = dataFromStore.productsFromStore.Where(p => p.idCategorie.Contains(categoryProp, StringComparer.OrdinalIgnoreCase)).ToList();
+        var thisCategoryExist = dataFromStore.categoriesFromStore.Any(c => c.id == categoryId);
+        if (!thisCategoryExist)
+            throw new BussinessException($"{nameof(categoryId)} no existe");
 
-        if (filteredProudcts ==  null)
-            throw new BussinessException($"{nameof(filteredProudcts)} no puede ser nulo");        
-        return filteredProudcts;
+        var filteredProducts = dataFromStore.productsFromStore.Where(p => p.category.id == categoryId).ToList();
+
+        //Si se permiten listas vacias
+        if (filteredProducts ==  null)
+            throw new BussinessException($"{nameof(filteredProducts)} no puede ser nulo");        
+        return filteredProducts;
+
     }
 }
