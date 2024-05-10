@@ -28,7 +28,8 @@ namespace KEStoreApi.Controllers
             {
                 return BadRequest("El ID de categoría debe ser un número entero mayor que 0.");
             }
-            var productsByCategory = await Products.GetProductsByCategory(categoryId);
+            var storeInstance = await Store.Instance;
+            var productsByCategory = await storeInstance.getProductosCategoryID(categoryId);
             return Ok(new
             {
                 Products = productsByCategory
