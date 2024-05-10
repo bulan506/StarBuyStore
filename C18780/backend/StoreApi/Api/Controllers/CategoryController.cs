@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StoreApi.Commands;
 using StoreApi.Models;
+using StoreApi.Cache;
 using StoreApi.Queries;
 namespace StoreApi
 {
@@ -10,7 +11,7 @@ namespace StoreApi
     public sealed class CategoryController : ControllerBase
     {
         private readonly IMediator mediator;
-        private readonly List<Categories> categories;
+        private List<Categories> categories;
         public CategoryController(IMediator mediator)
         {
             if (mediator == null)
@@ -19,19 +20,29 @@ namespace StoreApi
             }
             this.mediator = mediator;
             categories = new List<Categories>();
+
             LoadCategoriesFromDatabaseAsync().Wait();
         }
+
         private async Task LoadCategoriesFromDatabaseAsync()
         {
-            var result = await mediator.Send(new GetCategoryListQuery());
-            if (result != null)
+            if (CategoriesCache._categories == null || !CategoriesCache._categories.Any())
             {
-                foreach (var category in result)
+                var result = await mediator.Send(new GetCategoryListQuery());
+                if (result != null)
                 {
-                    categories.Add(new Categories(category));
+                    foreach (var category in result)
+                    {
+                        categories.Add(new Categories(category));
+                    }
+                    CategoriesCache._categories = categories;
+                    CategoriesCache._categories.Sort(new CategoryNameComparator());
                 }
             }
-            categories.Sort(new CategoryNameComparator());
+            else
+            {
+                categories = CategoriesCache._categories;
+            }
         }
         [HttpGet]
         public async Task<List<Categories>> GetCategoryListAsync()
@@ -45,17 +56,6 @@ namespace StoreApi
             foreach (var category in categories)
             {
                 if (category.Uuid == uuid)
-                {
-                    return category;
-                }
-            }
-            return default;
-        }
-        internal Categories GetCategoryByName(string name)
-        {
-            foreach (var category in categories)
-            {
-                if (category.Name.Equals(name))
                 {
                     return category;
                 }

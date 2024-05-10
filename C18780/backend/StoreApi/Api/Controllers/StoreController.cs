@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StoreApi.Cache;
 using StoreApi.Models;
 using StoreApi.Queries;
 
@@ -11,6 +12,7 @@ namespace StoreApi.Controllers
     {
         private readonly IMediator mediator;
         private readonly CategoryController categoryController;
+        private CategoriesCache categoriesCache;
         public StoreController(IMediator mediator, CategoryController categoryController)
         {
             if (mediator == null)
@@ -19,6 +21,7 @@ namespace StoreApi.Controllers
             }
             this.mediator = mediator;
             this.categoryController = categoryController;
+            categoriesCache = CategoriesCache.GetInstance();
         }
         [HttpGet("getStore")]
         public async Task<Store> GetStoreAsync(string category)
@@ -31,7 +34,7 @@ namespace StoreApi.Controllers
             }
             else
             {
-                var guidCategory = categoryController.GetCategoryByName(category);
+                var guidCategory = categoriesCache.GetCategoryByName(category);
                 var product = await mediator.Send(new GetProductByCategoryQuery() { Category =  guidCategory.Uuid});
                 return new Store(product, taxPercentage);
             }

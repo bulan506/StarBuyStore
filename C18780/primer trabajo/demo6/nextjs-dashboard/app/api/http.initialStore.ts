@@ -7,7 +7,7 @@ export function useFetchInitialStore(category: string) {
   
   useEffect(() => {
     async function getProducts() {
-        const res = await fetch(`https://localhost:7099/api/Store/getStore?name=${category}`);
+        const res = await fetch(`https://localhost:7099/api/Store/getStore?category=${category}`);
         if (!res.ok) {
           throw new Error('Failed to fetch products.');
         }

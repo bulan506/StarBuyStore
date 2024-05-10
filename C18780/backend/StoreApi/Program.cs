@@ -1,4 +1,5 @@
 using MediatR;
+using StoreApi;
 using StoreApi.Commands;
 using StoreApi.Data;
 using StoreApi.Handler;
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddDbContext<DbContextClass>();
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
@@ -48,6 +51,9 @@ builder.Services.AddTransient<IRequestHandler<GetCategoryListQuery, IEnumerable<
 builder.Services.AddTransient<IRequestHandler<CreateCategoryCommand, Category>, CreateCategoryHandler>();
 builder.Services.AddTransient<IRequestHandler<DeleteCategoryCommand, int>, DeleteCategoryHandler>();
 
+
+//Add services to controllers
+builder.Services.AddTransient<CategoryController>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
