@@ -122,30 +122,30 @@ namespace storeApi.DataBase
                                     CREATE DATABASE store;
                                     USE store;
                                     CREATE TABLE IF NOT EXISTS products (
-                                     id INT AUTO_INCREMENT PRIMARY KEY,
-                                     name VARCHAR(100),
-                                     description VARCHAR(255),
-                                     price DECIMAL(10, 2),
-                                     imageURL VARCHAR(255),
-                                     categoryID INT
+                                     id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+                                     name VARCHAR(100) NOT NULL,
+                                     description VARCHAR(255) NOT NULL,
+                                     price DECIMAL(10, 2) NOT NULL,
+                                     imageURL VARCHAR(255) NOT NULL,
+                                     categoryID INT NOT NULL
                                  );
                                  CREATE TABLE IF NOT EXISTS paymentMethod (
-                                     id INT PRIMARY KEY,
-                                     method_name VARCHAR(50)
+                                     id INT PRIMARY KEY NOT NULL,
+                                     method_name VARCHAR(50) NOT NULL
                                  );
                                  CREATE TABLE IF NOT EXISTS sales (
                                      purchase_date DATETIME NOT NULL,
                                      total DECIMAL(10, 2) NOT NULL,
-                                     payment_method INT,
+                                     payment_method INT NOT NULL,
                                      purchase_id VARCHAR(30) NOT NULL PRIMARY KEY,
                                      FOREIGN KEY (payment_method) REFERENCES paymentMethod(id)
                                  );
                                  CREATE TABLE IF NOT EXISTS linesSales(
                                      id INT AUTO_INCREMENT PRIMARY KEY,
                                      purchase_id VARCHAR(30) NOT NULL,
-                                     product_id INT,
-                                     quantity INT,
-                                     price DECIMAL(10, 2),
+                                     product_id INT NOT NULL,
+                                     quantity INT NOT NULL,
+                                     price DECIMAL(10, 2) NOT NULL,
                                      FOREIGN KEY (purchase_id) REFERENCES sales(purchase_id),
                                      FOREIGN KEY (product_id) REFERENCES products(id)
                                  );
@@ -262,7 +262,7 @@ namespace storeApi.DataBase
                         while (await reader.ReadAsync())
                         {
                             int categoryIdFromDB = reader.GetInt32("categoryID");
-                            CategoryStruct categoryStruct = categoryList.GetCategoryById(categoryIdFromDB);
+                            CategoryStr categoryStruct = categoryList.GetCategoryById(categoryIdFromDB);
                             products.Add(new Product
                             {
                                 id = reader.GetInt32("id"),

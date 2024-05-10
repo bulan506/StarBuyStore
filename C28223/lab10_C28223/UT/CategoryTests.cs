@@ -13,8 +13,8 @@ public class CategoryTests
     [Test]
     public void CreateCategory_Struct_CreatesCategoryWithValidData()
     {
-        CategoryStruct category = new CategoryStruct();
-        CategoryStruct createdCategory = category.crearCategoria(1, "Electronica");
+        CategoryStr category = new CategoryStr();
+        CategoryStr createdCategory = category.crearCategoria(1, "Electronica");
         Assert.AreEqual(1, createdCategory.CategoryID);
         Assert.AreEqual("Electronica", createdCategory.NameCategory);
     }
@@ -29,14 +29,14 @@ public class CategoryTests
     [Test]
     public void CreateCategory_Struct_ThrowsExceptionWithInvalidData()
     {
-        CategoryStruct category = new CategoryStruct();
+        CategoryStr category = new CategoryStr();
         Assert.Throws<ArgumentException>(() => category.crearCategoria(-1, "Invalid Category"));
         Assert.Throws<ArgumentException>(() => category.crearCategoria(1, ""));
     }
     [Test]
     public void CreateCategory_Struct_ThrowsExceptionForInvalidName()
     {
-        CategoryStruct category = new CategoryStruct();
+        CategoryStr category = new CategoryStr();
         Assert.Throws<ArgumentException>(() => category.crearCategoria(10, null));
         Assert.Throws<ArgumentException>(() => category.crearCategoria(10, ""));
     }

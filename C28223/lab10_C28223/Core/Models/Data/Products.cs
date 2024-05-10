@@ -10,9 +10,9 @@ namespace storeApi.Models.Data
     {
         private IEnumerable<Product> allProducts;
         private Dictionary<int, List<Product>> productsByCategory;
-        private IEnumerable<CategoryStruct> Category;
+        private IEnumerable<CategoryStr> Category;
         public Products() { }
-        private Products(IEnumerable<Product> allProducts, Dictionary<int, List<Product>> productsByCategory, IEnumerable<CategoryStruct> categories)
+        private Products(IEnumerable<Product> allProducts, Dictionary<int, List<Product>> productsByCategory, IEnumerable<CategoryStr> categories)
         {
             if (allProducts == null || allProducts.Count() == 0) throw new ArgumentNullException($"La lista de productos {nameof(allProducts)} no puede ser nula.");
             if (productsByCategory == null || productsByCategory.Count() == 0) throw new ArgumentNullException($"El diccionario {nameof(productsByCategory)}de productos por categoría no puede ser nulo.");
@@ -52,7 +52,7 @@ namespace storeApi.Models.Data
         }
 
         public IEnumerable<Product> GetAllProducts() { return allProducts; }
-        public IEnumerable<CategoryStruct> GetCategory() { return Category; }
+        public IEnumerable<CategoryStr> GetCategory() { return Category; }
         public IEnumerable<Product> GetProductsBycategoryID(int categoryID)
         {
             if (categoryID < 1) throw new ArgumentException($"El id de la categoría {nameof(categoryID)} no puede ser negativa o cero.");
