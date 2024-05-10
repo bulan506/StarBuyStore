@@ -12,7 +12,7 @@ namespace storeApi.DataBase
     {
         public static void CreateMysql()
         {
-            Category categoryList= new Category();
+            Category categoryList = new Category();
             var products = new List<Product>
             {
                 new Product
@@ -21,7 +21,7 @@ namespace storeApi.DataBase
                     description = "Esta computadora es muy rapida",
                     price = 20000,
                     imageURL = "https://m.media-amazon.com/images/I/71Cco7OaVxL.__AC_SX300_SY300_QL70_FMwebp_.jpg",
-                    category=categoryList.GetCategories().ToList()[0]
+                    category=categoryList.GetCategories().ToList()[0] //aqui lo correcto es llamar a la categoria por el id y asignarle el struct, por el momento esta random
                 },
                 new Product
                 {
@@ -250,7 +250,7 @@ namespace storeApi.DataBase
         internal async Task<IEnumerable<Product>> GetProductsFromDBAsync()
         {
             List<Product> products = new List<Product>();
-            var category= new Category();
+            var categoryList = new Category();
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 await connection.OpenAsync();
@@ -260,9 +260,9 @@ namespace storeApi.DataBase
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
-                        { 
-                             int categoryIdFromDB = reader.GetInt32("categoryID");
-                             CategoryStruct categoryStruct = category.GetCategories().FirstOrDefault(c => c.CategoryID == categoryIdFromDB);
+                        {
+                            int categoryIdFromDB = reader.GetInt32("categoryID");
+                            CategoryStruct categoryStruct = categoryList.GetCategoryById(categoryIdFromDB);
                             products.Add(new Product
                             {
                                 id = reader.GetInt32("id"),
@@ -270,7 +270,7 @@ namespace storeApi.DataBase
                                 description = reader.GetString("description"),
                                 price = reader.GetDecimal("price"),
                                 imageURL = reader.GetString("imageURL"),
-                                category= categoryStruct
+                                category = categoryStruct
                             });
                         }
                     }

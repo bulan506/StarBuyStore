@@ -27,6 +27,14 @@ public class Category
         listCategories.Add(categoryStruct.crearCategoria(9, "Entretenimiento"));
 
     }
+    public CategoryStruct GetCategoryById(int categoryId)
+    {
+        if (categoryId<1)throw new ArgumentException($"No se permiten categorias con ID negativo o cero, ID:{categoryId}.");
+        var category = listCategories.FirstOrDefault(cat => cat.CategoryID == categoryId);
+        if (category.CategoryID == 0)throw new InvalidOperationException($"No se encontró ninguna categoría con el ID {categoryId}.");
+        return category;
+    }
+
     public IEnumerable<CategoryStruct> GetCategories()
     {
         return listCategories.OrderBy(category => category.NameCategory);
