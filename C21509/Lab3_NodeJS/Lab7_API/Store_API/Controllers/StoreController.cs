@@ -12,6 +12,15 @@ namespace Store_API.Controllers
         {
             return Store.Instance;
         }
+
+       [HttpGet("Products")]
+        public IEnumerable<Product> GetCategories([FromQuery] int categoryId)
+        {
+            if (categoryId < 1)
+                throw new ArgumentException($"The {nameof(categoryId)} cannot be less than 1");
+
+            return Store.Instance.Products.Where(p => p.IdCategory.IdCategory == categoryId);
+        }
     }
 
 }

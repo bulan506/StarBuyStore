@@ -1,5 +1,6 @@
 using MySql.Data.MySqlClient;
 using Store_API.Models;
+using Core.Models;
 
 namespace Store_API.Database
 {
@@ -48,7 +49,8 @@ namespace Store_API.Database
                             IdProduct INT AUTO_INCREMENT PRIMARY KEY,
                             Name VARCHAR(255) NOT NULL,
                             ImageURL VARCHAR(255),
-                            Price DECIMAL(10, 2) NOT NULL
+                            Price DECIMAL(10, 2) NOT NULL,
+                            IdCategory INT NOT NULL
                         );";
 
                     using (MySqlCommand command = new MySqlCommand(createTableProducts, connection))
@@ -88,15 +90,16 @@ namespace Store_API.Database
                     foreach (var actualProduct in allProducts)
                     {
                         string insertQuery = @"
-                            INSERT INTO Products (Name, ImageURL, Price)
-                            VALUES (@name, @imageURL, @price);
-                        ";
+                    INSERT INTO Products (Name, ImageURL, Price, IdCategory)
+                    VALUES (@name, @imageURL, @price, @idCategory);
+                ";
 
                         using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                         {
                             command.Parameters.AddWithValue("@name", actualProduct.Name);
                             command.Parameters.AddWithValue("@imageURL", actualProduct.ImageURL);
                             command.Parameters.AddWithValue("@price", actualProduct.Price);
+                            command.Parameters.AddWithValue("@idCategory", actualProduct.IdCategory);
 
                             command.ExecuteNonQuery();
                         }
@@ -119,9 +122,9 @@ namespace Store_API.Database
                 {
                     connection.Open();
                     string selectProducts = @"
-                        SELECT IdProduct, Name, ImageURL, Price
-                        FROM Products;
-                        ";
+                 SELECT IdProduct, Name, ImageURL, Price, IdCategory
+                    FROM Products;
+                    ";
 
                     using (MySqlCommand command = new MySqlCommand(selectProducts, connection))
                     {
@@ -129,12 +132,16 @@ namespace Store_API.Database
                         {
                             while (readerTable.Read())
                             {
+                                int categoryId = Convert.ToInt32(readerTable["IdCategory"]);
+                                ProductCategoryStruct category = Category.GetCategoryById(categoryId);
+
                                 productListToStoreInstance.Add(new Product
                                 {
                                     Id = Convert.ToInt32(readerTable["IdProduct"]),
                                     Name = readerTable["Name"].ToString(),
                                     ImageURL = readerTable["ImageURL"].ToString(),
-                                    Price = Convert.ToDecimal(readerTable["Price"])
+                                    Price = Convert.ToDecimal(readerTable["Price"]),
+                                    IdCategory = category
                                 });
                             }
                         }
@@ -147,7 +154,7 @@ namespace Store_API.Database
             }
             return productListToStoreInstance;
         }
-
+        
         public async Task<string> InsertSaleAsync(Sale sale)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
