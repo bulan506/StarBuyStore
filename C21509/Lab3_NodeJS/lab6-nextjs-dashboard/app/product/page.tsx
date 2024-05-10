@@ -8,31 +8,64 @@ import Link from 'next/link';
 export default function Page() {
   const [availableProducts, setAvailableProducts] = useState<ProductItem[]>([]);
   const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   useEffect(() => {
-    const loadProductApiData = async () => {
+    const loadProductData = async () => {
       try {
-        const response = await fetch('https://localhost:7165/api/Store');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
+        const productResponse = await fetch('https://localhost:7165/api/Store');
+        if (!productResponse.ok) {
+          throw new Error('Failed to fetch products');
         }
-        const json = await response.json();
-        if (json.products) {
-          setAvailableProducts(json.products);
-        } else {
-          throw new Error('Failed to fetch data: No products found');
+        const productJson = await productResponse.json();
+        if (!productJson.products) {
+          throw new Error('Failed to fetch products: No products found');
         }
-      } catch (error) {
+        setAvailableProducts(productJson.products);
+      } catch{
+
         throw new Error('Failed to fetch data');
       }
     };
-    loadProductApiData();
-  }, []);
 
-  useEffect(() => {
+    const loadCategoryData = async () => {
+      try {
+        const categoryResponse = await fetch('https://localhost:7165/api/Store/Products');
+        if (!categoryResponse.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+        const categoryJson = await categoryResponse.json();
+        if (!categoryJson) {
+          throw new Error('Failed to fetch categories: No categories found');
+        }
+        const uniqueCategories: string[] = Array.from(new Set(categoryJson.map((product: { idCategory: string }) => product.idCategory)));
+        setCategories(uniqueCategories);
+      } catch {
+        throw new Error('Failed to fetch data');
+      }
+    };
+
+    loadProductData();
+    loadCategoryData();
+
     const savedCartProducts = JSON.parse(localStorage.getItem('cartProducts') || '[]');
     setCartProducts(savedCartProducts);
   }, []);
+
+  const handleCategoryChange = async (category: string) => {
+    setSelectedCategory(category);
+    try {
+      const response = await fetch(`https://localhost:7165/api/Store/Products?categoryId=${category}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      const productJson = await response.json();
+      setAvailableProducts(productJson);
+    } catch {
+      throw new Error('Failed to fetch data');
+    }
+  };
 
   const addToCart = (product: ProductItem) => {
     setCartProducts(prevProducts => {
@@ -51,6 +84,14 @@ export default function Page() {
           <Link href="/cart" className="col-sm-4 d-flex justify-content-end">
             <button><img src="/img/carrito.png" className="col-sm-6" />{cartProducts.length}</button>
           </Link>
+        </div>
+        <div className="categories-container">
+          <select value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
+            <option value="">Todas las Categorías</option>
+            {categories.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
         </div>
       </header>
 
