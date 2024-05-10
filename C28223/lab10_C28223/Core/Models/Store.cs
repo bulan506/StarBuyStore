@@ -16,6 +16,7 @@ namespace storeApi
             if (productsList == null|| productsList.Count()==0)throw new ArgumentNullException($"La lista de productos {nameof(productsList)} no puede ser nula.");
             if (taxPercentage < 1 || taxPercentage > 100)throw new ArgumentOutOfRangeException($"El porcentaje de impuestos {nameof(taxPercentage)} debe estar en el rango de 1 a 100.");
             if (categoryStruct == null|| categoryStruct.Count()==0)throw new ArgumentNullException($"La lista de estructuras {nameof(categoryStruct)} de categorías no puede ser nula.");
+            if (productsInstance == null)throw new ArgumentNullException($"La instancia de  {nameof(productsInstance)} no puede ser nula.");
             this.Products = productsList;
             this.TaxPercentage = taxPercentage;
             this.Categories = categoryStruct;
