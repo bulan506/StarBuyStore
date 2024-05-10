@@ -9,8 +9,8 @@ public sealed class StoreDB
     {
         Categories categories = Categories.Instance;
 
-        // Obtener la lista actual de categorías
-        List<Category> categoryList = categories.GetCategories().ToList();
+        IEnumerable<Category> categoryList = categories.GetCategories();
+       
         var products = new List<Product>{
 
         new Product
@@ -19,7 +19,7 @@ public sealed class StoreDB
             Author = "Marissa Meyer",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768889_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 9500,
-            IdCategory = 3,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
             Id = 1
         },
 
@@ -29,7 +29,7 @@ public sealed class StoreDB
             Author = "Marissa Meyer",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768896_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 9500,
-            IdCategory = 3,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
             Id = 2
         },
 
@@ -39,7 +39,7 @@ public sealed class StoreDB
             Author = "Marissa Meyer",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768902_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 9500,
-            IdCategory = 3,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
             Id = 3
         },
 
@@ -49,7 +49,7 @@ public sealed class StoreDB
             Author = "Marissa Meyer",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768926_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 3,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
             Id = 4
         },
 
@@ -59,7 +59,7 @@ public sealed class StoreDB
             Author = "Marissa Meyer",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250774057_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 8700,
-            IdCategory = 3,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
             Id = 5
         },
 
@@ -69,7 +69,7 @@ public sealed class StoreDB
             Author = "Pablo Vierci",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786070794162_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 12800,
-            IdCategory = 6,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 6),
             Id = 6
         },
 
@@ -79,7 +79,7 @@ public sealed class StoreDB
             Author = "Gabriel García Márquez",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073911290_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 14900,
-            IdCategory = 7,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 7
         },
 
@@ -89,7 +89,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9789585457935_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 12800,
-            IdCategory = 7,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 8
         },
 
@@ -99,7 +99,7 @@ public sealed class StoreDB
             Author = "Rebecca Yarros",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788408279990_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 19800,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 9
         },
 
@@ -109,7 +109,7 @@ public sealed class StoreDB
             Author = "Sarah J. Mass",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073143691_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 15800,
-            IdCategory = 4,
+             ProductCategory = categoryList.Single(category => category.IdCategory == 4),
             Id = 10
         },
 
@@ -119,7 +119,7 @@ public sealed class StoreDB
             Author = "Ava Dellaira",
             ImgUrl = "https://m.media-amazon.com/images/I/41IETN4YxGL._SY445_SX342_.jpg",
             Price = 8900,
-            IdCategory = 2,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 2),
             Id = 11
         },
 
@@ -129,16 +129,16 @@ public sealed class StoreDB
             Author = "Lewis Carrol",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 7900,
-            IdCategory = 7,
+             ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 0
         },
          new Product
         {
             Name = "Alicia a través del Espejo",
             Author = "Lewis Carrol",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788417430429_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 7900,
-            IdCategory = 7,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 12
         },
        new Product
@@ -147,7 +147,7 @@ public sealed class StoreDB
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574043_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price =19800,
-            IdCategory = 7,
+             ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 13
         },
         new Product
@@ -156,7 +156,7 @@ public sealed class StoreDB
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574074_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 19800,
-            IdCategory = 7,
+           ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 14
         },
         new Product
@@ -165,7 +165,7 @@ public sealed class StoreDB
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574104_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 19800,
-            IdCategory = 7,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 15
         },
         new Product
@@ -174,7 +174,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878929_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 9900,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 16
         },
         new Product
@@ -183,7 +183,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878936_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 9900,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 17
         },
         new Product
@@ -192,7 +192,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878943_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 9900,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 18
         },
         new Product
@@ -201,7 +201,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878950_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 19
         },
         new Product
@@ -210,7 +210,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878967_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 20
         },
          new Product
@@ -219,7 +219,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878974_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 21
         },
          new Product
@@ -228,7 +228,7 @@ public sealed class StoreDB
             Author = "J.K Rowling",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878981_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 12800,
-            IdCategory = 1,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
             Id = 22
         },
          new Product
@@ -237,7 +237,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780439023528_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 9,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 9),
             Id = 23
         },
         new Product
@@ -246,7 +246,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780545586177_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 9,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 9),
             Id = 24
         },
         new Product
@@ -255,7 +255,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780545663267_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 9,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 9),
             Id = 25
         },
         new Product
@@ -264,7 +264,7 @@ public sealed class StoreDB
             Author = "Suzzane Collins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781339016573_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 9,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 9),
             Id = 26
         },
           new Product
@@ -273,7 +273,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404741_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 8700,
-            IdCategory = 8,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 8),
             Id = 27
         },
           new Product
@@ -282,7 +282,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404734_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 8,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 8),
             Id = 28
         },
           new Product
@@ -291,7 +291,7 @@ public sealed class StoreDB
             Author = "Patrick Rothfuss",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756411329_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 11900,
-            IdCategory = 8,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 8),
             Id = 29
         },
         new Product
@@ -300,7 +300,7 @@ public sealed class StoreDB
             Author = "Paula Hawkins",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781594634024_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 13900,
-            IdCategory = 5,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 5),
             Id = 30
         }
       };
@@ -402,7 +402,7 @@ public sealed class StoreDB
                             insertCommand.Parameters.AddWithValue("@name", product.Name);
                             insertCommand.Parameters.AddWithValue("@author", product.Author);
                             insertCommand.Parameters.AddWithValue("@price", product.Price);
-                            insertCommand.Parameters.AddWithValue("@idCategory", product.IdCategory);
+                            insertCommand.Parameters.AddWithValue("@idCategory", product.ProductCategory.IdCategory);
                             insertCommand.Parameters.AddWithValue("@imgUrl", product.ImgUrl);
                             insertCommand.ExecuteNonQuery();
                         }
@@ -474,7 +474,7 @@ public sealed class StoreDB
                         }
                         databaseInfo.Add(row);
                     }
-                   
+
                 }
             }
         }

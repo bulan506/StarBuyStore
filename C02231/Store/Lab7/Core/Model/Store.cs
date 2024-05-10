@@ -8,7 +8,7 @@ namespace StoreAPI.models;
 
 public sealed class Store
 {
-    public List<Product> Products { get; private set; }
+    public List<Product> Products { get; private set; } //hacer un diccionario de productos por categoria
     public List<Product> ProductsCarrusel { get; private set; }
     public IEnumerable<Category> CategoriesList { get; private set; }
     public int TaxPercentage { get; private set; }
@@ -68,9 +68,9 @@ public sealed class Store
     }
     public IEnumerable<Product> CategoryProducts(int idCategory)
     {
-        if (idCategory <= -1) throw new ArgumentException($"A Category {nameof(idCategory)} is required");
+        if (idCategory < 0) throw new ArgumentException($"A Category {nameof(idCategory)} is required");
 
-        return Instance.Products.Where(product => product.IdCategory == idCategory);
+        return Instance.Products.Where(product => product.ProductCategory.IdCategory == idCategory);
     }
     private static List<Product> LoadProducts()
     {
@@ -84,23 +84,32 @@ public sealed class Store
                 if (int.TryParse(row["id"], out int id) &&
                     decimal.TryParse(row["price"], out decimal price) &&
                     int.TryParse(row["idCategory"], out int idCategory)) // Conversión de idCategory a int
-     
+
                 {
                     string name = row["name"];
                     string author = row["author"];
                     string imageUrl = row["imgUrl"];
 
-                    Product product = new Product
-                    {
-                        Id = id,
-                        Name = name,
-                        Author = author,
-                        Price = price,
-                        IdCategory = idCategory,
-                        ImgUrl = imageUrl
-                    };
+                    Category category = Categories.Instance.GetCategories().SingleOrDefault(c => c.IdCategory == idCategory);
 
-                    products.Add(product);
+                    if (!category.Equals(default(Category)))
+                    {
+                        Product product = new Product
+                        {
+                            Id = id,
+                            Name = name,
+                            Author = author,
+                            Price = price,
+                            ProductCategory = category,
+                            ImgUrl = imageUrl
+                        };
+
+                        products.Add(product);
+                    }
+                    else
+                    {
+                        throw new Exception($"No se encontró la categoría correspondiente al ID {idCategory}.");
+                    }
                 }
             }
         }

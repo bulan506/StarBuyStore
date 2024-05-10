@@ -18,8 +18,8 @@ namespace StoreAPI.Controllers
         [HttpGet("Products")]
         public IEnumerable<Product> GetCategories([FromQuery] int category)
         {
-            if (category <= -1)
-                throw new ArgumentException($"The {nameof(category)} number must positive");
+            if (category < 0)
+                throw new ArgumentException($"The {nameof(category)} number must be greater than 0");
             return Store.Instance.CategoryProducts(category);
         }
     }

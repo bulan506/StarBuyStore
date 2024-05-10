@@ -7,7 +7,7 @@ public class Product : ICloneable
     public decimal Price { get; set; }
     public int Id { get; set; }
     public int Quantity { get; set; }
-    public int IdCategory { get; set; }
+     public Category ProductCategory { get; set; } 
 
 
     // Implementation of the ICloneable interface
@@ -21,7 +21,7 @@ public class Product : ICloneable
             ImgUrl = this.ImgUrl,
             Price = this.Price,
             Quantity = this.Quantity,
-            IdCategory = this.IdCategory
+            ProductCategory = this.ProductCategory
         };
     }
 }

@@ -17,7 +17,7 @@ public class Categories
         }
     }
 
-    private Categories()
+    public Categories()
     {
         categoryList = new List<Category>
         {
@@ -34,9 +34,14 @@ public class Categories
 
         categoryList.Sort((category1, category2) => string.Compare(category1.Name, category2.Name));
     }
-    
+
     public IEnumerable<Category> GetCategories()
     {
+        if (categoryList.Count == 0)
+        {
+            throw new Exception("No categories available.");
+        }
+
         return categoryList;
     }
 }
