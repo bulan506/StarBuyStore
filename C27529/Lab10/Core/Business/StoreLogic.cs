@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks; // Importa este namespace para usar async/await
+using System.Threading.Tasks; 
 using storeApi.Models;
 using storeApi.Database;
 
@@ -11,7 +11,7 @@ namespace storeApi.Business
     {
         private SaleDB saleDB = new SaleDB();
 
-        public async Task<Sale> PurchaseAsync(Cart cart)
+        public async Task<Sale> PurchaseAsync(Cart cart) //UT
         {
             if (cart.ProductIds.Count == 0) throw new ArgumentException("Cart must contain at least one product.");
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
@@ -36,7 +36,7 @@ namespace storeApi.Business
             return sale;
         }
 
-        public static string GenerateNextPurchaseNumber()
+        public static string GenerateNextPurchaseNumber()//UT
         {
             Random random = new Random();
 

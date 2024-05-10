@@ -1,24 +1,16 @@
 using System;
-using System.Data.Common;
-using System.IO.Compression;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MySqlConnector;
 using Core;
-using System.Data;
-
-
 namespace storeApi.db;
 public sealed class StoreDB
 {
-
-
-
     public StoreDB()
     {
-
-
     }
 
-    public static void CreateMysql()
+    public static async Task CreateMysql()
     {
 
 
@@ -31,7 +23,7 @@ public sealed class StoreDB
                 Description = "Audífonos con alta fidelidad",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Headset_1x._SY116_CB667159060_.jpg",
-                Category = ProductCategory.Audifonos
+                Category = 1
             },
             new Product
             {
@@ -40,8 +32,8 @@ public sealed class StoreDB
                 Description = "Control PS4",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Controller2.png",
-                Category = ProductCategory.Controles
-            },
+                Category = 2
+                    },
             new Product
             {
                 Id = 3,
@@ -49,8 +41,8 @@ public sealed class StoreDB
                 Description = "PS4 1TB",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Playstation3.jpg",
-                Category = ProductCategory.Consolas
-            },
+                Category = 3
+                    },
             new Product
             {
                 Id = 4,
@@ -58,7 +50,7 @@ public sealed class StoreDB
                 Description = "Crash Bandicoot 4 Switch",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Game.png",
-                Category = ProductCategory.Videojuegos
+                Category = 4
             },
             new Product
             {
@@ -67,8 +59,8 @@ public sealed class StoreDB
                 Description = "Mouse Logitech",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_Quad_Mouse.jpg",
-                Category = ProductCategory.Mouse
-            },
+                Category =  5
+                  },
             new Product
             {
                 Id = 6,
@@ -76,8 +68,8 @@ public sealed class StoreDB
                 Description = "Silla Oficina",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_Quad_Chair.jpg",
-                Category = ProductCategory.Sillas
-            },
+                Category = 6
+                   },
             new Product
             {
                 Id = 7,
@@ -85,8 +77,8 @@ public sealed class StoreDB
                 Description = "Laptop Acer",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Laptop.png",
-                Category = ProductCategory.Laptops
-            },
+                Category = 7
+                     },
             new Product
             {
                 Id = 8,
@@ -94,7 +86,7 @@ public sealed class StoreDB
                 Description = "Oculus Quest 3",
                 Price = 20000,
                 ImageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Karu/2021/June/Karu_LP_Oculus2.jpg",
-                Category = ProductCategory.RealidadVirtual
+                Category = 8
             },
             new Product
             {
@@ -103,8 +95,8 @@ public sealed class StoreDB
                 Description = "Teclado mecánico RGB",
                 Price = 15000,
                 ImageURL = "https://m.media-amazon.com/images/I/61uofDvRldS._AC_UL320_.jpg",
-                Category = ProductCategory.Teclados
-            },
+                Category =  9
+                     },
             new Product
             {
                 Id = 10,
@@ -112,8 +104,8 @@ public sealed class StoreDB
                 Description = "Monitor gaming 144Hz",
                 Price = 30000,
                 ImageURL = "https://m.media-amazon.com/images/I/71sPOWyMwVL._AC_UL320_.jpg",
-                Category = ProductCategory.Monitores
-            },
+                Category =  10
+                      },
             new Product
             {
                 Id = 11,
@@ -121,8 +113,8 @@ public sealed class StoreDB
                 Description = "Cámara DSLR Canon EOS",
                 Price = 40000,
                 ImageURL = "https://m.media-amazon.com/images/I/61o0MBO9jFL._AC_UL320_.jpg",
-                Category = ProductCategory.Camaras
-            },
+                Category =   11
+                     },
             new Product
             {
                 Id = 12,
@@ -130,7 +122,7 @@ public sealed class StoreDB
                 Description = "Smartwatch Samsung Galaxy",
                 Price = 25000,
                 ImageURL = "https://m.media-amazon.com/images/I/711f6KLsMaL._AC_UL320_.jpg",
-                Category = ProductCategory.Smartwatches
+                Category = 12
             },
             new Product
             {
@@ -139,8 +131,8 @@ public sealed class StoreDB
                 Description = "Bicicleta de montaña",
                 Price = 150000,
                 ImageURL = "https://m.media-amazon.com/images/I/817X9TvYQ3L._AC_UL320_.jpg",
-                Category = ProductCategory.Bicicletas
-            },
+                Category =  13
+                         },
             new Product
             {
                 Id = 14,
@@ -148,7 +140,7 @@ public sealed class StoreDB
                 Description = "Robot aspirador",
                 Price = 35000,
                 ImageURL = "https://m.media-amazon.com/images/I/619TvTYML3L._AC_UY218_.jpg",
-                Category = ProductCategory.RobotsAspiradores
+                Category = 14
             },
             new Product
             {
@@ -157,7 +149,7 @@ public sealed class StoreDB
                 Description = "Proyector de cine en casa",
                 Price = 50000,
                 ImageURL = "https://m.media-amazon.com/images/I/71iPl3A0ubL._AC_UL320_.jpg",
-                Category = ProductCategory.Proyectores
+                Category = 15
             },
             new Product
             {
@@ -166,7 +158,152 @@ public sealed class StoreDB
                 Description = "Cafetera espresso",
                 Price = 20000,
                 ImageURL = "https://m.media-amazon.com/images/I/71BvCt6eAFL._AC_UL320_.jpg",
-                Category = ProductCategory.Cafeteras
+                Category =  16
+                },
+
+            new Product
+            {
+                Id = 17,
+                Name = "Auriculares Bluetooth",
+                Description = "Auriculares inalámbricos con alta calidad de sonido.",
+                Price = 30000,
+                ImageURL = "https://m.media-amazon.com/images/I/514TrZ0P5qL._AC_UL320_.jpg",
+                Category = 1 
+            },
+            new Product
+            {
+                Id = 18,
+                Name = "Mando para PC",
+                Description = "Control de juego compatible con PC y consolas.",
+                Price = 25000,
+                ImageURL = "https://m.media-amazon.com/images/I/71WhtRV7AoL._AC_UL320_.jpg",
+                Category = 2 
+            },
+            new Product
+            {
+                Id = 19,
+                Name = "Consola PlayStation 5",
+                Description = "Consola de última generación con capacidad de 4K.",
+                Price = 60000,
+                ImageURL = "https://m.media-amazon.com/images/I/71rWPpdhwgL._AC_UY218_.jpg",
+                Category = 3 
+            },
+            new Product
+            {
+                Id = 20,
+                Name = "Videojuego The Last of Us Part II",
+                Description = "Aventura épica en un mundo post-apocalíptico.",
+                Price = 4000,
+                ImageURL = "https://m.media-amazon.com/images/I/818m9WGY0lL._AC_UY218_.jpg",
+                Category = 4
+            },
+            new Product
+            {
+                Id = 21,
+                Name = "Mouse inalámbrico",
+                Description = "Mouse ergonómico con conexión Bluetooth.",
+                Price = 15000,
+                ImageURL = "https://m.media-amazon.com/images/I/61N+CzcA8vL._AC_UY218_.jpg",
+                Category = 5 
+            },
+            new Product
+            {
+                Id = 22,
+                Name = "Silla gamer",
+                Description = "Silla ergonómica diseñada para largas sesiones de juego.",
+                Price = 35000,
+                ImageURL = "https://m.media-amazon.com/images/I/61Sp94J-hhL._AC_UL320_.jpg",
+                Category = 6 
+            },
+            new Product
+            {
+                Id = 23,
+                Name = "Laptop HP",
+                Description = "Portátil con procesador Intel Core i7 y pantalla Full HD.",
+                Price = 80000,
+                ImageURL = "https://m.media-amazon.com/images/I/71nIkcFLf9L._AC_UY218_.jpg",
+                Category = 7 
+            },
+            new Product
+            {
+                Id = 24,
+                Name = "Gafas de realidad virtual Oculus Rift",
+                Description = "Experimenta la realidad virtual de alta calidad con Oculus Rift.",
+                Price = 40000,
+                ImageURL = "https://m.media-amazon.com/images/I/61GhF+JUXGL._AC_UY218_.jpg",
+                Category = 8 
+            },
+            new Product
+            {
+                Id = 25,
+                Name = "Teclado mecánico RGB",
+                Description = "Teclado mecánico con retroiluminación RGB personalizable.",
+                Price = 20000,
+                ImageURL = "https://m.media-amazon.com/images/I/61l76udL5rL._AC_UY218_.jpg",
+                Category = 9 
+            },
+            new Product
+            {
+                Id = 26,
+                Name = "Monitor ASUS",
+                Description = "Monitor de 27 pulgadas con resolución QHD y tasa de actualización de 144Hz.",
+                Price = 35000,
+                ImageURL = "https://m.media-amazon.com/images/I/71NN-PW+pdL._AC_UL320_.jpg",
+                Category = 10 
+            },
+            new Product
+            {
+                Id = 27,
+                Name = "Cámara digital Nikon",
+                Description = "Cámara DSLR con sensor de 24.2 megapíxeles y grabación de video Full HD.",
+                Price = 45000,
+                ImageURL = "https://m.media-amazon.com/images/I/61osNWYa4pL._AC_UY218_.jpg",
+                Category = 11 
+            },
+            new Product
+            {
+                Id = 28,
+                Name = "Smartwatch Apple Watch Series 6",
+                Description = "Smartwatch con monitorización avanzada de la salud y pantalla siempre activa.",
+                Price = 35000,
+                ImageURL = "https://m.media-amazon.com/images/I/71eOAQxSbPL._AC_UY218_.jpg",
+                Category = 12 
+            },
+            new Product
+            {
+                Id = 29,
+                Name = "Desviador trasero bicicleta de montaña",
+                Description = "6/7/8 velocidades de montaje de suspensión/montaje directo para bicicleta de montaña MTB.",
+                Price = 55000,
+                ImageURL = "https://m.media-amazon.com/images/I/61BU+pZTgJL._AC_UL320_.jpg",
+                Category = 13 
+            },
+            new Product
+            {
+                Id = 30,
+                Name = "Robot aspirador iRobot Roomba",
+                Description = "Robot aspirador con mapeo inteligente y capacidad de limpieza programada.",
+                Price = 60000,
+                ImageURL = "https://m.media-amazon.com/images/I/81wCNXD4F0L._AC_UY218_.jpg",
+                Category = 14 
+            },
+            new Product
+            {
+                Id = 31,
+                Name = "Proyector Epson",
+                Description = "Proyector con resolución Full HD y brillo de 3000 lúmenes.",
+                Price = 80000,
+                ImageURL = "https://m.media-amazon.com/images/I/51SaUisG5BL._AC_UY218_.jpg",
+                Category = 15 
+            },
+            new Product
+            {
+                Id = 32,
+                Name = "Cafetera Nespresso",
+                Description = "Cafetera de cápsulas con sistema de extracción rápido y fácil de limpiar.",
+                Price = 15000,
+                ImageURL = "https://m.media-amazon.com/images/I/71mgVqsz1tL._AC_UL320_.jpg",
+                Category = 16 
             }
             };
 
@@ -175,7 +312,7 @@ public sealed class StoreDB
 
         using (var connection = new MySqlConnection(ConnectionDB.Instance.ConnectionString))
         {
-            connection.Open();
+            await connection.OpenAsync();
 
             string createTableQuery = @"
                 DROP DATABASE IF EXISTS store;
@@ -193,7 +330,7 @@ public sealed class StoreDB
                 description TEXT,
                 price DECIMAL(10, 2),
                 imageURL VARCHAR(255),
-                category VARCHAR(30)
+                category INT
                 );
 
                 
@@ -246,12 +383,11 @@ public sealed class StoreDB
                     ('2024-05-01 08:14:00', 90.25, 0, 'SG123456459'),
                     ('2024-05-04 08:23:00', 92.25, 1, 'HG123494459'),
                     ('2024-05-04 08:09:00', 93.25, 0, 'SV123475459'),
-                    ('2024-05-04 08:18:00', 95.25, 1, 'TE123434459'),
                     ('2024-05-10 05:20:00', 67.20, 1, 'SA124456789'),
                     ('2024-05-10 05:20:00', 67.20, 1, 'SA122456789'),
-                    ('2024-05-10 05:20:00', 67.20, 1, 'SA121456789'),
-                    ('2024-05-10 05:20:00', 67.20, 1, 'SA129456789')
-
+                    ('2024-05-08 08:18:00', 95.25, 1, 'TE123434459'),
+                    ('2024-05-08 01:20:00', 67.20, 1, 'SA121456789'),
+                    ('2024-05-08 01:50:00', 67.20, 1, 'SA129456789')
                                 ";
 
 
@@ -264,16 +400,15 @@ public sealed class StoreDB
             }
 
             // Begin a transaction
-            using (var transaction = connection.BeginTransaction())
+            using (var transaction = await connection.BeginTransactionAsync())
             {
                 try
                 {
                     foreach (Product product in products)
                     {
-
                         string insertProductQuery = @"
-                            INSERT INTO products (name, description, price, imageURL, category)
-                            VALUES (@name, @description ,@price, @imageURL, @category);";
+                                INSERT INTO products (name, description, price, imageURL, category)
+                                VALUES (@name, @description ,@price, @imageURL, @category);";
 
                         using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
                         {
@@ -282,38 +417,34 @@ public sealed class StoreDB
                             insertCommand.Parameters.AddWithValue("@price", product.Price);
                             insertCommand.Parameters.AddWithValue("@imageURL", product.ImageURL);
                             insertCommand.Parameters.AddWithValue("@category", product.Category.ToString());
-                            insertCommand.ExecuteNonQuery();
+                            await insertCommand.ExecuteNonQueryAsync();
                         }
                     }
 
-                    // Commit the transaction if all inserts are successful
-                    transaction.Commit();
+                    await transaction.CommitAsync();
                 }
                 catch (Exception)
                 {
-                    // Rollback the transaction if an error occurs
-                    transaction.Rollback();
+                    await transaction.RollbackAsync();
                     throw;
                 }
             }
         }
     }
-    public static List<Product> GetProducts()
+    public static async Task<List<Product>> GetProductsAsync()
     {
         List<Product> products = new List<Product>();
         using (MySqlConnection connection = new MySqlConnection(ConnectionDB.Instance.ConnectionString))
         {
-            connection.Open();
+            await connection.OpenAsync();
 
             string sql = "use store; select * from products;";
 
             using (var command = new MySqlCommand(sql, connection))
             {
-                
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         Product product = new Product
                         {
@@ -322,7 +453,7 @@ public sealed class StoreDB
                             Description = reader.GetString("description"),
                             Price = reader.GetDecimal("price"),
                             ImageURL = reader.GetString("imageURL"),
-                            Category = Enum.Parse<ProductCategory>(reader.GetString("category"))
+                            Category = reader.GetInt32("category")
                         };
 
                         products.Add(product);
@@ -332,6 +463,7 @@ public sealed class StoreDB
         }
         return products;
     }
+
 
 
 
