@@ -12,6 +12,7 @@ namespace Core
         public IEnumerable<Product> ProductsStore { get; private set; }
         public Dictionary<int, List<Product>> ProductDictionary { get; private set; }
 
+        private static List<Product> cachedProducts;
         private Products(IEnumerable<Product> products)
         {
             if (products == null)
@@ -32,10 +33,15 @@ namespace Core
 
         public static async Task<Products> InitializeAsync()
         {
-            var products = await DatabaseStore.GetProductsFromDBaAsync();
+            if (cachedProducts == null)
+            {
+                var products = await DatabaseStore.GetProductsFromDBaAsync();
+                cachedProducts = products.ToList();
+            }
 
-            return new Products(products);
+            return new Products(cachedProducts);
         }
+
         public static async Task<List<Product>> GetProductsByCategory(int categoryId)
         {
             if (categoryId < 1)

@@ -25,42 +25,47 @@ namespace UnitTests
         [Test]
         public async Task GetReportSalesAsync_ReturnsValidReportSales()
         {
-            // Arrange
-            DateTime date = DateTime.Now;
+            DateTime date = new DateTime(2024, 4, 7);
 
-            // Act
+
             ReportSales result = await _saleLogic.GetReportSalesAsync(date);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.That(result.Date, Is.EqualTo(date));
             Assert.IsNotNull(result.Sales);
             Assert.IsNotNull(result.SalesByWeek);
             Assert.IsTrue(result.Sales.Any(), "No hay ventas en el informe.");
-
-            // Validar los montos
             decimal totalAmount = result.Sales.Sum(s => s.Total);
             Assert.Greater(totalAmount, 0, "El monto total de ventas debe ser mayor que cero.");
-
-            // Validar la cantidad de filas
-            int expectedRowCount = 2; // Ajusta este valor según tus requisitos
+            int expectedRowCount = 3;
             Assert.That(result.Sales.Count(), Is.EqualTo(expectedRowCount), $"La cantidad de filas debe ser {expectedRowCount}.");
         }
         [Test]
-        public async Task GetReportSalesAsync_WithInvalidDate_ThrowsException()
+        public async Task GetReportSalesAsync_WithMaxValue_ThrowsException()
         {
-            // Arrange
-            DateTime invalidDate = DateTime.MaxValue;
+            DateTime MaxValueDate = DateTime.MaxValue;
                     
-            // Act & Assert
-            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _saleLogic.GetReportSalesAsync(invalidDate));
+
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _saleLogic.GetReportSalesAsync(MaxValueDate));
         }
 
         [Test]
-        public void GetReportSalesAsync_WithNullDate_ThrowsException()
+        public void GetReportSalesAsync_WithMinDate_ThrowsException()
         {
             DateTime minValueDate = DateTime.MinValue;
             Assert.ThrowsAsync<ArgumentException>(() => _saleLogic.GetReportSalesAsync(minValueDate)); 
+        }
+
+        [Test]
+
+        public async Task GetReportSalesAsync_NoDataSales(){
+
+            DateTime dateTime = new DateTime(2024, 2, 23);
+
+            ReportSales reportSales = await _saleLogic.GetReportSalesAsync(dateTime);
+            Assert.That(reportSales.Sales.Count(), Is.EqualTo(0));
+            Assert.That(reportSales.SalesByWeek.Count(), Is.EqualTo(0));
+            
         }
 
     }

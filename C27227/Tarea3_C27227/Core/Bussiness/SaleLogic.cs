@@ -6,7 +6,7 @@ namespace KEStoreApi
 {
     public sealed class SaleLogic
     {
-        private  DatabaseSale _databaseSale = new();
+        private DatabaseSale _databaseSale = new();
 
         public SaleLogic()
         {
@@ -19,8 +19,8 @@ namespace KEStoreApi
 
         public async Task<ReportSales> GetReportSalesAsync(DateTime date)
         {
-            if (date == DateTime.MinValue) { throw new ArgumentException($"La fecha no puede ser {nameof(date)}");}
-            if (date > DateTime.Now){throw new ArgumentOutOfRangeException(nameof(date), "La fecha no puede ser posterior a la fecha actual.");}
+            if (date == DateTime.MinValue) { throw new ArgumentException($"La fecha no puede ser {nameof(date)}"); }
+            if (date > DateTime.Now) { throw new ArgumentOutOfRangeException(nameof(date), "La fecha no puede ser posterior a la fecha actual."); }
 
             Task<IEnumerable<SaleDetails>> dailySalesTask = _databaseSale.GetDailySalesReportAsync(date);
             Task<IEnumerable<SalesByDay>> weeklySalesTask = _databaseSale.GetWeeklySalesReportAsync(date);
@@ -28,24 +28,22 @@ namespace KEStoreApi
 
             IEnumerable<SaleDetails> salesDetails = await dailySalesTask;
             IEnumerable<SalesByDay> salesByDays = await weeklySalesTask;
-            ReportSales salesReport = new ReportSales
-            {
-                Date = date,
-                Sales = salesDetails,
-                SalesByWeek = salesByDays 
-            };
+            ReportSales salesReport = new ReportSales(date, salesDetails, salesByDays);
 
             return salesReport;
         }
+
         public class ReportSales
         {
-            public DateTime Date { get; set; }
-            public IEnumerable<SaleDetails> Sales { get; set; }
-            public IEnumerable<SalesByDay> SalesByWeek { get; set; }
+            public DateTime Date { get; private set; }
+            public IEnumerable<SaleDetails> Sales { get; private set; }
+            public IEnumerable<SalesByDay> SalesByWeek { get; private set; }
 
-            public int Count()
+            public ReportSales(DateTime date, IEnumerable<SaleDetails> sales, IEnumerable<SalesByDay> salesByWeek)
             {
-                throw new NotImplementedException();
+                Date = date;
+                Sales = sales;
+                SalesByWeek = salesByWeek;
             }
         }
     }

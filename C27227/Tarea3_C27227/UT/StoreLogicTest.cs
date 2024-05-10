@@ -77,6 +77,16 @@ namespace UnitTests
             Assert.IsFalse(String.IsNullOrEmpty(sale.PurchaseNumber));
         }
 
+        [Test]
+        public async Task Purchase_Async_ProductsEmpty_ThrowsArgumentException()
+        {
+            var cart = new Cart {
+                Product = new List<ProductQuantity>(),
+                address = "Cartago, Paraiso",
+                PaymentMethod = PaymentMethods.Type.SINPE
+            };
+            Assert.ThrowsAsync<ArgumentException>(async()=> await _storeLogic.PurchaseAsync(cart));
+        }
 
     }
 }

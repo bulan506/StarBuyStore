@@ -7,7 +7,7 @@ namespace KEStoreApi
     public sealed class Cart
     {
          public List<ProductQuantity> Product { get; set; }
-        public string address { get; set; }
+        public string address { get;  set; }
         public PaymentMethods.Type PaymentMethod { get; set; }
     }
 }

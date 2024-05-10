@@ -14,12 +14,12 @@ public class Categorias
         {
             agregaCategoria(1, "Electrónica");
             agregaCategoria(2, "Moda");
-            agregaCategoria(3, "Hogar y Jardin");
+            agregaCategoria(3, "Hogar y Jardín");
             agregaCategoria(4, "Deportes");
             agregaCategoria(5, "Belleza");
-            agregaCategoria(6, "Alimentacion");
+            agregaCategoria(6, "Alimentación");
             agregaCategoria(7, "Entretenimiento");
-            agregaCategoria(8, "Tecnologia");
+            agregaCategoria(8, "Tecnología");
 
             ListaCategorias.Sort((categoria1, cateogoria2) => string.Compare(categoria1.Nombre, cateogoria2.Nombre));
         }

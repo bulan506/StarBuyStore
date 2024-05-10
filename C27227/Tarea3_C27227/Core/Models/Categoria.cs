@@ -5,7 +5,7 @@ namespace Core;
     public struct  Categoria
     {
     public int Id {get;}
-    public string Nombre { get; set; }
+    public string Nombre { get; private set; }
 
     public Categoria (int id, string nombre){
         if (id == null || id < 1)
