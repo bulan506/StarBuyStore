@@ -21,12 +21,16 @@ namespace Core
 
             ProductsStore = products;
             ProductDictionary = new Dictionary<int, List<Product>>();
+
             foreach (var product in products)
             {
-                if (!ProductDictionary.ContainsKey(product.Categoria.Id))
-                    ProductDictionary[product.Categoria.Id] = new List<Product>();
+                if (!ProductDictionary.TryGetValue(product.Categoria.Id, out List<Product> productList))
+                {
+                    productList = new List<Product>();
+                    ProductDictionary[product.Categoria.Id] = productList;
+                }
 
-                ProductDictionary[product.Categoria.Id].Add(product);
+                productList.Add(product);
             }
         }
 
@@ -43,12 +47,12 @@ namespace Core
 
             var products = await InitializeAsync();
 
-            if (!products.ProductDictionary.ContainsKey(categoryId))
-                return new List<Product>();
+            if (products.ProductDictionary.TryGetValue(categoryId, out List<Product> productList))
+                return productList;
 
-            return products.ProductDictionary[categoryId];
+            return new List<Product>();
         }
-        
+
         private static readonly Lazy<Task<Products>> InstanceTask = new Lazy<Task<Products>>(InitializeAsync);
         public static Task<Products> Instance => InstanceTask.Value;
     }

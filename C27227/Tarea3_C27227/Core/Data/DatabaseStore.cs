@@ -10,7 +10,7 @@ namespace KEStoreApi.Data
     public sealed class DatabaseStore
     {
 
-        
+
         public DatabaseStore()
         {
 
@@ -151,28 +151,27 @@ namespace KEStoreApi.Data
 
             using (var connection = new MySqlConnection(connectionString))
             {
-              connection.Open();
+                connection.Open();
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                try
-                {
-                    string createTableQuery = @"
+                    try
+                    {
+                        string createTableQuery = @"
                             DROP DATABASE IF EXISTS store;
                             CREATE DATABASE store;
                             USE store;
                             CREATE TABLE IF NOT EXISTS products (
                                 id INT AUTO_INCREMENT PRIMARY KEY,
-                                name VARCHAR(100),
-                                price DECIMAL(10, 2),
-                                ImageUrl VARCHAR(255),
-                                idCategoria INT
+                                name VARCHAR(100) NOT NULL,
+                                price DECIMAL(10, 2) NOT NULL,
+                                ImageUrl VARCHAR(255) NOT NULL,
+                                idCategoria INT NOT NULL
                             );
                             CREATE TABLE IF NOT EXISTS paymentMethod (
                                 id INT PRIMARY KEY,
-                                description VARCHAR(50)
+                                description VARCHAR(50) NOT NULL
                             );
-                            
                             INSERT INTO paymentMethod (id, description) VALUES (0, 'Cash');
                             INSERT INTO paymentMethod (id, description) VALUES (1, 'Sinpe');
 
@@ -217,31 +216,31 @@ namespace KEStoreApi.Data
                                 ('2024-04-20 22:00:00', 620.00, 0, 'PUR014');
                         ";
 
-                    using (var command = new MySqlCommand(createTableQuery, connection, transaction))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
+                        using (var command = new MySqlCommand(createTableQuery, connection, transaction))
                         {
-                            throw new Exception("Error creating the database");
+                            int result = command.ExecuteNonQuery();
+                            if (result < 0)
+                            {
+                                throw new Exception("Error creating the database");
+                            }
                         }
-                    }
 
-                    foreach (Product product in products)
-                    {
-                        string insertProductQuery = @"
+                        foreach (Product product in products)
+                        {
+                            string insertProductQuery = @"
                                 INSERT INTO products(name, price, ImageUrl, idCategoria)
                                 VALUES(@name, @price, @imageUrl, @categoryId);";
 
-                        using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
-                        {
-                            insertCommand.Parameters.AddWithValue("@name", product.Name);
-                            insertCommand.Parameters.AddWithValue("@price", product.Price);
-                            insertCommand.Parameters.AddWithValue("@imageUrl", product.ImageUrl);
-                            insertCommand.Parameters.AddWithValue("@categoryId", product.Categoria.Id);
-                            insertCommand.ExecuteNonQuery();
+                            using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
+                            {
+                                insertCommand.Parameters.AddWithValue("@name", product.Name);
+                                insertCommand.Parameters.AddWithValue("@price", product.Price);
+                                insertCommand.Parameters.AddWithValue("@imageUrl", product.ImageUrl);
+                                insertCommand.Parameters.AddWithValue("@categoryId", product.Categoria.Id);
+                                insertCommand.ExecuteNonQuery();
+                            }
                         }
-                    }
-                     string insertQuery = @"
+                        string insertQuery = @"
 
 
                             INSERT INTO Lines_Sales (id_Sale, id_Product, quantity, price)
@@ -297,17 +296,17 @@ namespace KEStoreApi.Data
                                 throw new Exception("Error inserting data into the database");
                             }
                         }
-                    transaction.Commit();
-                    
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
+                        transaction.Commit();
+
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
-    }
         public static async Task<IEnumerable<Product>> GetProductsFromDBaAsync()
         {
             List<Product> products = new List<Product>();
@@ -315,23 +314,23 @@ namespace KEStoreApi.Data
 
             using (var connection = new MySqlConnection(connectionString))
             {
-               await  connection.OpenAsync();
+                await connection.OpenAsync();
 
                 string query = "SELECT id, name, price, ImageUrl,idCategoria FROM products";
                 using (var command = new MySqlCommand(query, connection))
                 {
                     var readerTask = command.ExecuteReaderAsync();
-                    using (var reader   = await readerTask)
+                    using (var reader = await readerTask)
                     {
-                        while ( await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                              int idCategoria = reader.GetInt32("idCategoria");
+                            int idCategoria = reader.GetInt32("idCategoria");
                             products.Add(new Product
                             {
                                 Id = reader.GetInt32("id"),
                                 Name = reader.GetString("name"),
                                 Price = reader.GetDecimal("price"),
-                                ImageUrl = reader.GetString("ImageUrl"),   
+                                ImageUrl = reader.GetString("ImageUrl"),
                                 Categoria = Categorias.Instance.GetCategorias().FirstOrDefault(c => c.Id == idCategoria)
                             });
                         }

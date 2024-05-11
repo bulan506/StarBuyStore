@@ -1,7 +1,7 @@
 ﻿public class SalesByDay
 {
-    public string SaleDayOfWeek { get;  set; }
-    public int SaleCount { get;  set; }
+    public string SaleDayOfWeek { get; private set; }
+    public int SaleCount { get;  private set; }
 
     public SalesByDay() { }
 
