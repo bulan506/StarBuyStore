@@ -84,7 +84,7 @@ const Page = () => {
       });
     } else {
      
-      const response = await fetch(`https://localhost:7043/api/Products?categoryId=${selectedCategoryId}`);
+      const response = await fetch(`https://localhost:7043/api/products?categoryId=${selectedCategoryId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
