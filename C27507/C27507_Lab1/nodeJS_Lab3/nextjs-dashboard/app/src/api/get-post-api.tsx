@@ -1,4 +1,5 @@
 //Interfaces
+import { ProductAPI } from "../models-data/ProductAPI";
 import { RegisteredSaleAPI } from "../models-data/RegisteredSale";
 import { RegisteredSaleReport } from "../models-data/RegisteredSaleReport";
 import { RegisteredSaleWeek } from "../models-data/RegisteredSaleWeek";
@@ -63,6 +64,34 @@ import { RegisteredSaleWeek } from "../models-data/RegisteredSaleWeek";
             const jsonRegisteredSales = await responsePost.json();            
 
             return jsonRegisteredSales.specificListOfRegisteredSales;
+            
+        } catch (error) {            
+            throw new Error('Failed to POST data: '+ error);
+        }        
+    }
+
+
+    export async function getProductsByCategory(idCategory: number): Promise<string | ProductAPI[] | null> {
+
+        const directionAPI = `https://localhost:7161/api/Products/store/products/category?category=${encodeURIComponent(idCategory)}`;
+        //Especificacion POST
+        let getConfig = {
+            method: "GET",
+            //pasamos un objeto como atributo de otro
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        }
+    
+        try {         
+            let responsePost = await fetch(directionAPI,getConfig);
+            if(!responsePost.ok){                
+                const errorMessage = await responsePost.text();                
+                return errorMessage;
+            }        
+            const productsFilteredFromAPI = await responsePost.json();                      
+            return productsFilteredFromAPI;
             
         } catch (error) {            
             throw new Error('Failed to POST data: '+ error);

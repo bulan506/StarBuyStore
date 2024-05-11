@@ -15,7 +15,7 @@ public class ProductsLogic{
     public IEnumerable<Product> filterProductsByCategory(int categoryId){        
 
         if (categoryId <= 0 )
-            throw new BussinessException($"{nameof(categoryId)} id de categoria no valido");
+            throw new BussinessException($"{nameof(categoryId)} id de categoría no válido");
         //verificar que la categoria exista en el struct 
         var thisCategoryExist = dataFromStore.categoriesFromStore.Any(c => c.id == categoryId);
         if (!thisCategoryExist)

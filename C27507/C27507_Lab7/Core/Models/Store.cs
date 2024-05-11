@@ -9,8 +9,9 @@ using System.Linq; // Asegúrate de incluir esto en la parte superior de tu arch
 namespace MyStoreAPI.Models
 {
     public sealed class Store{
-        public IEnumerable<Product> Products { get; private set; }        
-        public int TaxPercentage { get; private set; }            
+        public IEnumerable<Product> Products { get; private set; } 
+        IEnumerable<Category> categoriesFromStore {get;}
+        public int TaxPercentage { get; private set; }
         public bool StoreConnectedWithDB {get; private set;}
 
         private Store(){            
@@ -28,10 +29,7 @@ namespace MyStoreAPI.Models
             //sobreescribimos la lista para que los productos tengan el ID correcto dado por la tabla
             this.Products = DB_Product.SelectProducts();            
             this.StoreConnectedWithDB = true;
-            //Ahora la tienda tendra productos para el StoreController (GET) 
-
-            //Creamos el mockData
-            mockDataAsync(Products);
+            //Ahora la tienda tendra productos para el StoreController (GET)             
         }
         
         public static readonly Store Instance;

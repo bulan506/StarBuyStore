@@ -7,13 +7,13 @@ namespace MyStoreAPI.Models
         private Categories(){
 
             CategoryList = new List<Category>(){
-                new Category { id = 1, name = "Redes" },
-                new Category { id = 2, name = "Celulares" },
-                new Category { id = 3, name = "Videojuegos" },
-                new Category { id = 4, name = "Entretenimiento" },
-                new Category { id = 5, name = "Musica" },
-                new Category { id = 6, name = "Computadoras" },
-                new Category {id = 7, name = "Juguetes"}                
+                new Category(1, "Redes"),
+                new Category(2, "Celulares"),
+                new Category(3, "Videojuegos"),
+                new Category(4, "Entretenimiento"),
+                new Category(5, "Musica"),
+                new Category(6, "Computadoras"),
+                new Category(7, "Juguetes")
             };
             //Nos ahorramos la creacion de una clase Compare<Categorie>
             //allCategories.Sort((x, y) => string.Compare(x.Description, y.Description));
