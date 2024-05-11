@@ -1,5 +1,3 @@
-using System.Security.Principal;
-
 namespace ShopApi.Models;
 
 public sealed class Store

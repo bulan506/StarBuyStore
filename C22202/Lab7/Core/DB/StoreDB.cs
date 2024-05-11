@@ -1,7 +1,3 @@
-using System;
-using System.Data.Common;
-using System.IO.Compression;
-using System.Net.Http.Headers;
 using MySqlConnector;
 using ShopApi.Models;
 
@@ -71,42 +67,6 @@ public sealed class StoreDB
                 if(dbNoCreated)
                     throw new Exception("Error creating the bd");
             }
-
-            // Begin a transaction
-            /*using (var transaction = connection.BeginTransaction())
-            {
-                try
-                {
-                    // Insert 30 products into the table
-                    foreach(Product product in products)
-                    {
-                        string productName = product.name;
-                        string productImage = product.imgSource;
-                        decimal productPrice = product.price;
-
-                        string insertProductQuery = @"
-                            INSERT INTO products (name, price, imgSource)
-                            VALUES (@name, @price, @imgSource);";
-
-                        using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
-                        {
-                            insertCommand.Parameters.AddWithValue("@name", productName);
-                            insertCommand.Parameters.AddWithValue("@price", productPrice);
-                            insertCommand.Parameters.AddWithValue("@imgSource", productImage);
-                            insertCommand.ExecuteNonQuery();
-                        }
-                    }
-
-                    // Commit the transaction if all inserts are successful
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    // Rollback the transaction if an error occurs
-                    transaction.Rollback();
-                    throw;
-                }
-            }*/
         }
         foreach (Product product in products)
         {
