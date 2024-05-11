@@ -70,7 +70,7 @@ const Page = () => {
     const selectedCategoryId = event.target.value;
 
     if (selectedCategoryId === '') {
-      const response = await fetch('https://localhost:7043/api/Store');
+      const response = await fetch('https://localhost:7043/api/store');
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
