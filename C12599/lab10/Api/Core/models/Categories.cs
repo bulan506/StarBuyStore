@@ -66,8 +66,18 @@ namespace storeapi.Models
 
         public Category GetCategoryById(int categoryId)
         {
-            return ListCategories.FirstOrDefault(c => c.Id == categoryId);
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("Invalid categoryId. It must be greater than zero.", nameof(categoryId));
+            }
+
+            var category = ListCategories.FirstOrDefault(c => c.Id == categoryId);
+
+
+            return category;
         }
+
     }
 }
+
 
