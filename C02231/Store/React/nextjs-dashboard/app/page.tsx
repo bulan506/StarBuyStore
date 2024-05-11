@@ -18,7 +18,7 @@ export default function Home() {
     const loadData = async () => {
       try {
         //const response = await fetch('http://localhost:5000/api/Store');
-        const response = await fetch('http://localhost:5207/api/store');
+        const response = await fetch('http://localhost:5207/api/Store');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -80,14 +80,14 @@ export default function Home() {
       setSelectedCategory(selected);
       let productsForCategory = [];
       if (selected === "0") {
-        const response = await fetch('http://localhost:5207/api/store');
+        const response = await fetch('http://localhost:5207/api/Store');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         productsForCategory = await response.json();
         setStoreProducts(productsForCategory);
       } else {
-        const response = await fetch(`http://localhost:5207/api/store/products?category=${selected}`);
+        const response = await fetch(`http://localhost:5207/api/Store/products?category=${selected}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
