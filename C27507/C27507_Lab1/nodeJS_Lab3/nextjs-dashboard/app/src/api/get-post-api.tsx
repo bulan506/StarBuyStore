@@ -73,7 +73,7 @@ import { RegisteredSaleWeek } from "../models-data/RegisteredSaleWeek";
 
     export async function getProductsByCategory(idCategory: number): Promise<string | ProductAPI[] | null> {
 
-        const directionAPI = `https://localhost:7161/api/Products/store/products/category?category=${encodeURIComponent(idCategory)}`;
+        const directionAPI = `https://localhost:7161/api/Products/store/products?category=${encodeURIComponent(idCategory)}`;
         //Especificacion POST
         let getConfig = {
             method: "GET",

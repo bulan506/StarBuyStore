@@ -24,6 +24,7 @@ import { mock } from 'node:test';
 //Funciones
 import { getCartShopStorage } from './src/storage/cart-storage';
 import { getProductsByCategory } from './src/api/get-post-api';
+import { CategoryAPI } from './src/models-data/CategoryAPI';
 
 
 function Page() {     
@@ -31,6 +32,7 @@ function Page() {
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);       
     const [productCategory, setproductCategory] = useState(2);
+    const [categoryList, setCategoryList] = useState<CategoryAPI[]>([]);
     
     //Se llama por defecto (este trae el Tax para los productos y la lista de Categorias)
     useEffect(() => {
@@ -46,10 +48,12 @@ function Page() {
                 //Como ahora Store desde la API se devuelve dentro de un objeto Action
                 //hacemos una validacion para saber si trae datos dentro de su metodo
                 if(json.hasOwnProperty('value')){
-                    setProducts(json.valeu.products);                            
+                    setProducts(json.valeu.products); 
+                    setCategoryList(json.allCategories);
                 }else{
                     //si el dato no viene dentro de un ActionResult se guarda normal
-                    setProducts(json.products);                        
+                    setProducts(json.products);
+                    setCategoryList(json.allCategories);
                 }                                
                 return json;
             } catch (error) {                
@@ -97,9 +101,14 @@ function Page() {
 
             <Dropdown.Menu>
                 <Dropdown.Item eventKey="0">Todos los productos:</Dropdown.Item>
-                <Dropdown.Item eventKey="1">Redes</Dropdown.Item>
-                <Dropdown.Item eventKey="2">Celulares</Dropdown.Item>
-                <Dropdown.Item eventKey="3">Videojuegos</Dropdown.Item>                
+                
+                <Dropdown.Menu>
+                    {categoryList.map((category, index) => (
+                        <Dropdown.Item key={index} eventKey={category.id.toString()}>
+                            {category.name}
+                        </Dropdown.Item>
+                    ))}
+            </Dropdown.Menu>
             </Dropdown.Menu>
         </Dropdown>
       <div className="main_banner">    
