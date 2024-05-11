@@ -19,7 +19,6 @@ namespace Store_API.Models
         static Store()
         {
             DB_API dbApi = new DB_API();
-            IEnumerable<ProductCategoryStruct> categoryList = Category.GetCategories();
 
             var products = new List<Product>
             {
@@ -29,7 +28,7 @@ namespace Store_API.Models
                     Name = $"Iphone",
                     ImageURL = $"/img/Iphone.jpg",
                     Price = 200M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 8)
+                    Categoria  = new Category(1, "Electrónica")
                 },
                 new Product
                 {
@@ -37,7 +36,7 @@ namespace Store_API.Models
                     Name = $"Audifono",
                     ImageURL = $"/img/audifonos.jpg",
                     Price = 100M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 9)
+                    Categoria  = new Category(1, "Electrónica")
                 },
                 new Product
                 {
@@ -45,7 +44,7 @@ namespace Store_API.Models
                     Name = $"Mouse",
                     ImageURL = $"/img/mouse.jpg",
                     Price = 35M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 8)
+                    Categoria  = new Category(2, "Hogar y oficina")
                 },
                 new Product
                 {
@@ -53,7 +52,7 @@ namespace Store_API.Models
                     Name = $"Pantalla",
                     ImageURL = $"/img/Pantalla.jpg",
                     Price = 68M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 8)
+                    Categoria  = new Category(3, "Entretenimiento")
                 },
                 new Product
                 {
@@ -61,7 +60,7 @@ namespace Store_API.Models
                     Name = $"Headphone",
                     ImageURL = $"/img/Headphone.jpg",
                     Price = 35M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 9)
+                    Categoria  = new Category(3, "Entretenimiento")
                 },
                 new Product
                 {
@@ -69,7 +68,7 @@ namespace Store_API.Models
                     Name = $"Teclado",
                     ImageURL = $"/img/teclado.jpg",
                     Price = 95M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 8)
+                    Categoria  = new Category(1, "Electrónica")
                 },
                 new Product
                 {
@@ -77,7 +76,7 @@ namespace Store_API.Models
                     Name = $"Cable USB",
                     ImageURL = $"/img/Cable.jpg",
                     Price = 10M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 8)
+                    Categoria  = new Category(4, "Tecnología")
                 },
                 new Product
                 {
@@ -85,7 +84,7 @@ namespace Store_API.Models
                     Name = $"Chromecast",
                     ImageURL = $"/img/Chromecast.jpg",
                     Price = 150M,
-                    IdCategory = categoryList.Single(category => category.IdCategory == 8)
+                    Categoria  = new Category(4, "Tecnología")
                 }
             };
 

@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Core.Models
 {
-    public struct ProductCategoryStruct
+    public struct Category
     {
         public string NameCategory { get; }
         public int IdCategory { get; }
 
-        public ProductCategoryStruct(int idCategory, string nameCategory)
+        public Category(int idCategory, string nameCategory)
         {
             if (idCategory < 1)
             {
@@ -26,25 +26,20 @@ namespace Core.Models
         }
     }
 
-    public class Category
+    public class Categories
     {
-        private readonly List<ProductCategoryStruct> categories = new List<ProductCategoryStruct>
+        private readonly List<Category> categories = new List<Category>
         {
-            new ProductCategoryStruct(1, "Electrónica"),
-            new ProductCategoryStruct(2, "Moda"),
-            new ProductCategoryStruct(3, "Hogar y jardín"),
-            new ProductCategoryStruct(4, "Deportes y actividades al aire libre"),
-            new ProductCategoryStruct(5, "Belleza y cuidado personal"),
-            new ProductCategoryStruct(6, "Alimentación y bebidas"),
-            new ProductCategoryStruct(7, "Libros y entretenimiento"),
-            new ProductCategoryStruct(8, "Tecnología"),
-            new ProductCategoryStruct(9, "Deportes")
+            new Category(1, "Electrónica"),
+            new Category(2, "Hogar y oficina"),
+            new Category(3, "Entretenimiento"),
+            new Category(4, "Tecnología"),
         };
 
-        public static Category Instance { get; } = new Category();
-        private Category() { }
+        public static Categories Instance { get; } = new Categories();
+        private Categories() { }
 
-        public static ProductCategoryStruct GetCategoryById(int categoryId)
+        public static Category GetCategoryById(int categoryId)
         {
             var category = Instance.categories.FirstOrDefault(category => category.IdCategory == categoryId);
             if (category.IdCategory == 0)
@@ -54,7 +49,7 @@ namespace Core.Models
             return category;
         }
 
-        public static IEnumerable<ProductCategoryStruct> GetCategories()
+        public static IEnumerable<Category> GetCategories()
         {
             return Instance.categories.OrderBy(category => category.NameCategory);
         }

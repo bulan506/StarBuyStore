@@ -68,6 +68,8 @@ namespace Store_API.Database
                             FOREIGN KEY (IdProduct) REFERENCES Products(IdProduct)
                         );";
 
+                    //InsertSalesData(connection);
+
                     using (MySqlCommand command = new MySqlCommand(createTableSalesLines, connection))
                     {
                         command.ExecuteNonQuery();
@@ -99,7 +101,7 @@ namespace Store_API.Database
                             command.Parameters.AddWithValue("@name", actualProduct.Name);
                             command.Parameters.AddWithValue("@imageURL", actualProduct.ImageURL);
                             command.Parameters.AddWithValue("@price", actualProduct.Price);
-                            command.Parameters.AddWithValue("@idCategory", actualProduct.IdCategory);
+                            command.Parameters.AddWithValue("@idCategory", actualProduct.IdCategory.IdCategory); // Solo se usa el valor entero de IdCategory
 
                             command.ExecuteNonQuery();
                         }
@@ -133,7 +135,7 @@ namespace Store_API.Database
                             while (readerTable.Read())
                             {
                                 int categoryId = Convert.ToInt32(readerTable["IdCategory"]);
-                                ProductCategoryStruct category = Category.GetCategoryById(categoryId);
+                                Category category = Categories.GetCategoryById(categoryId);
 
                                 productListToStoreInstance.Add(new Product
                                 {
@@ -154,7 +156,7 @@ namespace Store_API.Database
             }
             return productListToStoreInstance;
         }
-        
+
         public async Task<string> InsertSaleAsync(Sale sale)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -251,58 +253,46 @@ namespace Store_API.Database
                 }
             }
         }
-        public void InsertSalesData()
+        private void InsertSalesData(MySqlConnection connection)
         {
-            try
+            string insertSalesQuery = @"
+        INSERT INTO Sales (Total, Subtotal,PurchaseNumber, Address, DateSale)
+        VALUES
+            (50.00, 50.00, 'ACD789', 'Cartago', '2024-04-27 08:00:00'),
+            (35.75, 35.75, 'BTR321', 'San Jose', '2024-04-27 12:30:00'),
+            (75.20, 75.20, 'CJR579', 'Limon', '2024-04-28 10:15:00'),
+            (20.50, 20.50, 'DET468', 'Puntarenas', '2024-04-28 14:45:00'),
+            (45.60, 45.60, 'EBY321', 'Heredia', '2024-04-29 09:20:00'),
+            (90.00, 90.00, 'FKJ789', 'Alajuela', '2024-04-29 16:00:00'),
+            (60.30, 60.30, 'GNM579', 'Santa Lucia','2024-04-30 11:45:00'),
+            (25.75, 25.75, 'HFK468', 'Paraiso', '2024-04-30 13:20:00'),
+            (55.00, 55.00, 'IMH321', 'Turrialba', '2024-05-01 08:30:00'),
+            (70.25, 70.25, 'JLO789', 'Guapiles', '2024-05-01 15:10:00');
+        ";
+            ExecuteNonQuery(insertSalesQuery, connection);
+
+            string insertSalesLinesQuery = @"
+        INSERT INTO SalesLines (IdSale, IdProduct, Price)
+        VALUES
+            (1, 1, 50.00),
+            (2, 2, 35.75),
+            (3, 3, 75.20),
+            (4, 4, 20.50),
+            (5, 5, 45.60),
+            (6, 6, 90.00),
+            (7, 7, 60.30),
+            (8, 8, 25.75),
+            (9, 9, 55.00),
+            (10, 10, 70.25);
+    ";
+            ExecuteNonQuery(insertSalesLinesQuery, connection);
+        }
+
+        private void ExecuteNonQuery(string query, MySqlConnection connection)
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    string insertSalesQuery = @"
-                INSERT INTO Sales (PurchaseDate, Total, PaymentMethodId, PurchaseNumber)
-                VALUES
-                    ('2024-04-27 08:00:00', 50.00, 1, 'ACD789'),
-                    ('2024-04-27 12:30:00', 35.75, 0, 'BTR321'),
-                    ('2024-04-28 10:15:00', 75.20, 1, 'CJR579'),
-                    ('2024-04-28 14:45:00', 20.50, 0, 'DET468'),
-                    ('2024-04-29 09:20:00', 45.60, 0, 'EBY321'),
-                    ('2024-04-29 16:00:00', 90.00, 1, 'FKJ789'),
-                    ('2024-04-30 11:45:00', 60.30, 0, 'GNM579'),
-                    ('2024-04-30 13:20:00', 25.75, 1, 'HFK468'),
-                    ('2024-05-01 08:30:00', 55.00, 0, 'IMH321'),
-                    ('2024-05-01 15:10:00', 70.25, 1, 'JLO789');
-            ";
-
-                    using (MySqlCommand command = new MySqlCommand(insertSalesQuery, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-
-                    string insertSalesLinesQuery = @"
-                INSERT INTO SalesLines (IdSale, IdProduct, Price)
-                VALUES
-                    (1, 1, 50.00),
-                    (2, 2, 35.75),
-                    (3, 3, 75.20),
-                    (4, 4, 20.50),
-                    (5, 5, 45.60),
-                    (6, 6, 90.00),
-                    (7, 7, 60.30),
-                    (8, 8, 25.75),
-                    (9, 9, 55.00),
-                    (10, 10, 70.25);
-            ";
-
-                    using (MySqlCommand command = new MySqlCommand(insertSalesLinesQuery, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
+                command.ExecuteNonQuery();
             }
         }
 
@@ -370,12 +360,12 @@ namespace Store_API.Database
                 await connection.OpenAsync();
 
                 var query = @"
-                    SELECT DAYNAME(s.DateSale) AS SaleDayOfWeek, COUNT(*) AS SaleCount
-                    FROM Sales s
-                    WHERE YEARWEEK(s.DateSale) = YEARWEEK(@startDate)
-                    GROUP BY SaleDayOfWeek
-                    ORDER BY SaleDayOfWeek;
-                ";
+            SELECT DAYNAME(s.DateSale) AS SaleDayOfWeek, SUM(s.Total) AS TotalSales
+            FROM Sales s
+            WHERE YEARWEEK(s.DateSale) = YEARWEEK(@startDate)
+            GROUP BY SaleDayOfWeek
+            ORDER BY SaleDayOfWeek;
+        ";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -386,12 +376,12 @@ namespace Store_API.Database
                         while (await reader.ReadAsync())
                         {
                             var saleDayOfWeek = reader.GetString(0);
-                            var saleCount = reader.GetInt32(1);
+                            var totalSales = reader.GetDecimal(1);
 
                             var salesByDay = new SaleAttribute
                             {
                                 DailySale = saleDayOfWeek,
-                                SaleCounter = saleCount
+                                Total = totalSales
                             };
 
                             weeklySalesReport.Add(salesByDay);

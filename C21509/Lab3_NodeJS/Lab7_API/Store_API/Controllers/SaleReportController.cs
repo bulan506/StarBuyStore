@@ -7,11 +7,9 @@ namespace Store_API.Controllers
     [Route("[controller]")]
     public class SalesReportController : ControllerBase
     {
-        private readonly SaleReportLogic _saleReportLogic;
 
-       public SalesReportController()
+        public SalesReportController()
         {
-            _saleReportLogic = new SaleReportLogic();
         }
 
         [HttpGet("{date}")]
@@ -24,7 +22,8 @@ namespace Store_API.Controllers
 
             try
             {
-                var salesReport = await _saleReportLogic.GenerateSalesReportAsync(date);
+                var saleReportLogic = new SaleReportLogic(); 
+                var salesReport = await saleReportLogic.GenerateSalesReportAsync(date);
                 return Ok(salesReport);
             }
             catch (Exception ex)

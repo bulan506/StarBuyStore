@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Store_API.Models;
+using Store_API.Models; 
+using Core.Models; 
 
 namespace Store_API.Controllers
 {
@@ -13,14 +14,19 @@ namespace Store_API.Controllers
             return Store.Instance;
         }
 
-       [HttpGet("Products")]
-        public IEnumerable<Product> GetCategories([FromQuery] int categoryId)
+        [HttpGet("Categories")]
+        public IEnumerable<Category> GetCategories()
+        {
+            return Categories.GetCategories(); 
+        }
+
+        [HttpGet("Products")]
+        public IEnumerable<Product> GetProductsByCategory([FromQuery] int categoryId)
         {
             if (categoryId < 1)
                 throw new ArgumentException($"The {nameof(categoryId)} cannot be less than 1");
 
-            return Store.Instance.Products.Where(p => p.IdCategory.IdCategory == categoryId);
+            return Store.Instance.Products.Where(p => p.Categoria.IdCategory == categoryId);
         }
     }
-
 }

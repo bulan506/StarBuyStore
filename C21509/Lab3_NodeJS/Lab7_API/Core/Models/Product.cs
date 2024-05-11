@@ -8,7 +8,7 @@ public class Product : ICloneable
     public string ImageURL { get; set; }
     public decimal Price { get; set; }
     public int Id { get; set; }
-    public ProductCategoryStruct IdCategory {get; set;}
+    public Category Categoria {get; set;}
 
     // Implementation of the ICloneable interface
     public object Clone()
@@ -19,7 +19,7 @@ public class Product : ICloneable
             Name = this.Name,
             ImageURL = this.ImageURL,
             Price = this.Price,
-            IdCategory = this.IdCategory
+           Categoria  = this.Categoria 
         };
     }
 }
