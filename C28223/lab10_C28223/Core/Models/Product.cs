@@ -9,7 +9,7 @@ public class Product : ICloneable
     public string description { get; set; }
     public int id { get; set; }
     public int cant { get; set; }
-    public CategoryStr category{ get; set; }
+    public Category category{ get; set; }
 
     // Implementation of the ICloneable interface
     public object Clone()

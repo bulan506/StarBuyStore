@@ -12,7 +12,7 @@ namespace storeApi.DataBase
     {
         public static void CreateMysql()
         {
-            Category categoryList = new Category();
+            Categories categoryList = new Categories();
             var products = new List<Product>
             {
                 new Product
@@ -250,7 +250,7 @@ namespace storeApi.DataBase
         internal async Task<IEnumerable<Product>> GetProductsFromDBAsync()
         {
             List<Product> products = new List<Product>();
-            var categoryList = new Category();
+            var categoryList = new Categories();
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionStringMyDb))
             {
                 await connection.OpenAsync();
@@ -262,7 +262,7 @@ namespace storeApi.DataBase
                         while (await reader.ReadAsync())
                         {
                             int categoryIdFromDB = reader.GetInt32("categoryID");
-                            CategoryStr categoryStruct = categoryList.GetCategoryById(categoryIdFromDB);
+                            Category category = categoryList.GetCategoryById(categoryIdFromDB);
                             products.Add(new Product
                             {
                                 id = reader.GetInt32("id"),
@@ -270,7 +270,7 @@ namespace storeApi.DataBase
                                 description = reader.GetString("description"),
                                 price = reader.GetDecimal("price"),
                                 imageURL = reader.GetString("imageURL"),
-                                category = categoryStruct
+                                category = category
                             });
                         }
                     }

@@ -3,18 +3,18 @@ using Core;
 using storeApi.Models.Data;
 public class CategoryTests
 {
-    Category category;
+    Categories category;
     [SetUp]
     public void Setup()
     {
-        category = new Category();
+        category = new Categories();
     }
 
     [Test]
     public void CreateCategory_Struct_CreatesCategoryWithValidData()
     {
-        CategoryStr category = new CategoryStr();
-        CategoryStr createdCategory = category.crearCategoria(1, "Electronica");
+        Category category = new Category();
+        Category createdCategory = category.crearCategoria(1, "Electronica");
         Assert.AreEqual(1, createdCategory.CategoryID);
         Assert.AreEqual("Electronica", createdCategory.NameCategory);
     }
@@ -23,20 +23,20 @@ public class CategoryTests
     public void GetCategories_ReturnsOrderedCategories()
     {
         var categories = category.GetCategories();
-        var expectedCategories = new List<string> { "Actividades al aire libre", "Alimentación", "Belleza", "Deportes", "Electronica", "Entretenimiento", "Hogar y jardín", "Moda", "Tecnología" };
+        var expectedCategories = new List<string> { "Actividades al aire libre", "Alimentación", "Belleza", "Deportes", "Electrónica", "Entretenimiento", "Hogar y jardín", "Moda", "Tecnología" };
         CollectionAssert.AreEqual(expectedCategories, categories.Select(cat => cat.NameCategory).ToList());
     }
     [Test]
     public void CreateCategory_Struct_ThrowsExceptionWithInvalidData()
     {
-        CategoryStr category = new CategoryStr();
+        Category category = new Category();
         Assert.Throws<ArgumentException>(() => category.crearCategoria(-1, "Invalid Category"));
         Assert.Throws<ArgumentException>(() => category.crearCategoria(1, ""));
     }
     [Test]
     public void CreateCategory_Struct_ThrowsExceptionForInvalidName()
     {
-        CategoryStr category = new CategoryStr();
+        Category category = new Category();
         Assert.Throws<ArgumentException>(() => category.crearCategoria(10, null));
         Assert.Throws<ArgumentException>(() => category.crearCategoria(10, ""));
     }
@@ -76,7 +76,7 @@ public class CategoryTests
     public void GetCategories_OrderByName_ReturnsSortedCategories()
     {
         //expectedCategories  ya esta ordenada
-        var expectedCategories = new List<string> { "Actividades al aire libre", "Alimentación", "Belleza", "Deportes", "Electronica", "Entretenimiento", "Hogar y jardín", "Moda", "Tecnología" };
+        var expectedCategories = new List<string> { "Actividades al aire libre", "Alimentación", "Belleza", "Deportes", "Electrónica", "Entretenimiento", "Hogar y jardín", "Moda", "Tecnología" };
         var categories = category.GetCategories().Select(cat => cat.NameCategory).ToList();
         CollectionAssert.AreEqual(expectedCategories, categories);
     }

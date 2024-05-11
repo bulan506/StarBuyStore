@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace storeApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class StoreController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("Store")]
          public async Task<IActionResult> GetStore()
         {
             var store = await Store.Instance;
@@ -20,10 +20,10 @@ namespace storeApi.Controllers
                 Categories=store.Categories
             });
         }
-        [HttpGet("Products")]
+        [HttpGet("Store/Products")]
          public async Task<IActionResult> GetCategoriesAsync(int categoryID)
         {
-            if (categoryID<1)throw new ArgumentException($"La categoria {nameof(categoryID)} no puede ser negativa o cero.");
+            if (categoryID<1)throw new ArgumentException($"La categoría {nameof(categoryID)} no puede ser negativa o cero.");
              var store = await Store.Instance;
              var filteredProducts= store.getProductosCategoryID(categoryID);
             return Ok(new{filteredProducts});

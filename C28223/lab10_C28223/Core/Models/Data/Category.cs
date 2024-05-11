@@ -3,20 +3,20 @@ using System.Diagnostics.SymbolStore;
 
 namespace storeApi.Models.Data;
 
-public class Category
+public class Categories
 {
-    private CategoryStr categoryStruct;
-    private List<CategoryStr> listCategories;
+    private Category categoryStruct;
+    private List<Category> listCategories;
 
-    public Category()
+    public Categories()
     {
-        categoryStruct = new CategoryStr();
-        listCategories = new List<CategoryStr>();
+        categoryStruct = new Category();
+        listCategories = new List<Category>();
         makeCategories();
     }
     private void makeCategories()
     {
-        listCategories.Add(categoryStruct.crearCategoria(1, "Electronica"));
+        listCategories.Add(categoryStruct.crearCategoria(1, "Electrónica"));
         listCategories.Add(categoryStruct.crearCategoria(2, "Moda"));
         listCategories.Add(categoryStruct.crearCategoria(3, "Hogar y jardín"));
         listCategories.Add(categoryStruct.crearCategoria(4, "Deportes"));
@@ -26,27 +26,27 @@ public class Category
         listCategories.Add(categoryStruct.crearCategoria(8, "Actividades al aire libre"));
         listCategories.Add(categoryStruct.crearCategoria(9, "Entretenimiento"));
     }
-    public CategoryStr GetCategoryById(int categoryId)
+    public Category GetCategoryById(int categoryId)
     {
         if (categoryId<1)throw new ArgumentException($"No se permiten categorias con ID negativo o cero, ID:{categoryId}.");
         var category = listCategories.FirstOrDefault(cat => cat.CategoryID == categoryId);
         if (category.CategoryID == 0)throw new InvalidOperationException($"No se encontró ninguna categoría con el ID {categoryId}.");
         return category;
     }
-    public IEnumerable<CategoryStr> GetCategories()
+    public IEnumerable<Category> GetCategories()
     {
         return listCategories.OrderBy(category => category.NameCategory);
     }
 }
 
-public struct CategoryStr
+public struct Category
 {
     public string NameCategory { private set; get; }
     public int CategoryID {private set; get; }
-    public CategoryStr crearCategoria(int id, string name)
+    public Category crearCategoria(int id, string name)
     {
         if (id < 1) throw new ArgumentException("Se necesita un id valido, para crear la categoria");
         if (string.IsNullOrWhiteSpace(name) || name.Trim() == "") throw new ArgumentException("Se necesita un nombre para la categoria");
-        return new CategoryStr { CategoryID = id, NameCategory = name };
+        return new Category { CategoryID = id, NameCategory = name };
     }
 }
