@@ -8,14 +8,14 @@ namespace ApiLab7.Controllers
     [ApiController]
     public class StoreController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("store")]
         public Store GetStore()
         {
             return Store.Instance;
         }
 
-        [HttpGet("Products")]
-        public IEnumerable<Product> GetCategories(int category)
+        [HttpGet("products")]
+        public IEnumerable<Product> GetProductsCategories(int category)
         {
             if (category < 1)
                 throw new ArgumentException("The category number must be above 0");

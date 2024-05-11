@@ -2,7 +2,7 @@ namespace ApiLab7;
 
 public sealed class Store
 {
-    public List<Product> Products { get; private set; }
+    public List<Product> ProductsList { get; private set; }
     public int TaxPercentage { get; private set; }
     public List<PaymentMethods> paymentMethods { get; private set; }
     public IEnumerable<Category> CategoriesList { get; private set; }
@@ -15,7 +15,7 @@ public sealed class Store
         IEnumerable<Category> categories
     )
     {
-        this.Products = products;
+        this.ProductsList = products;
         this.TaxPercentage = TaxPercentage;
         this.paymentMethods = paymentMethods;
         this.CategoriesList = categories;
@@ -27,7 +27,7 @@ public sealed class Store
     {
         if (category < 1)
             throw new ArgumentException("A category must have an ID, and it should be above 0");
-        return Instance.Products.Where(product => product.Category.Id == category);
+        return Products.Instance.GetProductsByCategory(category);
     }
 
     public IEnumerable<Product> ProductsByCategoriesAndName(List<int> categories, string name)

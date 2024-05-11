@@ -28,11 +28,12 @@ public class Products
 {
     private static Products instance;
     private List<Product> productList;
-    private Dictionary<int, Product> ProductsByCategory;
+    private Dictionary<int, List<Product>> ProductsByCategory;
 
     private Products()
     {
         productList = new List<Product>();
+        ProductsByCategory = new Dictionary<int, List<Product>>();
     }
 
     public static Products Instance
@@ -85,12 +86,14 @@ public class Products
             }
         };
 
+        Product product;
+
         for (int i = 1; i <= 40; i++)
         {
             var productData = productsData[(i - 1) % productsData.Length];
-            int randomIndex = rand.Next(1, categories.Count);
+            int randomIndex = rand.Next(1, categories.Count + 1);
 
-            productList.Add(new Product
+            product = new Product
             {
                 Name = $"Product {i}",
                 ImageUrl = productData.imageUrl,
@@ -98,8 +101,31 @@ public class Products
                 Description = productData.description,
                 Uuid = Guid.NewGuid(),
                 Category = Categories.Instance.GetCategoryById(randomIndex)
-            });
+            };
+
+            AddProduct(product);
         }
+    }
+
+    private void AddProduct(Product product)
+    {
+        productList.Add(product);
+        if (ProductsByCategory.ContainsKey(product.Category.Id))
+        {
+            ProductsByCategory[product.Category.Id].Add(product);
+        }else
+        {
+            List<Product> productList = new List<Product>();
+            productList.Add(product);
+            ProductsByCategory.Add(product.Category.Id, productList);
+        }
+    }
+
+    public IEnumerable<Product> GetProductsByCategory(int category)
+    {
+        if(ProductsByCategory.ContainsKey(category) && ProductsByCategory[category].Count() > 0)
+            return ProductsByCategory[category];
+        else throw new EmptyException("There are no products matching your queried category");
     }
 
     public IEnumerable<Product> GetProducts()

@@ -134,7 +134,7 @@ export default function Home() {
 
   async function getData() {
     try {
-      const res = await fetch('https://localhost:7151/api/Store');
+      const res = await fetch('https://localhost:7151/api/store');
       if (!res.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -173,7 +173,7 @@ export default function Home() {
         setProducts(allProducts.products)
       } else
         try {
-          const res = await fetch(`https://localhost:7151/api/Store/Products?category=${selected}`, {
+          const res = await fetch(`https://localhost:7151/api/Store/products?category=${selected}`, {
             method: 'GET',
             headers: {
               'content-type': 'application/json'
