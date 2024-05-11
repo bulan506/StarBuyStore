@@ -63,16 +63,28 @@ namespace storeapi.Models
             }
         }
 
-        public Category Category
+             public Category Category
+    {
+        get => _category;
+        set
         {
-            get => _category;
-            set
+            // Validar que el Id sea mayor que cero
+            if (value.Id <= 0)
             {
-              
-                _category = value;
+                throw new ArgumentException("El Id de Category debe ser mayor que cero.");
             }
-        }
 
+            // Validar que el nombre no esté vacío
+            if (string.IsNullOrWhiteSpace(value.Name))
+            {
+                throw new ArgumentException("El nombre de Category no puede estar vacío o ser nulo.");
+            }
+
+            // Asignar el valor solo si pasa las validaciones
+            _category = value;
+        }
+    }
+    
         public object Clone()
         {
             // Create a new instance of Product and copy all properties
