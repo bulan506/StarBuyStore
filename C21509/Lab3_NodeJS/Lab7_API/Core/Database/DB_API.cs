@@ -50,7 +50,7 @@ namespace Store_API.Database
                             Name VARCHAR(255) NOT NULL,
                             ImageURL VARCHAR(255),
                             Price DECIMAL(10, 2) NOT NULL,
-                            IdCategory INT NOT NULL
+                            Categoria INT NOT NULL
                         );";
 
                     using (MySqlCommand command = new MySqlCommand(createTableProducts, connection))
@@ -92,8 +92,8 @@ namespace Store_API.Database
                     foreach (var actualProduct in allProducts)
                     {
                         string insertQuery = @"
-                    INSERT INTO Products (Name, ImageURL, Price, IdCategory)
-                    VALUES (@name, @imageURL, @price, @idCategory);
+                    INSERT INTO Products (Name, ImageURL, Price, Categoria)
+                    VALUES (@name, @imageURL, @price, @categoria);
                 ";
 
                         using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
@@ -101,7 +101,7 @@ namespace Store_API.Database
                             command.Parameters.AddWithValue("@name", actualProduct.Name);
                             command.Parameters.AddWithValue("@imageURL", actualProduct.ImageURL);
                             command.Parameters.AddWithValue("@price", actualProduct.Price);
-                            command.Parameters.AddWithValue("@idCategory", actualProduct.Categoria.IdCategory); // Solo se usa el valor entero de IdCategory
+                            command.Parameters.AddWithValue("@categoria", actualProduct.Categoria.IdCategory); // Solo se usa el valor entero de IdCategory
 
                             command.ExecuteNonQuery();
                         }
@@ -124,7 +124,7 @@ namespace Store_API.Database
                 {
                     connection.Open();
                     string selectProducts = @"
-                 SELECT IdProduct, Name, ImageURL, Price, IdCategory
+                 SELECT IdProduct, Name, ImageURL, Price, Categoria
                     FROM Products;
                     ";
 
@@ -134,7 +134,7 @@ namespace Store_API.Database
                         {
                             while (readerTable.Read())
                             {
-                                int categoryId = Convert.ToInt32(readerTable["IdCategory"]);
+                                int categoryId = Convert.ToInt32(readerTable["Categoria"]);
                                 Category category = Categories.GetCategoryById(categoryId);
 
                                 productListToStoreInstance.Add(new Product
