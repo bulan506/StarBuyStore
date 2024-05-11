@@ -8,11 +8,11 @@ namespace storeapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class productsController : ControllerBase
     {
 
         [HttpGet]
-        public IActionResult GetProducts([FromQuery] string categoryID)
+        public IActionResult Getproducts([FromQuery] string categoryID)
         {
             if (string.IsNullOrWhiteSpace(categoryID))
             {
