@@ -5,12 +5,13 @@ namespace storeapi.Models
     public class Product : ICloneable
     {
         public int id { get; set; }
-        private string? _name;
-        private string? _imageUrl;
+        private string _name = string.Empty; // Initialize to empty string
+        private string _imageUrl = string.Empty; // Initialize to empty string
         private decimal _price;
-        private string? _description;
+        private string _description = string.Empty; // Initialize to empty string
+        private Category _category ;
 
-        public string? Name
+        public string Name
         {
             get => _name;
             set
@@ -23,7 +24,7 @@ namespace storeapi.Models
             }
         }
 
-        public string? ImageUrl
+        public string ImageUrl
         {
             get => _imageUrl;
             set
@@ -49,7 +50,7 @@ namespace storeapi.Models
             }
         }
 
-        public string? Description
+        public string Description
         {
             get => _description;
             set
@@ -62,15 +63,27 @@ namespace storeapi.Models
             }
         }
 
+        public Category Category
+        {
+            get => _category;
+            set
+            {
+              
+                _category = value;
+            }
+        }
+
         public object Clone()
         {
+            // Create a new instance of Product and copy all properties
             return new Product
             {
-                id = this.id,
+              
                 Name = this.Name,
                 ImageUrl = this.ImageUrl,
                 Price = this.Price,
-                Description = this.Description
+                Description = this.Description,
+                Category = this.Category // Assign the category directly
             };
         }
     }
