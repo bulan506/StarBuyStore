@@ -9,7 +9,7 @@ public class Product : ICloneable
     public decimal price { get; set; }
     public string imageUrl { get; set; }
     public int pcant {get; set;}
-    public Category.CategoryStr category{ get; set; }
+    public Category category{ get; set; }
    
     public object Clone()
     {
