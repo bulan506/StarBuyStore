@@ -22,9 +22,9 @@ public class ProductsTest
        =
         List<Product> listaProductos = new List<Product>
         {
-            new Product { id = 1, category = new Category.CategoryStruct { id = 1 } },
-            new Product { id = 2, category = new Category.CategoryStruct { id = 2 } },
-            new Product { id = 3, category = new Category.CategoryStruct { id = 1 } }
+            new Product { id = 1, category = new Category.CategoryStr { id = 1 } },
+            new Product { id = 2, category = new Category.CategoryStr { id = 2 } },
+            new Product { id = 3, category = new Category.CategoryStr { id = 1 } }
         };
 
         _prod.FiltrarProductosCategoria(1, listaProductos);
@@ -39,9 +39,9 @@ public class ProductsTest
 		
         List<Product> listaProductos = new List<Product>
         {
-            new Product { id = 1, category = new Category.CategoryStruct { id = 1 } },
-            new Product { id = 2, category = new Category.CategoryStruct { id = 2 } },
-            new Product { id = 3, category = new Category.CategoryStruct { id = 1 } }
+            new Product { id = 1, category = new Category.CategoryStr { id = 1 } },
+            new Product { id = 2, category = new Category.CategoryStr { id = 2 } },
+            new Product { id = 3, category = new Category.CategoryStr { id = 1 } }
         };
 
         _prod.FiltrarProductosCategoria(2, listaProductos);
@@ -57,8 +57,8 @@ public class ProductsTest
         int categoryId = 1;
         List<Product> productList = new List<Product>
         {
-            new Product { id = 1, name = "Product 1", category = new Category.CategoryStruct { id = 1, Name = "Category 1" } },
-            new Product { id = 2, name = "Product 2", category = new Category.CategoryStruct { id = 2, Name = "Category 2" } }
+            new Product { id = 1, name = "Product 1", category = new Category.CategoryStr { id = 1, Name = "Category 1" } },
+            new Product { id = 2, name = "Product 2", category = new Category.CategoryStr { id = 2, Name = "Category 2" } }
         };
 
         _prod.FiltrarProductosCategoria(categoryId, productList);
@@ -73,8 +73,8 @@ public class ProductsTest
         int categoryId = 1;
         List<Product> products = new List<Product>
         {
-            new Product { id = 1, name = "Product 1", category = new Category.CategoryStruct { id = 1, Name = "Category 1" } },
-            new Product { id = 2, name = "Product 2", category = new Category.CategoryStruct { id = 1, Name = "Category 1" } }
+            new Product { id = 1, name = "Product 1", category = new Category.CategoryStr { id = 1, Name = "Category 1" } },
+            new Product { id = 2, name = "Product 2", category = new Category.CategoryStr { id = 1, Name = "Category 1" } }
         };
         _prod.filter.Add(categoryId, products);
 

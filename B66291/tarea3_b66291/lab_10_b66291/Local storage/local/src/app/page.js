@@ -18,8 +18,7 @@ export default function Home() {
   };
 
   function agregarProducto(item) {
-    //hecha
-    if(item == undefined){
+    if(item === ""){
       throw new Error("El objeto a agregar se encuentra vacio")
     }
     try {
@@ -27,7 +26,6 @@ export default function Home() {
       const isPresent = tienda.cart.productos.some(producto => producto.id == item.id);
   
       if (!isPresent) {
-        const nuevosProductos = [...tienda.cart.productos, item];
   
         let subtotalCalc = 0;
         
@@ -54,8 +52,6 @@ export default function Home() {
     }
   };
 
-
-  //use State
   const [selectedCategoryId, setSelectedCategoryId] = useState();
   const [productList, setProductList] = useState([]);
   const [tienda, setTienda] = useState(() => {
@@ -79,7 +75,7 @@ export default function Home() {
     }
     setSelectedCategoryId(categoryId); 
     try {
-      const response = await fetch(`https://localhost:7013/api/Store/Products?idCat=${categoryId}`); 
+      const response = await fetch(`https://localhost:7013/api/store/products?idCat=${categoryId}`); 
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -95,7 +91,7 @@ export default function Home() {
 
   useEffect(() => {
     const loadData = async () => {
-      const response = await fetch('https://localhost:7013/api/Store');
+      const response = await fetch('https://localhost:7013/api/store');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
