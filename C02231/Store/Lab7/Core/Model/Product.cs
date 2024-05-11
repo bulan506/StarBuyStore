@@ -6,8 +6,8 @@ public class Product : ICloneable
     public required string ImgUrl { get; set; }
     public decimal Price { get; set; }
     public int Id { get; set; }
-    public int Quantity { get; set; }
-     public Category ProductCategory { get; set; } 
+    public int Quantity { get; private set; }
+     public Category ProductCategory { get; private set; } 
 
 
     // Implementation of the ICloneable interface
