@@ -10,7 +10,7 @@ namespace storeapi.Models
         private int _id;
         private string _name;
 
-        internal Category(int id, string name)
+        public Category(int id, string name)
         {
             Id = id;
             Name = name;
