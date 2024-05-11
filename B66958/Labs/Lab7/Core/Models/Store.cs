@@ -27,7 +27,7 @@ public sealed class Store
     {
         if (category < 1)
             throw new ArgumentException("A category must have an ID, and it should be above 0");
-        return Instance.Products.Where(product => product.CategoryId == category);
+        return Instance.Products.Where(product => product.Category.Id == category);
     }
 
     static Store()
