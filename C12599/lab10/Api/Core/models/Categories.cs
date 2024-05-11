@@ -6,14 +6,42 @@ namespace storeapi.Models
 {
     public struct Category
     {
-        internal int Id { get; }
-        internal  string Name { get; }
+
+        private int _id;
+        private string _name;
 
         public Category(int id, string name)
         {
             Id = id;
             Name = name;
         }
+
+        public int Id
+        {
+            get => _id;
+            private set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Category Id must be greater than zero.", nameof(Id));
+                }
+                _id = value;
+            }
+        }
+
+        public string Name
+        {
+            get => _name;
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Category Name must not be null or empty.", nameof(Name));
+                }
+                _name = value;
+            }
+        }
+
     }
 
     public class Categories
@@ -42,3 +70,4 @@ namespace storeapi.Models
         }
     }
 }
+
