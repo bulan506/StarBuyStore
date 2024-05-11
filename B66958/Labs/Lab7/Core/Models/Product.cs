@@ -123,8 +123,9 @@ public class Products
 
     public IEnumerable<Product> GetProductsByCategory(int category)
     {
-        if(ProductsByCategory.ContainsKey(category) && ProductsByCategory[category].Count() > 0)
-            return ProductsByCategory[category];
+        List<Product> productsFound;
+        if(ProductsByCategory.TryGetValue(category, out productsFound))
+            return productsFound;
         else throw new EmptyException("There are no products matching your queried category");
     }
 
