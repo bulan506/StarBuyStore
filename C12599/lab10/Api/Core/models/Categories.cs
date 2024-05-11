@@ -44,7 +44,7 @@ namespace storeapi.Models
 
     }
 
-    internal class Categories
+    public class Categories
     {
         public List<Category> ListCategories { get; } = new List<Category>
         {
