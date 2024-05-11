@@ -27,13 +27,16 @@ public sealed class Store
     {
         if (category < 1)
             throw new ArgumentException("A category must have an ID, and it should be above 0");
-        return Instance.Products.Where(product => product.CategoryId == category);
+        return Instance.Products.Where(product => product.Category.Id == category);
     }
 
-    public IEnumerable<Product> ProductsByCategoriesAndName(List<int> categories, string name){
-        if(categories.Count() == 0 || categories == null){
+    public IEnumerable<Product> ProductsByCategoriesAndName(List<int> categories, string name)
+    {
+        if (categories.Count() == 0 || categories == null)
+        {
             throw new ArgumentException("At least one category is expected");
         }
+        return null;
     }
 
     static Store()
