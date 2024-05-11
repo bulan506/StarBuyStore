@@ -25,7 +25,9 @@ namespace storeapi.Models
                     int rowCategoryId = int.Parse(row[5]);
 
                     // Verificar si el ID de la categoría del producto coincide con el ID de la categoría deseada
-                    if (rowCategoryId == categoryId)
+                    bool categoriaBuscada = rowCategoryId == categoryId;
+                    
+                    if (categoriaBuscada)
                     {
                         // Buscar la categoría correspondiente en la lista de categorías disponibles
                         Category category = categories.GetCategoryById(rowCategoryId);
