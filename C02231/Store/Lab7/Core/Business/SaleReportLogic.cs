@@ -6,11 +6,11 @@ namespace StoreAPI.Business
     public sealed class SaleReportLogic
     {
 
-        private readonly StoreDB storeDB;
+        private readonly SaleBD saleBD;
 
         public SaleReportLogic()
         {
-            storeDB = new StoreDB();
+            saleBD = new SaleBD();
         }
 
         public async Task<SalesReport> GetSalesReportAsync(DateTime date)
@@ -18,8 +18,8 @@ namespace StoreAPI.Business
             if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
             StoreDB storeDB = new StoreDB();
 
-            Task<IEnumerable<WeekSalesReport>> weeklySalesTask = storeDB.GetWeeklySalesAsync(date);
-            Task<IEnumerable<DaySalesReports>> dailySalesTask = storeDB.GetDailySalesAsync(date);
+            Task<IEnumerable<WeekSalesReport>> weeklySalesTask = saleBD.GetWeeklySalesAsync(date);
+            Task<IEnumerable<DaySalesReports>> dailySalesTask = saleBD.GetDailySalesAsync(date);
             await Task.WhenAll(weeklySalesTask, dailySalesTask);
 
             IEnumerable<WeekSalesReport> weeklySales = await weeklySalesTask;

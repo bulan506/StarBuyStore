@@ -10,7 +10,7 @@ public sealed class StoreDB
         Categories categories = Categories.Instance;
 
         IEnumerable<Category> categoryList = categories.GetCategories();
-       
+
         var products = new List<Product>{
 
         new Product
@@ -24,24 +24,24 @@ public sealed class StoreDB
         },
 
        new Product
-        {
-            Name = "Scarlet",
-            Author = "Marissa Meyer",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768896_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 9500,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
-            Id = 2
-        },
+       {
+           Name = "Scarlet",
+           Author = "Marissa Meyer",
+           ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768896_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+           Price = 9500,
+           ProductCategory = categoryList.Single(category => category.IdCategory == 3),
+           Id = 2
+       },
 
        new Product
-        {
-            Name = "Cress",
-            Author = "Marissa Meyer",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768902_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 9500,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 3),
-            Id = 3
-        },
+       {
+           Name = "Cress",
+           Author = "Marissa Meyer",
+           ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781250768902_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+           Price = 9500,
+           ProductCategory = categoryList.Single(category => category.IdCategory == 3),
+           Id = 3
+       },
 
         new Product
         {
@@ -104,24 +104,24 @@ public sealed class StoreDB
         },
 
        new Product
-        {
-            Name = "Corona de Medianoche",
-            Author = "Sarah J. Mass",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073143691_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 15800,
-             ProductCategory = categoryList.Single(category => category.IdCategory == 4),
-            Id = 10
-        },
+       {
+           Name = "Corona de Medianoche",
+           Author = "Sarah J. Mass",
+           ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9786073143691_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+           Price = 15800,
+           ProductCategory = categoryList.Single(category => category.IdCategory == 4),
+           Id = 10
+       },
 
        new Product
-        {
-            Name = "Carta de Amor a los Muertos",
-            Author = "Ava Dellaira",
-            ImgUrl = "https://m.media-amazon.com/images/I/41IETN4YxGL._SY445_SX342_.jpg",
-            Price = 8900,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 2),
-            Id = 11
-        },
+       {
+           Name = "Carta de Amor a los Muertos",
+           Author = "Ava Dellaira",
+           ImgUrl = "https://m.media-amazon.com/images/I/41IETN4YxGL._SY445_SX342_.jpg",
+           Price = 8900,
+           ProductCategory = categoryList.Single(category => category.IdCategory == 2),
+           Id = 11
+       },
 
         new Product
         {
@@ -129,34 +129,34 @@ public sealed class StoreDB
             Author = "Lewis Carrol",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788415618713_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 7900,
-             ProductCategory = categoryList.Single(category => category.IdCategory == 7),
+            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 0
         },
          new Product
-        {
-            Name = "Alicia a través del Espejo",
-            Author = "Lewis Carrol",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788417430429_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 7900,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
-            Id = 12
-        },
-       new Product
-        {
-            Name = "Crecent City 1 House Of Earth And Blood",
-            Author = "Sarah J. Maas",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574043_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price =19800,
+         {
+             Name = "Alicia a través del Espejo",
+             Author = "Lewis Carrol",
+             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9788417430429_1_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+             Price = 7900,
              ProductCategory = categoryList.Single(category => category.IdCategory == 7),
-            Id = 13
-        },
+             Id = 12
+         },
+       new Product
+       {
+           Name = "Crecent City 1 House Of Earth And Blood",
+           Author = "Sarah J. Maas",
+           ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574043_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+           Price = 19800,
+           ProductCategory = categoryList.Single(category => category.IdCategory == 7),
+           Id = 13
+       },
         new Product
         {
             Name = "Crescent City 2 House Of Sky And Breath",
             Author = "Sarah J. Maas",
             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781635574074_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
             Price = 19800,
-           ProductCategory = categoryList.Single(category => category.IdCategory == 7),
+            ProductCategory = categoryList.Single(category => category.IdCategory == 7),
             Id = 14
         },
         new Product
@@ -214,32 +214,32 @@ public sealed class StoreDB
             Id = 20
         },
          new Product
-        {
-            Name = "Harry Potter And The Half-Blood Prince",
-            Author = "J.K Rowling",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878974_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 11900,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
-            Id = 21
-        },
+         {
+             Name = "Harry Potter And The Half-Blood Prince",
+             Author = "J.K Rowling",
+             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878974_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+             Price = 11900,
+             ProductCategory = categoryList.Single(category => category.IdCategory == 1),
+             Id = 21
+         },
          new Product
-        {
-            Name = "Harry Potter And The Deathly Hallows",
-            Author = "J.K Rowling",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878981_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 12800,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 1),
-            Id = 22
-        },
+         {
+             Name = "Harry Potter And The Deathly Hallows",
+             Author = "J.K Rowling",
+             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9781338878981_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+             Price = 12800,
+             ProductCategory = categoryList.Single(category => category.IdCategory == 1),
+             Id = 22
+         },
          new Product
-        {
-            Name = "The Hunger Games",
-            Author = "Suzzane Collins",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780439023528_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 11900,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 9),
-            Id = 23
-        },
+         {
+             Name = "The Hunger Games",
+             Author = "Suzzane Collins",
+             ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780439023528_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+             Price = 11900,
+             ProductCategory = categoryList.Single(category => category.IdCategory == 9),
+             Id = 23
+         },
         new Product
         {
             Name = "Catching Fire",
@@ -268,32 +268,32 @@ public sealed class StoreDB
             Id = 26
         },
           new Product
-        {
-            Name = "Kingkiller Chronicle 1 The Name Of The Wind",
-            Author = "Patrick Rothfuss",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404741_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 8700,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 8),
-            Id = 27
-        },
+          {
+              Name = "Kingkiller Chronicle 1 The Name Of The Wind",
+              Author = "Patrick Rothfuss",
+              ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404741_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+              Price = 8700,
+              ProductCategory = categoryList.Single(category => category.IdCategory == 8),
+              Id = 27
+          },
           new Product
-        {
-            Name = "Kingkiller 2 The Wise Mans Fear",
-            Author = "Patrick Rothfuss",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404734_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 11900,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 8),
-            Id = 28
-        },
+          {
+              Name = "Kingkiller 2 The Wise Mans Fear",
+              Author = "Patrick Rothfuss",
+              ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756404734_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+              Price = 11900,
+              ProductCategory = categoryList.Single(category => category.IdCategory == 8),
+              Id = 28
+          },
           new Product
-        {
-            Name = "Slow Regard Of Silent Things",
-            Author = "Patrick Rothfuss",
-            ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756411329_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
-            Price = 11900,
-            ProductCategory = categoryList.Single(category => category.IdCategory == 8),
-            Id = 29
-        },
+          {
+              Name = "Slow Regard Of Silent Things",
+              Author = "Patrick Rothfuss",
+              ImgUrl = "https://www.libreriainternacional.com/media/catalog/product/9/7/9780756411329_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1320&width=1000",
+              Price = 11900,
+              ProductCategory = categoryList.Single(category => category.IdCategory == 8),
+              Id = 29
+          },
         new Product
         {
             Name = "Girl On The Train",
@@ -302,12 +302,40 @@ public sealed class StoreDB
             Price = 13900,
             ProductCategory = categoryList.Single(category => category.IdCategory == 5),
             Id = 30
+        },
+         new Product
+        {
+            Name = "Bookmarks",
+            Author = "Perfect for not to lose where your story goes",
+            ImgUrl = "1.png",
+            Price = 9500,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 10),
+            Id = 31
+        },
+
+        new Product
+        {
+            Name = "Pins",
+            Author = "Adding a touch of literary flair to any outfit or accessory",
+            ImgUrl = "2.png",
+            Price = 9500,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 10),
+            Id = 32
+        },
+
+        new Product
+        {
+            Name = "Necklace",
+            Author = "A beautifull Necklace for all day wear",
+            ImgUrl = "3.png",
+            Price = 9500,
+            ProductCategory = categoryList.Single(category => category.IdCategory == 10),
+            Id = 33
         }
       };
 
 
 
-        // string connectionString = "Server=localhost;Database=mysql;Port=3306;Uid=root;Pwd=123456;";
         using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
         {
             connection.Open();
@@ -322,11 +350,11 @@ public sealed class StoreDB
                 
                 CREATE TABLE IF NOT EXISTS products (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(100),
-                    author VARCHAR(100),
-                    price DECIMAL(10, 2),
-                    idCategory INT,
-                    imgUrl VARCHAR(255)
+                    name VARCHAR(100)  NOT NULL,
+                    author VARCHAR(100)  NOT NULL,
+                    price DECIMAL(10, 2)  NOT NULL,
+                    idCategory INT  NOT NULL,
+                    imgUrl VARCHAR(255)  NOT NULL
                 );
                 
                 CREATE TABLE IF NOT EXISTS sales (
@@ -340,8 +368,8 @@ public sealed class StoreDB
                 CREATE TABLE IF NOT EXISTS saleLines (
                     sale_id INT,
                     product_id INT,
-                    quantity int,
-                    final_price DECIMAL(10, 2),
+                    quantity int  NOT NULL,
+                    final_price DECIMAL(10, 2)  NOT NULL,
                     PRIMARY KEY (sale_id, product_id),
                     FOREIGN KEY (sale_id) REFERENCES sales(Id),
                     FOREIGN KEY (product_id) REFERENCES products(id)
@@ -377,7 +405,6 @@ public sealed class StoreDB
                     ('2024-04-28 20:30:00', 7200, '0', 'NEW24680');
                     ";
 
-            //50 ventas, incluir detalle
             using (var command = new MySqlCommand(createTableQuery, connection))
             {
                 int result = command.ExecuteNonQuery();
@@ -436,12 +463,10 @@ public sealed class StoreDB
                         insertCommand.ExecuteNonQuery();
                     }
 
-                    // Commit the transaction if all inserts are successful
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    // Rollback the transaction if an error occurs
                     transaction.Rollback();
                     throw;
                 }
@@ -481,85 +506,4 @@ public sealed class StoreDB
 
         return databaseInfo;
     }
-
-
-    public async Task<IEnumerable<DaySalesReports>> GetDailySalesAsync(DateTime date)
-    {
-        if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
-
-        List<DaySalesReports> dailySales = new List<DaySalesReports>();
-
-        using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
-        {
-            await connection.OpenAsync();
-
-            string selectQuery = @"
-            use store;
-            SELECT S.purchase_number AS purchase_Number, S.purchase_date AS purchase_date, S.total AS total,  SUM(Sl.quantity) AS quantity, GROUP_CONCAT(P.name SEPARATOR ', ') AS productsName
-            FROM sales S
-            INNER JOIN saleLines Sl ON S.id = Sl.sale_id
-			INNER JOIN products P ON Sl.product_id = P.id 
-            WHERE DATE(S.purchase_date) = @date
-            GROUP BY S.purchase_number, S.purchase_date, S.total";
-
-            using (var command = new MySqlCommand(selectQuery, connection))
-            {
-                command.Parameters.AddWithValue("@date", date);
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        DateTime purchaseDate = reader.GetDateTime("purchase_date");
-                        string purchaseNumber = reader.GetString("purchase_Number");
-                        int quantity = reader.GetInt32("quantity");
-                        decimal total = reader.GetDecimal("total");
-                        string productsString = reader.GetString("productsName");
-                        DaySalesReports dayReport = new DaySalesReports(purchaseDate, purchaseNumber.ToString(), quantity, total, productsString);
-                        dailySales.Add(dayReport);
-                    }
-                }
-            }
-        }
-
-        return dailySales;
-    }
-
-    public async Task<IEnumerable<WeekSalesReport>> GetWeeklySalesAsync(DateTime date)
-    {
-        if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
-
-        List<WeekSalesReport> weeklySales = new List<WeekSalesReport>();
-
-        using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
-        {
-            await connection.OpenAsync();
-
-            string selectQuery = @"
-                use store;
-                SELECT DAYNAME(S.purchase_date) AS day, SUM(S.total) AS total
-                FROM sales S 
-                WHERE YEARWEEK(S.purchase_date) = YEARWEEK(@date)
-                GROUP BY DAYNAME(S.purchase_date);";
-
-            using (var command = new MySqlCommand(selectQuery, connection))
-            {
-                command.Parameters.AddWithValue("@date", date);
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        string? day = reader.GetString("day").ToString();
-                        decimal total = reader.GetDecimal("total");
-                        WeekSalesReport weekSalesReport = new WeekSalesReport(day, total);
-                        weeklySales.Add(weekSalesReport);
-                    }
-                }
-            }
-        }
-
-        return weeklySales;
-    }
-
 }

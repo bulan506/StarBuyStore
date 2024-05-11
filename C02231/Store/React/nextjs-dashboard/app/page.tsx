@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Console } from 'console';
 
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -24,7 +26,7 @@ export default function Home() {
         setStoreProducts(data);
         setCarrusel(data);
         setCategories(data.categoriesList);
-        
+        console.log(data)
       } catch (error) {
         throw new Error('Failed to fetch data');
       }
@@ -32,7 +34,6 @@ export default function Home() {
     };
 
     loadData();
-
   }, []);
 
 
@@ -80,13 +81,12 @@ export default function Home() {
       setSelectedCategory(selected);
       let productsForCategory = [];
       if (selected === "0") {
-        const response = await fetch('http://localhost:5207/api/Store/Products');
-        setFilteredProducts([]); 
+        const response = await fetch('http://localhost:5207/api/Store');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         productsForCategory = await response.json();
-        setFilteredProducts(productsForCategory);
+        setStoreProducts(productsForCategory);
       } else {
         const response = await fetch(`http://localhost:5207/api/Store/Products?category=${selected}`);
         if (!response.ok) {
@@ -103,6 +103,8 @@ export default function Home() {
       throw new Error('Fail handleCategory: ' + error.message);
     }
   };
+
+  // const carruselProducts = carrusel.productsCarrusel.filter(item => item.productCategory.idCategory === 10);
 
   return (
 
@@ -155,8 +157,7 @@ export default function Home() {
           ))}
         </select>
 
-        
-        
+
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
           {storeProducts && storeProducts.products && storeProducts.products.map(item => (
             <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
@@ -164,9 +165,15 @@ export default function Home() {
 
           {filteredProducts && filteredProducts.map(item => (
             <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
+
           ))}
 
-          <CarruselComponent carrusel={carrusel} />
+
+          <CarruselComponent carrusel={carrusel.products && {
+            ...carrusel, productsCarrusel:
+              carrusel.products.filter(product => product.productCategory.idCategory === 10)
+          }} handleAddToCart={handleAddToCart} />
+
         </div>
       </div >
 
@@ -184,31 +191,42 @@ export default function Home() {
 const Products = ({ product, handleAddToCart }) => {
   if (product === undefined) throw new Error('The product is empty.');
 
-  const { id, name, author, imgUrl, price } = product;
-  return (
-    <div className="row my-3">
-      <div key={id} className='col-sm-3 mb-4' style={{ width: '300px', margin: '0.5rem' }}>
-        <div className="card" style={{ background: 'white' }}>
-          <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
-          <div className="card-body">
-            <div className='text-center'>
-              <h4> {name} </h4>
-              <p> Author: {author} </p>
-              <p>Price: ₡{price}</p>
-              <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+  if (product.productCategory.idCategory !== 10) {
+    const { id, name, author, imgUrl, price } = product;
+
+    return (
+      <div className="row my-3">
+        <div key={id} className='col-sm-3 mb-4' style={{ width: '300px', margin: '0.5rem' }}>
+          <div className="card" style={{ background: 'white' }}>
+            <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
+            <div className="card-body">
+              <div className='text-center'>
+                <h4>{name}</h4>
+                <p>Author: {author}</p>
+                <p>Price: ₡{price}</p>
+                <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    // Si el idCategory es igual a 10, devuelve null para no renderizar el producto
+    return null;
+  }
 };
 
 
 //Carrusel
 
-const CarruselComponent = ({ carrusel }) => {
-  if (carrusel === undefined) throw new Error('The carrusel is empty.');
+const CarruselComponent = ({ carrusel, handleAddToCart }) => {
+  if (!carrusel) {
+    return null; // Devuelve null para no renderizar nada si carrusel es undefined o null
+  }
+  if (typeof handleAddToCart !== 'function') {
+    throw new Error('handleAddToCart must be a function');
+  }
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
@@ -252,6 +270,7 @@ const CarruselComponent = ({ carrusel }) => {
                 <h5>{carruselItem.name}</h5>
                 <p>{carruselItem.author}</p>
                 <p>{carruselItem.price}</p>
+                <button className="btn btn-dark" onClick={() => handleAddToCart(carruselItem)}>Add to Cart</button>
               </div>
             </div>
           ))}

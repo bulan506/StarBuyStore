@@ -20,7 +20,7 @@ namespace StoreAPI.Controllers
         {
             if (category < 0)
                 throw new ArgumentException($"The {nameof(category)} number must be greater than 0");
-            return Store.Instance.CategoryProducts(category);
+            return Products.Instance.GetProductsCategory(category);
         }
     }
 

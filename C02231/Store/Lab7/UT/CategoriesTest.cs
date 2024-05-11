@@ -12,6 +12,7 @@ public class CategoriesTest
     private StoreDB storeDB;
     private Categories categories;
     private Store store;
+    private Products products1;
 
 
     [SetUp]
@@ -24,6 +25,7 @@ public class CategoriesTest
         // Inicializar las instancias necesarias para las pruebas
         storeDB = new StoreDB();
         store = Store.Instance; // Aquí obtienes la instancia existente de Store
+        products1 = Products.Instance;
         categories = Categories.Instance;
     }
 
@@ -34,7 +36,7 @@ public class CategoriesTest
         int categoryId = 3; // Categoría de ciencia ficción en este ejemplo
 
         // Act
-        IEnumerable<Product> products = store.CategoryProducts(categoryId);
+        IEnumerable<Product> products = products1.GetProductsCategory(categoryId);
 
         // Assert
         Assert.IsNotNull(products);
@@ -49,7 +51,8 @@ public class CategoriesTest
         int categoryId = -1;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => store.CategoryProducts(categoryId));
+        Assert.Throws<ArgumentException>(() =>products1.GetProductsCategory(categoryId));
+
     }
 
 
@@ -58,7 +61,7 @@ public class CategoriesTest
     public void GetCategories_ReturnsCorrectCount()
     {
         // Arrange
-        int expectedCount = 9; // Suponiendo que hay 9 categorías en la lista
+        int expectedCount = 10; // Suponiendo que hay 9 categorías en la lista
 
         // Act
         var _categories = categories.GetCategories();
@@ -82,7 +85,7 @@ public class CategoriesTest
     public void GetCategories_ReturnsOrderedCategories()
     {
         // Arrange
-        var expectedCategories = new List<string> { "Adventure", "Dystopian", "Fantasy", "Fiction", "Mystery", "NonFiction", "Romance", "Science Fiction", "Young Adult" };
+        var expectedCategories = new List<string> { "Adventure", "Dystopian", "Fantasy", "Fiction", "Gift", "Mystery", "NonFiction", "Romance", "Science Fiction", "Young Adult" };
 
         // Act
         var _categories = categories.GetCategories();
