@@ -5,10 +5,11 @@ namespace storeapi.Models
     public class Product : ICloneable
     {
         public int id { get; set; }
-        private string _name = string.Empty; // Initialize to empty string
-        private string _imageUrl = string.Empty; // Initialize to empty string
+        private string _name;
+        private string _imageUrl;
         private decimal _price;
-        private string _description = string.Empty; // Initialize to empty string
+        private string _description;
+
         private Category _category ;
 
         public string Name
