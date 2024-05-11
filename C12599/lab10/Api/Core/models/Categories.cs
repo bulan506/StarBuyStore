@@ -6,8 +6,8 @@ namespace storeapi.Models
 {
     public struct Category
     {
-        public int Id { get; }
-        public  string Name { get; }
+        internal int Id { get; }
+        internal  string Name { get; }
 
         public Category(int id, string name)
         {
