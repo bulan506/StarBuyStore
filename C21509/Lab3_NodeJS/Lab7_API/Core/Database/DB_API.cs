@@ -101,7 +101,7 @@ namespace Store_API.Database
                             command.Parameters.AddWithValue("@name", actualProduct.Name);
                             command.Parameters.AddWithValue("@imageURL", actualProduct.ImageURL);
                             command.Parameters.AddWithValue("@price", actualProduct.Price);
-                            command.Parameters.AddWithValue("@idCategory", actualProduct.IdCategory.IdCategory); // Solo se usa el valor entero de IdCategory
+                            command.Parameters.AddWithValue("@idCategory", actualProduct.Categoria.IdCategory); // Solo se usa el valor entero de IdCategory
 
                             command.ExecuteNonQuery();
                         }
@@ -143,7 +143,7 @@ namespace Store_API.Database
                                     Name = readerTable["Name"].ToString(),
                                     ImageURL = readerTable["ImageURL"].ToString(),
                                     Price = Convert.ToDecimal(readerTable["Price"]),
-                                    IdCategory = category
+                                    Categoria = category
                                 });
                             }
                         }
