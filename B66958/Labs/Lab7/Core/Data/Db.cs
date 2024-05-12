@@ -234,7 +234,7 @@ public class Db
                                 Description = reader[2].ToString(),
                                 ImageUrl = reader[3].ToString(),
                                 Price = (decimal)reader[4],
-                                CategoryId = reader.GetInt32(5)
+                                Category = Categories.Instance.GetCategoryById(reader.GetInt32(5))
                             };
 
                             products.Add(product);
