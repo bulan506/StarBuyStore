@@ -34,7 +34,7 @@ export const Products = ({ }) => {
 
   const loadFilteredData = async (category) => {
     try {
-      const response = await fetch(`https://localhost:7280/api/Store/products?category=${category}`);
+      const response = await fetch(`https://localhost:7280/api/store/products?category=${category}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -44,7 +44,6 @@ export const Products = ({ }) => {
       
       setProductList(data);
     } catch (error) {
-      console.error('Failed to fetch data:', error);
       throw new Error('Failed to fetch data');
     }
   };
