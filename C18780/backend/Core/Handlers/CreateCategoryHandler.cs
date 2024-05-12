@@ -2,7 +2,6 @@ using MediatR;
 using StoreApi.Commands;
 using StoreApi.Models;
 using StoreApi.Repositories;
-
 namespace StoreApi.Handler
 {
     public sealed class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Category>

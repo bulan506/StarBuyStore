@@ -8,6 +8,7 @@ namespace StoreApi.Models
         {
             Uuid = category.Uuid;
             Name = category.Name;
+            
         }
     }
 }

@@ -2,7 +2,6 @@ using MediatR;
 using StoreApi.Models;
 using StoreApi.Queries;
 using StoreApi.Repositories;
-
 namespace StoreApi.Handler
 {
     public sealed class GetCategoryByNameHandler : IRequestHandler<GetCategoryByNameQuery, Category>
@@ -13,7 +12,7 @@ namespace StoreApi.Handler
         {
             if (categoryRepository == null)
             {
-                throw new ArgumentException("Illegal action, categoryRepository is invalid.");
+                throw new ArgumentException("Illegal action, category repository is invalid.");
             }
             _categoryRepository = categoryRepository;
         }

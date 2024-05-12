@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StoreApi.Cache;
 using StoreApi.Commands;
 using StoreApi.Models;
 using StoreApi.Queries;
@@ -11,7 +12,7 @@ namespace StoreApi
     public sealed class ProductController : ControllerBase
     {
         private readonly IMediator mediator;
-
+        private CategoriesCache categoriesCache;
         public ProductController(IMediator mediator)
         {
             if (mediator == null)
@@ -19,6 +20,7 @@ namespace StoreApi
                 throw new ArgumentException("Illegal action, the mediator is being touched. The mediator is null and void.");
             }
             this.mediator = mediator;
+            categoriesCache = CategoriesCache.GetInstance();
         }
 
         [HttpGet]
@@ -40,7 +42,7 @@ namespace StoreApi
         [HttpGet("productCategory")]
         public async Task<List<Product>> GetProductByCategoryAsync(string categoryName)
         {
-            var guidCategory = await mediator.Send(new GetCategoryByNameQuery() {Name = categoryName});
+            var guidCategory = categoriesCache.GetCategoryByName(categoryName);
             var product = await mediator.Send(new GetProductByCategoryQuery() { Category = guidCategory.Uuid });
 
             return product;

@@ -2,8 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StoreApi.Commands;
 using StoreApi.Models;
+using StoreApi.Cache;
 using StoreApi.Queries;
-
 namespace StoreApi
 {
     [Route("api/[controller]")]
@@ -11,7 +11,7 @@ namespace StoreApi
     public sealed class CategoryController : ControllerBase
     {
         private readonly IMediator mediator;
-        private readonly List<Categories> categories;
+        private List<Categories> categories;
         public CategoryController(IMediator mediator)
         {
             if (mediator == null)
@@ -20,35 +20,46 @@ namespace StoreApi
             }
             this.mediator = mediator;
             categories = new List<Categories>();
+
             LoadCategoriesFromDatabaseAsync().Wait();
         }
+
         private async Task LoadCategoriesFromDatabaseAsync()
         {
-            var result = await mediator.Send(new GetCategoryListQuery());
-            if (result != null)
+            if (CategoriesCache._categories == null || !CategoriesCache._categories.Any())
             {
-                foreach (var category in result)
+                var result = await mediator.Send(new GetCategoryListQuery());
+                if (result != null)
                 {
-                    categories.Add(new Categories(category));
+                    foreach (var category in result)
+                    {
+                        categories.Add(new Categories(category));
+                    }
+                    categories = categories.OrderBy(x => x.Name).ToList<Categories>();
+                    CategoriesCache._categories = categories;
                 }
             }
-            categories.Sort(new CategoryNameComparator());
+            else
+            {
+                categories = (List<Categories>)CategoriesCache._categories;
+            }
         }
-
         [HttpGet]
-        public async Task<List<Categories>> GetCategoryListAsync()
+        public async Task<IEnumerable<Categories>> GetCategoryListAsync()
         {
             return categories;
         }
 
         [HttpGet("categoryId")]
-        public Category GetCategoryById(Guid uuid)
+        public Categories GetCategoryById(Guid uuid)
         {
-            return default;
-        }
-        [HttpGet("categoryName")]
-        public Category GetCategoryByName(string name)
-        {
+            foreach (var category in categories)
+            {
+                if (category.Uuid == uuid)
+                {
+                    return category;
+                }
+            }
             return default;
         }
 

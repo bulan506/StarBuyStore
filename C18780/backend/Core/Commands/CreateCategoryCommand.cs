@@ -1,6 +1,5 @@
 using MediatR;
 using StoreApi.Models;
-
 namespace StoreApi.Commands
 {
     public sealed class CreateCategoryCommand : IRequest<Category>

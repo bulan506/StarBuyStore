@@ -2,7 +2,6 @@ using MediatR;
 using StoreApi.Models;
 using StoreApi.Queries;
 using StoreApi.Repositories;
-
 namespace StoreApi.Handler
 {
     public sealed class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Category>
