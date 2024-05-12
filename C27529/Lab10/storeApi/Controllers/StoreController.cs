@@ -18,7 +18,7 @@ namespace storeApi.Controllers
             return await Task.FromResult(Store.Instance);
         }
 
-        [HttpGet("Products")]
+        [HttpGet("products")]
         public async Task<IActionResult> GetCategories(int category)
         {
             if (category < 1) throw new ArgumentException("Invalid category ID");

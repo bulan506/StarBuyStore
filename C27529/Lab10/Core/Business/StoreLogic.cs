@@ -17,7 +17,7 @@ namespace storeApi.Business
             if (string.IsNullOrWhiteSpace(cart.Address)) throw new ArgumentException("Address must be provided.");
 
             var products = Store.Instance.Products;
-            var taxPercentage = Store.Instance.TaxPercentage;
+           // var taxPercentage = Store.Instance.TaxPercentage;
 
             // Find matching products based on the product IDs in the cart
             IEnumerable<Product> matchingProducts = products.Where(p => cart.ProductIds.Contains(p.Id.ToString())).ToList();

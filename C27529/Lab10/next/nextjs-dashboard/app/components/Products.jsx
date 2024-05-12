@@ -10,7 +10,7 @@ export const Products = ({ }) => {
 
   const loadData = async () => {
     try {
-      const response = await fetch(`https://localhost:7280/api/Store`);
+      const response = await fetch(`https://localhost:7280/api/store`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -21,11 +21,6 @@ export const Products = ({ }) => {
       setListNames(nameData);
       setProductList(json);
 
-      listNames.map(category => {
-        const categoryId = category.id;
-        const categoryName = category.name;
-        console.log(`ID: ${categoryId}, Name: ${categoryName}`);
-      });
     } catch (error) {
       throw new Error('Failed to fetch data');
     }

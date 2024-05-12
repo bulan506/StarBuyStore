@@ -6,6 +6,7 @@ using storeApi.db;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Dynamic;
 
 namespace storeApi
 {
@@ -14,16 +15,15 @@ namespace storeApi
     {
         public IEnumerable<Product> Products { get; private set; }
         public Dictionary<int, List<Product>> CategoriesProducts { get; private set; }
-        public List<Category.ProductCategory> CategoriesNames { get; private set; }
-        public int TaxPercentage { get; private set; }
-
-        private Store(IEnumerable<Product> products, int taxPercentage)
+        public IEnumerable<Category.ProductCategory> CategoriesNames { get; private set; }
+        public const int TaxPercent = 13;
+        
+        private Store(IEnumerable<Product> products)
         {
             this.Products = products;
-            this.TaxPercentage = taxPercentage;
             
         }
-
+         
 
 
         public readonly static Store Instance;
@@ -32,7 +32,7 @@ namespace storeApi
         static Store()
         {
             Task<IEnumerable<Product>> productsTask = productsFromDB();
-            Store.Instance = new Store(productsTask.Result, 13);
+            Store.Instance = new Store(productsTask.Result);
             var category = new Category();
             Store.Instance.CategoriesNames = category.GetCategoryNames();
 
@@ -51,11 +51,11 @@ namespace storeApi
 
             foreach (Product product in Products)
             {
-                if (!this.CategoriesProducts.ContainsKey(product.Category))
+                if (!this.CategoriesProducts.ContainsKey(product.Category.Id))
                 {
-                    this.CategoriesProducts[product.Category] = new List<Product>();
+                    this.CategoriesProducts[product.Category.Id] = new List<Product>();
                 }
-                this.CategoriesProducts[product.Category].Add(product);
+                this.CategoriesProducts[product.Category.Id].Add(product);
             }
 
         }
@@ -69,7 +69,7 @@ namespace storeApi
             if (CategoriesProducts.ContainsKey(category))
             {
                 IEnumerable<Product> products = CategoriesProducts[category];
-                return new Store(products, 13);
+                return new Store(products);
             }
             else
             {
