@@ -4,8 +4,8 @@ namespace StoreApi.Cache
 {
     public sealed class CategoriesCache
     {
-        public static List<Categories> _categories { get; set; }
-        private CategoriesCache(){ }
+        public static IEnumerable<Categories> _categories { get; set; }
+        private CategoriesCache() { }
 
         private static CategoriesCache _instance;
 
@@ -19,11 +19,14 @@ namespace StoreApi.Cache
         }
         public Categories GetCategoryByName(string name)
         {
-            foreach (var category in _categories)
+            if (!string.IsNullOrWhiteSpace(name))
             {
-                if (category.Name.Equals(name))
+                foreach (var category in _categories)
                 {
-                    return category;
+                    if (category.Name.Equals(name))
+                    {
+                        return category;
+                    }
                 }
             }
             return default;

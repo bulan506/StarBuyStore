@@ -23,21 +23,33 @@ namespace StoreApi.Controllers
             this.categoryController = categoryController;
             categoriesCache = CategoriesCache.GetInstance();
         }
-        [HttpGet("getStore")]
-        public async Task<Store> GetStoreAsync(string category)
+        [HttpGet("Products")]
+        public async Task<Store> GetStoreAsync(string category, string search)
         {
-            var taxPercentage = 13;
-            if (category.Equals("All"))
+            IEnumerable<Product> products;
+            //Paso 1: Guardo los productos en memoria para no volver a pedirlos a base de datos
+            if (!ProductsCache.exists())
             {
-                var product = await mediator.Send(new GetProductListQuery());
-                return new Store(product, taxPercentage);
+                var productsList = await mediator.Send(new GetProductListQuery());
+                ProductsCache.setProduct(productsList);
+            }
+            //Paso 2: Filtro los productos por su categoria
+            if (!category.Equals("All"))
+            {
+                products = ProductsCache.GetProduct(categoriesCache.GetCategoryByName(category).Uuid);
             }
             else
             {
-                var guidCategory = categoriesCache.GetCategoryByName(category);
-                var product = await mediator.Send(new GetProductByCategoryQuery() { Category =  guidCategory.Uuid});
-                return new Store(product, taxPercentage);
+                products = ProductsCache.getAll();
             }
+            //Paso 3: Filtro los productos por el search
+            if (!search.Equals("none"))
+            {
+                ProductSearch productSearch = new ProductSearch(products);
+                products = productSearch.Search(search);
+            }
+
+            return new Store(products);
         }
     }
 }

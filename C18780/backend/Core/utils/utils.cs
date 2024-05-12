@@ -28,7 +28,5 @@ namespace StoreApi.utils
             int sunday = DayOfWeek.Sunday - dateTime.DayOfWeek;
             return dateTime.AddDays(sunday);
         }
-
-
     }
 }

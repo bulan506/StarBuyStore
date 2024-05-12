@@ -35,17 +35,17 @@ namespace StoreApi
                     {
                         categories.Add(new Categories(category));
                     }
+                    categories = categories.OrderBy(x => x.Name).ToList<Categories>();
                     CategoriesCache._categories = categories;
-                    CategoriesCache._categories.Sort(new CategoryNameComparator());
                 }
             }
             else
             {
-                categories = CategoriesCache._categories;
+                categories = (List<Categories>)CategoriesCache._categories;
             }
         }
         [HttpGet]
-        public async Task<List<Categories>> GetCategoryListAsync()
+        public async Task<IEnumerable<Categories>> GetCategoryListAsync()
         {
             return categories;
         }
