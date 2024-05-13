@@ -22,15 +22,23 @@ namespace ApiLab7.Controllers
         {
             bool queryIsPresentButCategoriesAreNot =
                 (categories == null || categories.Count() == 0) && query != null;
-            bool queryIsNotPresentButCategoriesAre = query == null && categories.Count() > 0;
+            bool queryIsNotPresentButCategoriesAre =
+                query == null && (categories != null && categories.Count() > 0);
+            bool categoriesAndQueryAreNotPresent =
+                (categories == null || categories.Count() == 0)
+                && (query == null || string.IsNullOrWhiteSpace(query));
 
             if (queryIsPresentButCategoriesAreNot)
             {
                 return Store.Instance.ProductsByQuery(query);
             }
-            else if (queryIsNotPresentButCategoriesAre)
+            if (queryIsNotPresentButCategoriesAre)
             {
                 return Store.Instance.ProductsByCategory(categories);
+            }
+            if (categoriesAndQueryAreNotPresent)
+            {
+                return Store.Instance.ProductsList;
             }
             else
             {
