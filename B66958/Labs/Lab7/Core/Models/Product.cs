@@ -113,7 +113,8 @@ public class Products
         if (ProductsByCategory.ContainsKey(product.Category.Id))
         {
             ProductsByCategory[product.Category.Id].Add(product);
-        }else
+        }
+        else
         {
             List<Product> productList = new List<Product>();
             productList.Add(product);
@@ -121,12 +122,89 @@ public class Products
         }
     }
 
-    public IEnumerable<Product> GetProductsByCategory(int category)
+    public IEnumerable<Product> GetProductsByCategory(List<int> categories)
     {
+        if (categories == null || categories.Count() == 0)
+            throw new ArgumentException(
+                "The categories list should not be null and must contain at least one category"
+            );
+
         List<Product> productsFound;
-        if(ProductsByCategory.TryGetValue(category, out productsFound))
-            return productsFound;
-        else throw new EmptyException("There are no products matching your queried category");
+        List<Product> productsMatching = new List<Product>();
+
+        foreach (int category in categories)
+        {
+            if (ProductsByCategory.TryGetValue(category, out productsFound))
+            {
+                productsMatching.AddRange(productsFound);
+            }
+        }
+
+        return productsMatching;
+    }
+
+    public IEnumerable<Product> GetProductsByQuery(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            throw new ArgumentException("The query should not be null");
+
+        ProductSearchTree tree = new ProductSearchTree();
+
+        foreach (var productsFound in ProductsByCategory.Values)
+        {
+            foreach (var product in productsFound)
+            {
+                tree.AddProduct(product);
+            }
+        }
+
+        List<Product> matchedProducts = tree.Search(query);
+
+        if (matchedProducts.Count > 0)
+        {
+            return matchedProducts;
+        }
+        else
+        {
+            throw new EmptyException("There are no products matching the queried query");
+        }
+    }
+
+    public IEnumerable<Product> GetProductsByCategoryAndQuery(List<int> categories, string query)
+    {
+        if (categories == null || categories.Count() == 0)
+            throw new ArgumentException(
+                "The categories list should not be null and must contain at least one category"
+            );
+        if (string.IsNullOrWhiteSpace(query))
+            throw new ArgumentException("The query should not be null");
+
+        List<Product> productsFound;
+        ProductSearchTree tree = new ProductSearchTree();
+
+        foreach (int category in categories)
+        {
+            if (ProductsByCategory.TryGetValue(category, out productsFound))
+            {
+                foreach (Product product in productsFound)
+                {
+                    tree.AddProduct(product);
+                }
+            }
+        }
+
+        List<Product> matchedProducts = tree.Search(query);
+
+        if (matchedProducts.Count > 0)
+        {
+            return matchedProducts;
+        }
+        else
+        {
+            throw new EmptyException(
+                "There are no products matching the queried categories and query"
+            );
+        }
     }
 
     public IEnumerable<Product> GetProducts()
