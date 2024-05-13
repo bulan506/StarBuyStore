@@ -5,6 +5,7 @@ import NavBar from "./navbar/page";
 import Cart from './Cart/page';
 import Alert from 'react-bootstrap/Alert';
 import Carousel from 'react-bootstrap/Carousel';
+import { Dropdown } from "react-bootstrap";
 
 export default function Home() {
   const [isErrorShowing, setIsErrorShowing] = useState(false);
@@ -12,7 +13,7 @@ export default function Home() {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const [isCartActive, setIsCartActive] = useState(false);
 
@@ -38,7 +39,7 @@ export default function Home() {
       try {
         const result = await getData();
         const paymentTypes = result.paymentMethods.map(payment => payment.paymentType);
-        setProducts(result.products);
+        setProducts(result.productsList);
         setCategories(result.categoriesList);
         setCart(cart => ({
           ...cart,
@@ -165,15 +166,20 @@ export default function Home() {
 
   const MyRow = () => {
 
-    async function handleCategoryChange(event: any) {
-      let selected = event.target.value;
-      setSelectedCategory(selected)
-      if (selected === "0") {
+    async function handleCategoryChange(newCategory: number) {
+      const updatedCategories = selectedCategories.includes(newCategory)
+        ? selectedCategories.filter(category => category !== newCategory)
+        : [...selectedCategories, newCategory];
+
+      setSelectedCategories(updatedCategories);
+
+      if (!updatedCategories || updatedCategories.length === 0) {
         var allProducts = await getData();
-        setProducts(allProducts.products)
-      } else
+        setProducts(allProducts.productsList)
+      } else {
+        const fetchUrl = 'https://localhost:7151/api/store/products' + buildQueryString(updatedCategories);
         try {
-          const res = await fetch(`https://localhost:7151/api/Store/products?category=${selected}`, {
+          const res = await fetch(fetchUrl, {
             method: 'GET',
             headers: {
               'content-type': 'application/json'
@@ -185,6 +191,15 @@ export default function Home() {
           setErrorMessage(error);
           setIsErrorShowing(true);
         }
+      }
+    }
+
+    function buildQueryString(categories: any) {
+      if (!categories || categories.length === 0) {
+        return '';
+      }
+      const queryString = categories.map(category => `categories=${category}`).join('&');
+      return `?${queryString}`;
     }
 
     return (
@@ -192,14 +207,22 @@ export default function Home() {
         <div className="row">
           <div className="col-auto">
             <h1>Lista de productos</h1>
-            <select className="form-control" onChange={handleCategoryChange} value={selectedCategory}>
-              <option value={0}>Todas las categorías</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Todas las categorías
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {categories.map(category => (
+                  <Dropdown.Item
+                    key={category.id}
+                    onClick={() => handleCategoryChange(category.id)}
+                    active={
+                      selectedCategories.includes(category.id)}>
+                    {category.name}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
         <div className="row justify-content-md-center">
