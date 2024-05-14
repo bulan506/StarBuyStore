@@ -23,7 +23,6 @@ export default function Home() {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [productQuery, setProductQuery] = useState('');
-  const [productQueryUrl, setProductQueryUrl] = useState('');
 
   const [isCartActive, setIsCartActive] = useState(false);
 
@@ -46,30 +45,43 @@ export default function Home() {
 
   const categoriesSearchString = Array.isArray(categoriesSearch) ? categoriesSearch.join(',') : categoriesSearch;
   useEffect(() => {
-    let urlToFilterCategories = buildQueryString(categoriesSearch);
-    let searchedQuerie = querySearch ? `query=${querySearch}` : '';
-    let urlToFilterQuery = urlToFilterCategories ? (searchedQuerie ? `&${searchedQuerie}` : '') : (searchedQuerie ? `${searchedQuerie}` : '')
-    if (categoriesSearch)
-      setSelectedCategories(categoriesSearch);
-    //if(querySearch) setProductQuery(querySearch);
-    const fetchUrl = 'https://localhost:7151/api/store/products' + urlToFilterCategories + urlToFilterQuery;
-    console.log(fetchUrl)
-    const fetchData = async () => {
-      try {
-        const res = await fetch(fetchUrl, {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json'
-          }
-        });
-        var productsForQuerySearch = await res.json();
-        setProducts(productsForQuerySearch);
-      } catch (error) {
-        setErrorMessage(error)
-        setIsErrorShowing(true)
-      }
-    };
-    fetchData();
+    if (categoriesSearch.length !== 0 || querySearch !== null) {
+      let urlToFilterCategories = buildQueryString(categoriesSearch);
+      let searchedQuerie = querySearch ? `query=${querySearch}` : '';
+      let urlToFilterQuery = urlToFilterCategories ? (searchedQuerie ? `&${searchedQuerie}` : '') : (searchedQuerie ? `${searchedQuerie}` : '')
+      if (categoriesSearch)
+        setSelectedCategories(categoriesSearch);
+      //if(querySearch) setProductQuery(querySearch);
+      const fetchUrl = 'https://localhost:7151/api/store/products' + urlToFilterCategories + urlToFilterQuery;
+      console.log(fetchUrl)
+      const fetchData = async () => {
+        try {
+          const res = await fetch(fetchUrl, {
+            method: 'GET',
+            headers: {
+              'content-type': 'application/json'
+            }
+          });
+          var productsForQuerySearch = await res.json();
+          setProducts(productsForQuerySearch);
+        } catch (error) {
+          setErrorMessage(error)
+          setIsErrorShowing(true)
+        }
+      };
+      fetchData();
+    } else {
+      const fetchStore = async () => {
+        try {
+          const result = await getData();
+          setProducts(result.productsInStore);
+        } catch (error) {
+          setErrorMessage(error)
+          setIsErrorShowing(true)
+        }
+      };
+      fetchStore();
+    }
   }, [querySearch, categoriesSearchString]);
 
   useEffect(() => {
@@ -77,8 +89,8 @@ export default function Home() {
       try {
         const result = await getData();
         const paymentTypes = result.paymentMethods.map(payment => payment.paymentType);
-        setProducts(result.productsList);
-        setCategories(result.categoriesList);
+        setProducts(result.productsInStore);
+        setCategories(result.categoriesInStore);
         setCart(cart => ({
           ...cart,
           carrito: {
@@ -174,7 +186,7 @@ export default function Home() {
   function updateBrowserUrl(categoriesSelected: Array<Number>) {
     let urlToBeDisplayed = ''
     let categoriesParams = categoriesSelected ? buildQueryString(categoriesSelected) : '?'
-    let queryParams = productQuery ? (categories ? `&query=${productQuery}` : `query=${productQuery}`) : ''
+    let queryParams = productQuery ? (categoriesSelected ? `&query=${productQuery}` : `query=${productQuery}`) : ''
     urlToBeDisplayed = categoriesParams + queryParams
 
     return urlToBeDisplayed
@@ -200,31 +212,12 @@ export default function Home() {
     return `?${queryString}`;
   }
 
-  async function searchProduct() {
+  function searchProduct() {
     if (!productQuery) {
       setErrorMessage('Por favor ingrese una consulta');
       setIsErrorShowing(true);
     } else {
-      /* let newFetchUrl = '';
-      if (selectedCategories.length > 0) {
-        newFetchUrl = productQueryUrl + `&query=${productQuery}`;
-      } else {
-        newFetchUrl = `https://localhost:7151/api/store/products?query=${productQuery}`
-      }
-      try {
-        const res = await fetch(newFetchUrl, {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json'
-          }
-        });
-        var productsForQuerySearch = await res.json();
-        setProducts(productsForQuerySearch); */
       router.push(pathname + updateBrowserUrl(selectedCategories))
-      /* } catch (error) {
-        setErrorMessage("No existen coincidencias para la búsqueda");
-        setIsErrorShowing(true);
-      } */
     }
   }
 
@@ -249,34 +242,14 @@ export default function Home() {
 
   const MyRow = () => {
 
-    async function handleCategoryChange(newCategory: number) {
+    function handleCategoryChange(newCategory: string) {
       const updatedCategories = selectedCategories.includes(newCategory)
         ? selectedCategories.filter(category => category !== newCategory)
         : [...selectedCategories, newCategory];
+      console.log(updatedCategories)
 
       setSelectedCategories(updatedCategories);
-
-      /* if (!updatedCategories || updatedCategories.length === 0) {
-        var allProducts = await getData();
-        setProducts(allProducts.productsList);
-      } else {
-        const fetchUrl = 'https://localhost:7151/api/store/products' + buildQueryString(updatedCategories);
-        setProductQueryUrl(fetchUrl);
-        try {
-          const res = await fetch(fetchUrl, {
-            method: 'GET',
-            headers: {
-              'content-type': 'application/json'
-            }
-          })
-          var productsForCategory = await res.json();
-          setProducts(productsForCategory) */
       router.push(pathname + updateBrowserUrl(updatedCategories))
-      /* } catch (error) {
-        setErrorMessage(error);
-        setIsErrorShowing(true);
-      }
-    } */
     }
 
     return (
@@ -292,7 +265,7 @@ export default function Home() {
                 {categories.map(category => (
                   <Dropdown.Item
                     key={category.id}
-                    onClick={() => handleCategoryChange(category.id)}
+                    onClick={() => handleCategoryChange(String(category.id))}
                     active={
                       selectedCategories.includes(category.id) || selectedCategories.includes(String(category.id))}>
                     {category.name}
