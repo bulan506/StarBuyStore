@@ -1,19 +1,29 @@
 'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NavBar from "./navbar/page";
 import Cart from './Cart/page';
 import Alert from 'react-bootstrap/Alert';
 import Carousel from 'react-bootstrap/Carousel';
 import { Dropdown } from "react-bootstrap";
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 export default function Home() {
+
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const querySearch = searchParams.get('query')
+  const categoriesSearch = searchParams.getAll('categories')
+
   const [isErrorShowing, setIsErrorShowing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [productQuery, setProductQuery] = useState('');
+  const [productQueryUrl, setProductQueryUrl] = useState('');
 
   const [isCartActive, setIsCartActive] = useState(false);
 
@@ -33,6 +43,34 @@ export default function Home() {
     metodosDePago: [],
     necesitaVerificacion: false
   });
+
+  const categoriesSearchString = Array.isArray(categoriesSearch) ? categoriesSearch.join(',') : categoriesSearch;
+  useEffect(() => {
+    let urlToFilterCategories = buildQueryString(categoriesSearch);
+    let searchedQuerie = querySearch ? `query=${querySearch}` : '';
+    let urlToFilterQuery = urlToFilterCategories ? (searchedQuerie ? `&${searchedQuerie}` : '') : (searchedQuerie ? `${searchedQuerie}` : '')
+    if (categoriesSearch)
+      setSelectedCategories(categoriesSearch);
+    //if(querySearch) setProductQuery(querySearch);
+    const fetchUrl = 'https://localhost:7151/api/store/products' + urlToFilterCategories + urlToFilterQuery;
+    console.log(fetchUrl)
+    const fetchData = async () => {
+      try {
+        const res = await fetch(fetchUrl, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+        var productsForQuerySearch = await res.json();
+        setProducts(productsForQuerySearch);
+      } catch (error) {
+        setErrorMessage(error)
+        setIsErrorShowing(true)
+      }
+    };
+    fetchData();
+  }, [querySearch, categoriesSearchString]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,6 +171,15 @@ export default function Home() {
     setIsCartActive(action ? true : false);
   };
 
+  function updateBrowserUrl(categoriesSelected: Array<Number>) {
+    let urlToBeDisplayed = ''
+    let categoriesParams = categoriesSelected ? buildQueryString(categoriesSelected) : '?'
+    let queryParams = productQuery ? (categories ? `&query=${productQuery}` : `query=${productQuery}`) : ''
+    urlToBeDisplayed = categoriesParams + queryParams
+
+    return urlToBeDisplayed
+  }
+
   async function getData() {
     try {
       const res = await fetch('https://localhost:7151/api/store');
@@ -142,6 +189,42 @@ export default function Home() {
       return res.json();
     } catch (error) {
       throw error;
+    }
+  }
+
+  function buildQueryString(categories: any) {
+    if (!categories || categories.length === 0) {
+      return '';
+    }
+    const queryString = categories.map(category => `categories=${category}`).join('&');
+    return `?${queryString}`;
+  }
+
+  async function searchProduct() {
+    if (!productQuery) {
+      setErrorMessage('Por favor ingrese una consulta');
+      setIsErrorShowing(true);
+    } else {
+      /* let newFetchUrl = '';
+      if (selectedCategories.length > 0) {
+        newFetchUrl = productQueryUrl + `&query=${productQuery}`;
+      } else {
+        newFetchUrl = `https://localhost:7151/api/store/products?query=${productQuery}`
+      }
+      try {
+        const res = await fetch(newFetchUrl, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+        var productsForQuerySearch = await res.json();
+        setProducts(productsForQuerySearch); */
+      router.push(pathname + updateBrowserUrl(selectedCategories))
+      /* } catch (error) {
+        setErrorMessage("No existen coincidencias para la búsqueda");
+        setIsErrorShowing(true);
+      } */
     }
   }
 
@@ -173,11 +256,12 @@ export default function Home() {
 
       setSelectedCategories(updatedCategories);
 
-      if (!updatedCategories || updatedCategories.length === 0) {
+      /* if (!updatedCategories || updatedCategories.length === 0) {
         var allProducts = await getData();
-        setProducts(allProducts.productsList)
+        setProducts(allProducts.productsList);
       } else {
         const fetchUrl = 'https://localhost:7151/api/store/products' + buildQueryString(updatedCategories);
+        setProductQueryUrl(fetchUrl);
         try {
           const res = await fetch(fetchUrl, {
             method: 'GET',
@@ -186,20 +270,13 @@ export default function Home() {
             }
           })
           var productsForCategory = await res.json();
-          setProducts(productsForCategory)
-        } catch (error) {
-          setErrorMessage(error);
-          setIsErrorShowing(true);
-        }
+          setProducts(productsForCategory) */
+      router.push(pathname + updateBrowserUrl(updatedCategories))
+      /* } catch (error) {
+        setErrorMessage(error);
+        setIsErrorShowing(true);
       }
-    }
-
-    function buildQueryString(categories: any) {
-      if (!categories || categories.length === 0) {
-        return '';
-      }
-      const queryString = categories.map(category => `categories=${category}`).join('&');
-      return `?${queryString}`;
+    } */
     }
 
     return (
@@ -217,7 +294,7 @@ export default function Home() {
                     key={category.id}
                     onClick={() => handleCategoryChange(category.id)}
                     active={
-                      selectedCategories.includes(category.id)}>
+                      selectedCategories.includes(category.id) || selectedCategories.includes(String(category.id))}>
                     {category.name}
                   </Dropdown.Item>
                 ))}
@@ -255,7 +332,8 @@ export default function Home() {
 
   return (
     <div className="d-grid gap-2">
-      <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })} />
+      <NavBar productCount={count} toggleCart={(action) => toggleCart({ action })}
+        searchFunction={searchProduct} setQuery={setProductQuery} />
       {isCartActive ? <Cart cart={cart} setCart={setCart}
         toggleCart={(action) => toggleCart({ action })} clearProducts={clearProducts} /> : <><MyRow /> <CarouselBootstrap /></>}
       {isErrorShowing ?
