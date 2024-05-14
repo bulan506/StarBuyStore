@@ -2,10 +2,10 @@ namespace ApiLab7;
 
 public sealed class Store
 {
-    public List<Product> ProductsList { get; private set; }
+    public List<Product> ProductsInStore { get; private set; }
     public int TaxPercentage { get; private set; }
     public List<PaymentMethods> paymentMethods { get; private set; }
-    public IEnumerable<Category> CategoriesList { get; private set; }
+    public IEnumerable<Category> CategoriesInStore { get; private set; }
     public static int CurrentTaxPercentage = 13;
     private static Db db;
 
@@ -16,10 +16,10 @@ public sealed class Store
         IEnumerable<Category> categories
     )
     {
-        this.ProductsList = products;
+        this.ProductsInStore = products;
         this.TaxPercentage = TaxPercentage;
         this.paymentMethods = paymentMethods;
-        this.CategoriesList = categories;
+        this.CategoriesInStore = categories;
     }
 
     public static readonly Store Instance;

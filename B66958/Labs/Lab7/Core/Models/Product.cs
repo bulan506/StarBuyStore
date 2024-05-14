@@ -27,12 +27,12 @@ public class Product : ICloneable
 public class Products
 {
     private static Products instance;
-    private List<Product> productList;
+    private List<Product> products;
     private Dictionary<int, List<Product>> ProductsByCategory;
 
     private Products()
     {
-        productList = new List<Product>();
+        products = new List<Product>();
         ProductsByCategory = new Dictionary<int, List<Product>>();
     }
 
@@ -109,16 +109,16 @@ public class Products
 
     private void AddProduct(Product product)
     {
-        productList.Add(product);
+        products.Add(product);
         if (ProductsByCategory.ContainsKey(product.Category.Id))
         {
             ProductsByCategory[product.Category.Id].Add(product);
         }
         else
         {
-            List<Product> productList = new List<Product>();
-            productList.Add(product);
-            ProductsByCategory.Add(product.Category.Id, productList);
+            List<Product> productsForCategory = new List<Product>();
+            productsForCategory.Add(product);
+            ProductsByCategory.Add(product.Category.Id, productsForCategory);
         }
     }
 
@@ -209,6 +209,6 @@ public class Products
 
     public IEnumerable<Product> GetProducts()
     {
-        return productList;
+        return products;
     }
 }

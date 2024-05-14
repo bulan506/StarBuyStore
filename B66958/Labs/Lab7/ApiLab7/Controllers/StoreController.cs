@@ -38,7 +38,7 @@ namespace ApiLab7.Controllers
             }
             if (categoriesAndQueryAreNotPresent)
             {
-                return Store.Instance.ProductsList;
+                return Store.Instance.ProductsInStore;
             }
             else
             {
