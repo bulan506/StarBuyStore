@@ -158,7 +158,7 @@ public class Products
             }
         }
 
-        List<Product> matchedProducts = tree.Search(query);
+        List<Product> matchedProducts = tree.Search(query).ToList();
 
         if (matchedProducts.Count > 0)
         {
@@ -193,7 +193,7 @@ public class Products
             }
         }
 
-        List<Product> matchedProducts = tree.Search(query);
+        List<Product> matchedProducts = tree.Search(query).ToList();
 
         if (matchedProducts.Count > 0)
         {

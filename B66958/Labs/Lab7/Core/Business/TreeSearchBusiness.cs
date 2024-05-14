@@ -46,7 +46,7 @@ public class ProductSearchTree
         return node;
     }
 
-    public List<Product> Search(string query)
+    public IEnumerable<Product> Search(string query)
     {
         List<Product> matchedProducts = new List<Product>();
         Search(root, query, matchedProducts);

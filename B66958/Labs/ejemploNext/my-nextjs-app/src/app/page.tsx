@@ -1,6 +1,6 @@
 'use client';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import NavBar from "./navbar/page";
 import Cart from './Cart/page';
 import Alert from 'react-bootstrap/Alert';
@@ -51,9 +51,7 @@ export default function Home() {
       let urlToFilterQuery = urlToFilterCategories ? (searchedQuerie ? `&${searchedQuerie}` : '') : (searchedQuerie ? `${searchedQuerie}` : '')
       if (categoriesSearch)
         setSelectedCategories(categoriesSearch);
-      //if(querySearch) setProductQuery(querySearch);
       const fetchUrl = 'https://localhost:7151/api/store/products' + urlToFilterCategories + urlToFilterQuery;
-      console.log(fetchUrl)
       const fetchData = async () => {
         try {
           const res = await fetch(fetchUrl, {
@@ -246,7 +244,6 @@ export default function Home() {
       const updatedCategories = selectedCategories.includes(newCategory)
         ? selectedCategories.filter(category => category !== newCategory)
         : [...selectedCategories, newCategory];
-      console.log(updatedCategories)
 
       setSelectedCategories(updatedCategories);
       router.push(pathname + updateBrowserUrl(updatedCategories))
