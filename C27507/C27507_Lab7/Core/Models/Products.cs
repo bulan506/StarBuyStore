@@ -9,7 +9,7 @@ public class Products{
     public Products(){
         //Obtenemos los datos que estan en memoria en Store.Instance        
         productsFromStore = Store.Instance.Products;
-        categoriesFromStore = Categories.Instance.CategoryList;
+        categoriesFromStore = Categories.Instance.AllProductCategories;
 
         if(productsFromStore == null || productsFromStore.Count() == 0)
             throw new ArgumentException($"{nameof(productsFromStore)} no es válido" );

@@ -31,7 +31,7 @@ function Page() {
     //cargamos los datos desde la API (StoreController por Metodo Get)    
     const [myCartInStorage, setMyCartInStorage] = useState<CartShopAPI | null>(getCartShopStorage("A"));    
     const [products, setProducts] = useState<ProductAPI[]>([]);       
-    const [productCategory, setproductCategory] = useState(2);
+    const [productCategory, setproductCategory] = useState(0);
     const [categoryList, setCategoryList] = useState<CategoryAPI[]>([]);
     
     //Se llama por defecto (este trae el Tax para los productos y la lista de Categorias)
@@ -49,12 +49,12 @@ function Page() {
                 //hacemos una validacion para saber si trae datos dentro de su metodo
                 if(json.hasOwnProperty('value')){
                     setProducts(json.valeu.products); 
-                    setCategoryList(json.allCategories);
+                    setCategoryList(json.allProductCategories);
                 }else{
                     //si el dato no viene dentro de un ActionResult se guarda normal
                     setProducts(json.products);
-                    setCategoryList(json.allCategories);
-                }                                
+                    setCategoryList(json.allProductCategories);
+                }                  
                 return json;
             } catch (error) {                
                 throw new Error('Failed to fetch data:' + error);
@@ -100,15 +100,12 @@ function Page() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-                <Dropdown.Item eventKey="0">Todos los productos:</Dropdown.Item>
-                
-                <Dropdown.Menu>
+                <Dropdown.Item eventKey="0">Todos los productos:</Dropdown.Item>                                
                     {categoryList.map((category, index) => (
                         <Dropdown.Item key={index} eventKey={category.id.toString()}>
                             {category.name}
                         </Dropdown.Item>
-                    ))}
-            </Dropdown.Menu>
+                    ))}            
             </Dropdown.Menu>
         </Dropdown>
       <div className="main_banner">    

@@ -13,7 +13,7 @@ namespace MyStoreAPI.Models
         public string description { get; set; }        
         public decimal id { get; internal set; }      
         [JsonIgnore]  
-        public Category category {get; set;}
+        public Category category {get; internal set;}
 
         public object Clone()
         {

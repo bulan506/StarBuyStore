@@ -10,9 +10,9 @@ namespace MyStoreAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //cuando heredamos de ControllerBase, la clase ahora puede manejar solicitudes HTTP
-    public class ProductsController : ControllerBase{                
+    public class productsController : ControllerBase{                
         
-        [HttpGet("store/products/category")]
+        [HttpGet("store/product/")]
         public IActionResult GetProductsByCategory(int category){
             try{
                 ProductsLogic productsLogic = new ProductsLogic();

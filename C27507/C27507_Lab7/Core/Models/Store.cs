@@ -10,21 +10,22 @@ namespace MyStoreAPI.Models
 {
     public sealed class Store{
         public IEnumerable<Product> Products { get; private set; } 
-        IEnumerable<Category> categoriesFromStore {get;}
+        public IEnumerable<Category> AllProductCategories {get; private set;}
         public int TaxPercentage { get; private set; }
         public bool StoreConnectedWithDB {get; private set;}
 
         private Store(){            
             this.TaxPercentage = 13;
+            this.AllProductCategories = Categories.Instance.AllProductCategories;
             this.Products = new List<Product>();                                       
             //Hacemos de cuenta que se crea con exito las tablas o las reconoce en Program.cs          
             if(!DB_Product.ProductsInTableExist()){
                 List<Product> temporalList = new List<Product>();
                 foreach (var productToStoreTable in createStoreProducts()){
                     temporalList.Add(productToStoreTable);                    
-                }                                
+                }
                 DB_Product.InsertProductsInDB(temporalList);
-            }                
+            }
             if(DB_PaymentMethod.PaymentMethodsInTableExist() == false ) DB_PaymentMethod.InsertPaymentMethod();
             //sobreescribimos la lista para que los productos tengan el ID correcto dado por la tabla
             this.Products = DB_Product.SelectProducts();            
@@ -53,7 +54,7 @@ namespace MyStoreAPI.Models
                     price = 25,
                     quantity = 0,                
                     description = "lorem ipsum",                    
-                    category = Categories.Instance.CategoryList.FirstOrDefault(c => c.id == 2)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault(c => c.id == 2)
                 });
 
                 products.Add(new Product
@@ -63,7 +64,7 @@ namespace MyStoreAPI.Models
                     price = 50,
                     quantity = 0,
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 4)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 4)
                 });
 
                 products.Add(new Product
@@ -73,7 +74,7 @@ namespace MyStoreAPI.Models
                     price = 100,
                     quantity = 0,
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 5)                    
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 5)                    
                 });
 
                 products.Add(new Product
@@ -83,7 +84,7 @@ namespace MyStoreAPI.Models
                     price = 35,
                     quantity = 0,                
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 3)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 3)
                 });
 
                 products.Add(new Product
@@ -93,7 +94,7 @@ namespace MyStoreAPI.Models
                     price = 75,
                     quantity = 0,              
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 6)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 6)
                 });
 
                 products.Add(new Product
@@ -103,7 +104,7 @@ namespace MyStoreAPI.Models
                     price = 250,
                     quantity = 0,              
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 2)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 2)
                 });
 
                 products.Add(new Product
@@ -113,7 +114,7 @@ namespace MyStoreAPI.Models
                     price = 250,
                     quantity = 0,                
                     description = "lorem ipsum",                    
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 3)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 3)
                 });
 
                 products.Add(new Product
@@ -123,7 +124,7 @@ namespace MyStoreAPI.Models
                     price = 150,
                     quantity = 0,                
                     description = "carousel",                    
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 2)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 2)
                 });
 
                 products.Add(new Product
@@ -133,7 +134,7 @@ namespace MyStoreAPI.Models
                     price = 2500,
                     quantity = 0,                
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 1)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 1)
                 });
 
                 products.Add(new Product
@@ -143,7 +144,7 @@ namespace MyStoreAPI.Models
                     price = 75,
                     quantity = 0,                
                     description = "lorem ipsum",
-                    category = Categories.Instance.CategoryList.FirstOrDefault( c => c.id == 1)
+                    category = Categories.Instance.AllProductCategories.FirstOrDefault( c => c.id == 1)
                 });
 
                 return products;
