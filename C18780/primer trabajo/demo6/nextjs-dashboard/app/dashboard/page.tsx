@@ -68,9 +68,13 @@ const ProductsRow = ({ products, onAdd }: { products: Product[], onAdd: any }) =
 
 export default function Page() {
   const [category, setCategory] = useState<string>("All");
-  const initialStore = useFetchInitialStore(category);
+  const [search, setSearch] = useState<string>("none");
+
+  const initialStore = useFetchInitialStore({ category, search });
   const initialCart = getInitialCartLocalStorage();
+
   const [count, setCount] = useState(initialCart.cart.products.length > 0 ? initialCart.cart.products.length : 0);
+
   const handleAddToCart = ({ product }: { product: Product }) => {
     initialCart.cart.products.push(product);
     initialCart.cart.subtotal = initialCart.cart.subtotal + product.price;
@@ -78,13 +82,23 @@ export default function Page() {
     setCount(count + 1);
     saveInitialCartLocalStorage(initialCart);
   }
+
   const handleAddtoCategory = ({ category }: { category: Category }) => {
     setCategory(category.name);
-    console.log(initialStore);
   }
+
+  const handleAddtoSearch = (searchQuery: string) => {
+    if (searchQuery !== null && searchQuery !== undefined && searchQuery.trim().length !== 0) {
+      setSearch(searchQuery.trim());
+    } else {
+      setSearch("none");
+    }
+  }
+  
+
   return (
     <>
-      <SideNav countCart={count} onAdd={handleAddtoCategory} />
+      <SideNav countCart={count} onAddCategory={handleAddtoCategory} onAddSearch={handleAddtoSearch} />
       {<ProductsRow products={initialStore ? initialStore : []} onAdd={handleAddToCart} />}
     </>
   );
