@@ -20,9 +20,13 @@ jobs:
         cd clases/apicsharp/Lab7
         dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: |
+        cd clases/apicsharp/Lab7
+        dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: |
+        cd clases/apicsharp/Lab7
+        dotnet test --no-build --verbosity normal
   publish:
     runs-on: ubuntu-latest
     steps:
