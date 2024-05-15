@@ -16,6 +16,6 @@ jobs:
     - name: Build & Push Image
       run: |
         cd clases/apicsharp/Lab7
-        echo "${{ secrets.dockerhub_pass  }}" | docker login -u "cris.guillen0@gmail.com" --password-stdin
+        echo "${{ secrets.DOCKERHUBPASS  }}" | docker login -u "cris.guillen0@gmail.com" --password-stdin
         docker image build -t cguillenmendez/leng2024:latest .
         docker push cguillenmendez/leng2024:latest
