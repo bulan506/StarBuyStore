@@ -1,0 +1,21 @@
+name: class Api image
+
+on:
+  push:
+   branches: [ master ]
+  pull_request:
+    branches: [ master ]
+      
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build & Push Image
+      run: |
+        cd clases/apicsharp/Lab7
+        echo "${{ secrets.dockerhub_pass  }}" | docker login -u "cris.guillen0@gmail.com" --password-stdin
+        docker image build -t cguillenmendez/leng2024:latest .
+        docker push cguillenmendez/leng2024:latest
