@@ -77,7 +77,11 @@ function Page() {
                 //Validar el tipo de informacion recibida es null, obj o string = error 504/501...etc
                 if (typeof filteredProducts  === "object" && filteredProducts !== null) {                    
                     setProducts(filteredProducts)
-                }
+                }else{
+                    
+
+                }                
+                
             } catch (error) {
                 //callAlertShop("Error","Error al obtener datos","Al parecer los datos no pueden ser mostrados. Por favor intentalo de nuevo");
             }            
@@ -87,40 +91,37 @@ function Page() {
 
   return (
     <main className="flex min-h-screen flex-col p-6">
-        <Link href='/login'>
-            <Button variant="secondary">Iniciar compra</Button>
-        </Link>
+        
+      <div className="main_banner row">    
 
-        <Link href='/admin/init'>
-            <Button variant="secondary">Dashboard</Button>
-        </Link>
-        <Dropdown onSelect={selectCategory}>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Productos por Categoría
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-                <Dropdown.Item eventKey="0">Todos los productos:</Dropdown.Item>                                
-                    {categoryList.map((category, index) => (
-                        <Dropdown.Item key={index} eventKey={category.id.toString()}>
-                            {category.name}
-                        </Dropdown.Item>
-                    ))}            
-            </Dropdown.Menu>
-        </Dropdown>
-      <div className="main_banner">    
-            
-            <div className="row">
-                <div className="search_container col-sm-6">
-                    <input type="search" name="name" placeholder="Busca cualquier cosa..."/>
-                    <i className="fas fa-search"></i>                                  
+                <div className="logo-container col-sm-3">
+                    <img src="./img/logo.png"/>
                 </div>
-                                
-                <CartShop                     
-                    myCartInStorage={myCartInStorage}  
-                    setMyCartInStorage={setMyCartInStorage}                             
-                />
-            </div>            
+                        
+                <div className="search_container col-sm-6 align-items-center justify-content-center">
+                    <input type="search" name="name" placeholder="Busca cualquier cosa..."/>                    
+                    <button type="submit">
+                        <i className="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div className="category-container col-sm-3">
+                    <Dropdown onSelect={selectCategory}>
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic" className="dropdown-style">
+                            Productos por Categoría
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="0">Todos los productos:</Dropdown.Item>                                
+                                {categoryList.map((category, index) => (
+                                    <Dropdown.Item key={index} eventKey={category.id.toString()}>
+                                        {category.name}
+                                    </Dropdown.Item>
+                                ))}            
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+                                   
       </div>  
 
       {/* Galeria de Productos */}
@@ -128,7 +129,7 @@ function Page() {
             {/* El uso de las Keys es importante ya que le hacen saber a React cuando hay cambios en los elementos del proyecto
             Ademas, todas los componentes deben llevar una Key, es una buena practica
             */}
-          <h1>Lista de Productos</h1>             
+                    
           <div id='div_gallery' className="row">
               {products && products.length >= 0 && products.map(product => {
                   if (product.description === "carousel") {
@@ -154,7 +155,11 @@ function Page() {
               })}
             </div>
       </div>      
-      <footer>@ Derechos Reservados 2024</footer>         
+      <footer>@ Derechos Reservados 2024</footer>     
+      <CartShop
+            myCartInStorage={myCartInStorage}  
+            setMyCartInStorage={setMyCartInStorage}                             
+        />                
     </main>
   );
 }
