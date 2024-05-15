@@ -2,14 +2,19 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Console } from 'console';
 
 
 export default function Home() {
 
   const [storeProducts, setStoreProducts] = useState([]);
   const [carrusel, setCarrusel] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  useEffect( () => {    
+
+  useEffect(() => {
     const loadData = async () => {
       try {
         //const response = await fetch('http://localhost:5000/api/Store');
@@ -18,17 +23,16 @@ export default function Home() {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        //console.log(data);
         setStoreProducts(data);
         setCarrusel(data);
+        setCategories(data.categoriesList);
       } catch (error) {
         throw new Error('Failed to fetch data');
       }
-    
-    };
-  
-    loadData();
 
+    };
+
+    loadData();
   }, []);
 
 
@@ -45,6 +49,8 @@ export default function Home() {
   });
 
   const handleAddToCart = (product) => {
+    if (product === undefined) throw new Error('The product is empty.');
+
     let productsNotInCart = !cart.products.some(item => item.id === product.id);
     if (productsNotInCart) {
       let updatedProductos = [...cart.products, product];
@@ -58,7 +64,7 @@ export default function Home() {
     }
   };
 
-  
+
   useEffect(() => {
     const storedCartData = JSON.parse(localStorage.getItem('cartItem') || '{}');
     setCart({
@@ -67,6 +73,37 @@ export default function Home() {
       count: storedCartData.count || 0
     });
   }, []);
+
+  const handleCategoryChange = async (event) => {
+    try {
+      const selected = event.target.value;
+      setSelectedCategory(selected);
+      let productsForCategory = [];
+      if (selected === "0") {
+        const response = await fetch('http://localhost:5207/api/Store');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        productsForCategory = await response.json();
+        setStoreProducts(productsForCategory);
+      } else {
+        const response = await fetch(`http://localhost:5207/api/Store/products?category=${selected}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        productsForCategory = await response.json();
+        setFilteredProducts(productsForCategory);
+      }
+
+      setStoreProducts(productsForCategory);
+
+
+    } catch (error) {
+      throw new Error('Fail handleCategory: ' + error.message);
+    }
+  };
+
+  // const carruselProducts = carrusel.productsCarrusel.filter(item => item.productCategory.idCategory === 10);
 
   return (
 
@@ -108,11 +145,34 @@ export default function Home() {
 
       <div className='container'>
         <h2 className='text-left mt-5 mb-5'>List of Books</h2>
+
+        <select className="btn btn-secondary dropdown-toggle" onChange={handleCategoryChange} value={selectedCategory}>
+          <option value={0}>ALL</option>
+
+          {categories && categories.map(category => (
+            <option key={category.idCategory} value={category.idCategory}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+
+
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap' }}>
           {storeProducts && storeProducts.products && storeProducts.products.map(item => (
             <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
           ))}
-          <CarruselComponent carrusel={carrusel} />
+
+          {filteredProducts && filteredProducts.map(item => (
+            <Products key={item.id} product={item} handleAddToCart={handleAddToCart} />
+
+          ))}
+
+
+          <CarruselComponent carrusel={carrusel.products && {
+            ...carrusel, productsCarrusel:
+              carrusel.products.filter(product => product.productCategory.idCategory === 10)
+          }} handleAddToCart={handleAddToCart} />
+
         </div>
       </div >
 
@@ -128,30 +188,44 @@ export default function Home() {
 }
 
 const Products = ({ product, handleAddToCart }) => {
-  const { id, name, author, imgUrl, price } = product;
-  return (
-    <div className="row my-3">
-      <div key={id} className='col-sm-3 mb-4' style={{ width: '300px', margin: '0.5rem' }}>
-        <div className="card" style={{ background: 'white' }}>
-          <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
-          <div className="card-body">
-            <div className='text-center'>
-              <h4> {name} </h4>
-              <p> Author: {author} </p>
-              <p>Price: ₡{price}</p>
-              <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+  if (product === undefined) throw new Error('The product is empty.');
+
+  if (product.productCategory.idCategory !== 10) {
+    const { id, name, author, imgUrl, price } = product;
+
+    return (
+      <div className="row my-3">
+        <div key={id} className='col-sm-3 mb-4' style={{ width: '300px', margin: '0.5rem' }}>
+          <div className="card" style={{ background: 'white' }}>
+            <img src={imgUrl} className="card-img-top" style={{ margin: '0.4rem', width: '250px' }} alt={name} />
+            <div className="card-body">
+              <div className='text-center'>
+                <h4>{name}</h4>
+                <p>Author: {author}</p>
+                <p>Price: ₡{price}</p>
+                <button className="btn btn-dark" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    // Si el idCategory es igual a 10, devuelve null para no renderizar el producto
+    return null;
+  }
 };
 
 
 //Carrusel
 
-const CarruselComponent = ({ carrusel }) => {
+const CarruselComponent = ({ carrusel, handleAddToCart }) => {
+  if (!carrusel) {
+    return null; // Devuelve null para no renderizar nada si carrusel es undefined o null
+  }
+  if (typeof handleAddToCart !== 'function') {
+    throw new Error('handleAddToCart must be a function');
+  }
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
@@ -195,6 +269,7 @@ const CarruselComponent = ({ carrusel }) => {
                 <h5>{carruselItem.name}</h5>
                 <p>{carruselItem.author}</p>
                 <p>{carruselItem.price}</p>
+                <button className="btn btn-dark" onClick={() => handleAddToCart(carruselItem)}>Add to Cart</button>
               </div>
             </div>
           ))}

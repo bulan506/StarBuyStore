@@ -112,7 +112,7 @@ namespace UT
       decimal expectedPrice = (6700 + 5800) * (1 + (decimal)Store.Instance.TaxPercentage / 100);
 
       // Comprobar que el monto total de la venta sea igual al monto esperado
-      Assert.AreEqual(21470, sale.Amount);
+      Assert.That(sale.Amount, Is.EqualTo(21470));
     }
 
     //Generación correcta del número de compra: 
@@ -148,7 +148,7 @@ namespace UT
       var sale = await storeLogic.PurchaseAsync(cart);
 
       Assert.IsNotNull(sale);
-      Assert.AreEqual(cart.PaymentMethod, sale.PaymentMethod);
+      Assert.That(sale.PaymentMethod, Is.EqualTo(cart.PaymentMethod));
     }
 
     //Happy path
@@ -168,10 +168,10 @@ namespace UT
 
       // Assert
       Assert.IsNotNull(sale);
-      Assert.AreEqual("Turrialba", sale.Address);
-      Assert.AreEqual(2, sale.Products.Count());
-      Assert.AreEqual(21470, sale.Amount);
-      Assert.AreEqual(PaymentMethods.Type.CASH, sale.PaymentMethod); 
+      Assert.That(sale.Address, Is.EqualTo("Turrialba"));
+      Assert.That(sale.Products.Count(), Is.EqualTo(2));
+      Assert.That(sale.Amount, Is.EqualTo(21470));
+      Assert.That(sale.PaymentMethod, Is.EqualTo(PaymentMethods.Type.CASH)); 
       Assert.IsTrue(sale.Amount > 0); 
       Assert.IsFalse(String.IsNullOrEmpty(sale.NumberOrder));
     }

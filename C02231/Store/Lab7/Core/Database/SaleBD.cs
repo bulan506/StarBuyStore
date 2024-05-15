@@ -76,5 +76,85 @@ namespace StoreAPI.Database
                 throw new Exception("An error occurred while saving the sale. Please check the logs for more details.");
             }
         }
+
+        public async Task<IEnumerable<DaySalesReports>> GetDailySalesAsync(DateTime date)
+        {
+            if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
+
+            List<DaySalesReports> dailySales = new List<DaySalesReports>();
+
+            using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = @"
+            use store;
+            SELECT S.purchase_number AS purchase_Number, S.purchase_date AS purchase_date, S.total AS total,  SUM(Sl.quantity) AS quantity, GROUP_CONCAT(P.name SEPARATOR ', ') AS productsName
+            FROM sales S
+            INNER JOIN saleLines Sl ON S.id = Sl.sale_id
+			INNER JOIN products P ON Sl.product_id = P.id 
+            WHERE DATE(S.purchase_date) = @date
+            GROUP BY S.purchase_number, S.purchase_date, S.total";
+
+                using (var command = new MySqlCommand(selectQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@date", date);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            DateTime purchaseDate = reader.GetDateTime("purchase_date");
+                            string purchaseNumber = reader.GetString("purchase_Number");
+                            int quantity = reader.GetInt32("quantity");
+                            decimal total = reader.GetDecimal("total");
+                            string productsString = reader.GetString("productsName");
+                            DaySalesReports dayReport = new DaySalesReports(purchaseDate, purchaseNumber.ToString(), quantity, total, productsString);
+                            dailySales.Add(dayReport);
+                        }
+                    }
+                }
+            }
+
+            return dailySales;
+        }
+
+        public async Task<IEnumerable<WeekSalesReport>> GetWeeklySalesAsync(DateTime date)
+        {
+            if (date == DateTime.MinValue) throw new ArgumentException($"Invalid date provided: {nameof(date)}");
+
+            List<WeekSalesReport> weeklySales = new List<WeekSalesReport>();
+
+            using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = @"
+                use store;
+                SELECT DAYNAME(S.purchase_date) AS day, SUM(S.total) AS total
+                FROM sales S 
+                WHERE YEARWEEK(S.purchase_date) = YEARWEEK(@date)
+                GROUP BY DAYNAME(S.purchase_date);";
+
+                using (var command = new MySqlCommand(selectQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@date", date);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            string? day = reader.GetString("day").ToString();
+                            decimal total = reader.GetDecimal("total");
+                            WeekSalesReport weekSalesReport = new WeekSalesReport(day, total);
+                            weeklySales.Add(weekSalesReport);
+                        }
+                    }
+                }
+            }
+
+            return weeklySales;
+        }
+
     }
 }

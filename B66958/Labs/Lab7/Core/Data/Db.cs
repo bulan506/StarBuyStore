@@ -34,7 +34,7 @@ public class Db
             "CREATE DATABASE andromeda_store;",
             "USE andromeda_store;",
             "CREATE TABLE products (id CHAR(36) PRIMARY KEY, name VARCHAR(100), description VARCHAR(100), "
-                + "image_Url VARCHAR(MAX), price DECIMAL(10, 2));",
+                + "image_Url VARCHAR(MAX), price DECIMAL(10, 2), category INT);",
             "CREATE TABLE payment_method (id INT PRIMARY KEY, name VARCHAR(20), description VARCHAR(100), enabled BIT)",
             "CREATE TABLE sales (id INT PRIMARY KEY IDENTITY(1,1), address VARCHAR(100), "
                 + "purchase_amount DECIMAL(10, 2), payment_method_id INT, purchase_number CHAR(6), sale_date DATETIME, "
@@ -103,6 +103,13 @@ public class Db
 
     public static void FillProducts()
     {
+        List<int> categories = Categories
+            .Instance.GetCategories()
+            .Select(category => category.Id)
+            .ToList();
+
+        Random rand = new Random();
+
         var productsData = new[]
         {
             new
@@ -137,12 +144,14 @@ public class Db
 
         string insertQuery =
             @"USE andromeda_store;
-            INSERT INTO dbo.products (id, name, description, image_Url, price) 
-            VALUES (@id, @name, @description, @imageUrl, @price)";
+            INSERT INTO dbo.products (id, name, description, image_Url, price, category) 
+            VALUES (@id, @name, @description, @imageUrl, @price, @category)";
 
         for (int i = 1; i <= 40; i++)
         {
             var productData = productsData[(i - 1) % productsData.Length];
+
+            int randomIndex = rand.Next(categories.Count);
 
             using (SqlConnection connection = new SqlConnection(Db.Instance.DbConnectionString))
             {
@@ -158,6 +167,7 @@ public class Db
                         "@price",
                         Convert.ToDecimal(productData.price) * i
                     );
+                    command.Parameters.AddWithValue("@category", categories.ElementAt(randomIndex));
 
                     command.ExecuteNonQuery();
                 }
@@ -223,7 +233,8 @@ public class Db
                                 Name = reader[1].ToString(),
                                 Description = reader[2].ToString(),
                                 ImageUrl = reader[3].ToString(),
-                                Price = (decimal)reader[4]
+                                Price = (decimal)reader[4],
+                                Category = Categories.Instance.GetCategoryById(reader.GetInt32(5))
                             };
 
                             products.Add(product);

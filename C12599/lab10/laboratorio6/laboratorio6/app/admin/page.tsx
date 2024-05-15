@@ -2,10 +2,8 @@
 import React, { useState } from 'react';
 import '../ui/globals.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import {useRouter} from 'next/router';
 
 const Admin: React.FC = () => {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -31,7 +29,10 @@ const Admin: React.FC = () => {
         ...formData,
         errorMessage: ''
       });
-        router.push('/admin/init'); 
+
+      
+      
+        window.location.href = '/admin/init'; 
 
     } else {
       setFormData({

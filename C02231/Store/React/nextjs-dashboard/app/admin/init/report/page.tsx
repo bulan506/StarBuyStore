@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Chart } from 'react-google-charts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
+import { format } from 'date-fns';
 
 export default function ReportPage() {
 
@@ -30,6 +31,7 @@ export default function ReportPage() {
             const formattedDate = `${year}-${month}-${day}`;
             const response = await fetch(`http://localhost:5207/api/Sale?date=${formattedDate}`);
 
+
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
@@ -46,7 +48,9 @@ export default function ReportPage() {
 
             for (const item of data.dailySales) {
                 dailyData.push([item.purchaseDate, item.purchaseNumber, item.quantity, item.total, item.products]);
+                dailyData.push([item.purchaseDate, item.purchaseNumber, item.quantity, item.total, item.products]);
             }
+
 
             setDailySalesData(dailyData)
             setWeeklySalesData(weeklyData);
@@ -91,6 +95,50 @@ export default function ReportPage() {
             </div>
 
             <div className="container">
+                <div className="row">
+                    <div className="col-md-8">
+                        <div style={{ display: 'flex' }}>
+                            <div>
+                                <h2>Sales Chart</h2>
+                                <Chart
+                                    width={'100%'}
+                                    height={'300px'}
+                                    chartType="Table"
+                                    loader={<div>Loading Chart</div>}
+                                    data={dailySalesData}
+                                    options={{
+                                        showRowNumber: true,
+                                        cssClassNames: {
+                                            tableRow: 'chart-row',
+                                            headerRow: 'chart-header-row',
+                                            tableCell: 'chart-cell',
+                                            title: "Weekly Sales",
+                                        },
+                                        allowHtml: true, // Allows HTML content in cells
+                                        pageSize: 20,
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <h2>Weekly Sales Pie Chart</h2>
+                            <Chart
+                                //400px
+                                width={'100%'}
+                                height={'300px'}
+                                chartType="PieChart"
+                                loader={<div>Loading Chart</div>}
+                                data={weeklySalesData}
+                                options={{
+                                    title: 'Weekly Sales',
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <div className="row">
                     <div className="col-md-8">
                         <div style={{ display: 'flex' }}>
