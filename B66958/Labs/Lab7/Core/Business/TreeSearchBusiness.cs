@@ -2,7 +2,7 @@ namespace ApiLab7;
 
 public class TreeNode
 {
-    public Product Product { get; set; }
+    public Product Product { get; private set; }
     public TreeNode Left { get; set; }
     public TreeNode Right { get; set; }
 
@@ -48,6 +48,7 @@ public class ProductSearchTree
 
     public IEnumerable<Product> Search(string query)
     {
+        if(string.IsNullOrWhiteSpace(query)) throw new ArgumentException("Query can't be null");
         List<Product> matchedProducts = new List<Product>();
         Search(root, query, matchedProducts);
         return matchedProducts;
@@ -60,7 +61,9 @@ public class ProductSearchTree
             return;
         }
 
-        if (node.Product.Name.Contains(query) || node.Product.Description.Contains(query))
+        bool productMatchesNameOrDescriptionWithQuery = node.Product.Name.Contains(query) || node.Product.Description.Contains(query);
+
+        if (productMatchesNameOrDescriptionWithQuery)
         {
             matchedProducts.Add(node.Product);
         }
