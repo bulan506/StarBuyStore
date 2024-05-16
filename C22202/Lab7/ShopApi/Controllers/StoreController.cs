@@ -14,6 +14,15 @@ namespace ShopApi.Controllers
         {
             return Store.Instance ;
         }
+
+        [HttpGet("Products")]
+        public IEnumerable<Product> GetCategories([FromQuery] int category)
+        {
+            if (category < 0) throw new ArgumentException($"The {nameof(category)} number must be greater than 0");
+
+            // Store.Instance.GetProductsCategory(category);
+            return ProductsLogic.Instance.GetProductsCategory(category);
+        }
     }
 
 }

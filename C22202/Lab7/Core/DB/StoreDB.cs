@@ -1,6 +1,3 @@
-using System;
-using System.Data.Common;
-using System.IO.Compression;
 using MySqlConnector;
 using ShopApi.Models;
 
@@ -12,6 +9,7 @@ public sealed class StoreDB
     public static void CreateMysql()
     {
         var products = new List<Product>();
+        Random random = new Random();
 
         for (int i = 1; i <= 30; i++)
         {
@@ -20,8 +18,8 @@ public sealed class StoreDB
                 name = $"Product {i}",
                 imgSource = $"producto.jpg",
                 price = 10.99m * i,
-                description = $"Description of Product {i}",
-                id = i
+                id = i,
+                category = random.Next(1, 11)
             });
         }
 
@@ -40,7 +38,8 @@ public sealed class StoreDB
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(100),
                     price DECIMAL(10, 2),
-                    imgSource VARCHAR(255)
+                    imgSource VARCHAR(255),
+                    category INT
                 );
                 
                 CREATE TABLE IF NOT EXISTS sales (
@@ -68,42 +67,10 @@ public sealed class StoreDB
                 if(dbNoCreated)
                     throw new Exception("Error creating the bd");
             }
-
-            // Begin a transaction
-            using (var transaction = connection.BeginTransaction())
-            {
-                try
-                {
-                    // Insert 30 products into the table
-                    foreach(Product product in products)
-                    {
-                        string productName = product.name;
-                        string productImage = product.imgSource;
-                        decimal productPrice = product.price;
-
-                        string insertProductQuery = @"
-                            INSERT INTO products (name, price, imgSource)
-                            VALUES (@name, @price, @imgSource);";
-
-                        using (var insertCommand = new MySqlCommand(insertProductQuery, connection, transaction))
-                        {
-                            insertCommand.Parameters.AddWithValue("@name", productName);
-                            insertCommand.Parameters.AddWithValue("@price", productPrice);
-                            insertCommand.Parameters.AddWithValue("@imgSource", productImage);
-                            insertCommand.ExecuteNonQuery();
-                        }
-                    }
-
-                    // Commit the transaction if all inserts are successful
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    // Rollback the transaction if an error occurs
-                    transaction.Rollback();
-                    throw;
-                }
-            }
+        }
+        foreach (Product product in products)
+        {
+            ProductDB.insertProduct(product);
         }
     }
 }
