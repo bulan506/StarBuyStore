@@ -19,20 +19,12 @@ public class ProductsLogic
 
         foreach (var product in products)
         {
-            // var categoryProducts = new List<Product>();
             if (!productsDictionary.TryGetValue(product.category, out var categoryProducts))
             {
                 categoryProducts = new List<Product>();
                 productsDictionary[product.category] = categoryProducts;
             }
-            // if (categoryProducts == null)
-            // {
-            //     categoryProducts = new List<Product>();
-            //     productsDictionary[product.category] = categoryProducts;
-            // }
             categoryProducts.Add(product);
-            
-
         }
 
         ProductsLogic.Instance = new ProductsLogic(products, productsDictionary);
