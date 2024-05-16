@@ -7,6 +7,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import React from 'react';
 import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '../lib/cart_data_localeStore';
 import useFetchInitialStore from '../api/http.initialStore';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const Carousel = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
   const chunkSize = 4;
@@ -64,20 +65,29 @@ const ProductsRow = ({ products, onAdd }: { products: Product[], onAdd: any }) =
   );
 };
 
-
-
 export default function Page() {
-  const [category, setCategory] = useState<string>("All");
-  const [search, setSearch] = useState<string>("none");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialCategory = searchParams.get('category') || 'All';
+  const initialSearch = searchParams.get('search') || 'none';
+
+  const [category, setCategory] = useState<string>(initialCategory);
+  const [search, setSearch] = useState<string>(initialSearch);
 
   const initialStore = useFetchInitialStore({ category, search });
   const initialCart = getInitialCartLocalStorage();
 
   const [count, setCount] = useState(initialCart.cart.products.length > 0 ? initialCart.cart.products.length : 0);
 
+  useEffect(() => {
+    setCategory(initialCategory);
+    setSearch(initialSearch);
+  }, [initialCategory, initialSearch]);
+
   const handleAddToCart = ({ product }: { product: Product }) => {
     initialCart.cart.products.push(product);
-    initialCart.cart.subtotal = initialCart.cart.subtotal + product.price;
+    initialCart.cart.subtotal += product.price;
     initialCart.cart.total = initialCart.cart.subtotal + initialCart.cart.subtotal * initialCart.cart.taxPercentage;
     setCount(count + 1);
     saveInitialCartLocalStorage(initialCart);
@@ -85,16 +95,18 @@ export default function Page() {
 
   const handleAddtoCategory = ({ category }: { category: Category }) => {
     setCategory(category.name);
+    router.push(`/dashboard?category=${category.name}&search=none`);
   }
 
   const handleAddtoSearch = (searchQuery: string) => {
-    if (searchQuery !== null && searchQuery !== undefined && searchQuery.trim().length !== 0) {
+    if (searchQuery && searchQuery.trim().length !== 0) {
       setSearch(searchQuery.trim());
+      router.push(`/dashboard?category=${category}&search=${searchQuery.trim()}`);
     } else {
       setSearch("none");
+      router.push(`/dashboard?category=${category}&search=none`);
     }
   }
-  
 
   return (
     <>

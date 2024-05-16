@@ -26,9 +26,9 @@ namespace StoreApi.Controllers
             categoriesCache = CategoriesCache.GetInstance();
         }
         [HttpGet("Products")]
-        public async Task<Store> GetStoreAsync(string category, string search)
+        public async Task<Store> GetStoreAsync([FromQuery] List<string> category, string search)
         {
-            IEnumerable<Product> products;
+            List<Product> products = new List<Product>();
             //Paso 1: Guardo los productos en memoria para no volver a pedirlos a base de datos
             if (!productsCache.exists())
             {
@@ -36,19 +36,22 @@ namespace StoreApi.Controllers
                 productsCache.setProduct(productsList);
             }
             //Paso 2: Filtro los productos por su categoria
-            if (!category.Equals("All"))
+            if (!category.Contains("All"))
             {
-                products = productsCache.GetProduct(categoriesCache.GetCategoryByName(category).Uuid);
+                foreach (var c in category)
+                {
+                    products.AddRange(productsCache.GetProduct(categoriesCache.GetCategoryByName(c).Uuid));
+                }
             }
             else
             {
-                products = productsCache.getAll();
+                products.AddRange(productsCache.getAll());
             }
             //Paso 3: Filtro los productos por el search
             if (!search.Equals("none"))
             {
                 ProductSearch productSearch = new ProductSearch(products);
-                products = productSearch.Search(search);
+                products = new List<Product>(productSearch.Search(search));
             }
 
             return new Store(products);
