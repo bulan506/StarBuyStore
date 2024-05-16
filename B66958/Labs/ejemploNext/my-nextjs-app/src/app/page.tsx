@@ -48,24 +48,25 @@ export default function Home() {
     if (categoriesSearch.length !== 0 || querySearch !== null) {
       let urlToFilterCategories = buildQueryString(categoriesSearch);
       let searchedQuerie = querySearch ? `query=${querySearch}` : '';
-      let urlToFilterQuery = urlToFilterCategories ? (searchedQuerie ? `&${searchedQuerie}` : '') : (searchedQuerie ? `${searchedQuerie}` : '')
+      let urlToFilterQuery = urlToFilterCategories ? (searchedQuerie ? `&${searchedQuerie}` : '') : (searchedQuerie ? `?${searchedQuerie}` : '')
       if (categoriesSearch)
         setSelectedCategories(categoriesSearch);
       const fetchUrl = 'https://localhost:7151/api/store/products' + urlToFilterCategories + urlToFilterQuery;
       const fetchData = async () => {
-        try {
-          const res = await fetch(fetchUrl, {
-            method: 'GET',
-            headers: {
-              'content-type': 'application/json'
-            }
-          });
-          var productsForQuerySearch = await res.json();
-          setProducts(productsForQuerySearch);
-        } catch (error) {
+        /* try { */
+        const res = await fetch(fetchUrl, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+        console.log(urlToFilterCategories, urlToFilterQuery)
+        var productsForQuerySearch = await res.json();
+        setProducts(productsForQuerySearch);
+        /* } catch (error) {
           setErrorMessage(error)
           setIsErrorShowing(true)
-        }
+        } */
       };
       fetchData();
     } else {
@@ -182,9 +183,10 @@ export default function Home() {
   };
 
   function updateBrowserUrl(categoriesSelected: Array<Number>) {
+    let overOneCategorySelected = categoriesSelected.length > 0
     let urlToBeDisplayed = ''
-    let categoriesParams = categoriesSelected ? buildQueryString(categoriesSelected) : '?'
-    let queryParams = productQuery ? (categoriesSelected ? `&query=${productQuery}` : `query=${productQuery}`) : ''
+    let categoriesParams = overOneCategorySelected ? buildQueryString(categoriesSelected) : '?'
+    let queryParams = productQuery ? (overOneCategorySelected ? `&query=${productQuery}` : `query=${productQuery}`) : ''
     urlToBeDisplayed = categoriesParams + queryParams
 
     return urlToBeDisplayed
