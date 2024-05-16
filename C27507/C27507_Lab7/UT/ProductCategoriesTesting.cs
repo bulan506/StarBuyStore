@@ -75,6 +75,18 @@ namespace UT{
 
         }
 
+
+        [Test]
+        public void getAndFilterProductsBySearchAndCategoryWithSuccess(){
+            IEnumerable<Product> products;
+            
+            int[] ids = new int[] {1,2,3};
+            products = productsLogic.filterProductsBySearchAndCategory("mouse",ids);
+            products = productsLogic.filterProductsByCategory(3);
+
+            Assert.AreNotEqual(0,products.Count());            
+        }
+
     }
 
 }

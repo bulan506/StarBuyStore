@@ -27,5 +27,22 @@ namespace MyStoreAPI.Controllers
                 return StatusCode(500, "Ha ocurrido un error al obtener los datos. Por favor inténtalo más tarde.");
             }   
         }                
-    }
+
+        [HttpGet("store/product/search/")]
+        public IActionResult GetProductsBySearchAndCategory(int d){
+
+            try{
+                ProductsLogic productsLogic = new ProductsLogic();
+                IEnumerable<Product> filteredProducts = productsLogic.filterProductsBySearchAndCategory(category);
+                return Ok(filteredProducts);
+                
+            //501 son para NotImplemented o Excepciones Propias
+            }catch (BussinessException ex){                                
+                return StatusCode(501, "Ha ocurrido un error al obtener los datos. Por favor inténtalo más tarde. ");
+            }
+            catch (Exception ex){                
+                return StatusCode(500, "Ha ocurrido un error al obtener los datos. Por favor inténtalo más tarde.");
+            }   
+        }
+    }            
 }
