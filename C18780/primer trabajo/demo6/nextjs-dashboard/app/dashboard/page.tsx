@@ -7,7 +7,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import React from 'react';
 import { getInitialCartLocalStorage, saveInitialCartLocalStorage } from '../lib/cart_data_localeStore';
 import useFetchInitialStore from '../api/http.initialStore';
-import { useRouter } from 'next/router';
 
 const Carousel = ({ products, onAdd }: { products: Product[], onAdd: any }) => {
   const chunkSize = 4;
@@ -68,8 +67,6 @@ const ProductsRow = ({ products, onAdd }: { products: Product[], onAdd: any }) =
 
 
 export default function Page() {
-  const router = useRouter();
-
   const [category, setCategory] = useState<string>("All");
   const [search, setSearch] = useState<string>("none");
 
@@ -88,18 +85,16 @@ export default function Page() {
 
   const handleAddtoCategory = ({ category }: { category: Category }) => {
     setCategory(category.name);
-    router.push(`/products?category=${category.name}&search=${search}`);
   }
 
   const handleAddtoSearch = (searchQuery: string) => {
     if (searchQuery !== null && searchQuery !== undefined && searchQuery.trim().length !== 0) {
       setSearch(searchQuery.trim());
-      router.push(`/products?category=${category}&search=${searchQuery.trim()}`);
     } else {
       setSearch("none");
-      router.push(`/products?category=${category}&search=none`);
     }
   }
+  
 
   return (
     <>
