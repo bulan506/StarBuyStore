@@ -61,7 +61,8 @@ public class ProductSearchTree
             return;
         }
 
-        bool productMatchesNameOrDescriptionWithQuery = node.Product.Name.Contains(query) || node.Product.Description.Contains(query);
+        bool productMatchesNameOrDescriptionWithQuery = node.Product.Name.ToLower().Contains(query.ToLower()) 
+            || node.Product.Description.ToLower().Contains(query.ToLower());
 
         if (productMatchesNameOrDescriptionWithQuery)
         {
