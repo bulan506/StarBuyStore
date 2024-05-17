@@ -103,7 +103,7 @@ button{
 	width: 75%;	
 	height: 100%;
 	background: #F2F2F2;
-	color: #FFF;		
+	color: #0a0a0a;		
 	padding: 1.2rem;
 	border: none;
 }
@@ -137,16 +137,28 @@ button{
 	align-items: center;	
 	position: absolute;
 	top: 100%;
-	left: 0;	
-	/* display: none; */
+	left: 0;		
+	visibility: hidden;
+}
+
+.category-list-searching:hover ul{
+	visibility: visible;
 }
 
 .category-list-searching ul li{
 
 	display: flex;
 	flex-flow: row;
-	background-color: #cc1515;
+	background-color: #FFA500;	
 	padding: 1rem;
+	cursor: pointer;
+}
+.category-list-searching ul li:hover{
+	background-color: #FFF;	
+	color: #000;
+}
+.category-list-searching ul li > *{
+	cursor: pointer;
 }
 
 /* .category-list-searching:hover ul{
@@ -165,17 +177,6 @@ button{
 	background-color: #FFA500;
 }
 
-
-
-
-
-/* .category-list-searching ul li button{
-
-	background-color: #F2F2F2;
-	color: #000;
-	border-radius: 25rem;
-	padding: 0.5rem;
-} */
 
 /* Galeria de productos */
 #div_gallery{

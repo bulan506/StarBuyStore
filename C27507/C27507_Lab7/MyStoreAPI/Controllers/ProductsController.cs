@@ -7,18 +7,18 @@ using MyStoreAPI.Models;
 namespace MyStoreAPI.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("store/[controller]")]
     [ApiController]
     //cuando heredamos de ControllerBase, la clase ahora puede manejar solicitudes HTTP
     public class productsController : ControllerBase{                
         
-        [HttpGet("store/product/")]
+        [HttpGet("product/category")]
         public IActionResult GetProductsByCategory(int category){
             try{
                 ProductsLogic productsLogic = new ProductsLogic();
                 IEnumerable<Product> filteredProducts = productsLogic.filterProductsByCategory(category);
-                int[] ids = new int[] {1,2,3};
-                var filteredProducts2 = productsLogic.filterProductsBySearchTextAndCategory("ps",ids);
+                //int[] ids = new int[] {1,2,3};
+                //var filteredProducts2 = productsLogic.filterProductsBySearchTextAndCategory("ps",ids);
                 return Ok(filteredProducts);
                 
             //501 son para NotImplemented o Excepciones Propias
@@ -30,13 +30,13 @@ namespace MyStoreAPI.Controllers
             }   
         }                
 
-        [HttpGet("store/product/search/")]
-        public IActionResult GetProductsBySearchAndCategory(string searchText){
+        [HttpGet("product/search/")]
+        public IActionResult GetProductsBySearchAndCategory([FromQuery]string searchText, [FromQuery]int[] categoryIds){
 
             try{
-                int[] arrayOfIds = new int[] {1,2,3};
                 ProductsLogic productsLogic = new ProductsLogic();
-                IEnumerable<Product> filteredProducts = productsLogic.filterProductsBySearchAndCategory(searchText,arrayOfIds);
+                //Las validaciones se hacen en ProductsLogic
+                IEnumerable<Product> filteredProducts = productsLogic.filterProductsBySearchTextAndCategory(searchText,categoryIds);
                 return Ok(filteredProducts);
                 
             //501 son para NotImplemented o Excepciones Propias

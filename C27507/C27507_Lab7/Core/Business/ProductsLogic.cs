@@ -57,14 +57,10 @@ public class ProductsLogic{
 
         //Ordenamos la lista con los productos para la busqueda binaria (por nombre de los productos)
         filteredProducts.Sort( (x,y) => string.Compare(x.name, y.name) );                
-
-        foreach (var item in filteredProducts)
-        {
-            Console.WriteLine(item.name);
-        }
         
-
-        if(string.IsNullOrEmpty(searchText)){
+        //Verificamos si el texto del buscador por alguna razón es nulo o vacío. Y su valor es igual a "default"
+        //es porque en el buscador nunca se escribió nada o solo había espacios en blanco.
+        if(string.IsNullOrEmpty(searchText) || searchText == "default"){
             return filteredProducts;
         }    
 
@@ -84,21 +80,15 @@ public class ProductsLogic{
         {
             int currentStep = Math.Min(step, n) - 1;
             Product currentProduct = filteredProducts[currentStep];
-
-            // Si se encuentra una coincidencia parcial, realizar búsqueda secuencial
+            
             if (currentProduct.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                for (int i = currentStep; i >= prev; i--)
-                {
+                for (int i = currentStep; i >= prev; i--){
                     Product product = filteredProducts[i];
-                    if (product.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
+                    if (product.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0){
                         foundProducts.Add(product);
-                    }
-                    else
-                    {
-                        break;
-                    }
+
+                    }else break;                    
                 }
                 break;
             }
@@ -106,15 +96,7 @@ public class ProductsLogic{
             prev = step;
             step += (int)Math.Floor(Math.Sqrt(n));
         }
-
-
-        Console.WriteLine("Busqueda: ");
-        foreach (var item in foundProducts)
-        {
-            Console.WriteLine(item.name);
-        }
-
-        //Le permitimos que pueda devolver una lista vacia (pero no nula)
+        //Le permitimos que pueda devolver una lista vacía (pero no nula)
         return foundProducts;
     }
 }
