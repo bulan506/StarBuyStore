@@ -126,7 +126,7 @@ namespace TodoApi.Database
                             DateTime purchaseDate = reader.GetDateTime("purchase_date");
                             string purchaseNumber = reader.GetString("purchase_number");
                             decimal total = reader.GetDecimal("total");
-                            DailyReport dailyReport = new DailyReport(purchaseDate, purchaseNumber.ToString(), total); // Convertir purchaseNumber a string si es necesario
+                            DailyReport dailyReport = new DailyReport(purchaseDate, purchaseNumber.ToString(), total);
                             dailylySales.Add(dailyReport);
                         }
                     }

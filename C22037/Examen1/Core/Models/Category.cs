@@ -18,6 +18,8 @@ namespace TodoApi
             public string Name { get; internal set; }
             public CategorySt(int id, string name)
             {
+                if(string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name cannot be null or empty.");
+            
                 Id = id;
                 Name = name;
             }
