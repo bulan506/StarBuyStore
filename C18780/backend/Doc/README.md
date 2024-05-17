@@ -28,4 +28,4 @@ Se utilizan expresiones regulares para dividir el texto en palabras clave y se a
 El árbol invertido y la búsqueda de productos están diseñados para ser eficientes en términos de tiempo y memoria, utilizando estructuras de datos como diccionarios y conjuntos para un acceso rápido y sin duplicados.
 
 ![invertedTreeNode](https://www.planttext.com/api/plantuml/png/XPFFJiCm3CRlUGfh9ofW3x036dyqn849mIJEKUEDY3If79UnjoT9swtfDbQfIkhuzzdvhCuzI-AcCg8EgovrBIt3vD5ej3m1wQ7TviTlv5HJyWTAAhzILXR9ar_i3nAZMX7YqYbC-N4ZHAiDjtSvFmEBspnqLRTVlX1P_0Jxq6YZXaK7h76kXhKZG1dOBYuWF9TKdv4_7Ic_85Ujy9TxqUbILWZNlTRq2Nr9kcRjR964yvBRe9729sj6LsPmhrGijNBP9I9vqvSfzXeHoT1K0jX1QXUKBcCladR_89rgfBgUF7XiZK6hH7pF3wkRa4zBzERoZ8xS7CAvOz-usvjsnh25jWfil5MaXe0qt1yqLXqvCEhg7RaXsxlXOHswI_ZvYOqKNf4sU13GDZXAw1iJCZexZSUs9UjurDQHUclvlZ6iQjwDzRhnN68Fb9Y7_FZ7_m40)
-[PlantUml](plantuml/InvertedTreeNode.md.)
+[PlantUml](plantuml/InvertedTreeNode.md)
