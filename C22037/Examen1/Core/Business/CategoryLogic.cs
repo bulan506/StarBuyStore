@@ -39,7 +39,7 @@ namespace TodoApi.Business
 
         public async Task<IEnumerable<Product>> GetCategoriesByIdAsync(IEnumerable<int> categoryIds)
         {
-            if (categoryIds == null) throw new ArgumentNullException(nameof(categoryIds), "Categories cannot be null");
+            if (categoryIds == null) throw new ArgumentNullException("Categories cannot be null");
 
             List<Product> products = new List<Product>();
 

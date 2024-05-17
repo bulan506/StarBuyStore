@@ -2,12 +2,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@/public/styles.css";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Carousel } from 'react-bootstrap';
 import Link from 'next/link';
 
 export default function Home() {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [count, setCount] = useState(0);
   const [productList, setProductList] = useState([]);
@@ -18,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch(`https://localhost:7067/api/store?search=${searchQuery}`);
+        const response = await fetch(`https://localhost:7067/api/store`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -194,7 +192,7 @@ export default function Home() {
                     onChange={handleSearchInputChange}
                   />
                 </label>
-                <button type="submit">
+                <button type="submit" disabled={!searchQuery.trim()}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="30"
