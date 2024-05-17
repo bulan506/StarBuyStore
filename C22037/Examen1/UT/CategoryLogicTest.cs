@@ -39,7 +39,7 @@ namespace UT
         {
             int existingCategoryId = 1;
 
-            var products = await categoryLogic.GetCategoryByIdAsync(existingCategoryId);
+            var products = await categoryLogic.GetCategoriesByIdAsync(new List<int> { existingCategoryId });
 
             Assert.IsNotNull(products);
             Assert.IsInstanceOf<IEnumerable<Product>>(products);
@@ -47,11 +47,34 @@ namespace UT
         }
 
         [Test]
-        public void GetCategoryByIdAsync_NonExistingId_ThrowsArgumentNullException()
+        public async Task GetCategoryByIdAsync_NonExistingId_ReturnsEmptyList()
         {
-            int nonExistingCategoryId = 999;
+            int nonExistingCategoryId = 7;
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await categoryLogic.GetCategoryByIdAsync(nonExistingCategoryId));
+            var products = await categoryLogic.GetCategoriesByIdAsync(new List<int> { nonExistingCategoryId });
+
+            Assert.IsNotNull(products);
+            Assert.IsEmpty(products);
+        }
+
+        [Test]
+        public async Task GetCategoryByIdAsync_MultipleExistingIds_ReturnsAllProducts()
+        {
+            var existingCategoryIds = new List<int> { 1, 2 };
+
+            var products = await categoryLogic.GetCategoriesByIdAsync(existingCategoryIds);
+
+            Assert.IsNotNull(products);
+            Assert.IsInstanceOf<IEnumerable<Product>>(products);
+            Assert.AreEqual(3, ((List<Product>)products).Count);
+        }
+
+        [Test]
+        public async Task GetProductsBySearchAsync_NullSearchTerm_ThrowsArgumentNullException()
+        {
+            string searchTerm = null;
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await categoryLogic.GetProductsBySearchAsync(searchTerm, null));
         }
     }
 }
