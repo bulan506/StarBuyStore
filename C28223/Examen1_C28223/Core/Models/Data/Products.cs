@@ -44,7 +44,10 @@ namespace storeApi.Models.Data
 
         private Dictionary<int, List<Product>> GroupProductsByCategory(IEnumerable<Product> products)
         {
-            if (products == null || products.Count() == 0) throw new ArgumentException($"La lista de productos {nameof(products)} no puede ser null o estar vacia.");
+            bool esListaDeProductosNula = products == null;
+            bool esListaDeProductosVacia = !esListaDeProductosNula && !products.ToList().Any();
+            bool esEntradaInvalida = esListaDeProductosNula || esListaDeProductosVacia;
+            if (esEntradaInvalida) throw new ArgumentException($"La lista de productos {nameof(products)} no puede ser null o estar vacia.");
             var productsByCategory = new Dictionary<int, List<Product>>();
             foreach (var p in products)
             {
@@ -63,7 +66,9 @@ namespace storeApi.Models.Data
         public IEnumerable<Category> GetCategory() { return Category; }
         public IEnumerable<Product> GetProductsByCategoryIDs(List<int> categoryIds)
         {
-            if (categoryIds == null || !categoryIds.Any()) throw new ArgumentException("La lista de IDs de categorías no puede estar vacía o ser nula.");
+            var esCategoriasNula=categoryIds==null;
+            var noHayCategorias= !categoryIds.Any();
+            if (esCategoriasNula ||noHayCategorias ) throw new ArgumentException("La lista de IDs de categorías no puede estar vacía o ser nula.");
             foreach (var categoryId in categoryIds)
             {
                 if (categoryId < 1) throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");

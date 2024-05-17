@@ -6,7 +6,12 @@ import Link from 'next/link';
 import { Dropdown, Form } from 'react-bootstrap';
 
 const Header = ({ size, setShow, fetchData, category }) => {
-  if(size==undefined || setShow==undefined||fetchData==undefined||category==undefined){throw new Error('Los argumentos para mostrar el header no pueden ser indefinidos.');}
+  let isSizeUndefined = size === undefined; 
+  let isSetShowUndefined = setShow === undefined; 
+  let isFetchDataUndefined = fetchData === undefined; 
+  let isCategoryUndefined = category === undefined;
+  let areArgumentsUndefined = isSizeUndefined || isSetShowUndefined || isFetchDataUndefined || isCategoryUndefined;
+  if(areArgumentsUndefined){throw new Error('Los argumentos para mostrar el header no pueden ser indefinidos.');}
   const [searchText, setSearchText] = useState('');
   const [categorySelected, setCategorySelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -16,7 +21,10 @@ const Header = ({ size, setShow, fetchData, category }) => {
   };
 
   const handleSearch = () => {
-    if (searchText === '' && categorySelected.length === 0) {
+    const trimmedSearchText = searchText.trim();
+    const elTextoABuscarEsVacio = trimmedSearchText === '';
+    const noHayCategoria = categorySelected.length === 0;
+    if (elTextoABuscarEsVacio && noHayCategoria) {
       setShowModal(true);
     } else {
       fetchData(searchText, categorySelected);

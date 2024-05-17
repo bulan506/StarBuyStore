@@ -48,7 +48,6 @@ const CarruselProductos = ({ productos, handleClick }) => {
 
 const MostrarProductos = ({ Productos, handleClick }) => {
   if (handleClick == undefined || Productos == undefined) { throw new Error('Error: Los argumentos de MostrarProductos no pueden ser nulos.'); }
- 
   return (
     <div>
       <CarruselProductos productos={Productos} handleClick={handleClick} />
