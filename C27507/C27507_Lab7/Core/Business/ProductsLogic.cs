@@ -33,16 +33,18 @@ public class ProductsLogic{
 
     }
 
-    public IEnumerable<Product> filterProductsBySearchAndCategory(string searchText, int[] categoryIds){
+    public IEnumerable<Product> filterProductsBySearchTextAndCategory(string searchText, int[] categoryIds){
         //El texto del buscador si puede ser vacío
         if(searchText == null) throw new BussinessException($"{nameof(searchText)} no puede ser nulo");
-        if(categoryIds == null) throw new BussinessException($"{nameof(filteredProducts)} no puede ser nulo");
+        if(categoryIds == null) throw new BussinessException($"{nameof(categoryIds)} no puede ser nulo");
 
         var filteredProducts = new List<Product>();
 
         //Si la lista de categorias donde buscar esta vacío, devolvemos todos los productos
-        if(categoryIds.length == 0){
-            filteredProducts = dataFromStore.productsFromStore;       
+        if(categoryIds.Length == 0){
+            foreach (var productList in dataFromStore.dictionaryOfProducts.Values){
+                filteredProducts.AddRange(productList);
+            }
         }else{
             //Si hay categorias especificadas
             foreach (var id in categoryIds){
@@ -54,58 +56,65 @@ public class ProductsLogic{
         }
 
         //Ordenamos la lista con los productos para la busqueda binaria (por nombre de los productos)
-        filteredProducts.Sort( (x,y) => string.Compare(x.name, y.name) );        
+        filteredProducts.Sort( (x,y) => string.Compare(x.name, y.name) );                
+
+        foreach (var item in filteredProducts)
+        {
+            Console.WriteLine(item.name);
+        }
+        
 
         if(string.IsNullOrEmpty(searchText)){
             return filteredProducts;
         }    
-        //Busqueda binaria:
-        int totalProducts = filteredProducts.Count();
-        int leftIndex = -1;
-        int rightIndex = filteredProducts.Count - 1;
-        int midIndex = 0;
-        //Productos que hagan match completo o parcial con searchText
-        var foundProducts = new List<Product>();
-        while(leftIndex <= rightIndex){
 
-            int midIndex = (leftIndex + rightIndex) / 2;            
-            //producto para comparar
-            Product midProduct = filteredProducts[midIndex];
-
-            int comparisonResult = string.Compare(midProduct.name, searchText, StringComparison.OrdinalIgnoreCase);
-            
-            if (comparisonResult == 0){
-
-                foundProducts.Add(midProduct);
-                //nos empezamos a mover a la izq del indice donde se encontro el primer match, para encontrar
-                //otros productos que puedan tener coincidencias flexibles
-                //int left = midIndex - 1;
-                // while (leftIndex >= 0 && filteredProducts[leftIndex].name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0){
-                //     foundProducts.Add(filteredProducts[leftIndex]);
-                //     leftIndex--;
-                // }
-                //nos empezamos a mover a la derecha del indice donde se encontro el primer match, para encontrar
-                //otros productos que puedan tener coincidencias flexibles
-                //int right = midIndex + 1;
-                // while (rightIndex < filteredProducts.Count && filteredProducts[rightIndex].name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0){
-                //     foundProducts.Add(filteredProducts[rightIndex]);
-                //     rightIndex++;
-                // }
-
-                break;
-
-            }else if (comparisonResult < 0){
-                //nos movemos hacia la derecha
-                leftIndex = midIndex  + 1;
-
-            }else{
-                //nos movemos hacia la izquierda
-                rightIndex = midIndex  - 1;
-            }
-        }
-
-        return foundProducts;
+        return filterByBinarySearch(searchText, filteredProducts);
 
         //https://stackoverflow.com/questions/41019464/c-sharp-binary-search-a-sorted-dictionary
+    }
+
+    private IEnumerable<Product> filterByBinarySearch(string searchText,List<Product> filteredProducts){
+
+        var foundProducts = new List<Product>();
+        int n = filteredProducts.Count;
+        int step = (int)Math.Floor(Math.Sqrt(n));
+        int prev = 0;
+
+        while (prev < n)
+        {
+            int currentStep = Math.Min(step, n) - 1;
+            Product currentProduct = filteredProducts[currentStep];
+
+            // Si se encuentra una coincidencia parcial, realizar búsqueda secuencial
+            if (currentProduct.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                for (int i = currentStep; i >= prev; i--)
+                {
+                    Product product = filteredProducts[i];
+                    if (product.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        foundProducts.Add(product);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                break;
+            }
+
+            prev = step;
+            step += (int)Math.Floor(Math.Sqrt(n));
+        }
+
+
+        Console.WriteLine("Busqueda: ");
+        foreach (var item in foundProducts)
+        {
+            Console.WriteLine(item.name);
+        }
+
+        //Le permitimos que pueda devolver una lista vacia (pero no nula)
+        return foundProducts;
     }
 }

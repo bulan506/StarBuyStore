@@ -33,6 +33,7 @@ function Page() {
     const [products, setProducts] = useState<ProductAPI[]>([]);       
     const [productCategory, setproductCategory] = useState(0);
     const [categoryList, setCategoryList] = useState<CategoryAPI[]>([]);
+    const [categoryListForSearch, setCategoryListForSearch] = useState<number[]>([]);
     
     //Se llama por defecto (este trae el Tax para los productos y la lista de Categorias)
     useEffect(() => {
@@ -89,6 +90,24 @@ function Page() {
         if (productCategory) fetchProductsByCategory();
     }, [productCategory]);
 
+    const selectCategoryInCheckBox = (e: React.MouseEvent<HTMLUListElement>) => {
+
+        var targetSelected = e.target as HTMLInputElement;
+        var parsedValue = 0;
+        if(targetSelected.tagName === "INPUT"  && targetSelected.type === 'checkbox'){
+
+            console.log(targetSelected.value);
+            parsedValue = parseInt(targetSelected.value);
+            if(targetSelected.checked){                
+                setCategoryListForSearch(prevState => [...prevState, parsedValue]);
+            }else{
+                setCategoryListForSearch(prevState => prevState.filter(category => category !== parsedValue))
+            }                        
+        }
+        
+        console.log(categoryListForSearch);
+    }
+
   return (
     <main className="flex min-h-screen flex-col p-6">
         
@@ -99,6 +118,25 @@ function Page() {
                 </div>
                         
                 <div className="search_container col-sm-6 align-items-center justify-content-center">
+                    
+                    <div className="category-list-searching">  
+                        <span><img src="./img/sliders-solid.svg" alt="" /></span>
+                        <ul onClick={selectCategoryInCheckBox}>
+                            <li>
+                                <input value="1" type="checkbox" name="a"/>
+                                <label htmlFor="a">Juguetes</label>
+                            </li>
+                            <li>
+                                <input value="2" type="checkbox"/>
+                                <span>Juguetes</span>
+                            </li>
+                            <li>
+                                <input value="3" type="checkbox"/>
+                                <span>Juguetes</span>
+                            </li>
+                        </ul>            
+                    </div>
+
                     <input type="search" name="name" placeholder="Busca cualquier cosa..."/>                    
                     <button type="submit">
                         <i className="fas fa-search"></i>
@@ -108,7 +146,7 @@ function Page() {
                 <div className="category-container col-sm-3">
                     <Dropdown onSelect={selectCategory}>
                         <Dropdown.Toggle variant="secondary" id="dropdown-basic" className="dropdown-style">
-                            Productos por Categoría
+                            Búsqueda rápida:
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
@@ -123,6 +161,18 @@ function Page() {
                 </div>
                                    
       </div>  
+
+       {/* CheckList de Categorias */}
+       {/* <div className="category-list-searching">        
+            <ul onClick={selectCategoryInCheckBox}>
+                <li><input value="1" type="checkbox"/>Juguetes</li>
+                <li><input value="2" type="checkbox"/>Musica</li>
+                <li><input value="3" type="checkbox"/>Videojuegos</li>
+
+            </ul>
+            <button className="position-btn left-btn">Left</button>
+            <button className="position-btn rigth-btn" >Right</button>
+      </div> */}
 
       {/* Galeria de Productos */}
       <div>
