@@ -69,21 +69,22 @@ export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialCategory = searchParams.get('category') || 'All';
-  const initialSearch = searchParams.get('search') || 'none';
+  let initialCategory: string[] = [];
+  let initialSearch = 'none';
 
-  const [category, setCategory] = useState<string>(initialCategory);
+  if (searchParams) {
+    const categoryParams = searchParams.getAll('category');
+    initialCategory = categoryParams.length > 0 ? categoryParams : ['All'];
+    initialSearch = searchParams.get('search') || 'none';
+  }
+
+  const [category, setCategory] = useState<string[]>(initialCategory);
   const [search, setSearch] = useState<string>(initialSearch);
 
   const initialStore = useFetchInitialStore({ category, search });
   const initialCart = getInitialCartLocalStorage();
 
   const [count, setCount] = useState(initialCart.cart.products.length > 0 ? initialCart.cart.products.length : 0);
-
-  useEffect(() => {
-    setCategory(initialCategory);
-    setSearch(initialSearch);
-  }, [initialCategory, initialSearch]);
 
   const handleAddToCart = ({ product }: { product: Product }) => {
     initialCart.cart.products.push(product);
@@ -94,17 +95,32 @@ export default function Page() {
   }
 
   const handleAddtoCategory = ({ category }: { category: Category }) => {
-    setCategory(category.name);
-    router.push(`/dashboard?category=${category.name}&search=none`);
+    setCategory(prevCategories => {
+      let newCategories;
+      if (category.name === 'All') {
+        newCategories = ['All'];
+      } else {
+        newCategories = prevCategories.includes('All')
+          ? [category.name]
+          : prevCategories.includes(category.name)
+            ? prevCategories.filter(c => c !== category.name)
+            : [...prevCategories, category.name];
+      }
+      const queryString = `category=${newCategories.join('&category=')}&search=${search}`;
+      router.push(`/dashboard?${queryString}`);
+      return newCategories;
+    });
   }
 
   const handleAddtoSearch = (searchQuery: string) => {
     if (searchQuery && searchQuery.trim().length !== 0) {
       setSearch(searchQuery.trim());
-      router.push(`/dashboard?category=${category}&search=${searchQuery.trim()}`);
+      const queryString = `category=${category.join('&category=')}&search=${searchQuery.trim()}`;
+      router.push(`/dashboard?${queryString}`);
     } else {
       setSearch("none");
-      router.push(`/dashboard?category=${category}&search=none`);
+      const queryString = `category=${category.join('&category=')}&search=none`;
+      router.push(`/dashboard?${queryString}`);
     }
   }
 

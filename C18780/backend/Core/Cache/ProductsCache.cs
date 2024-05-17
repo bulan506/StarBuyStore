@@ -18,16 +18,23 @@ namespace StoreApi.Cache
 
         public void setProduct(List<Product> products)
         {
-            foreach (var product in products)
+            if (products.Count() > 0)
             {
-                if (productDictionary.ContainsKey(product.Category))
+                foreach (var product in products)
                 {
-                    productDictionary[product.Category].Add(product);
+                    if (productDictionary.ContainsKey(product.Category))
+                    {
+                        productDictionary[product.Category].Add(product);
+                    }
+                    else
+                    {
+                        productDictionary.Add(product.Category, new List<Product> { product });
+                    }
                 }
-                else
-                {
-                    productDictionary.Add(product.Category, new List<Product> { product });
-                }
+            }
+            else
+            {
+                throw new ArgumentException("The products list cannot be empty.");
             }
         }
         public IEnumerable<Product> GetProduct(Guid category)

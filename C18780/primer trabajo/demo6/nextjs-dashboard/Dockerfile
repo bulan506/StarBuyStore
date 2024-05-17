@@ -14,12 +14,3 @@ RUN npm install
  
 EXPOSE 3000 
 CMD npm run dev 
- 
-# Compila la aplicación 
-#RUN npm run dev 
- 
-# Expone el puerto en el que la aplicación se ejecutará 
-#EXPOSE 3000 
- 
-# Comando para ejecutar la aplicación cuando se inicie el contenedor 
-#CMD ["npm", "start"]docker build -t my-nextjs-app .

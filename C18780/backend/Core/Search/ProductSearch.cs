@@ -1,74 +1,80 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using StoreApi.Models;
 
 namespace StoreApi.Search
 {
-    public sealed class TrieNode
+    public sealed class InvertedTreeNode
     {
-        public Dictionary<char, TrieNode> Children { get; }
-        public List<Product> Products { get; }
+        internal Dictionary<string, InvertedTreeNode> Words { get; }
+        internal HashSet<Product> Products { get; }
 
-        public TrieNode()
+        public InvertedTreeNode()
         {
-            Children = new Dictionary<char, TrieNode>();
-            Products = new List<Product>();
+            Words = new Dictionary<string, InvertedTreeNode>();
+            Products = new HashSet<Product>();
         }
     }
 
     public sealed class ProductSearch
     {
-        private readonly TrieNode root;
+        private readonly InvertedTreeNode root;
 
         public ProductSearch(IEnumerable<Product> products)
         {
-            root = new TrieNode();
-            BuildTrie(products);
+            if (products.Count() == 0)
+            {
+                throw new ArgumentException("The products cannot be empty.");
+            }
+            root = new InvertedTreeNode();
+            BuildInvertedTree(products);
         }
 
-        private void BuildTrie(IEnumerable<Product> products)
+        private void BuildInvertedTree(IEnumerable<Product> products)
         {
             foreach (var product in products)
             {
-                var words = product.Name.Split(' ').Concat(product.Description.Split(' '));
+                var words = GetWordsFromText(product.Name + " " + product.Description);
                 foreach (var word in words)
                 {
-                    AddWordToTrie(word.ToLower(), product);
+                    AddWordToInvertedTree(word, product);
                 }
             }
         }
 
-        private void AddWordToTrie(string word, Product product)
+        private IEnumerable<string> GetWordsFromText(string text)
+        {
+            return Regex.Split(text.ToLower(), @"\W+").Where(word => !string.IsNullOrWhiteSpace(word));
+        }
+
+        private void AddWordToInvertedTree(string word, Product product)
         {
             var node = root;
-            foreach (var c in word)
+            if (!node.Words.ContainsKey(word))
             {
-                if (!node.Children.ContainsKey(c))
-                {
-                    node.Children[c] = new TrieNode();
-                }
-                node = node.Children[c];
+                node.Words[word] = new InvertedTreeNode();
             }
-            if (!node.Products.Contains(product))
-            {
-                node.Products.Add(product);
-            }
+            node = node.Words[word];
+            node.Products.Add(product);
         }
 
         public IEnumerable<Product> Search(string search)
         {
-            IEnumerable<string> keywords = search.Split(" ");
+            var keywords = GetWordsFromText(search);
             var resultSet = new HashSet<Product>();
+            var node = root;
             foreach (var keyword in keywords)
             {
-                var node = root;
-                foreach (var c in keyword.ToLower())
+                if (node.Words.ContainsKey(keyword))
                 {
-                    if (!node.Children.ContainsKey(c))
-                    {
-                        break;
-                    }
-                    node = node.Children[c];
+                    node = node.Words[keyword];
+                    resultSet.UnionWith(node.Products);
                 }
-                resultSet.UnionWith(node.Products);
+                else
+                {
+                    return Enumerable.Empty<Product>();
+                }
             }
             return resultSet;
         }
