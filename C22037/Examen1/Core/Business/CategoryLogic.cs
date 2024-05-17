@@ -58,9 +58,9 @@ namespace TodoApi.Business
             if (string.IsNullOrEmpty(search)) throw new ArgumentNullException("Search term cannot be null or empty.");
 
             List<Product> matchingProducts = new List<Product>();
-            List<int> categoryIds = categories?.Split(',').Select(int.Parse).ToList();
+            List<int> categoryIdsList = categories?.Split(',').Select(int.Parse).ToList();
 
-            if (categoryIds == null || !categoryIds.Any())
+            if (categoryIdsList == null || !categoryIdsList.Any())
             {
                 foreach (var id in productsByCategoryId)
                 {
@@ -69,7 +69,7 @@ namespace TodoApi.Business
             }
             else
             {
-                foreach (var categoryId in categoryIds)
+                foreach (var categoryId in categoryIdsList)
                 {
                     if (productsByCategoryId.TryGetValue(categoryId, out List<Product> categoryProducts))
                     {
