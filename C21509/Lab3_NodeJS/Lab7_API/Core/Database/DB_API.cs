@@ -101,7 +101,7 @@ namespace Store_API.Database
                             command.Parameters.AddWithValue("@name", actualProduct.Name);
                             command.Parameters.AddWithValue("@imageURL", actualProduct.ImageURL);
                             command.Parameters.AddWithValue("@price", actualProduct.Price);
-                            command.Parameters.AddWithValue("@categoria", actualProduct.Categoria.IdCategory); // Solo se usa el valor entero de IdCategory
+                            command.Parameters.AddWithValue("@categoria", actualProduct.Categoria.IdCategory); 
 
                             command.ExecuteNonQuery();
                         }
@@ -134,8 +134,13 @@ namespace Store_API.Database
                         {
                             while (readerTable.Read())
                             {
+
+                                Console.WriteLine($"ID: {readerTable["IdProduct"]}, Name: {readerTable["Name"]}, Price: {readerTable["Price"]}, Categoria: {readerTable["Categoria"]}");
                                 int categoryId = Convert.ToInt32(readerTable["Categoria"]);
                                 Category category = Categories.GetCategoryById(categoryId);
+
+                                Console.WriteLine($"Category ID: {category.IdCategory}, Category Name: {category.NameCategory}");
+
 
                                 productListToStoreInstance.Add(new Product
                                 {

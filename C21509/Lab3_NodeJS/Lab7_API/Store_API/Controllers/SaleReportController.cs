@@ -12,8 +12,8 @@ namespace Store_API.Controllers
         {
         }
 
-        [HttpGet("{date}")]
-        public async Task<IActionResult> GetSalesReportAsync(DateTime date)
+        [HttpGet]
+        public async Task<IActionResult> GetSalesReportAsync( [FromQuery] DateTime date)
         {
             if (date == DateTime.MinValue || date > DateTime.Now)
             {

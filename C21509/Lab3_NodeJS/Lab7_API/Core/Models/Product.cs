@@ -19,7 +19,7 @@ public class Product : ICloneable
             Name = this.Name,
             ImageURL = this.ImageURL,
             Price = this.Price,
-           Categoria  = this.Categoria 
+            Categoria  = this.Categoria 
         };
     }
 }

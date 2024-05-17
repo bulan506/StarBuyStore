@@ -8,8 +8,10 @@ import Link from 'next/link';
 export default function Page() {
   const [availableProducts, setAvailableProducts] = useState<ProductItem[]>([]);
   const [cartProducts, setCartProducts] = useState<ProductItem[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [categories, setCategories] = useState<{ idCategory: number; nameCategory: string; }[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const loadProductData = async () => {
@@ -19,30 +21,27 @@ export default function Page() {
           throw new Error('Failed to fetch products');
         }
         const productJson = await productResponse.json();
-        if (!productJson.products) {
-          throw new Error('Failed to fetch products: No products found');
+        if (!Array.isArray(productJson.products)) {
+          throw new Error('Invalid product data format');
         }
         setAvailableProducts(productJson.products);
-      } catch{
-
-        throw new Error('Failed to fetch data');
+      } catch (error) {
+        setError('Error al cargar productos');
+      } finally {
+        setLoading(false);
       }
     };
 
     const loadCategoryData = async () => {
       try {
-        const categoryResponse = await fetch('https://localhost:7165/api/Store/Products');
+        const categoryResponse = await fetch('https://localhost:7165/api/Store/Categories');
         if (!categoryResponse.ok) {
           throw new Error('Failed to fetch categories');
         }
         const categoryJson = await categoryResponse.json();
-        if (!categoryJson) {
-          throw new Error('Failed to fetch categories: No categories found');
-        }
-        const uniqueCategories: string[] = Array.from(new Set(categoryJson.map((product: { idCategory: string }) => product.idCategory)));
-        setCategories(uniqueCategories);
-      } catch {
-        throw new Error('Failed to fetch data');
+        setCategories(categoryJson.map((category: any) => category));
+      } catch (error) {
+        setError('Error al cargar categorías');
       }
     };
 
@@ -53,17 +52,32 @@ export default function Page() {
     setCartProducts(savedCartProducts);
   }, []);
 
-  const handleCategoryChange = async (category: string) => {
+  const handleCategoryChange = async (category: number) => {
     setSelectedCategory(category);
+    setLoading(true);
+    setError('');
+
     try {
-      const response = await fetch(`https://localhost:7165/api/Store/Products?categoryId=${category}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
+      if (category === 0) {
+        const productResponse = await fetch('https://localhost:7165/api/Store');
+        if (!productResponse.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const productJson = await productResponse.json();
+        setAvailableProducts(productJson.products);
+      } else {
+        const response = await fetch(`https://localhost:7165/api/Store/Products?categoryId=${category}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const productJson = await response.json();
+        const filteredProducts = productJson.filter((product: any) => product.categoria.idCategory === category);
+        setAvailableProducts(filteredProducts);
       }
-      const productJson = await response.json();
-      setAvailableProducts(productJson);
-    } catch {
-      throw new Error('Failed to fetch data');
+    } catch (error) {
+      setError('Error al cargar productos');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,23 +100,31 @@ export default function Page() {
           </Link>
         </div>
         <div className="categories-container">
-          <select value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
-            <option value="">Todas las Categorías</option>
+          <select className="form-select" style={{ height: "auto", maxHeight: "200px", overflowY: "auto" }} value={selectedCategory} onChange={(e) => handleCategoryChange(Number(e.target.value))}>
+            <option value="0">Categorías</option>
             {categories.map(category => (
-              <option key={category} value={category}>{category}</option>
+              <option key={category.idCategory} value={category.idCategory}>
+                {category.nameCategory}
+              </option>
             ))}
           </select>
         </div>
       </header>
 
-      <div>
-        <h1>Lista de Productos</h1>
-        <div className='row' style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {availableProducts && availableProducts.map(product =>
-            <Product key={product.id} product={product} addToCart={addToCart} />
-          )}
+      {loading ? (
+        <div>Cargando...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
+        <div>
+          <h1>Lista de Productos</h1>
+          <div className='row' style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {availableProducts && availableProducts.map(product =>
+              <Product key={product.id} product={product} addToCart={addToCart} />
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="products col-sm-6" style={{ margin: '0 auto' }}>
         <div id="productsCarouselControl" className="carousel" data-bs-ride="carousel">
