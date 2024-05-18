@@ -14,6 +14,9 @@ export default function Home() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
+    const { search, categories: categoryIds } = getQueryParams();
+    setSearchQuery(search);
+
     const loadData = async () => {
       try {
         const response = await fetch(`https://localhost:7067/api/store`);
@@ -23,8 +26,20 @@ export default function Home() {
         const data = await response.json();
         setProductList(data.store.products);
         setCategories(data.categories);
+
+        const selectedCategories = data.categories.filter(category => categoryIds.includes(category.id.toString()));
+        setSelectedCategory(selectedCategories);
+
+        if (search || categoryIds.length > 0) {
+          const searchResponse = await fetch(`https://localhost:7067/api/store/search?search=${search}&categories=${categoryIds.join(',') || 'null'}`);
+          if (!searchResponse.ok) {
+            throw new Error('Failed to fetch data.');
+          }
+          const searchData = await searchResponse.json();
+          setProductList(searchData.products);
+        }
       } catch (error) {
-        throw new Error('Failed to fetch data.');
+        throw new Error('Failed to fetch data', error);
       }
     };
 
@@ -33,14 +48,25 @@ export default function Home() {
       setCount(Object.keys(storedCart.products).length);
     }
 
-    const initialCart = JSON.parse(localStorage.getItem('cart')) || {
-      products: {},
-    };
-
+    const initialCart = JSON.parse(localStorage.getItem('cart')) || { products: {} };
     localStorage.setItem('cart', JSON.stringify(initialCart));
 
     loadData();
-  }, [searchQuery]);
+  }, []);
+
+
+  const updateUrl = (searchQuery, selectedCategory) => {
+    const categoryIds = selectedCategory.map(category => category.id).join(',');
+    const url = `?search=${searchQuery}&categories=${categoryIds}`;
+    window.history.pushState(null, '', url);
+  };
+
+  const getQueryParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    const search = params.get('search') || '';
+    const categories = params.get('categories') ? params.get('categories').split(',') : [];
+    return { search, categories };
+  };
 
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
@@ -48,6 +74,8 @@ export default function Home() {
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
+
+    updateUrl(searchQuery, selectedCategory);
 
     let url = `https://localhost:7067/api/store/search?search=${searchQuery}`;
 
@@ -68,12 +96,11 @@ export default function Home() {
 
       setProductList(data.products);
     } catch (error) {
-      throw new Error('Failed to fetch data.');
+      throw new Error('Failed to fetch data', error);
     }
   };
 
   const handleAddToCart = (productId) => {
-
     if (productId === undefined) {
       throw new Error('ProductId cannot be undefined.');
     }
@@ -106,16 +133,18 @@ export default function Home() {
 
       setSelectedCategory(updatedCategories);
       setIsDropdownOpen(false);
+
+      updateUrl(searchQuery, updatedCategories);
+
       const response = await fetch(`https://localhost:7067/api/store/products?${updatedCategories.length > 0 ? `categories=${updatedCategories.map(c => c.id).join(',')}` : 'categories=null'}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
 
       const data = await response.json();
-      const products = data.products;
-      setProductList(products);
+      setProductList(data.products);
     } catch (error) {
-      throw new Error('Failed to fetch data');
+      throw new Error('Failed to fetch data', error);
     }
   };
 
@@ -154,9 +183,7 @@ export default function Home() {
     );
   };
 
-
-  function rows(array, size) {
-
+  const rows = (array, size) => {
     if (array === undefined) {
       throw new Error("There are no products.");
     }
@@ -171,7 +198,7 @@ export default function Home() {
     }
 
     return row;
-  }
+  };
 
   return (
     <div>
