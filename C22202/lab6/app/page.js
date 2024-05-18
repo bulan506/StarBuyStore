@@ -17,7 +17,9 @@ const Product = ({ product, addToCart }) => {
     <Col sm='3' className="mt-5">
 
       <Card style={{ width: '20rem' }}>
-        <Card.Img variant="top" src={product.imgSource} />
+      <div className="d-flex align-items-center justify-content-center" style={{ width: '100%', height: '300px', overflow: 'hidden' }}>
+          <img src={imgSource} alt={name} style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        </div>
         <Card.Body>
           <Card.Title>{product.name}</Card.Title>
           <Card.Text>
