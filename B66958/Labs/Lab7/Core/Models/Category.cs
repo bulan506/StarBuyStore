@@ -72,11 +72,4 @@ public class Categories
             throw new ArgumentException("A category must have an ID, and it should be above 0");
         return categories.FirstOrDefault(category => category.Id == id);
     }
-
-    public Category GetCategoryById(int id)
-    {
-        if (id < 1)
-            throw new ArgumentException("A category must have an ID, and it should be above 0");
-        return categoryList.FirstOrDefault(category => category.Id == id);
-    }
 }
