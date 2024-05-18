@@ -39,7 +39,7 @@ namespace StoreApi.Cache
         }
         public IEnumerable<Product> GetProduct(Guid category)
         {
-            if (!productDictionary.ContainsKey(category))
+            if (category == Guid.Empty && !productDictionary.ContainsKey(category))
             {
                 throw new ArgumentException("There is no such category in the dictionary.");
             }
