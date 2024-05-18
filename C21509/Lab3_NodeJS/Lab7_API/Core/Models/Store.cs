@@ -97,12 +97,22 @@ namespace Store_API.Models
 
         public async Task<Product> GetProductByNameAndCategoryIdAsync(string productName, int categoryId)
         {
+            if (string.IsNullOrWhiteSpace(productName))
+            {
+                throw new ArgumentException("El nombre del producto no puede ser nulo o vacío.", nameof(productName));
+            }
+
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("El ID de la categoría debe ser un valor positivo.", nameof(categoryId));
+            }
+
             var products = Store.Instance.Products.OrderBy(p => p.Name).ThenBy(p => p.Categoria.IdCategory).ToList();
-             var result = await Task.Run(() => BinarySearch(products, productName, categoryId));
+            var result = await Task.Run(() => BinarySearch(products, productName, categoryId));
 
             if (result == null)
             {
-                throw new KeyNotFoundException($"Product with name '{productName}' and category ID '{categoryId}' not found.");
+                throw new KeyNotFoundException($"Producto con nombre '{productName}' y ID de categoría '{categoryId}' no encontrado.");
             }
 
             return result;
