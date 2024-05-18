@@ -1,9 +1,9 @@
 @startuml
-participant "Client" as Client
+participant "StoreController" as StoreController
 participant "ProductSearch" as ProductSearch
 participant "InvertedTreeNode" as Node
 
-Client -> ProductSearch: new ProductSearch(products)
+StoreController -> ProductSearch: new ProductSearch(products)
 ProductSearch -> ProductSearch: BuildInvertedTree(products)
 loop for each product
     ProductSearch -> ProductSearch: GetWordsFromText(product.Name + product.Description)
@@ -14,7 +14,7 @@ loop for each product
     end
 end
 
-Client -> ProductSearch: Search(searchText)
+StoreController -> ProductSearch: Search(searchText)
 ProductSearch -> ProductSearch: GetWordsFromText(searchText)
 loop for each keyword
     ProductSearch -> Node: Find node for keyword
@@ -22,9 +22,9 @@ loop for each keyword
         Node -> ProductSearch: Return products from node
         ProductSearch -> ProductSearch: Merge products into resultSet
     else node not found
-        ProductSearch -> Client: Return empty resultSet
+        ProductSearch -> StoreController: Return empty resultSet
     end
 end
-ProductSearch -> Client: Return resultSet
+ProductSearch -> StoreController: Return resultSet
 
 @enduml
