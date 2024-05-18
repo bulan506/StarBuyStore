@@ -112,7 +112,7 @@ function Page() {
                     setProducts(filteredProducts)
                 }
             } catch (error) {
-                //callAlertShop("Error","Error al obtener datos","Al parecer los datos no pueden ser mostrados. Por favor intentalo de nuevo");
+                callAlertShop("Error","Error al obtener datos","Al parecer los datos no pueden ser mostrados. Por favor intentalo de nuevo");
             }            
         };    
         if (productCategory) fetchProductsByCategory();
@@ -161,7 +161,7 @@ function Page() {
                 window.history.pushState({ filteredProducts }, '', newUrl);
             }
         } catch (error) {
-            //callAlertShop("Error","Error al obtener datos","Al parecer los datos no pueden ser mostrados. Por favor intentalo de nuevo");
+            callAlertShop("Error","Error al obtener datos","Al parecer los datos no pueden ser mostrados. Por favor intentalo de nuevo");
         }                    
     }
 

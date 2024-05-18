@@ -16,9 +16,7 @@ namespace MyStoreAPI.Controllers
         public IActionResult GetProductsByCategory(int category){
             try{
                 ProductsLogic productsLogic = new ProductsLogic();
-                IEnumerable<Product> filteredProducts = productsLogic.filterProductsByCategory(category);
-                //int[] ids = new int[] {1,2,3};
-                //var filteredProducts2 = productsLogic.filterProductsBySearchTextAndCategory("ps",ids);
+                IEnumerable<Product> filteredProducts = productsLogic.filterProductsByCategory(category);                
                 return Ok(filteredProducts);
                 
             //501 son para NotImplemented o Excepciones Propias
