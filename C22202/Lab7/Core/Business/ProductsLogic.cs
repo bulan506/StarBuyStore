@@ -32,34 +32,10 @@ public class ProductsLogic
 
     }
 
-    /*public IEnumerable<Product> searchProducts(IEnumerable<Product> products, string search){
-        List<Product> productsToFilter = products.ToList<Product>();
-        List<Product> searchResult = new List<Product>();
-
-        Product searchProduct = new Product{
-            name = search,
-            id = 1,
-            imgSource = "",
-            price = 0,
-            category = 0
-            };
-        int searchIndex = productsToFilter.BinarySearch(searchProduct, new ProductoComparer());
-
-        while (searchIndex > 0){
-            searchResult.Add(productsToFilter[searchIndex]);
-            productsToFilter.RemoveAt(searchIndex);
-            searchIndex = productsToFilter.BinarySearch(searchProduct, new ProductoComparer());
-        }
-
-        return searchResult;
-    }*/
-
     public IEnumerable<Product> searchProducts(IEnumerable<Product> productos, string search)
     {
-        // Primero ordenamos la lista de productos por nombre
         var productosOrdenados = productos.OrderBy(p => p.name).ToList();
 
-        // Usamos una lista para almacenar los resultados
         List<Product> resultados = new List<Product>();
 
         Product searchProduct = new Product{
@@ -69,17 +45,13 @@ public class ProductsLogic
             price = 0,
             category = 0
             };
-
-        // Realizamos una búsqueda binaria para encontrar un elemento que contenga el filtro
         int index = productosOrdenados.BinarySearch(searchProduct, new ProductoComparer());
 
         if (index < 0)
         {
-            // Si no encuentra un producto exacto, BinarySearch retorna un valor negativo que indica el índice complementario.
             index = ~index;
         }
 
-        // A partir de este índice, buscamos hacia adelante y hacia atrás para encontrar todos los productos que contengan el filtro
         for (int i = index; i < productosOrdenados.Count && productosOrdenados[i].name.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0; i++)
         {
             if (productosOrdenados[i].name.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0)

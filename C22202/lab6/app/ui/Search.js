@@ -47,9 +47,9 @@ export default function Search() {
         [searchParams]
     )
 
-    /*useEffect(() => {
+    useEffect(() => {
         fetchData();
-    }, []);*/
+    }, []);
 
     const handleCheckboxChange = (id) => {
         setSelectedCategories((prevSelected) => {
@@ -67,7 +67,7 @@ export default function Search() {
         }
     }, [selectedCategories]);
 
-    /*const fetchData = async () => {
+    const fetchData = async () => {
         try {
             const response = await fetch('https://localhost:7194/api/Store'); // Replace with your API endpoint
             if (!response.ok) {
@@ -84,7 +84,7 @@ export default function Search() {
             setError(error.message);
             setLoading(false);
         }
-    };*/
+    };
 
     const handleChangeSelect = async (ids, search = '') => {
         const params = { categories: ids, search: search };

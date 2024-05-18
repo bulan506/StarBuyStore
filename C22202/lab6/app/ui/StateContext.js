@@ -1,7 +1,6 @@
 'use client';
 import React, { createContext, useContext, useState } from 'react';
 
-// Creamos el contexto
 const StateContext = createContext();
 const Cart = {
   products: [],
@@ -10,7 +9,6 @@ const Cart = {
   paymentMethod: 0,
 };
 
-// Proveedor personalizado para envolver componentes hijos
 export const StateProvider = ({ children }) => {
   var cartStoraged = JSON.parse(localStorage.getItem('Cart'));
   if (!cartStoraged) {
@@ -26,5 +24,4 @@ export const StateProvider = ({ children }) => {
   );
 };
 
-// Hook personalizado para consumir el contexto
 export const useStateValue = () => useContext(StateContext);

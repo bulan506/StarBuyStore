@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Security.Permissions;
 
 namespace ShopApi.Controllers
 {

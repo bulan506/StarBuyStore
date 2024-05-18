@@ -1,6 +1,6 @@
 "use client";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useState, useCallback, useLayoutEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -9,13 +9,6 @@ import React from 'react';
 import { Card, Container } from "react-bootstrap";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useStateValue } from "./ui/StateContext";
-
-const Cart = {
-  products: [],
-  subtotal: 0,
-  address: '',
-  paymentMethod: 0,
-};
 
 const Product = ({ product, addToCart }) => {
   const { id, imgSource, name, price } = product;
@@ -85,7 +78,6 @@ export default function Home() {
 
   if (!params.has('category')) {
     router.push(pathname + '?' + createQueryString('category', '0'))
-    // router.refresh()
   }
 
   var shopStorage = JSON.parse(localStorage.getItem('Shop'));
@@ -102,7 +94,6 @@ export default function Home() {
 
   const fetchData = async () => {
     try {
-      debugger
       let params = searchParams.toString()
 
       const response = await fetch(`https://localhost:7194/api/Store`); // Replace with your API endpoint
@@ -142,7 +133,6 @@ export default function Home() {
       const formattedSubtotal = Number(subtotal.toFixed(2));
       copyOfCart.subtotal = formattedSubtotal;
       setCartState(copyOfCart);
-      // setSharedState(copyOfCart)
       localStorage.setItem('Cart', JSON.stringify(copyOfCart));
     }
   }

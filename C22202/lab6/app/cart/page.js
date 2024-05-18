@@ -26,7 +26,6 @@ const Tupla = ({ item, deleteAction, index }) => {
 };
 
 export default function Page() {
-    // const [cartState, setCartState] = useState(JSON.parse(localStorage.getItem('Cart')));
     const { cartState, setCartState } = useStateValue();
     const [shopState, setShopState] = useState(JSON.parse(localStorage.getItem('Shop')));
     const [hasProducts, toggleHasProducts] = useState(cartState.products.length > 0)
@@ -34,7 +33,6 @@ export default function Page() {
     const handleClick = (index) => {
         let copyOfCart = { ...cartState };
         const deletedProduct = copyOfCart.products.splice(index, 1);
-        // copyOfCart.subtotal -= deletedProduct[0].price;
         const subtotal = copyOfCart.subtotal - deletedProduct[0].price;
         const formattedSubtotal = Number(subtotal.toFixed(2));
         copyOfCart.subtotal = formattedSubtotal;
