@@ -57,7 +57,8 @@ public class ProductsLogic{
 
         //Ordenamos la lista con los productos para la busqueda binaria (por nombre de los productos)
         filteredProducts.Sort( (x,y) => string.Compare(x.name, y.name) );                
-        
+
+
         //Verificamos si el texto del buscador por alguna razón es nulo o vacío. Y su valor es igual a "default"
         //es porque en el buscador nunca se escribió nada o solo había espacios en blanco.
         if(string.IsNullOrEmpty(searchText) || searchText == "default"){
@@ -65,8 +66,7 @@ public class ProductsLogic{
         }    
 
         return filterByBinarySearch(searchText, filteredProducts);
-
-        //https://stackoverflow.com/questions/41019464/c-sharp-binary-search-a-sorted-dictionary
+        
     }
 
     private IEnumerable<Product> filterByBinarySearch(string searchText,List<Product> filteredProducts){
