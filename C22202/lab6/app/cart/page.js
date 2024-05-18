@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useStateValue } from '../ui/StateContext';
 
 const Tupla = ({ item, deleteAction, index }) => {
     const { id, imgSource, name, price } = item;
@@ -25,7 +26,8 @@ const Tupla = ({ item, deleteAction, index }) => {
 };
 
 export default function Page() {
-    const [cartState, setCartState] = useState(JSON.parse(localStorage.getItem('Cart')));
+    // const [cartState, setCartState] = useState(JSON.parse(localStorage.getItem('Cart')));
+    const { cartState, setCartState } = useStateValue();
     const [shopState, setShopState] = useState(JSON.parse(localStorage.getItem('Shop')));
     const [hasProducts, toggleHasProducts] = useState(cartState.products.length > 0)
 
