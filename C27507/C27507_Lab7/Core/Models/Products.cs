@@ -20,19 +20,6 @@ public class Products{
         dictionaryOfProducts = new Dictionary<int, List<Product>>();
         //Llenamos el diccionario
         fillDictionaryOfProducts();
-
-        // Recorremos el diccionario
-        // foreach (var kvp in dictionaryOfProducts)
-        // {
-        //     int categoryId = kvp.Key;
-        //     List<Product> products = kvp.Value;
-
-        //     Console.WriteLine($"Category ID: {categoryId}");
-        //     foreach (var product in products)
-        //     {
-        //         Console.WriteLine($"Product Name: {product.name}");
-        //     }
-        // }
     }
 
     private void fillDictionaryOfProducts(){
