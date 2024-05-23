@@ -1,6 +1,6 @@
 "use client";
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import "@/app/ui/styles.css";
 import Header from "@/app/navStarBuyStore/page";
 import Carrito from "@/app/Cart/page";
@@ -93,8 +93,6 @@ export default function Page() {
   const [productos, setProductos] = useState([]);
   const [category, setCategory] = useState([]);
   const [showNoResultsModal, setShowNoResultsModal] = useState(false);
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -142,7 +140,6 @@ export default function Page() {
       throw new Error('Failed to fetch filtered products');
     }
   };
-
   const initialCart = {
     carrito: {
       subtotal: 0,

@@ -66,9 +66,9 @@ namespace storeApi.Models.Data
         public IEnumerable<Category> GetCategory() { return Category; }
         public IEnumerable<Product> GetProductsByCategoryIDs(List<int> categoryIds)
         {
-            var esCategoriasNula=categoryIds==null;
-            var noHayCategorias= !categoryIds.Any();
-            if (esCategoriasNula ||noHayCategorias ) throw new ArgumentException("La lista de IDs de categorías no puede estar vacía o ser nula.");
+            var esCategoriasNula = categoryIds == null;
+            var noHayCategorias = !categoryIds.Any();
+            if (esCategoriasNula || noHayCategorias) throw new ArgumentException("La lista de IDs de categorías no puede estar vacía o ser nula.");
             foreach (var categoryId in categoryIds)
             {
                 if (categoryId < 1) throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");
@@ -92,8 +92,12 @@ namespace storeApi.Models.Data
 
         public IEnumerable<Product> SearchByTextAndCategory(string searchText, List<int> categoryIds)
         {
-            if (string.IsNullOrWhiteSpace(searchText) || categoryIds == null || !categoryIds.Any())
-                throw new ArgumentException("El texto de búsqueda no puede estar vacío o ser nulo, y la lista de IDs de categorías no puede estar vacía o ser nula.");
+            bool esTextoBusquedaNuloOVacio = string.IsNullOrWhiteSpace(searchText);
+            bool sonIdsCategoriasNulos = categoryIds == null;
+            bool sonIdsCategoriasVacios = !sonIdsCategoriasNulos && !categoryIds.Any();
+            bool esEntradaInvalida = esTextoBusquedaNuloOVacio || sonIdsCategoriasNulos || sonIdsCategoriasVacios;
+            if (esEntradaInvalida)throw new ArgumentException("El texto de búsqueda no puede estar vacío o ser nulo, y la lista de IDs de categorías no puede estar vacía o ser nula.");
+            
             foreach (var categoryId in categoryIds)
             {
                 if (categoryId < 1) throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");

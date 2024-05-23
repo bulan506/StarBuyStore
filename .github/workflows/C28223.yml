@@ -1,0 +1,56 @@
+name: C28223
+
+on:
+  push:
+    branches: [ "Examen01_C28223" ]
+  pull_request:
+    branches: [ "Examen01_C28223" ]
+
+jobs:
+  unitTest:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: |
+        cd C28223/Examen1_C28223
+        dotnet restore
+    - name: Build
+      run: |
+        cd C28223/Examen1_C28223
+        dotnet build --no-restore
+    - name: Test
+      run: |
+        cd C28223/Examen1_C28223
+        dotnet test --no-build --verbosity normal
+
+  publish-Api:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build & Push Image
+      run: |
+        cd C28223/Examen1_C28223
+        docker image build -t bulan506/lenguajes2024api:latest .
+        docker image build -t bulan506/lenguajes2024api:0.0.1 .
+        echo "${{ secrets.DOCKERHUBPASSC28223  }}" | docker login -u "brandon.vargassolano@ucr.ac.cr" --password-stdin
+        docker push bulan506/lenguajes2024api:latest
+        docker push bulan506/lenguajes2024api:0.0.1
+  publish-UI:   
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build & Push Image
+      run: |
+        cd C28223/Examen1_C28223/
+        docker image build -t bulan506/lenguajes2024ui:latest -f DockerfileFront .
+        docker image build -t bulan506/lenguajes2024ui:0.0.1 -f DockerfileFront .
+        echo "${{ secrets.DOCKERHUBPASSC28223  }}" | docker login -u "brandon.vargassolano@ucr.ac.cr" --password-stdin
+        docker push bulan506/lenguajes2024ui:latest
+        docker push bulan506/lenguajes2024ui:0.0.1    
