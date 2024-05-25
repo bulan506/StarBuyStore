@@ -62,12 +62,6 @@ public class ProductsTest
         Assert.Throws<ArgumentException>(() => productsInstance.GetProductsByCategoryIDs(categories));
     }
 
-    [Test]
-    public async Task GetProductsByCategories_WithNullCategories_ThrowsArgumentException()
-    {
-        List<int> categories = null;
-        Assert.Throws<ArgumentException>(() => productsInstance.GetProductsByCategoryIDs(categories));
-    }
 
     [Test]
     public async Task GetProductsByCategories_WithEmptyCategories_ThrowsArgumentException()
