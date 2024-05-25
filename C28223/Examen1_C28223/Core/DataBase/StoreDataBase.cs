@@ -114,7 +114,7 @@ namespace storeApi.DataBase
             };
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-              await  connection.OpenAsync();
+              await connection.OpenAsync();
 
                 // Create tables if it does not exist
                 string createTableQuery = @"
@@ -180,7 +180,7 @@ namespace storeApi.DataBase
             }
             using (var connectionMyDb = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                connectionMyDb.Open();
+                await connectionMyDb.OpenAsync();
                 using (var transaction = await connectionMyDb.BeginTransactionAsync())
                 {
                     try
@@ -198,7 +198,7 @@ namespace storeApi.DataBase
                                 command.Parameters.AddWithValue("@price", product.price);
                                 command.Parameters.AddWithValue("@imageURL", product.imageURL);
                                 command.Parameters.AddWithValue("@categoryID", product.category.CategoryID);
-                                command.ExecuteNonQueryAsync();
+                               await command.ExecuteNonQueryAsync();
                             }
                         }
                         string createLinesQuery = @"
@@ -235,13 +235,13 @@ namespace storeApi.DataBase
                                   ('PUR14', 4, 2, 90.00);";
                         using (var insertCommand = new MySqlCommand(createLinesQuery, connectionMyDb, transaction))
                         {
-                            insertCommand.ExecuteNonQueryAsync();
+                           await insertCommand.ExecuteNonQueryAsync();
                         }
-                        transaction.Commit();
+                       await transaction.CommitAsync();
                     }
                     catch (Exception)
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                         throw;
                     }
                 }
