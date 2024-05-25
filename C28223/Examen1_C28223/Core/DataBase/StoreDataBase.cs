@@ -114,7 +114,7 @@ namespace storeApi.DataBase
             };
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                connection.OpenAsync();
+              await  connection.OpenAsync();
 
                 // Create tables if it does not exist
                 string createTableQuery = @"
