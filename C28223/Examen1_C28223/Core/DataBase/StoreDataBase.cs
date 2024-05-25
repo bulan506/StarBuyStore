@@ -10,7 +10,7 @@ namespace storeApi.DataBase
 {
     public sealed class StoreDataBase
     {
-        public static async void CreateMysql()
+        public static void CreateMysql()
         {
             Categories categoryList = new Categories();
             var products = new List<Product>
@@ -114,7 +114,7 @@ namespace storeApi.DataBase
             };
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-              await connection.OpenAsync();
+                connection.Open();
 
                 // Create tables if it does not exist
                 string createTableQuery = @"
@@ -170,7 +170,7 @@ namespace storeApi.DataBase
                              ('2024-04-14 22:00:00', 380.00, 0, 'PUR14');";
                 using (var command = new MySqlCommand(createTableQuery, connection))
                 {
-                    int result =await command.ExecuteNonQueryAsync();
+                    int result = command.ExecuteNonQuery();
                     bool dbNotCreated = result < 0;
                     if (dbNotCreated)
                     {
@@ -180,8 +180,8 @@ namespace storeApi.DataBase
             }
             using (var connectionMyDb = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                await connectionMyDb.OpenAsync();
-                using (var transaction = await connectionMyDb.BeginTransactionAsync())
+                 connectionMyDb.Open();
+                using (var transaction =  connectionMyDb.BeginTransaction())
                 {
                     try
                     {
@@ -198,7 +198,7 @@ namespace storeApi.DataBase
                                 command.Parameters.AddWithValue("@price", product.price);
                                 command.Parameters.AddWithValue("@imageURL", product.imageURL);
                                 command.Parameters.AddWithValue("@categoryID", product.category.CategoryID);
-                               await command.ExecuteNonQueryAsync();
+                                 command.ExecuteNonQuery();
                             }
                         }
                         string createLinesQuery = @"
@@ -235,13 +235,13 @@ namespace storeApi.DataBase
                                   ('PUR14', 4, 2, 90.00);";
                         using (var insertCommand = new MySqlCommand(createLinesQuery, connectionMyDb, transaction))
                         {
-                           await insertCommand.ExecuteNonQueryAsync();
+                             insertCommand.ExecuteNonQuery();
                         }
-                       await transaction.CommitAsync();
+                         transaction.Commit();
                     }
                     catch (Exception)
                     {
-                        await transaction.RollbackAsync();
+                         transaction.Rollback();
                         throw;
                     }
                 }
