@@ -1,6 +1,8 @@
 ﻿namespace UT;
 using Core;
 using storeApi.Models.Data;
+using storeApi.DataBase;
+
 
 public class ProductsTest
 {
@@ -12,6 +14,7 @@ public class ProductsTest
         var dbtestDefault = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
         Storage.Init(dbtestDefault);
         productsInstance = await new Products().GetInstanceAsync();
+        StoreDataBase.CreateMysql();
     }
     [Test]
     public async Task GetInstanceAsync_WithValidData_NotReturnsProductsInstance()// No se crea la instancia hasta que se crea la instancia

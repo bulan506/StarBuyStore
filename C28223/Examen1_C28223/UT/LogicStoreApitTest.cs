@@ -3,7 +3,7 @@ using storeApi.Business;
 using storeApi.Models;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Core;
-using storeApi;
+using storeApi.DataBase;
 
 public class LogicStoreApitTest
 {
@@ -12,6 +12,8 @@ public class LogicStoreApitTest
     {
         var dbtestDefault = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
         Storage.Init(dbtestDefault);
+        StoreDataBase.CreateMysql();
+
     }
 
     [Test]

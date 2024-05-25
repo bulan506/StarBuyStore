@@ -16,6 +16,7 @@ public class LogicSalesReportsApiTests
         Storage.Init(dbtestDefault);
         _logicSalesReportsApi = new LogicSalesReportsApi();
         _saleDataBase = new SaleDataBase();
+        StoreDataBase.CreateMysql();
     }
 
     [Test]
