@@ -12,6 +12,8 @@ const SalesCharAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [charge, setCharge] = useState(false);
   var nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const URLConection = process.env.NEXT_PUBLIC_API;
+
 
   useEffect(() => {
     fetchData(); // Cargar datos iniciales al cargar el componente
@@ -21,7 +23,7 @@ const SalesCharAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://localhost:7223/api/sales/date?date=${selectedDate}`, {
+      const response = await fetch(URLConection+`/api/sales/date?date=${selectedDate}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

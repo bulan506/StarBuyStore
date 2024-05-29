@@ -8,6 +8,7 @@ const MetodoPago = () => {
     const [numeroComprobante, setNumeroComprobante] = useState('');
     const [modalData, setModalData] = useState(null);
     const [modalData2, setModalData2] = useState(false);
+    const URLConection = process.env.NEXT_PUBLIC_API;
 
     const closeModal = () => {
         setModalData(null);
@@ -56,7 +57,7 @@ const MetodoPago = () => {
             showModal('Sin comprobante de pago', 'Por favor ingrese el comprobante de pago para finalizar la compra.');
             return;
         }
-        const response = await fetch('https://localhost:7223/api/Cart', {
+        const response = await fetch(URLConection+'/api/Cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

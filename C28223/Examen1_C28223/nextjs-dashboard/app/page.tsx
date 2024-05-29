@@ -93,10 +93,12 @@ export default function Page() {
   const [productos, setProductos] = useState([]);
   const [category, setCategory] = useState([]);
   const [showNoResultsModal, setShowNoResultsModal] = useState(false);
+  const URLConection = process.env.NEXT_PUBLIC_API;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://localhost:7223/api/store');
+        const response = await fetch(URLConection+'/api/store');//hola
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -114,7 +116,7 @@ export default function Page() {
     if (categoryIDs == undefined) throw new Error("Error: Los argumentos fetchDataByCategory  no pueden ser indefinidos.");// esta lista si puede ser 0
     if (searchText==undefined) throw new Error("Error: Los argumentos fetchDataByCategory  no pueden ser indefinidos.");
     try {
-      const url = new URL('https://localhost:7223/api/store/products');
+      const url = new URL(URLConection+'/api/store/products');
       if (searchText) {
         url.searchParams.append('searchText', searchText);
       }
@@ -123,6 +125,7 @@ export default function Page() {
           url.searchParams.append('categoryIDs', categoryID.toString());
         });
       }
+      window.history.pushState(null, '','?'+url.searchParams);
       const response = await fetch(url.toString());
       if (!response.ok) {
         throw new Error('Failed to fetch filtered products');

@@ -67,7 +67,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build & Push Image
       run: |
-        cd C28223/Examen1_C28223/
+        cd C28223/Examen1_C28223/nextjs-dashboard
         docker image build -t bulan506/lenguajes2024ui:latest -f DockerfileFront .
         docker image build -t bulan506/lenguajes2024ui:0.0.1 -f DockerfileFront .
         echo "${{ secrets.DOCKERHUBPASSC28223  }}" | docker login -u "brandon.vargassolano@ucr.ac.cr" --password-stdin
