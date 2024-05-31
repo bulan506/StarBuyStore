@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using storeApi.Business;
 using storeApi.Models;
-
 using System;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 
 namespace storeApi.Controllers
@@ -14,6 +14,8 @@ namespace storeApi.Controllers
         private LogicStoreApi logicStore = new LogicStoreApi();
 
         [HttpPost]
+        [AllowAnonymous]
+
         public async Task<IActionResult> CreateCart([FromBody] Cart cart)
         {
             try

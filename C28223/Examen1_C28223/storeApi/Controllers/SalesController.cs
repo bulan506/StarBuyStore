@@ -1,7 +1,8 @@
 using System.Runtime.Intrinsics.X86;
 using Microsoft.AspNetCore.Mvc;
-using storeApi.Business;
 using storeApi.Models;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace storeApi.Controllers
 {
@@ -10,8 +11,7 @@ namespace storeApi.Controllers
     public class SalesController : ControllerBase
     {
         internal readonly LogicSalesReportsApi lsr = new LogicSalesReportsApi();
-
-        [HttpGet("sales/date")]
+        [HttpGet("sales/date"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateReportSales(DateTime date)
         {
             try

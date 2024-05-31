@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const MetodoPago = () => {
     const [formaDePago, setFormaDePago] = useState(0); // 0 para efectivo, 1 para SinpeMóvil

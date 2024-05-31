@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using storeApi.Models.Data;
 using System;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 
 namespace storeApi.Controllers
@@ -10,6 +11,8 @@ namespace storeApi.Controllers
     public class StoreController : ControllerBase
     {
         [HttpGet("store")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GetStore()
         {
             var store = await Store.Instance;
@@ -21,10 +24,12 @@ namespace storeApi.Controllers
             });
         }
         [HttpGet("store/products")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GetCategoriesAsync([FromQuery(Name = "categoryIDs")] List<int> categoryIDs = null,
             [FromQuery(Name = "searchText")] string searchText = null)//se hace asi ya que puede que reciba algunos parametros, no los dos a la vez, por ejemplo
         {
-             
+
             var store = await Store.Instance;
             // Validar que al menos uno de los parámetros de búsqueda sea proporcionado
             bool noSearchTextProvided = string.IsNullOrWhiteSpace(searchText);

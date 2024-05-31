@@ -1,18 +1,23 @@
 "use client";
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@/app/ui/styles.css";
 import Menu from "@/app/Admin/init/page";
+import { jwtDecode } from 'jwt-decode';
+
 
 const SalesCharAdmin = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]); // Fecha por defecto: hoy
   const [salesData2, setSalesData2] = useState([['Datetime', 'Purchase Number', 'Price', 'Amount of Products', { role: 'annotation' }]]);
   const [weeklySalesData, setWeeklySalesData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const [charge, setCharge] = useState(false);
   var nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   const URLConection = process.env.NEXT_PUBLIC_API;
+  var token = localStorage.getItem("token");
+
 
 
   useEffect(() => {
@@ -23,12 +28,26 @@ const SalesCharAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(URLConection+`/api/sales/date?date=${selectedDate}`, {
+      if (token) {
+        const decodedTokenStorage = jwtDecode(token);
+        const nowTime = Date.now() / 1000;
+        if (decodedTokenStorage.exp < nowTime) {
+          setShowModal2(true);
+          localStorage.removeItem("token");
+          return;
+        }
+      }
+      const response = await fetch(URLConection + `/api/sales/date?date=${selectedDate}`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
         }
-    });
+      });
+      if (response.status === 403 || response.status === 401) {
+        setShowModal2(true);
+        return;
+      }
       if (response.ok) {
         const data = await response.json();
         var salesAreEmpty = data.sales === null || data.sales.length === 0;
@@ -57,11 +76,11 @@ const SalesCharAdmin = () => {
     }
 
   };
-  const updateSalesData2 = (data:any) => {
-    if (data==undefined) {throw new Error('Error: data es nulo o indefinido');}
+  const updateSalesData2 = (data: any) => {
+    if (data == undefined) { throw new Error('Error: data es nulo o indefinido'); }
     let productsString = '';
     const newData = data.sales.map(sale => {
-    const productsInfo = sale.productsAnnotation.map(product => {
+      const productsInfo = sale.productsAnnotation.map(product => {
         return `${product.productId}, cantidad: ${product.quantity}`;
       });
       productsString = productsInfo.join('  \n'); // Unir los productos con saltos de línea
@@ -79,6 +98,7 @@ const SalesCharAdmin = () => {
     <div className='col' >
       <Menu />
       {showModal && <ModalSinVentas closeModal={() => setShowModal(false)} />}
+      {showModal2 && (<ModalNoAutorizado closeModal={() => setShowModal(false)} />)}
       <div>
         <div>
           <label htmlFor="fecha">Selecciona una fecha:</label>
@@ -138,8 +158,8 @@ const SalesCharAdmin = () => {
   );
 };
 
-const ModalSinVentas = ({ closeModal }:any) => {
-  if (closeModal==undefined) {throw new Error('Error: CloseModal es nulo o indefinido');}
+const ModalSinVentas = ({ closeModal }: any) => {
+  if (closeModal == undefined) { throw new Error('Error: CloseModal es nulo o indefinido'); }
   return (
     <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
       <div className="modal-dialog" role="document">
@@ -161,5 +181,24 @@ const ModalSinVentas = ({ closeModal }:any) => {
     </div>
   );
 };
-
+const ModalNoAutorizado = ({ closeModal }: any) => {
+  if (closeModal == undefined) { throw new Error('Error: CloseModal es nulo o indefinido'); }
+  return (
+    <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">No autorizado</h5>
+          </div>
+          <div className="modal-body">
+            <p>No estás autorizado para acceder a este recurso.</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={closeModal}><a href="/">Volver al inicio</a></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default SalesCharAdmin;
