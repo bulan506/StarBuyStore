@@ -2,9 +2,9 @@ name: C28223
 
 on:
   push:
-    branches: [ "Examen01_C28223" ]
+    branches: [ "C28223" ]
   pull_request:
-    branches: [ "Examen01_C28223" ]
+    branches: [ "C28223" ]
 
 jobs:
   unitTest:
