@@ -16,11 +16,12 @@ const SalesCharAdmin = () => {
   const [charge, setCharge] = useState(false);
   var nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   const URLConection = process.env.NEXT_PUBLIC_API;
-  var token = localStorage.getItem("token");
-
-
-
+  var token = sessionStorage.getItem("token");
   useEffect(() => {
+    if(!token){
+      setShowModal2(true);
+      return;
+    }
     fetchData(); // Cargar datos iniciales al cargar el componente
   }, [selectedDate, charge]);
   useEffect(() => {
@@ -33,7 +34,7 @@ const SalesCharAdmin = () => {
         const nowTime = Date.now() / 1000;
         if (decodedTokenStorage.exp < nowTime) {
           setShowModal2(true);
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           return;
         }
       }

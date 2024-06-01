@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import "@/app/ui/styles.css";
 
 const init = () => {
-
   return (
     <div>
       <title>Menú</title>

@@ -33,6 +33,10 @@ namespace storeApi
         public static Task<Store> Instance => instance.Value;
         public async Task<IEnumerable<Product>> getProductosCategoryID(List<int> categoryIDs)
         {
+            if (categoryIDs.Count() == 0 || categoryIDs == null)
+            {
+                throw new ArgumentException($"El argumento {categoryIDs} no puede ser nula o vacia.");
+            }
             var productsInstance = ProductsInstance;
             foreach (var categoryId in categoryIDs)
             {
@@ -44,7 +48,9 @@ namespace storeApi
         public async Task<IEnumerable<Product>> getProductsCategoryAndText(string textToSearch, List<int> categoryIDs)
         {
             var productsInstance = ProductsInstance;
-            if (textToSearch == null || textToSearch.Trim() == "") throw new ArgumentException($"El texto a buscar {nameof(textToSearch)} no puede ser nulo.");
+            if (string.IsNullOrEmpty(textToSearch)) throw new ArgumentException($"El texto a buscar {nameof(textToSearch)} no puede ser nulo.");
+            if (!categoryIDs.Any()) throw new ArgumentException($"La lista de categorias no puede ser nula{nameof(categoryIDs)}.");
+
             foreach (var categoryId in categoryIDs)
             {
                 if (categoryId < 1) throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");
@@ -52,11 +58,11 @@ namespace storeApi
             if (productsInstance == null || productsInstance.GetAllProducts().Count() == 0) throw new ArgumentException($" La instancia {nameof(productsInstance)} no puede ser nula.");
             return productsInstance.SearchByTextAndCategory(textToSearch, categoryIDs);
         }
-        
+
         public async Task<IEnumerable<Product>> getProductByText(string textToSearch)
         {
             var productsInstance = ProductsInstance;
-            if (textToSearch == null || textToSearch.Trim() == "") throw new ArgumentException($"El texto a buscar {nameof(textToSearch)} no puede ser nulo.");
+            if (string.IsNullOrEmpty(textToSearch)) throw new ArgumentException($"El texto a buscar {nameof(textToSearch)} no puede ser nulo.");
             if (productsInstance == null || productsInstance.GetAllProducts().Count() == 0) throw new ArgumentException($" La instancia {nameof(productsInstance)} no puede ser nula.");
             return productsInstance.SearchByText(textToSearch);
         }

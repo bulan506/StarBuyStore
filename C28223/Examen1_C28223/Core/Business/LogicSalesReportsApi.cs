@@ -20,12 +20,19 @@ public sealed class LogicSalesReportsApi
         await Task.WhenAll(salesByDateTask, salesWeekTask);
         IEnumerable<SalesData> listSales = await salesByDateTask;
         IEnumerable<SaleAnnotation> weekSales = await salesWeekTask;
-        return new SalesReport { Sales = listSales, SalesDaysWeek = weekSales };
+        return new SalesReport (listSales, weekSales);
     }
 }
 
 public class SalesReport
 {
-    public IEnumerable<SalesData> Sales { get; set; }
-    public IEnumerable<SaleAnnotation> SalesDaysWeek { get; set; }
+    public IEnumerable<SalesData> Sales { get;  private set; }
+    public IEnumerable<SaleAnnotation> SalesDaysWeek { get; private set; }
+    public SalesReport(IEnumerable<SalesData> sales, IEnumerable<SaleAnnotation> salesDaysWeek){
+        this.Sales=sales;
+        this.SalesDaysWeek=salesDaysWeek;
+    }
+    public SalesReport(){}
+
+
 }
