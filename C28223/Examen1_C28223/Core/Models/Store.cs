@@ -23,6 +23,7 @@ namespace storeApi
             this.ProductsInstance = productsInstance;
         }
         public static async Task<Store> GetInstanceAsync()
+        
         {
             Products products = await new Products().GetInstanceAsync();
             var productsInstance = products;
