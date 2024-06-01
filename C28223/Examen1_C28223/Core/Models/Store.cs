@@ -66,7 +66,5 @@ namespace storeApi
             if (productsInstance == null || productsInstance.GetAllProducts().Count() == 0) throw new ArgumentException($" La instancia {nameof(productsInstance)} no puede ser nula.");
             return productsInstance.SearchByText(textToSearch);
         }
-
-
     }
 }
