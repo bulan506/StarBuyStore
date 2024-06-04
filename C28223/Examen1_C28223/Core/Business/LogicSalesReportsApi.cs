@@ -28,11 +28,12 @@ public class SalesReport
 {
     public IEnumerable<SalesData> Sales { get;  private set; }
     public IEnumerable<SaleAnnotation> SalesDaysWeek { get; private set; }
-    public SalesReport(IEnumerable<SalesData> sales, IEnumerable<SaleAnnotation> salesDaysWeek){
+
+    public SalesReport(){}
+     public SalesReport(IEnumerable<SalesData> sales, IEnumerable<SaleAnnotation> salesDaysWeek){// para este caso la listas si pueden estar vacias
+        if (sales==null) { throw new ArgumentException($"El parametro {nameof(sales)} no puede ser nulo."); }
+        if (salesDaysWeek==null) { throw new ArgumentException($"El parametro {nameof(salesDaysWeek)} no puede ser nulo."); }
         this.Sales=sales;
         this.SalesDaysWeek=salesDaysWeek;
     }
-    public SalesReport(){}
-
-
 }

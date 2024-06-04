@@ -28,8 +28,8 @@ public class Product : ICloneable
 }
 public class ProductQuantity
 {
-    public string ProductId { get; set; }
-    public int Quantity { get; set; }
+    public string ProductId { get; private set; }
+    public int Quantity { get; private set; }
     public ProductQuantity(string productId, int quantity)
     {
         if (string.IsNullOrWhiteSpace(productId)) { throw new ArgumentException($"El {nameof(productId)} producto no puede estar vacío o nulo."); }

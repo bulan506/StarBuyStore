@@ -14,8 +14,8 @@ namespace storeApi.DataBase
         {
             Categories categoryList = new Categories();
             var products = new List<Product>
-            {
-                new Product
+                {
+                     new Product
                 {
                     name = "Producto 1",
                     description = "Esta computadora es muy rapida",
@@ -111,7 +111,7 @@ namespace storeApi.DataBase
                     imageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg",
                     category=categoryList.GetCategories().ToList()[5]
                 }
-            };
+                };
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 connection.Open();
@@ -180,8 +180,8 @@ namespace storeApi.DataBase
             }
             using (var connectionMyDb = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                 connectionMyDb.Open();
-                using (var transaction =  connectionMyDb.BeginTransaction())
+                connectionMyDb.Open();
+                using (var transaction = connectionMyDb.BeginTransaction())
                 {
                     try
                     {
@@ -198,7 +198,7 @@ namespace storeApi.DataBase
                                 command.Parameters.AddWithValue("@price", product.price);
                                 command.Parameters.AddWithValue("@imageURL", product.imageURL);
                                 command.Parameters.AddWithValue("@categoryID", product.category.CategoryID);
-                                 command.ExecuteNonQuery();
+                                command.ExecuteNonQuery();
                             }
                         }
                         string createLinesQuery = @"
@@ -235,13 +235,13 @@ namespace storeApi.DataBase
                                   ('PUR14', 4, 2, 90.00);";
                         using (var insertCommand = new MySqlCommand(createLinesQuery, connectionMyDb, transaction))
                         {
-                             insertCommand.ExecuteNonQuery();
+                            insertCommand.ExecuteNonQuery();
                         }
-                         transaction.Commit();
+                        transaction.Commit();
                     }
                     catch (Exception)
                     {
-                         transaction.Rollback();
+                        transaction.Rollback();
                         throw;
                     }
                 }
@@ -270,7 +270,7 @@ namespace storeApi.DataBase
                                 description = reader.GetString("description"),
                                 price = reader.GetDecimal("price"),
                                 imageURL = reader.GetString("imageURL"),
-                                category = category
+                                category = category,
                             });
                         }
                     }
