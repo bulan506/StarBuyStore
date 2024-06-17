@@ -127,7 +127,8 @@ namespace storeApi.DataBase
                                      description VARCHAR(255) NOT NULL,
                                      price DECIMAL(10, 2) NOT NULL,
                                      imageURL VARCHAR(255) NOT NULL,
-                                     categoryID INT NOT NULL
+                                     categoryID INT NOT NULL,
+                                     deleted INT NOT NULL
                                  );
                                  CREATE TABLE IF NOT EXISTS paymentMethod (
                                      id INT PRIMARY KEY NOT NULL,
@@ -188,8 +189,8 @@ namespace storeApi.DataBase
                         foreach (var product in products)
                         {
                             string insertQuery = @"
-                                INSERT INTO products (name, description, price, imageURL, categoryID)
-                                VALUES (@name, @description, @price, @imageURL, @categoryID)";
+                                INSERT INTO products (name, description, price, imageURL, categoryID, deleted)
+                                VALUES (@name, @description, @price, @imageURL, @categoryID, @deleted)";
 
                             using (var command = new MySqlCommand(insertQuery, connectionMyDb, transaction))
                             {
@@ -198,6 +199,7 @@ namespace storeApi.DataBase
                                 command.Parameters.AddWithValue("@price", product.price);
                                 command.Parameters.AddWithValue("@imageURL", product.imageURL);
                                 command.Parameters.AddWithValue("@categoryID", product.category.CategoryID);
+                                command.Parameters.AddWithValue("@deleted", 0);//0 no borrado, 1 borrado
                                 command.ExecuteNonQuery();
                             }
                         }
@@ -254,7 +256,7 @@ namespace storeApi.DataBase
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 await connection.OpenAsync();
-                string query = "SELECT id, name, description, price, imageURL,categoryID FROM products";
+                string query = "SELECT id, name, description, price, imageURL, categoryID, deleted FROM products";
                 using (var command = new MySqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -271,6 +273,7 @@ namespace storeApi.DataBase
                                 price = reader.GetDecimal("price"),
                                 imageURL = reader.GetString("imageURL"),
                                 category = category,
+                                deleted = reader.GetInt32("deleted")
                             });
                         }
                     }

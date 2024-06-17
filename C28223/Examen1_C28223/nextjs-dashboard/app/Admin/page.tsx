@@ -3,49 +3,41 @@ import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import "@/app/ui/styles.css";
 import {jwtDecode} from 'jwt-decode';
-
-const Modal = ({ title, content, onClose, closeButtonText = 'Cerrar', showCloseButton = true }) => {
-    if (!title || !content || !onClose || typeof onClose !== 'function') {
-        throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.');
-    }
-    return (
-        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">{title}</h5>
-                        {showCloseButton && (
-                            <button type="button" className="close" onClick={onClose} aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        )}
-                    </div>
-                    <div className="modal-body">
-                        <p>{content}</p>
-                    </div>
-                    {showCloseButton && (
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>
-                                {closeButtonText}
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
+import { Modal, Button } from 'react-bootstrap';
 
 const LoginAdmin = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
-    const [error, setError] = useState('');
+    const [modalContent, setModalContent] = useState('');
     const [showModal, setShowModal] = useState(false);
     const URLConection = process.env.NEXT_PUBLIC_API;
   
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                const nowTime = Date.now() / 1000;
+                if (decodedToken.exp > nowTime) {
+                    const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                    if (userRole === "Admin") {
+                        window.location.href = '/Admin/init';
+                        return;
+                    }
+                } else {
+                    setModalContent('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+                    setShowModal(true);
+                }
+            } catch (error) {
+                setModalContent('Ha ocurrido un error en el proceso de registro. Por favor, vuelve a iniciar sesión.');
+                setShowModal(true);
+            }
+        }
+    }, []);
+
     const handleCloseModal = () => {
         setShowModal(false);
-        setError('');
+        setModalContent('');
     };
 
     const handleSubmit = async (event) => {
@@ -71,16 +63,16 @@ const LoginAdmin = () => {
                 if (userRole === "Admin") {
                     window.location.href = '/Admin/init';
                 } else {
-                    setError('No tienes permisos de administrador.');
+                    setModalContent('No tienes permisos de administrador.');
                     setShowModal(true);
                 }
             } else {
                 const errorData = await response.json();
-                setError(errorData.message || 'Error de autenticación');
+                setModalContent(errorData.message || 'Error en la solicitud. Por favor, intente de nuevo más tarde.');
                 setShowModal(true);
             }
         } catch (error) {
-            setError('Error en la solicitud. Por favor, intente de nuevo más tarde.');
+            setModalContent('Error en la solicitud. Por favor, intente de nuevo más tarde.');
             setShowModal(true);
         }
     };
@@ -103,13 +95,19 @@ const LoginAdmin = () => {
                     <button type="submit" className="btn btn-primary">Login</button>
                 </div>
             </form>
-            {showModal && (
-                <Modal
-                    title="Error de Autenticación"
-                    content={error}
-                    onClose={handleCloseModal}
-                />
-            )}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Mensaje</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>{modalContent}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleCloseModal}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

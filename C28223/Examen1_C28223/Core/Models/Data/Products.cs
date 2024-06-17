@@ -12,6 +12,7 @@ namespace storeApi.Models.Data
         private Dictionary<int, List<Product>> productsByCategory;
         private IEnumerable<Category> Category;
         private BinarySearchTree TreeSearch;
+        private LogicProduct logicProduct;
         public Products() { }
         private Products(IEnumerable<Product> allProducts, Dictionary<int, List<Product>> productsByCategory, IEnumerable<Category> categories)
         {
@@ -22,6 +23,7 @@ namespace storeApi.Models.Data
             this.productsByCategory = productsByCategory;
             this.Category = categories;
             this.TreeSearch = new BinarySearchTree();
+            this.logicProduct = new LogicProduct();
             foreach (var product in allProducts)
             {
                 TreeSearch.InsertProduct(product);
@@ -96,8 +98,8 @@ namespace storeApi.Models.Data
             bool sonIdsCategoriasNulos = categoryIds == null;
             bool sonIdsCategoriasVacios = !sonIdsCategoriasNulos && !categoryIds.Any();
             bool esEntradaInvalida = esTextoBusquedaNuloOVacio || sonIdsCategoriasNulos || sonIdsCategoriasVacios;
-            if (esEntradaInvalida)throw new ArgumentException("El texto de búsqueda no puede estar vacío o ser nulo, y la lista de IDs de categorías no puede estar vacía o ser nula.");
-            
+            if (esEntradaInvalida) throw new ArgumentException("El texto de búsqueda no puede estar vacío o ser nulo, y la lista de IDs de categorías no puede estar vacía o ser nula.");
+
             foreach (var categoryId in categoryIds)
             {
                 if (categoryId < 1) throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");
@@ -121,6 +123,37 @@ namespace storeApi.Models.Data
             }
             var productsFilter = treeByCategories.Search(searchText);
             return productsFilter;
+        }
+
+        internal void setNewProductList(IEnumerable<Product> listProducts)
+        {
+            if (listProducts == null || !listProducts.Any()) throw new ArgumentNullException($"{nameof(listProducts)} no puede ser nulo o vacío.");
+            allProducts = listProducts;
+            TreeSearch = new BinarySearchTree();
+            foreach (var product in listProducts)
+            {
+                TreeSearch.InsertProduct(product);
+            }
+            productsByCategory = GroupProductsByCategory(listProducts);
+        }
+       
+        internal int BinarySearch(IEnumerable<Product> sortedProducts, int idProduct)
+        {
+            if (sortedProducts == null || !sortedProducts.Any()) throw new ArgumentNullException($"{nameof(sortedProducts)} no puede ser nulo o vacío.");
+            if (idProduct <= 0) throw new ArgumentException($"El id del producto {nameof(idProduct)} no puede ser 0 o negativo.");
+            var productList = sortedProducts.OrderBy(p => p.id).ToList();//por seguridad se vuelve a ordenar
+            int left = 0;  
+            int right = sortedProducts.Count() - 1;
+            while (left <= right)
+            {
+                int mid = left + (right - left) / 2;
+                if (productList[mid].id == idProduct) return mid;
+                else if (productList[mid].id < idProduct)
+                    left = mid + 1; // mitad derecha
+                else
+                    right = mid - 1; // mitad izquierda
+            }
+            return -1; //  no se encontró producto
         }
     }
 }

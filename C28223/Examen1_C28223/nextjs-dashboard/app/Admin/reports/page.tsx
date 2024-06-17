@@ -16,18 +16,18 @@ const SalesCharAdmin = () => {
   const [charge, setCharge] = useState(false);
   var nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   const URLConection = process.env.NEXT_PUBLIC_API;
-  var token = sessionStorage.getItem("token");
   useEffect(() => {
+    var token = sessionStorage.getItem("token");
     if(!token){
       setShowModal2(true);
       return;
     }
-    fetchData(); // Cargar datos iniciales al cargar el componente
+    fetchData(token); // Cargar datos iniciales al cargar el componente
   }, [selectedDate, charge]);
   useEffect(() => {
   }, [weeklySalesData, salesData2, showModal]);
 
-  const fetchData = async () => {
+  const fetchData = async (token) => {
     try {
       if (token) {
         const decodedTokenStorage = jwtDecode(token);

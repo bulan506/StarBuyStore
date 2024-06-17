@@ -10,6 +10,7 @@ public class Product : ICloneable
     public int id { get; set; }
     public int cant { get; set; }
     public Category category{ get; set; }
+    public int deleted {get; set;}
 
     // Implementation of the ICloneable interface
     public object Clone()
@@ -22,7 +23,8 @@ public class Product : ICloneable
             price = this.price,
             description = this.description,
             cant = this.cant, 
-            category=this.category
+            category=this.category,
+            deleted=this.deleted
         };
     }
 }

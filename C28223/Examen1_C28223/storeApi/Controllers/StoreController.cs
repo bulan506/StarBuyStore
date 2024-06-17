@@ -16,9 +16,10 @@ namespace storeApi.Controllers
         public async Task<IActionResult> GetStore()
         {
             var store = await Store.Instance;
+            var products = store.Products.Where(p => p.deleted != 1).ToList(); // Filtrar productos no borrados
             return Ok(new
             {
-                Products = store.Products,
+                Products = products,
                 TaxPercentage = store.TaxPercentage,
                 Categories = store.Categories
             });
@@ -41,7 +42,8 @@ namespace storeApi.Controllers
             if (onlySearchTextProvided)
             {
                 var filteredProducts = await store.getProductByText(searchText);
-                return Ok(new { filteredProducts });
+                var productsFilter = filteredProducts.Where(p => p.deleted != 1).ToList(); // Filtrar productos no borrados
+                return Ok(new { productsFilter });
             }
 
             bool onlyCategoryIDsProvided = string.IsNullOrWhiteSpace(searchText) && (categoryIDs != null && categoryIDs.Any());
@@ -53,7 +55,8 @@ namespace storeApi.Controllers
                         throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");
                 }
                 var filteredProducts = await store.getProductosCategoryID(categoryIDs);
-                return Ok(new { filteredProducts });
+                var productsFilter = filteredProducts.Where(p => p.deleted != 1).ToList(); // Filtrar productos no borrados
+                return Ok(new { productsFilter });
             }
             bool searchTextAndCategoryIDsProvided = !string.IsNullOrWhiteSpace(searchText) && (categoryIDs != null && categoryIDs.Any());
             if (searchTextAndCategoryIDsProvided)
@@ -64,7 +67,8 @@ namespace storeApi.Controllers
                         throw new ArgumentException($"El ID de la categoría {categoryId} no puede ser negativo o cero.");
                 }
                 var filteredProducts = await store.getProductsCategoryAndText(searchText, categoryIDs);
-                return Ok(new { filteredProducts });
+                var productsFilter = filteredProducts.Where(p => p.deleted != 1).ToList(); // Filtrar productos no borrados
+                return Ok(new { productsFilter });
             }
 
             return BadRequest("Los parámetros de búsqueda proporcionados no son válidos.");

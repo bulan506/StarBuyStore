@@ -18,7 +18,15 @@ const Product = ({ product, handleClick }) => {
         <div className="productos">
           <div style={{ justifyContent: "center", textAlign: "center" }}>
             <h3>{name}</h3>
-            <img src={imageURL} />
+            <img 
+            src={imageURL} 
+            alt={name} 
+            style={{ 
+              width: "350px", 
+              height: "350px", 
+              objectFit: "cover" 
+            }} 
+          />
             <h5>{description}</h5>
             <h5>{price}</h5>
             <button onClick={() => handleClick(product)} className="btn btn-primary"> Añadir al carrito</button>
@@ -98,11 +106,16 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(URLConection+'/api/store');//hola
+        const response = await fetch(URLConection+'/api/store');
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
         const data = await response.json();
+        const filteredProducts = data.products.filter(product => product.deleted !== 1);
+        if (filteredProducts.length === 0) {
+          setShowNoResultsModal(true);
+          return
+        }
         setProductos(data);
         setCategory(data.categories);
       } catch (error) {
@@ -131,12 +144,12 @@ export default function Page() {
         throw new Error('Failed to fetch filtered products');
       }
       const data = await response.json();
-      const filteredProducts = { products: data.filteredProducts };
-      if (data.filteredProducts.length === 0) {
+      const productsFilter = { products: data.productsFilter };
+      if (data.productsFilter.length === 0) {
         setShowNoResultsModal(true);
         setProductos([]);
       } else {
-        setProductos(filteredProducts);
+        setProductos(productsFilter);
         setShowNoResultsModal(false);
       }
     } catch (error) {
@@ -225,7 +238,7 @@ export default function Page() {
       {showNoResultsModal && (
         <Modal
           title="No se encontraron resultados"
-          content="No se encontraron productos según los criterios de búsqueda seleccionados."
+          content="No se encontraron productos, intente de nuevo."
           onClose={closeNoResultsModal}
         />
       )}

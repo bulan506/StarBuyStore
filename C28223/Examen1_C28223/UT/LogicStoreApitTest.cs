@@ -8,6 +8,7 @@ using storeApi.DataBase;
 public class LogicStoreApitTest
 {
 
+     [SetUp]
     public void Setup()
     {
         var dbtestDefault = "Server=localhost;Database=store;Uid=root;Pwd=123456;";
