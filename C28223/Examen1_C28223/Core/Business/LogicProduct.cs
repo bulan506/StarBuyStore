@@ -30,16 +30,15 @@ public sealed class LogicProduct
     {
         if (string.IsNullOrWhiteSpace(newProduct.Name)) throw new ArgumentException("El nombre del producto no puede estar vacío o ser nulo.", nameof(newProduct.Name));
         if (string.IsNullOrWhiteSpace(newProduct.ImageURL)) throw new ArgumentException("La URL de la imagen del producto no puede estar vacía o ser nula.", nameof(newProduct.ImageURL));
-        if (newProduct.Price <= 0) throw new ArgumentOutOfRangeException("El precio del producto debe ser mayor que cero.", nameof(newProduct.Price ));
+        if (newProduct.Price <= 0) throw new ArgumentOutOfRangeException("El precio del producto debe ser mayor que cero.", nameof(newProduct.Price));
         if (string.IsNullOrWhiteSpace(newProduct.Description)) throw new ArgumentException("La descripción del producto no puede estar vacía o ser nula.", nameof(newProduct.Description));
         if (newProduct.Category <= 0) throw new ArgumentOutOfRangeException("El ID de la categoría del producto debe ser mayor que cero.", nameof(newProduct.Category));
-        int idNewProduct = await productDatabase.SaveNewProductAsync(newProduct);
-        await productDatabase.LastProductByIdAsync(idNewProduct, newProductDel);
+        await productDatabase.SaveNewProductAsync(newProduct, newProductDel);
     }
 
     public bool DeleteProductByID(int idProduct)
     {
-       if (idProduct <= 0) throw new ArgumentException("El id del producto a borrar no puede ser 0 o negativo.", nameof(idProduct));
+        if (idProduct <= 0) throw new ArgumentException("El id del producto a borrar no puede ser 0 o negativo.", nameof(idProduct));
         return productDatabase.DeleteProductByID(idProduct, deleteProductDel);
     }
 }
