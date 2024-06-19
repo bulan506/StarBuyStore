@@ -113,7 +113,7 @@ public class LogicSalesReportsApiTests
         // Act & Assert
         Assert.AreEqual(listSaleTest.Count(), listWeekSales.Count());
         Assert.AreEqual(listSaleTest.Count(), listWeekSales.Count());
-     List<SaleAnnotation> listWeekSalesList = listWeekSales.ToList();
+        List<SaleAnnotation> listWeekSalesList = listWeekSales.ToList();
 
         for (int i = 0; i < listSaleTest.Count(); i++)
         {

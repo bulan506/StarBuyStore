@@ -23,7 +23,6 @@ namespace storeApi
             this.ProductsInstance = productsInstance;
         }
         public static async Task<Store> GetInstanceAsync()
-        
         {
             Products products = await new Products().GetInstanceAsync();
             var productsInstance = products;
@@ -66,6 +65,29 @@ namespace storeApi
             if (string.IsNullOrEmpty(textToSearch)) throw new ArgumentException($"El texto a buscar {nameof(textToSearch)} no puede ser nulo.");
             if (productsInstance == null || productsInstance.GetAllProducts().Count() == 0) throw new ArgumentException($" La instancia {nameof(productsInstance)} no puede ser nula.");
             return productsInstance.SearchByText(textToSearch);
+        }
+
+        internal void setNewProduct(Product newProduct)
+        {
+            if (newProduct == null) throw new ArgumentNullException($"{nameof(newProduct)} No puede ser nulo.");
+            var updatedProducts = new List<Product>(Products) { newProduct };
+            var productsInstance = ProductsInstance;
+            productsInstance.setNewProductList(updatedProducts);// esto actualiza la lista de productos 
+            Products = updatedProducts;// esto actualiza la lista de la cache de store
+        }
+        internal void deleteProductByIDlist(int productID)//esta lista elimina de la cache y de la clase products actualiza las listas
+        {
+            if (productID <= 0)throw new ArgumentException($"El ID del producto {nameof(productID)} no puede ser cero o negativo.");
+            var instanceProducts = ProductsInstance;
+            var productList = Products.OrderBy(p => p.id).ToList();
+            int index = instanceProducts.BinarySearch(productList, productID);
+            if (index >= 0)
+            {
+                productList[index].deleted = 1;
+                Products = productList;
+                instanceProducts.setNewProductList(Products);
+            }
+            else throw new ArgumentException($"No se encontró ningún producto con el ID {productID} en la lista.");
         }
     }
 }

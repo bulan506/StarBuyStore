@@ -10,6 +10,7 @@ public class Product : ICloneable
     public int id { get; set; }
     public int cant { get; set; }
     public Category category{ get; set; }
+    public int deleted {get; set;}
 
     // Implementation of the ICloneable interface
     public object Clone()
@@ -22,14 +23,15 @@ public class Product : ICloneable
             price = this.price,
             description = this.description,
             cant = this.cant, 
-            category=this.category
+            category=this.category,
+            deleted=this.deleted
         };
     }
 }
 public class ProductQuantity
 {
-    public string ProductId { get; set; }
-    public int Quantity { get; set; }
+    public string ProductId { get; private set; }
+    public int Quantity { get; private set; }
     public ProductQuantity(string productId, int quantity)
     {
         if (string.IsNullOrWhiteSpace(productId)) { throw new ArgumentException($"El {nameof(productId)} producto no puede estar vacío o nulo."); }

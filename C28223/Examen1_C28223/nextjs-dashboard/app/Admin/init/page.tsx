@@ -23,7 +23,7 @@ const init = () => {
                   <a href="/Admin/reports" className="nav-link">Reportes de ventas</a>
                 </li>
                 <li className="nav-item p-3 py-md-1">
-                  <a href="" className="nav-link" >Opciones de Productos</a>
+                  <a href="/Admin/products" className="nav-link" >Opciones de Productos</a>
                 </li>
                 <li className="nav-item p-3 py-md-1">
                   <a href="/" className="nav-link">Volver</a>

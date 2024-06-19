@@ -29,8 +29,8 @@ public sealed class Sale
 }
 public class SaleAnnotation
 {
-    public DayOfWeek DayOfWeek { set; get; }
-    public decimal Total { set; get; }
+    public DayOfWeek DayOfWeek { private set;  get; }
+    public decimal Total { private set;  get; }
     public SaleAnnotation(DayOfWeek dayOfWeek, decimal total)
     {
         if (dayOfWeek==null ){throw new ArgumentException($"El {nameof(dayOfWeek)} no puede estar vacío o indefinido");}

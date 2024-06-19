@@ -14,8 +14,8 @@ namespace storeApi.DataBase
         {
             Categories categoryList = new Categories();
             var products = new List<Product>
-            {
-                new Product
+                {
+                     new Product
                 {
                     name = "Producto 1",
                     description = "Esta computadora es muy rapida",
@@ -111,7 +111,7 @@ namespace storeApi.DataBase
                     imageURL = "https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Events/2023/EBF23/Fuji_Desktop_Single_image_EBF_1x_v1._SY304_CB573698005_.jpg",
                     category=categoryList.GetCategories().ToList()[5]
                 }
-            };
+                };
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 connection.Open();
@@ -127,7 +127,8 @@ namespace storeApi.DataBase
                                      description VARCHAR(255) NOT NULL,
                                      price DECIMAL(10, 2) NOT NULL,
                                      imageURL VARCHAR(255) NOT NULL,
-                                     categoryID INT NOT NULL
+                                     categoryID INT NOT NULL,
+                                     deleted INT NOT NULL
                                  );
                                  CREATE TABLE IF NOT EXISTS paymentMethod (
                                      id INT PRIMARY KEY NOT NULL,
@@ -180,16 +181,16 @@ namespace storeApi.DataBase
             }
             using (var connectionMyDb = new MySqlConnection(Storage.Instance.ConnectionString))
             {
-                 connectionMyDb.Open();
-                using (var transaction =  connectionMyDb.BeginTransaction())
+                connectionMyDb.Open();
+                using (var transaction = connectionMyDb.BeginTransaction())
                 {
                     try
                     {
                         foreach (var product in products)
                         {
                             string insertQuery = @"
-                                INSERT INTO products (name, description, price, imageURL, categoryID)
-                                VALUES (@name, @description, @price, @imageURL, @categoryID)";
+                                INSERT INTO products (name, description, price, imageURL, categoryID, deleted)
+                                VALUES (@name, @description, @price, @imageURL, @categoryID, @deleted)";
 
                             using (var command = new MySqlCommand(insertQuery, connectionMyDb, transaction))
                             {
@@ -198,7 +199,8 @@ namespace storeApi.DataBase
                                 command.Parameters.AddWithValue("@price", product.price);
                                 command.Parameters.AddWithValue("@imageURL", product.imageURL);
                                 command.Parameters.AddWithValue("@categoryID", product.category.CategoryID);
-                                 command.ExecuteNonQuery();
+                                command.Parameters.AddWithValue("@deleted", 0);//0 no borrado, 1 borrado
+                                command.ExecuteNonQuery();
                             }
                         }
                         string createLinesQuery = @"
@@ -235,13 +237,13 @@ namespace storeApi.DataBase
                                   ('PUR14', 4, 2, 90.00);";
                         using (var insertCommand = new MySqlCommand(createLinesQuery, connectionMyDb, transaction))
                         {
-                             insertCommand.ExecuteNonQuery();
+                            insertCommand.ExecuteNonQuery();
                         }
-                         transaction.Commit();
+                        transaction.Commit();
                     }
                     catch (Exception)
                     {
-                         transaction.Rollback();
+                        transaction.Rollback();
                         throw;
                     }
                 }
@@ -254,7 +256,7 @@ namespace storeApi.DataBase
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 await connection.OpenAsync();
-                string query = "SELECT id, name, description, price, imageURL,categoryID FROM products";
+                string query = "SELECT id, name, description, price, imageURL, categoryID, deleted FROM products";
                 using (var command = new MySqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -270,7 +272,8 @@ namespace storeApi.DataBase
                                 description = reader.GetString("description"),
                                 price = reader.GetDecimal("price"),
                                 imageURL = reader.GetString("imageURL"),
-                                category = category
+                                category = category,
+                                deleted = reader.GetInt32("deleted")
                             });
                         }
                     }

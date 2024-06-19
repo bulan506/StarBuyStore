@@ -9,7 +9,7 @@ namespace storeApi.Models.Data
         public string PurchaseNumber { get; private set; }
         public decimal Total { get; private set; }
         public int AmountProducts { get; set; }
-        public List<ProductQuantity> ProductsAnnotation { get; private set; }
+        public IEnumerable<ProductQuantity> ProductsAnnotation { get; private set; }
 
         // Constructor que inicializa todas las propiedades de la clase
         public SalesData(DateTime purchaseDate, string purchaseNPurchaseNumber, decimal total, int amountProducts, List<ProductQuantity> productsAnnotation)
