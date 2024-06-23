@@ -100,7 +100,10 @@ const AddProduct = () => {
                 setCategory(0);
                 router.push('/Admin/products');
             } else {
-                throw new Error('Error al insertar el producto.');
+                const errorResponse = await response.json();
+                const errorMessage = errorResponse.message || 'Error en la solicitud'; 
+                setModalContent(errorMessage);
+                setShowModal(true);
             }
         } catch (error) {
             throw new Error('Error en el proceso de inserción del producto.');

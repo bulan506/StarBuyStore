@@ -27,7 +27,7 @@ const Product = ({ product, handleClick }) => {
               objectFit: "cover" 
             }} 
           />
-            <h5>{description}</h5>
+          <h5 dangerouslySetInnerHTML={{ __html: description }}></h5>
             <h5>{price}</h5>
             <button onClick={() => handleClick(product)} className="btn btn-primary"> Añadir al carrito</button>
           </div>

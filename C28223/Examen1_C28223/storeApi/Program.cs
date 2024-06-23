@@ -1,16 +1,19 @@
-using storeApi.DataBase;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using storeApi.DataBase;
+using storeApi.Hubs;
+using System.Text;
 using Core;
+using storeApi;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<LogicCampaigns>(); // Registrar LogicCampaigns como singleton
 builder.Services.AddSwaggerGen(setup =>
 {
     // Include 'SecurityScheme' to use JWT Authentication
@@ -44,12 +47,13 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.WithOrigins("http://localhost:3000") // Ajusta esto a la URL de tu cliente React
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .AllowCredentials(); // Importante para SignalR
+
     });
 });
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
         options =>
@@ -66,6 +70,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipeline.
@@ -93,8 +98,11 @@ app.UseHttpsRedirection();
 app.UseRouting();
 // Use CORS
 app.UseCors();
+app.UseAuthentication(); 
 app.UseAuthorization();
-
-app.MapControllers();
-
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<CampaignsHub>("/campaignsHub");
+    endpoints.MapControllers();
+});
 app.Run();
