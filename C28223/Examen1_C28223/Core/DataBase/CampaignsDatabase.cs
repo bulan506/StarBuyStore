@@ -22,7 +22,6 @@ namespace storeApi.DataBase
                             insertCommand.Parameters.AddWithValue("@ContentCam", campanna.ContentCam);
                             insertCommand.Parameters.AddWithValue("@DateCam", campanna.DateCam);
                             insertCommand.Parameters.AddWithValue("@IsDeleted", campanna.IsDeleted);
-
                             var newId = Convert.ToInt32(await insertCommand.ExecuteScalarAsync());
                             campanna.Id = newId;
                             await transaction.CommitAsync();
@@ -43,7 +42,7 @@ namespace storeApi.DataBase
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 connection.Open();
-                var query = "SELECT * FROM Campaign WHERE IsDeleted = 0";
+                var query = "SELECT id, Title, ContentCam, DateCam, IsDeleted  FROM Campaign WHERE IsDeleted = 0";
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -83,7 +82,7 @@ namespace storeApi.DataBase
             using (var connection = new MySqlConnection(Storage.Instance.ConnectionString))
             {
                 await connection.OpenAsync();
-                var query = @"SELECT * 
+                var query = @"SELECT id,Title, ContentCam, DateCam, IsDeleted
                       FROM Campaign WHERE IsDeleted = 0
                       ORDER BY DateCam DESC 
                       LIMIT 3";
