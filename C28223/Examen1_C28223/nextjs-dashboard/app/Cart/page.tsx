@@ -81,8 +81,8 @@ const Carrito = () => {
                             <img src={item.imageURL} alt={item.name} />
                             <div className='data-prod'>
                                 <h5>{item.name}</h5>
-                                <p>{item.description}</p>
-                            </div>
+                                <h5 dangerouslySetInnerHTML={{ __html: item.description }}></h5>
+                                </div>
                         </div>
 
                         <div className='price-del'>

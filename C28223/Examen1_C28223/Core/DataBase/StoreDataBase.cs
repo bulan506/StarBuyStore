@@ -124,9 +124,9 @@ namespace storeApi.DataBase
                                     CREATE TABLE IF NOT EXISTS products (
                                      id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
                                      name VARCHAR(100) NOT NULL,
-                                     description VARCHAR(255) NOT NULL,
+                                     description TEXT NOT NULL,
                                      price DECIMAL(10, 2) NOT NULL,
-                                     imageURL VARCHAR(255) NOT NULL,
+                                     imageURL VARCHAR(500) NOT NULL,
                                      categoryID INT NOT NULL,
                                      deleted INT NOT NULL
                                  );
@@ -150,6 +150,15 @@ namespace storeApi.DataBase
                                      FOREIGN KEY (purchase_id) REFERENCES sales(purchase_id),
                                      FOREIGN KEY (product_id) REFERENCES products(id)
                                  );
+
+                                CREATE TABLE IF NOT EXISTS Campaign (
+                                    id INT AUTO_INCREMENT PRIMARY KEY,
+                                    Title VARCHAR(100) NOT NULL,
+                                    ContentCam TEXT NOT NULL,
+                                    DateCam DATETIME NOT NULL,
+                                    IsDeleted INT NOT NULL
+                                );
+
                                  INSERT INTO paymentMethod (id, method_name)
                                  VALUES (0, 'Efectivo'), (1, 'Sinpe');
                                  

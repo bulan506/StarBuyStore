@@ -3,19 +3,25 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import React, { useState, useEffect } from 'react';
 import "@/app/ui/styles.css";
 import Link from 'next/link';
-import { Dropdown, Form } from 'react-bootstrap';
+import * as signalR from '@microsoft/signalr';
+import { Dropdown, Form, Badge } from 'react-bootstrap';
+import MessageHandler from '@/app/Messages/page';
+
+const URL = process.env.NEXT_PUBLIC_API;
+
 
 const Header = ({ size, setShow, fetchData, category }) => {
-  let isSizeUndefined = size === undefined; 
-  let isSetShowUndefined = setShow === undefined; 
-  let isFetchDataUndefined = fetchData === undefined; 
+  let isSizeUndefined = size === undefined;
+  let isSetShowUndefined = setShow === undefined;
+  let isFetchDataUndefined = fetchData === undefined;
   let isCategoryUndefined = category === undefined;
   let areArgumentsUndefined = isSizeUndefined || isSetShowUndefined || isFetchDataUndefined || isCategoryUndefined;
-  if(areArgumentsUndefined){throw new Error('Los argumentos para mostrar el header no pueden ser indefinidos.');}
+  if (areArgumentsUndefined) { throw new Error('Los argumentos para mostrar el header no pueden ser indefinidos.'); }
   const [searchText, setSearchText] = useState('');
   const [categorySelected, setCategorySelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+  const [showMessages, setShowMessages] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const handleReloadPage = () => {
     window.location.reload();
   };
@@ -38,12 +44,36 @@ const Header = ({ size, setShow, fetchData, category }) => {
   };
 
   const handleCategoryChange = (categoryID) => {
-    if(category==undefined){throw new Error('Los argumentos para handleCategoryChange no pueden ser indefinidos.');}
+    if (category == undefined) { throw new Error('Los argumentos para handleCategoryChange no pueden ser indefinidos.'); }
     const updatedCategories = categorySelected.includes(categoryID)
       ? categorySelected.filter(cat => cat !== categoryID)
       : [...categorySelected, categoryID];
     setCategorySelected(updatedCategories);
   };
+
+  const handleShowMessages = () => {
+    setShowMessages(true);
+    setUnreadMessages(0);
+  };
+  useEffect(() => {
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl(`${URL}/campaignsHub`)
+      .withAutomaticReconnect()
+      .build();
+
+    connection.on("UpdateCampaigns", (contentCampaing, title) => {
+      setUnreadMessages(prev => prev + 1);
+    });
+    connection.on("DeleteCampaigns", (id) => {
+      setUnreadMessages(prev => prev - 1);
+    });
+
+    connection.start().catch(() => {});
+
+    return () => {
+      connection.stop();
+    };
+  }, []);
 
   return (
     <div>
@@ -88,6 +118,21 @@ const Header = ({ size, setShow, fetchData, category }) => {
               </Dropdown>
             </div>
           </div>
+
+          <div onClick={handleShowMessages} style={{ cursor: 'pointer', position: 'relative' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-envelope" viewBox="0 0 16 16">
+              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
+            </svg>
+            {unreadMessages > 0 && (
+              <Badge bg="danger" style={{ position: 'absolute', top: -5, right: -5 }}>
+                {unreadMessages}
+              </Badge>
+            )}
+          </div>
+
+          <MessageHandler
+            show={showMessages}
+            handleClose={() => setShowMessages(false)}/>          
           <Link href={'/Admin'}><button className="btn btn-outline-dark">Perfil</button></Link>
         </div>
       </div>
