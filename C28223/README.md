@@ -36,6 +36,9 @@ Este proyecto es una tienda en línea desarrollada con React y Next.js. Permite 
 
 ![Diagramas-Clases-Backend](imgSource/DiagramasClasesBackend.png)
 
+## Diagrama de actividad, Campañas de Administrador tienda
+![Diagram-activity-Campaigns](imgSource/campaigns.jpg)
+
 
 
 
