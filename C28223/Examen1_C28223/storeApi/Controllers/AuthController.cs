@@ -57,7 +57,7 @@ namespace storeApi.Controllers
                         issuer: "http://localhost:7223",
                         audience: "http://localhost:7223",
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(1),
+                        expires: DateTime.Now.AddMinutes(5),
                         signingCredentials: signingCredentials
                     );
                     var token = new JwtSecurityTokenHandler().WriteToken(tokenOp);

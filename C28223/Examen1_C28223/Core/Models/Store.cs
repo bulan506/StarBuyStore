@@ -11,12 +11,14 @@ namespace storeApi
         public IEnumerable<Product> Products { get; private set; }
         public int TaxPercentage { get; private set; }
         public IEnumerable<Category> Categories { get; private set; }
+        public DirectionsStore directionsStore { get; private set; }
         private Store(IEnumerable<Product> productsList, int taxPercentage, IEnumerable<Category> category, Products productsInstance)
         {
             if (productsList == null || productsList.Count() == 0) throw new ArgumentNullException($"La lista de productos {nameof(productsList)} no puede ser nula.");
             if (taxPercentage < 1 || taxPercentage > 100) throw new ArgumentOutOfRangeException($"El porcentaje de impuestos {nameof(taxPercentage)} debe estar en el rango de 1 a 100.");
             if (category == null || category.Count() == 0) throw new ArgumentNullException($"La lista de estructuras {nameof(category)} de categorías no puede ser nula.");
             if (productsInstance == null) throw new ArgumentNullException($"La instancia de  {nameof(productsInstance)} no puede ser nula.");
+            directionsStore= new DirectionsStore();
             this.Products = productsList;
             this.TaxPercentage = taxPercentage;
             this.Categories = category;
@@ -77,7 +79,7 @@ namespace storeApi
         }
         internal void deleteProductByIDlist(int productID)//esta lista elimina de la cache y de la clase products actualiza las listas
         {
-            if (productID <= 0)throw new ArgumentException($"El ID del producto {nameof(productID)} no puede ser cero o negativo.");
+            if (productID <= 0) throw new ArgumentException($"El ID del producto {nameof(productID)} no puede ser cero o negativo.");
             var instanceProducts = ProductsInstance;
             var productList = Products.OrderBy(p => p.id).ToList();
             int index = instanceProducts.BinarySearch(productList, productID);
@@ -88,6 +90,12 @@ namespace storeApi
                 instanceProducts.setNewProductList(Products);
             }
             else throw new ArgumentException($"No se encontró ningún producto con el ID {productID} en la lista.");
+        }
+
+        public string GetDirections()
+        {
+            var directions = directionsStore.GetDirections();
+            return directions;
         }
     }
 }

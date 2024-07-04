@@ -20,7 +20,13 @@ namespace storeApi.Controllers
         {
             try
             {
-                var sale = await logicStore.PurchaseAsync(cart); 
+                if (string.IsNullOrEmpty(cart.Address) || !cart.Address.Contains("#"))
+                return BadRequest("La dirección es requerida, o el formato no es valido.");
+                if (!cart.ProductIds.Any())
+                return BadRequest("Error la lista de productos debe contener productos asociados.");
+                if (cart.PaymentMethod<0)
+                return BadRequest("Error en el tipo de pago.");
+                var sale = await logicStore.PurchaseAsync(cart);
                 var numeroCompra = sale.PurchaseNumber;
                 var response = new { numeroCompra = numeroCompra };
                 return Ok(response);

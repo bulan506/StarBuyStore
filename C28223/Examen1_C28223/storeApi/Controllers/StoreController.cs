@@ -70,8 +70,23 @@ namespace storeApi.Controllers
                 var productsFilter = filteredProducts.Where(p => p.deleted != 1).ToList(); // Filtrar productos no borrados
                 return Ok(new { productsFilter });
             }
-
             return BadRequest("Los parámetros de búsqueda proporcionados no son válidos.");
+        }
+
+
+        [HttpGet("store/directions")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDirections()
+        {
+            try
+            {
+                var store = await Store.Instance;
+                return Ok(store.GetDirections());
+            }
+            catch (FileNotFoundException)
+            {
+                return NotFound("El archivo directions.json no se encuentra.");
+            }
         }
     }
 
