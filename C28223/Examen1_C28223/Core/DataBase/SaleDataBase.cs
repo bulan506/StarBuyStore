@@ -22,13 +22,14 @@ namespace storeApi.DataBase
                             command.Transaction = transaction;
 
                             command.CommandText = @"
-                                    INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
-                                    VALUES (@purchase_date, @total, @payment_method, @purchase_id);";
+                                    INSERT INTO sales (purchase_date, total, payment_method, purchase_id, shipping_address)
+                                    VALUES (@purchase_date, @total, @payment_method, @purchase_id, @shipping_address);";
 
                             command.Parameters.AddWithValue("@purchase_date", DateTime.Now);
                             command.Parameters.AddWithValue("@total", sale.Amount);
                             command.Parameters.AddWithValue("@payment_method", (int)sale.PaymentMethod);
                             command.Parameters.AddWithValue("@purchase_id", sale.PurchaseNumber);
+                            command.Parameters.AddWithValue("@shipping_address",sale.Address);
 
                             await command.ExecuteNonQueryAsync();
 

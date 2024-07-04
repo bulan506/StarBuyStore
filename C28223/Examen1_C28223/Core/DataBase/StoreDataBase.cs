@@ -132,13 +132,15 @@ namespace storeApi.DataBase
                                  );
                                  CREATE TABLE IF NOT EXISTS paymentMethod (
                                      id INT PRIMARY KEY NOT NULL,
-                                     method_name VARCHAR(50) NOT NULL
+                                     method_name VARCHAR(50) NOT NULL, 
+                                     isActive int NOT NULL 
                                  );
                                  CREATE TABLE IF NOT EXISTS sales (
                                      purchase_date DATETIME NOT NULL,
                                      total DECIMAL(10, 2) NOT NULL,
                                      payment_method INT NOT NULL,
                                      purchase_id VARCHAR(30) NOT NULL PRIMARY KEY,
+                                     shipping_address VARCHAR(255) NOT NULL,
                                      FOREIGN KEY (payment_method) REFERENCES paymentMethod(id)
                                  );
                                  CREATE TABLE IF NOT EXISTS linesSales(
@@ -159,25 +161,25 @@ namespace storeApi.DataBase
                                     IsDeleted INT NOT NULL
                                 );
 
-                                 INSERT INTO paymentMethod (id, method_name)
-                                 VALUES (0, 'Efectivo'), (1, 'Sinpe');
+                                 INSERT INTO paymentMethod (id, method_name, isActive)
+                                 VALUES (0, 'Efectivo', 1), (1, 'Sinpe', 1);
                                  
-                       INSERT INTO sales (purchase_date, total, payment_method, purchase_id)
-                         VALUES 
-                             ('2024-04-01 10:00:00', 150.00, 0, 'BVS01'),
-                             ('2024-04-01 10:00:00', 150.00, 0, 'PUR099'),
-                             ('2024-04-02 12:00:00', 200.00, 1, 'PUR02'),
-                             ('2024-04-04 16:00:00', 400.00, 1, 'PUR04'),
-                             ('2024-04-05 18:00:00', 250.00, 0, 'BVS05'),
-                             ('2024-04-06 20:00:00', 180.00, 1, 'PUR06'),
-                             ('2024-04-07 22:00:00', 350.00, 0, 'PUR07'),
-                             ('2024-04-08 10:00:00', 180.00, 0, 'PUR08'),
-                             ('2024-04-09 12:00:00', 220.00, 1, 'PUR09'),
-                             ('2024-04-10 14:00:00', 320.00, 0, 'PUR10'),
-                             ('2024-04-11 16:00:00', 420.00, 1, 'PUR11'),
-                             ('2024-04-12 18:00:00', 270.00, 0, 'PUR12'),
-                             ('2024-04-13 20:00:00', 200.00, 1, 'PUR13'),
-                             ('2024-04-14 22:00:00', 380.00, 0, 'PUR14');";
+                                 INSERT INTO sales (purchase_date, total, payment_method, purchase_id, shipping_address)
+                                 VALUES 
+                                    ('2024-04-01 10:00:00', 150.00, 0, 'BVS01', 'San Jose#San Pedro#Montes de Oca'),
+                                    ('2024-04-01 10:00:00', 150.00, 0, 'PUR099', 'Alajuela#Alajuela#Alajuela'),
+                                    ('2024-04-02 12:00:00', 200.00, 1, 'PUR02', 'Heredia#Heredia#Heredia'),
+                                    ('2024-04-04 16:00:00', 400.00, 1, 'PUR04', 'Cartago#Cartago#Cartago'),
+                                    ('2024-04-05 18:00:00', 250.00, 0, 'BVS05', 'Guanacaste#Liberia#Liberia'),
+                                    ('2024-04-06 20:00:00', 180.00, 1, 'PUR06', 'Puntarenas#Puntarenas#Puntarenas'),
+                                    ('2024-04-07 22:00:00', 350.00, 0, 'PUR07', 'Limón#Limón#Limón'),
+                                    ('2024-04-08 10:00:00', 180.00, 0, 'PUR08', 'San Jose#Escazú#Escazú'),
+                                    ('2024-04-09 12:00:00', 220.00, 1, 'PUR09', 'Alajuela#San Ramón#San Ramón'),
+                                    ('2024-04-10 14:00:00', 320.00, 0, 'PUR10', 'Heredia#Belén#La Ribera'),
+                                    ('2024-04-11 16:00:00', 420.00, 1, 'PUR11', 'Cartago#Paraíso#Paraíso'),
+                                    ('2024-04-12 18:00:00', 270.00, 0, 'PUR12', 'Guanacaste#Santa Cruz#Santa Cruz'),
+                                    ('2024-04-13 20:00:00', 200.00, 1, 'PUR13', 'Puntarenas#Quepos#Quepos'),
+                                    ('2024-04-14 22:00:00', 380.00, 0, 'PUR14', 'Limón#Pococí#Guápiles');";
                 using (var command = new MySqlCommand(createTableQuery, connection))
                 {
                     int result = command.ExecuteNonQuery();

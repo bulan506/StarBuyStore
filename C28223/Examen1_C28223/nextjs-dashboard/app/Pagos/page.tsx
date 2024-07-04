@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const MetodoPago = () => {
-    const [formaDePago, setFormaDePago] = useState(0); // 0 para efectivo, 1 para SinpeMóvil
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    const [selectedMethod, setSelectedMethod] = useState(null);
     const [accepted, setAccepted] = useState(false);
     const memoryStore = JSON.parse(localStorage.getItem('tienda'));
     const [numeroCompra, setNumeroCompra] = useState('');
@@ -10,30 +11,55 @@ const MetodoPago = () => {
     const [modalData2, setModalData2] = useState(false);
     const URLConection = process.env.NEXT_PUBLIC_API;
 
+    useEffect(() => {
+        fetchPaymentMethods();
+    }, []);
+
+    const fetchPaymentMethods = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${URLConection}/api/admin/paymentMethods`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setPaymentMethods(data.filter(method => method.isActive === 1));
+            } else {
+                showModal('Error', 'No se pudieron cargar los métodos de pago.');
+            }
+        } catch (error) {
+            throw new Error('Error al obtener los métodos de pago');
+
+        }
+    };
+
     const closeModal = () => {
         setModalData(null);
     };
-    const showModal = (title, content) => {
-        if (!title || !content ) {throw new Error('Error: Los argumentos title, content deben existir.');}
-        if (title===undefined||content===undefined) {throw new Error('Error: Los argumentos title no pueden ser indefinidos');}
-        setModalData({ title, content });
-    };
-    const showModalAceptado = (title, content) => {
-        if (!title || !content ) {throw new Error('Error: Los argumentos title, content deben existir.');}
-        if (title==undefined||content==undefined) {throw new Error('Error: Los argumentos title no pueden ser indefinidos');}
-        setModalData({ title, content });
-    };
 
+    const showModal = (title, content) => {
+        if (!title || !content) {
+            throw new Error('Error: Los argumentos title, content deben existir.');
+        }
+        setModalData({ title, content });
+    };
 
     const handleAceptar = () => {
-        if (formaDePago === '') {
+        if (paymentMethods.length == 0) {
+            showModal('Error en los método de pago', `No hay métodos de pago disponibles en este momento.`);
+        }
+        if (!selectedMethod) {
             showModal('Método de pago', 'Por favor seleccione un método de pago disponible.');
         } else {
             const updatedCart = {
                 ...memoryStore,
                 carrito: {
                     ...memoryStore.carrito,
-                    metodoDePago: formaDePago
+                    metodoDePago: selectedMethod.id
                 },
                 necesitaVerificacion: true
             };
@@ -42,89 +68,85 @@ const MetodoPago = () => {
         }
     };
 
-    const productData = memoryStore?.productos?.map((producto) => ({
-        ProductId: String(producto.id),
-        Quantity: producto.cant
-    }));
-    const dataToSend = {
-        ProductIds: productData,
-        Address: memoryStore?.carrito?.direccionEntrega,
-        PaymentMethod: memoryStore?.carrito?.metodoDePago
+    const handleMetodoChange = (event) => {
+        const selectedId = parseInt(event.target.value);
+        const method = paymentMethods.find(m => m.id === selectedId);
+        setSelectedMethod(method);
+    };
+
+    const renderPaymentForm = () => {
+        if (selectedMethod?.methodName.toLowerCase().includes('sinpe')) {
+            return (
+                <div>
+                    <h4>Número de SinpeMóvil: +506 3875 8524</h4>
+                    <input
+                        type="text"
+                        placeholder="Número de comprobante"
+                        onChange={(e) => setNumeroComprobante(e.target.value)}
+                        required
+                    />
+                </div>
+            );
+        }
+        return null;
     };
 
     const enviarDatosaAPI = async () => {
-        if (formaDePago === 1 && !numeroComprobante) { // Verificar si el número de comprobante está vacío para SinpeMóvil
+        if (selectedMethod?.methodName.toLowerCase().includes('sinpe') && !numeroComprobante) {
             showModal('Sin comprobante de pago', 'Por favor ingrese el comprobante de pago para finalizar la compra.');
             return;
         }
-        const response = await fetch(URLConection+'/api/Cart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
-        });
-        if (response.ok) {
-            const data = await response.json();
-            setNumeroCompra(data.numeroCompra);
-            setModalData2(true);
-            showModalAceptado('Compra exitosa', `¡Su compra  ${data.numeroCompra}  ha sido procesada con éxito! Será redirigido al inicio.`);
-        } else {
-            const errorResponseData = await response.json();
-            throw new Error(errorResponseData.message || 'Error al procesar el pago');
-        }
-    }
 
-    const pagoE = () => {
-        return (
+        const productData = memoryStore?.productos?.map((producto) => ({
+            ProductId: String(producto.id),
+            Quantity: producto.cant
+        }));
+
+        const dataToSend = {
+            ProductIds: productData,
+            Address: memoryStore?.carrito?.direccionEntrega,
+            PaymentMethod: selectedMethod.id,
+            ComprobantePago: numeroComprobante
+        };
+
+        try {
+            const response = await fetch(`${URLConection}/api/Cart`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setNumeroCompra(data.numeroCompra);
+                setModalData2(true);
+                showModal('Compra exitosa', `¡Su compra ${data.numeroCompra} ha sido procesada con éxito! Será redirigido al inicio.`);
+            } else {
+                const errorResponseData = await response.json();
+                throw new Error(errorResponseData.message || 'Error al procesar el pago');
+            }
+        } catch (error) {
+            showModal('Error', error.message);
+        }
+    };
+
+    return (
+        accepted ? (
             <div className="Compra">
                 {modalData && modalData.title === 'Compra exitosa' && (
-                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />)}
+                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />
+                )}
+                
                 <div className="smsFinal">
                     <div className="text-center">
                         <h5>Número de compra: {numeroCompra}</h5>
+                        {renderPaymentForm()}
                         <h4>Esperando la confirmación del Administrador</h4>
                         <button className="btn btn-primary" onClick={enviarDatosaAPI}>Confirmar Pago</button>
                     </div>
                 </div>
-            </div>
-        );
-    };
-
-    const pagoS = () => {
-        return (
-            <div className="Compra">
-                {!modalData2 && modalData && <Modal title={modalData.title} content={modalData.content} onClose={closeModal} />}
-                {modalData2 && modalData && modalData.title === 'Compra exitosa' && (
-                    <ModalPagoAceptado title={modalData.title} content={modalData.content} onClose={closeModal} />)}
-                <div className="smsFinal">
-                    <div className="text-center">
-                        <h5>Número de compra: {numeroCompra}</h5>
-                        <h4>Número de SinpeMóvil: +506 3875 8524</h4>
-                        <input type="text" placeholder="Número de comprobante" onChange={handleSinComprobanteChange} required></input>
-                        <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
-                        <h3>Esperando la confirmación del Administrador</h3>
-                        <button className="btn btn-primary" onClick={enviarDatosaAPI}>Confirmar Pago</button>
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    const handleMetodoChange = (metodoDePagoSelec) => {
-        if (metodoDePagoSelec==undefined ) {throw new Error('Error: El argumento de metodo de pago no puede ser un null.');}
-        setFormaDePago(metodoDePagoSelec.target.value === 'pagoEfectivo' ? 0 : 1);
-    };
-    const handleSinComprobanteChange = (comprobanteDePago) => {
-        if (comprobanteDePago==undefined ) {throw new Error('Error: El argumento de Comprobante de pago no puede ser un null.');}
-        setNumeroComprobante(comprobanteDePago.target.value);
-    };
-
-
-    return (
-        accepted ? (
-            <div>
-                {formaDePago === 0 ? pagoE() : formaDePago === 1 ? pagoS() : <div className="cart-box"><h1>Ha ocurrido un error</h1></div>}
             </div>
         ) : (
             <div>
@@ -132,14 +154,22 @@ const MetodoPago = () => {
                 <div className='metodoPago'>
                     <div className="centro">
                         <h1>Métodos de pago</h1>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" id="inlineCheckbox1" value="pagoEfectivo" onChange={handleMetodoChange} checked={formaDePago === 0} required />
-                            <label className="form-check-label" htmlFor="inlineCheckbox1">En Efectivo</label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" id="inlineCheckbox2" value="pagoSinpe" onChange={handleMetodoChange} checked={formaDePago === 1} required />
-                            <label className="form-check-label" htmlFor="inlineCheckbox2">SinpeMóvil</label>
-                        </div>
+                        {paymentMethods.map(method => (
+                            <div key={method.id} className="form-check form-check-inline">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    id={`paymentMethod${method.id}`}
+                                    value={method.id}
+                                    onChange={handleMetodoChange}
+                                    checked={selectedMethod?.id === method.id}
+                                    required
+                                />
+                                <label className="form-check-label" htmlFor={`paymentMethod${method.id}`}>
+                                    {method.methodName}
+                                </label>
+                            </div>
+                        ))}
                         <button className="btn btn-primary" onClick={handleAceptar}>Aceptar</button>
                     </div>
                 </div>
@@ -149,8 +179,8 @@ const MetodoPago = () => {
 };
 
 const Modal = ({ title, content, onClose, closeButtonText = 'Cerrar', showCloseButton = true }) => {
-    if (!title || !content || !onClose || typeof onClose !== 'function') {throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.');}
-    if (title==undefined||content==undefined|| onClose==undefined) {throw new Error('Error: Los argumentos title, content no pueden ser indefinidos');}
+    if (!title || !content || !onClose || typeof onClose !== 'function') { throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.'); }
+    if (title == undefined || content == undefined || onClose == undefined) { throw new Error('Error: Los argumentos title, content no pueden ser indefinidos'); }
     return (
         <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
             <div className="modal-dialog" role="document">
@@ -179,8 +209,8 @@ const Modal = ({ title, content, onClose, closeButtonText = 'Cerrar', showCloseB
     );
 };
 const ModalPagoAceptado = ({ title, content, onClose, closeButtonText = 'Ir al inicio', showCloseButton = true }) => {
-    if (!title || !content || !onClose || typeof onClose !== 'function') { throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.');}
-    if (title==undefined||content==undefined|| onClose==undefined) {throw new Error('Error: Los argumentos title, content no pueden ser indefinidos');}
+    if (!title || !content || !onClose || typeof onClose !== 'function') { throw new Error('Error: Los argumentos title, content y onClose son obligatorios y onClose debe ser una función.'); }
+    if (title == undefined || content == undefined || onClose == undefined) { throw new Error('Error: Los argumentos title, content no pueden ser indefinidos'); }
     const handleCerrarModal = () => {
         onClose();
         window.location.replace('/');
