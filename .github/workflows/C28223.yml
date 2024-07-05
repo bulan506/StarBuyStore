@@ -38,15 +38,15 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: |
-        cd C28223/Examen1_C28223
+        cd C28223/API
         dotnet restore
     - name: Build
       run: |
-        cd C28223/Examen1_C28223
+        cd C28223/API
         dotnet build --no-restore
     - name: Test
       run: |
-        cd C28223/Examen1_C28223
+        cd C28223/API
         dotnet test --no-build --verbosity normal
 
   publish-Api:
@@ -55,7 +55,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build & Push Image
       run: |
-        cd C28223/Examen1_C28223
+        cd C28223/API
         docker image build -t bulan506/lenguajes2024api:latest .
         docker image build -t bulan506/lenguajes2024api:0.0.1 .
         echo "${{ secrets.DOCKERHUBPASSC28223  }}" | docker login -u "brandon.vargassolano@ucr.ac.cr" --password-stdin
@@ -67,7 +67,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build & Push Image
       run: |
-        cd C28223/Examen1_C28223/nextjs-dashboard
+        cd C28223/UI
         docker image build -t bulan506/lenguajes2024ui:latest -f DockerfileFront .
         docker image build -t bulan506/lenguajes2024ui:0.0.1 -f DockerfileFront .
         echo "${{ secrets.DOCKERHUBPASSC28223  }}" | docker login -u "brandon.vargassolano@ucr.ac.cr" --password-stdin
