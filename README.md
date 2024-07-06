@@ -1041,25 +1041,25 @@ The application has undergone comprehensive testing using the NUnit unit testing
 
 ### Project Package Diagram
 
-![Project-Packages](imgSource/PacketsProject.jpg)
+![Project-Packages](C28223/imgSource/PacketsProject.jpg)
 
 This diagram illustrates the modular structure of the application, showcasing how different layers or modules are organized within the project. It provides a visual representation of various components and their interdependencies, aiding in understanding the overall architecture and system design.
 
 ### Frontend Package Diagram
 
-![Frontend-Packages](imgSource/PackageFrontEnd.jpg)
+![Frontend-Packages](C28223/imgSource/PackageFrontEnd.jpg)
 
 The frontend package diagram describes the organization of modules and specific components within the application's frontend. It highlights the structure and interrelationships of different frontend functionalities, such as user interfaces, components, and services. This diagram helps in understanding the frontend architecture and the distribution of responsibilities among frontend modules.
 
 ### Backend Package Diagram
 
-![Backend-Packages](imgSource/PackageBACKEND.jpg)
+![Backend-Packages](C28223/imgSource/PackageBACKEND.jpg)
 
 The backend package diagram displays the structural arrangement of modules and components within the application's backend. It illustrates the organization of backend services, databases, APIs, and other components supporting the business logic and data processing functionalities of the application. This diagram aids in visualizing the backend architecture and understanding relationships among different backend modules.
 
 ### Activity Diagram, Store Administrator Campaigns
 
-![Activity-Diagram-Campaigns](imgSource/campaigns.jpg)
+![Activity-Diagram-Campaigns](C28223/imgSource/campaigns.jpg)
 
 This activity diagram depicts the sequence of actions and interactions involved in managing store administrator campaigns. It visualizes the workflow and processes, including user interactions, system operations, and decision points related to the creation, monitoring, and management of promotional campaigns within the application. The diagram provides insight into the operational flow of campaign management activities, including integrations with socket-based communication for real-time updates.
 
